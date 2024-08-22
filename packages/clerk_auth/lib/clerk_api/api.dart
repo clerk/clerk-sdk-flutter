@@ -19,19 +19,19 @@ enum HttpMethod {
   bool get isGet => this == get;
 }
 
-class ClerkApi {
+class Api {
   static const _kJwtKey = 'jwt';
 
   static final _client = HttpClient();
-  static ClerkApi? _instance;
+  static Api? _instance;
 
-  ClerkApi._({required this.tokenCache, required this.domain});
+  Api._({required this.tokenCache, required this.domain});
 
-  factory ClerkApi({
+  factory Api({
     required String publishableKey,
     required String publicKey,
   }) =>
-      _instance ??= ClerkApi._(
+      _instance ??= Api._(
         tokenCache: TokenCache(publicKey),
         domain: _deriveDomainFrom(publishableKey),
       );

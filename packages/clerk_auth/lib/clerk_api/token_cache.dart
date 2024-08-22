@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 import 'models/models.dart';
@@ -63,8 +64,8 @@ class TokenCache {
   DateTime _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
   bool get _sessionTokenHasExpired => DateTime.now().isAfter(_sessionTokenExpiry);
 
-  void updateFrom(HttpClientResponse resp, Session? session) {
-    final newClientToken = resp.headers.value(HttpHeaders.authorizationHeader);
+  void updateFrom(http.Response resp, Session? session) {
+    final newClientToken = resp.headers[HttpHeaders.authorizationHeader];
     if (newClientToken?.isNotEmpty == true) clientToken = newClientToken!;
 
     if (session is Session) {

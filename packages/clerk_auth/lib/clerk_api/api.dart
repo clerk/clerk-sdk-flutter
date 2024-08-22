@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' show HttpStatus, HttpHeaders;
 
+import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 import 'models/models.dart';
 import 'token_cache.dart';
-
-const _defaultTimeout = Duration(seconds: 3);
 
 enum HttpMethod {
   get,
@@ -22,7 +21,7 @@ enum HttpMethod {
 class Api {
   static const _kJwtKey = 'jwt';
 
-  static final _client = HttpClient();
+  static final _client = http.Client();
   static Api? _instance;
 
   Api._({required this.tokenCache, required this.domain});
@@ -33,7 +32,7 @@ class Api {
   }) =>
       _instance ??= Api._(
         tokenCache: TokenCache(publicKey),
-        domain: _deriveDomainFrom(publishableKey),
+        domain: deriveDomainFrom(publishableKey),
       );
 
   final TokenCache tokenCache;
@@ -104,8 +103,7 @@ class Api {
     if (tokenCache.sessionToken.isEmpty && tokenCache.canRefreshSessionToken) {
       final resp = await _fetch(url: "/client/sessions/${tokenCache.sessionId}/tokens");
       if (resp.statusCode == HttpStatus.ok) {
-        final result = await _body(resp);
-        final body = jsonDecode(result) as Map<String, dynamic>;
+        final body = jsonDecode(resp.body) as Map<String, dynamic>;
         tokenCache.sessionToken = body[_kJwtKey] as String;
       }
     }
@@ -119,11 +117,8 @@ class Api {
     HttpMethod method = HttpMethod.post,
     Map<String, String> headers = const {},
     Map<String, dynamic> params = const {},
-    Duration timeout = _defaultTimeout,
   }) async {
     try {
-      _client.connectionTimeout = timeout;
-
       final resp = await _fetch(
         method: method,
         url: url,
@@ -133,8 +128,7 @@ class Api {
 
       logger.i("STATUS: ${resp.statusCode}");
 
-      final result = await _body(resp);
-      final body = jsonDecode(result) as Map<String, dynamic>;
+      final body = json.decode(resp.body) as Map<String, dynamic>;
       switch (resp.statusCode) {
         case 200:
           final client = Client.fromJson(body);
@@ -157,7 +151,7 @@ class Api {
     }
   }
 
-  Future<HttpClientResponse> _fetch({
+  Future<http.Response> _fetch({
     required String url,
     HttpMethod method = HttpMethod.post,
     Map<String, String> headers = const {},
@@ -165,16 +159,7 @@ class Api {
   }) async {
     final query = params.isNotEmpty ? "&${params.entries.map(_queryParamFrom).join("&")}" : "";
     final uri = Uri.parse("https://$domain/v1$url?_is_native=true$query");
-    final req = await _client.openUrl(method.name, uri);
-    for (final entry in headers.entries) {
-      req.headers.add(entry.key, entry.value);
-    }
-    final token = tokenCache.clientToken;
-    if (token.isNotEmpty) {
-      req.headers.add(HttpHeaders.authorizationHeader, token);
-    }
-
-    return req.close();
+    return await _client.sendHttpRequest(method, uri, headers: headers);
   }
 
   String _queryParamFrom(MapEntry e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}";
@@ -184,25 +169,36 @@ class Api {
     Map<String, String> headers,
   ) =>
       {
-        HttpHeaders.acceptHeader: "application/json",
+        HttpHeaders.acceptHeader: 'application/json',
         HttpHeaders.contentTypeHeader:
-            params.isNotEmpty ? "application/x-www-form-urlencoded" : "application/json",
+            params.isNotEmpty ? 'application/x-www-form-urlencoded' : 'application/json',
         ...headers,
       };
 
-  Future<String> _body(HttpClientResponse resp) {
-    final completer = Completer<String>();
-    final contents = StringBuffer();
-    resp.transform(utf8.decoder).listen(
-          contents.write,
-          onDone: () => completer.complete(contents.toString()),
-        );
-    return completer.future;
-  }
+  static String deriveDomainFrom(String key) {
+    final underscoreIndex = key.lastIndexOf("_");
+    if (underscoreIndex < 0) {
+      throw FormatException('Public key not in correct format');
+    }
 
-  static String _deriveDomainFrom(String key) {
     final encodedPart = key.substring(key.lastIndexOf("_") + 1);
     final encodedDomain = encodedPart.substring(0, encodedPart.length - (encodedPart.length % 4));
     return utf8.decode(base64.decode(encodedDomain));
+  }
+}
+
+extension SendExtension on http.Client {
+  Future<http.Response> sendHttpRequest(
+    HttpMethod method,
+    Uri uri, {
+    Map<String, String> headers = const {},
+  }) async {
+    return await switch (method) {
+      HttpMethod.get => get(uri, headers: headers),
+      HttpMethod.post => post(uri, headers: headers),
+      HttpMethod.put => put(uri, headers: headers),
+      HttpMethod.patch => patch(uri, headers: headers),
+      HttpMethod.delete => delete(uri, headers: headers),
+    };
   }
 }

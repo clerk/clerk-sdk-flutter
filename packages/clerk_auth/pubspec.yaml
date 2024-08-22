@@ -6,10 +6,8 @@ environment:
   sdk: '>=3.2.5 <4.0.0'
 
 dependencies:
-  flutter:
-    sdk: flutter
-  collection: ^1.18.0
   dart_jsonwebtoken: ^2.14.0
+  http: ^1.2.0
   json_annotation: ^4.9.0
   logger: ^2.3.0
 

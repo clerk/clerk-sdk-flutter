@@ -193,12 +193,9 @@ extension SendExtension on http.Client {
     Uri uri, {
     Map<String, String> headers = const {},
   }) async {
-    return await switch (method) {
-      HttpMethod.get => get(uri, headers: headers),
-      HttpMethod.post => post(uri, headers: headers),
-      HttpMethod.put => put(uri, headers: headers),
-      HttpMethod.patch => patch(uri, headers: headers),
-      HttpMethod.delete => delete(uri, headers: headers),
-    };
+    final request = http.Request(method.name.toUpperCase(), uri)..headers.addAll(headers);
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    return response;
   }
 }

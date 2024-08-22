@@ -15,7 +15,7 @@ void main() {
 
     test('will fail unless encoded part follows underscore', () {
       expect(
-        () => Api.deriveDomainFrom("NOT A PUBLIC KEY"),
+        () => Api.deriveDomainFrom('NOT A PUBLIC KEY'),
         throwsA(TypeMatcher<FormatException>()),
       );
     });

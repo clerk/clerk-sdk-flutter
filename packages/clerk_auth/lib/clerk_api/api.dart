@@ -65,7 +65,7 @@ class Api with Logging {
 
   // Sign Up API
 
-  Future<ApiResponse> createSignUp() async => _fetchApiResponse('/client/sign_ups');
+  Future<ApiResponse> createSignUp() => _fetchApiResponse('/client/sign_ups');
 
   // Sign In API
 

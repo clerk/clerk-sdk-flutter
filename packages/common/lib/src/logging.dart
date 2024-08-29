@@ -191,7 +191,7 @@ String _withColor(String text, Level level) {
 /// A class which is responsible for outputting to the console.
 /// Must implement a [print] method.
 ///
-abstract class Printer with Logging {
+abstract class Printer {
   /// Takes a string and logs it to the console.
   void print(String output);
 }

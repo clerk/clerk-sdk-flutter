@@ -1,3 +1,8 @@
+import 'dart:core' as core show print;
+import 'dart:core' hide print;
+
+import 'package:common/common.dart';
+
 class TestEnv {
   final map = <String, String>{};
 
@@ -9,4 +14,11 @@ class TestEnv {
   String get code => map['code'] ?? '';
   String get publicKey => map['public_key']?.replaceAll('\\n', '\n') ?? '';
   String get publishableKey => map['publishable_key'] ?? '';
+}
+
+class TestLogPrinter extends Printer {
+  @override
+  void print(String output) {
+    core.print(output);
+  }
 }

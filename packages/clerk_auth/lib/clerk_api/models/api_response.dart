@@ -15,4 +15,10 @@ class ApiResponse {
 
   bool get isOkay => status == HttpStatus.ok;
   bool get isError => isOkay == false;
+
+  Map<String, dynamic> toJson() => {
+        'status': status,
+        'client': client?.toJson(),
+        'errorDetail': errorDetail,
+      };
 }

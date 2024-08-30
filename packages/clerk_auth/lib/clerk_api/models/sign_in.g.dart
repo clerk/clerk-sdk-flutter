@@ -55,8 +55,9 @@ Map<String, dynamic> _$SignInToJson(SignIn instance) => <String, dynamic>{
     };
 
 const _$StatusEnumMap = {
-  Status.active: 'active',
   Status.abandoned: 'abandoned',
+  Status.active: 'active',
+  Status.missingRequirements: 'missing_requirements',
   Status.needsFirstFactor: 'needs_first_factor',
   Status.unverified: 'unverified',
 };

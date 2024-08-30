@@ -2,8 +2,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonEnum(fieldRename: FieldRename.snake)
 enum Status {
-  active,
   abandoned,
+  active,
+  missingRequirements,
   needsFirstFactor,
   unverified,
   ;
@@ -18,14 +19,15 @@ enum Status {
 enum Strategy {
   emailCode,
   emailLink,
+  passkey,
   password,
   phoneCode,
+  resetPasswordEmailCode,
+  resetPasswordPhoneCode,
+  saml,
   web3MetamaskSignature,
   web3CoinbaseSignature,
-  resetPasswordPhoneCode,
-  resetPasswordEmailCode,
-  saml,
-  passkey;
+  ;
 
   @override
   String toString() => name.toSnakeCase();
@@ -38,6 +40,21 @@ enum FactorStage {
 
   @override
   String toString() => name;
+}
+
+@JsonEnum(fieldRename: FieldRename.snake)
+enum Field {
+  emailAddress,
+  externalAccount,
+  firstName,
+  lastName,
+  password,
+  phoneNumber,
+  oauthApple,
+  oauthGithub,
+  oauthGoogle,
+  username,
+  web3Wallet,
 }
 
 extension CaseExtension on String {

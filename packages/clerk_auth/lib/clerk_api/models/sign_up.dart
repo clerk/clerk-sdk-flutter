@@ -8,23 +8,23 @@ part 'sign_up.g.dart';
 class SignUp {
   final String id;
   final Status status;
-  final List<String> requiredFields;
-  final List<String> optionalFields;
-  final List<String> missingFields;
-  final List<String> unverifiedFields;
-  final String username;
-  final String emailAddress;
-  final String phoneNumber;
-  final String web3Wallet;
-  final String passwordEnabled;
-  final String firstName;
-  final String lastName;
+  final List<Field> requiredFields;
+  final List<Field> optionalFields;
+  final List<Field> missingFields;
+  final List<Field> unverifiedFields;
+  final String? username;
+  final String? emailAddress;
+  final String? phoneNumber;
+  final String? web3Wallet;
+  final bool passwordEnabled;
+  final String? firstName;
+  final String? lastName;
   final Map<String, dynamic> unsafeMetadata;
   final Map<String, dynamic> publicMetadata;
   final bool customAction;
-  final String externalId;
-  final String createdSessionId;
-  final String createdUserId;
+  final String? externalId;
+  final String? createdSessionId;
+  final String? createdUserId;
 
   @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch)
   final DateTime abandonAt;
@@ -55,4 +55,9 @@ class SignUp {
   factory SignUp.fromJson(Map<String, dynamic> json) => _$SignUpFromJson(json);
 
   Map<String, dynamic> toJson() => _$SignUpToJson(this);
+
+  bool requires(Field field) => requiredFields.contains(field);
+  bool optional(Field field) => optionalFields.contains(field);
+  bool missing(Field field) => missingFields.contains(field);
+  bool unverified(Field field) => unverifiedFields.contains(field);
 }

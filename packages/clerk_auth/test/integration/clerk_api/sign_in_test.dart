@@ -28,7 +28,7 @@ void main() {
       expect(response.client?.signIn?.status, Status.needsFirstFactor);
 
       final signIn = response.client!.signIn!;
-      response = await api.attemptVerification(
+      response = await api.attemptSignInVerification(
         signIn,
         stage: FactorStage.first,
         strategy: Strategy.password,
@@ -51,7 +51,7 @@ void main() {
       expect(response.client?.signIn?.status, Status.needsFirstFactor);
 
       signIn = response.client!.signIn!;
-      response = await api.prepareVerification(
+      response = await api.prepareSignInVerification(
         signIn,
         stage: FactorStage.first,
         strategy: Strategy.emailCode,
@@ -59,7 +59,7 @@ void main() {
       expect(response.client?.signIn?.status, Status.needsFirstFactor);
 
       signIn = response.client!.signIn!;
-      response = await api.attemptVerification(
+      response = await api.attemptSignInVerification(
         signIn,
         stage: FactorStage.first,
         strategy: Strategy.emailCode,
@@ -85,7 +85,7 @@ void main() {
       final redirectUrl = 'https://redirect.to.somewhere';
 
       signIn = response.client!.signIn!;
-      response = await api.prepareVerification(
+      response = await api.prepareSignInVerification(
         signIn,
         stage: FactorStage.first,
         strategy: Strategy.emailLink,
@@ -104,7 +104,7 @@ void main() {
       expect(response.client?.signIn?.status, Status.needsFirstFactor);
 
       signIn = response.client!.signIn!;
-      response = await api.prepareVerification(
+      response = await api.prepareSignInVerification(
         signIn,
         stage: FactorStage.first,
         strategy: Strategy.phoneCode,
@@ -112,7 +112,7 @@ void main() {
       expect(response.client?.signIn?.status, Status.needsFirstFactor);
 
       signIn = response.client!.signIn!;
-      response = await api.attemptVerification(
+      response = await api.attemptSignInVerification(
         signIn,
         stage: FactorStage.first,
         strategy: Strategy.phoneCode,

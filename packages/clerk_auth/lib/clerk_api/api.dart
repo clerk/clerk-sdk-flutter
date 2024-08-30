@@ -9,11 +9,11 @@ import 'models/models.dart';
 import 'token_cache.dart';
 
 enum HttpMethod {
+  delete,
   get,
-  post,
-  put,
   patch,
-  delete;
+  post,
+  put;
 
   bool get isGet => this == get;
   bool get isNotGet => isGet == false;
@@ -46,26 +46,74 @@ class Api with Logging {
   static const _kClerkJsVersion = '_clerk_js_version';
   static const _vClerkJsVersion = '4.70.0';
 
-  // Sign out
+  // Sign out / delete user
 
-  Future<void> signOut() async {
+  Future<bool> deleteUser() => _delete('/me');
+  Future<bool> signOut() => _delete('/client');
+
+  Future<bool> _delete(String path) async {
     try {
       final headers = _headers(HttpMethod.delete);
-      final resp = await _fetch(method: HttpMethod.delete, path: '/client', headers: headers);
+      final resp = await _fetch(method: HttpMethod.delete, path: path, headers: headers);
       if (resp.statusCode == 200) {
         tokenCache.clear();
+        return true;
       } else {
-        logSevere('HTTP error on sign out: ${resp.statusCode}');
-        logSevere(resp);
+        logSevere('HTTP error on DELETE $path: ${resp.statusCode}', resp);
       }
     } catch (error, stacktrace) {
-      logSevere('Error during sign out', error, stacktrace);
+      logSevere('Error during DELETE $path', error, stacktrace);
     }
+
+    return false;
   }
 
   // Sign Up API
 
-  Future<ApiResponse> createSignUp() => _fetchApiResponse('/client/sign_ups');
+  Future<ApiResponse> createSignUp({
+    String? username,
+    String? password,
+    String? emailAddress,
+    String? phoneNumber,
+  }) {
+    return _fetchApiResponse(
+      '/client/sign_ups',
+      params: {
+        'username': username,
+        'password': password,
+        'email_address': emailAddress,
+        'phone_number': phoneNumber,
+      },
+    );
+  }
+
+  Future<ApiResponse> prepareSignUpVerification(
+    SignUp signUp, {
+    required Strategy strategy,
+    String? redirectUrl,
+  }) async {
+    return _fetchApiResponse(
+      '/client/sign_ups/${signUp.id}/prepare_verification',
+      params: {
+        'strategy': strategy,
+      },
+    );
+  }
+
+  Future<ApiResponse> attemptSignUpVerification(
+    SignUp signUp, {
+    required Strategy strategy,
+    String? code,
+    String? signature,
+  }) async {
+    return _fetchApiResponse(
+      '/client/sign_ups/${signUp.id}/attempt_verification',
+      params: {
+        'strategy': strategy,
+        'code': code,
+      },
+    );
+  }
 
   // Sign In API
 
@@ -77,7 +125,7 @@ class Api with Logging {
         params: {'identifier': identifier},
       );
 
-  Future<ApiResponse> prepareVerification(
+  Future<ApiResponse> prepareSignInVerification(
     SignIn signIn, {
     required FactorStage stage,
     required Strategy strategy,
@@ -92,17 +140,14 @@ class Api with Logging {
       '/client/sign_ins/${signIn.id}/prepare_${stage}_factor',
       params: {
         'strategy': strategy,
-        if (factor.emailAddressId?.isNotEmpty == true) //
-          'email_address_id': factor.emailAddressId,
-        if (factor.phoneNumberId?.isNotEmpty == true) //
-          'phone_number_id': factor.phoneNumberId,
-        if (redirectUrl?.isNotEmpty == true) //
-          'redirect_url': redirectUrl,
+        'email_address_id': factor.emailAddressId,
+        'phone_number_id': factor.phoneNumberId,
+        'redirect_url': redirectUrl,
       },
     );
   }
 
-  Future<ApiResponse> attemptVerification(
+  Future<ApiResponse> attemptSignInVerification(
     SignIn signIn, {
     required FactorStage stage,
     required Strategy strategy,
@@ -118,10 +163,8 @@ class Api with Logging {
       '/client/sign_ins/${signIn.id}/attempt_${stage}_factor',
       params: {
         'strategy': strategy,
-        if (code is String) //
-          'code': code,
-        if (password is String) //
-          'password': password,
+        'code': code,
+        'password': password,
       },
     );
   }
@@ -186,6 +229,7 @@ class Api with Logging {
     Map<String, String>? headers,
     Map<String, dynamic>? params,
   }) async {
+    params?.removeWhere((key, value) => value == null);
     final queryParams = {
       _kIsNative: true,
       _kClerkJsVersion: _vClerkJsVersion,

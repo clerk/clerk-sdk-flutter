@@ -24,8 +24,9 @@ Map<String, dynamic> _$VerificationToJson(Verification instance) =>
     };
 
 const _$StatusEnumMap = {
-  Status.active: 'active',
   Status.abandoned: 'abandoned',
+  Status.active: 'active',
+  Status.missingRequirements: 'missing_requirements',
   Status.needsFirstFactor: 'needs_first_factor',
   Status.unverified: 'unverified',
 };

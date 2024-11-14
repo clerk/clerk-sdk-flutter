@@ -1,3 +1,4 @@
-# widgetbook
+# clerk_widgetbook
 
-A new Flutter project.
+Clerk SDK Widgets
+

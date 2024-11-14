@@ -5,7 +5,7 @@ extension MapExtension on Map {
 extension StringExtension on String {
   bool _isUpper(int c) => c >= 0x41 && c <= 0x5a;
   bool _isNumeric(int c) => c >= 0x30 && c <= 0x39;
-  bool _isAlphanum(int c) => _isUpper(c) || _isNumeric(c);
+  bool _isAlphaNumeric(int c) => _isUpper(c) || _isNumeric(c);
 
   String toSnakeCase({String separator = "_"}) {
     if (isEmpty) return this;
@@ -26,7 +26,7 @@ extension StringExtension on String {
 
   String get initials => toUpperCase()
       .split(' ')
-      .where((t) => t.isNotEmpty && _isAlphanum(t.runes.first))
+      .where((t) => t.isNotEmpty && _isAlphaNumeric(t.runes.first))
       .map((t) => t[0])
       .join();
 }

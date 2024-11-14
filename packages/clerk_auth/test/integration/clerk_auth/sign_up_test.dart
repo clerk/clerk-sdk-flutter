@@ -8,8 +8,7 @@ import '../../test_helpers.dart';
 
 void main() {
   late final Auth auth;
-
-  final env = TestEnv();
+  late final TestEnv env;
 
   String emailAddress = '';
   String phoneNumber = '';
@@ -24,12 +23,8 @@ void main() {
   });
 
   setUpAll(() async {
-    final dotEnv = DotEnv(filePath: '.env.test');
-    final values = dotEnv.getDotEnv();
-    env.addAll(values);
-
+    env = TestEnv('.env.test');
     auth = Auth(publicKey: env.publicKey, publishableKey: env.publishableKey);
-
     await setUpLogging(printer: TestLogPrinter());
   });
 

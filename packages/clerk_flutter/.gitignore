@@ -14,3 +14,7 @@
 /pubspec.lock
 .dart_tool/
 build/
+
+# Flutter auto-generated files
+.flutter-plugins
+.flutter-plugins-dependencies

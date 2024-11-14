@@ -33,5 +33,4 @@ pubspec_overrides.yaml
 # FVM Version Cache
 .fvm/
 
-packages/clerk_auth/.env.test
 packages/clerk_flutter/widgetbook/.env

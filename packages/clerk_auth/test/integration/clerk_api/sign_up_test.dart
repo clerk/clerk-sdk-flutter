@@ -1,6 +1,5 @@
-import 'package:clerk_auth/clerk_api/clerk_api.dart';
-import 'package:common/common.dart';
-import 'package:dart_dotenv/dart_dotenv.dart';
+import 'package:clerk_auth/src/clerk_api/api.dart';
+import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,7 +19,7 @@ void main() {
   String password = '';
 
   setUp(() async {
-    password = Uuid().v4();
+    password = const Uuid().v4();
     username = 'user-$password';
     emailAddress = '$username+clerk_test@some.domain';
     phoneNumber = '+15555550109';

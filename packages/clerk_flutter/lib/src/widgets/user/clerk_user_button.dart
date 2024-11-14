@@ -1,8 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:clerk_auth/clerk_auth.dart' as Clerk;
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 
 class ClerkUserButton extends StatefulWidget {
@@ -17,9 +16,9 @@ class ClerkUserButton extends StatefulWidget {
 class _ClerkUserButtonState extends State<ClerkUserButton> {
   static const _closeDelay = Duration(milliseconds: 250);
 
-  final _sessions = <Clerk.Session>[];
+  final _sessions = <clerk.Session>[];
 
-  Future<void> _manage(List<Clerk.Session> sessions) async {
+  Future<void> _manage(List<clerk.Session> sessions) async {
     // adding to a list of existing sessions means we have ones that are now deleted
     // still available in `_sessions`, making for prettier UI
     _sessions.addOrReplaceAll(sessions, by: (s) => s.id);
@@ -69,7 +68,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const _CircleIcon(
+                        const CircleIcon(
                           icon: Icons.add,
                           backgroundColor: ClerkColors.dawnPink,
                           borderColor: ClerkColors.nobel,
@@ -147,7 +146,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: unload,
-                    child: const _CircleIcon(icon: Icons.close),
+                    child: const CircleIcon(icon: Icons.close),
                   ),
                 ),
               ],
@@ -161,14 +160,14 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
   }
 }
 
-class _CircleIcon extends StatelessWidget {
+class CircleIcon extends StatelessWidget {
   final IconData icon;
   final Color color;
   final Color backgroundColor;
   final Color? borderColor;
   final bool dashed;
 
-  const _CircleIcon({
+  const CircleIcon({
     super.key,
     required this.icon,
     this.color = ClerkColors.stormGrey,
@@ -243,7 +242,7 @@ class _DottedBorderPainter extends CustomPainter {
 }
 
 class _SessionRow extends StatelessWidget {
-  final Clerk.Session session;
+  final clerk.Session session;
   final bool closed;
   final bool selected;
   final bool showName;

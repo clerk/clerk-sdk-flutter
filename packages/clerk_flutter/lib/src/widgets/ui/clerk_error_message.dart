@@ -1,13 +1,15 @@
 import 'dart:async';
 
-import 'package:clerk_auth/clerk_auth.dart' as Clerk;
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
 class ClerkErrorMessage extends StatelessWidget {
+  const ClerkErrorMessage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Clerk.AuthError>(
+    return StreamBuilder<clerk.AuthError>(
       stream: ClerkAuth.errorStreamOf(context),
       builder: (context, snapshot) => _ErrorMessage(error: snapshot.data),
     );
@@ -15,7 +17,7 @@ class ClerkErrorMessage extends StatelessWidget {
 }
 
 class _ErrorMessage extends StatefulWidget {
-  final Clerk.AuthError? error;
+  final clerk.AuthError? error;
 
   const _ErrorMessage({required this.error});
 

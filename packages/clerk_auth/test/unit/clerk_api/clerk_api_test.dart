@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:clerk_auth/clerk_api/api.dart';
+import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -16,7 +16,7 @@ void main() {
     test('will fail unless encoded part follows underscore', () {
       expect(
         () => Api.deriveDomainFrom('NOT A PUBLIC KEY'),
-        throwsA(TypeMatcher<FormatException>()),
+        throwsA(const TypeMatcher<FormatException>()),
       );
     });
 

@@ -1,4 +1,4 @@
-import 'package:clerk_auth/clerk_auth.dart' as Clerk;
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -10,8 +10,6 @@ class ClerkSSOPanel extends StatefulWidget {
 }
 
 class _ClerkSSOPanelState extends State<ClerkSSOPanel> {
-  static const _errorDisplayDuration = Duration(seconds: 3);
-
   @override
   Widget build(BuildContext context) {
     final auth = ClerkAuth.of(context);
@@ -31,7 +29,7 @@ class _ClerkSSOPanelState extends State<ClerkSSOPanel> {
                   child: Padding(
                     padding: const EdgeInsets.all(4),
                     child: SocialConnectionButton(
-                      key: ValueKey<Clerk.SocialConnection>(connection),
+                      key: ValueKey<clerk.SocialConnection>(connection),
                       connection: connection,
                     ),
                   ),

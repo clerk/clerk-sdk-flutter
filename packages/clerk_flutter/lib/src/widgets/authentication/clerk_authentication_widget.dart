@@ -1,4 +1,4 @@
-import 'package:clerk_auth/clerk_auth.dart' as Clerk;
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/assets.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/gestures.dart';
@@ -10,6 +10,7 @@ enum _AuthState {
   signingUp;
 
   bool get isSigningIn => this == signingIn;
+
   bool get isSigningUp => this == signingUp;
 
   _AuthState get nextState => values[(index + 1) % values.length];
@@ -44,18 +45,18 @@ class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
         topPortion: _TopPortion(state: _state),
         middlePortion: Column(
           children: [
-            ClerkErrorMessage(),
+            const ClerkErrorMessage(),
             ClerkAuthBuilder(
               builder: (context, auth) {
                 return Closeable(
-                  closed: auth.signIn is Clerk.SignIn || auth.signUp is Clerk.SignUp,
+                  closed: auth.signIn is clerk.SignIn || auth.signUp is clerk.SignUp,
                   child: const ClerkSSOPanel(),
                 );
               },
             ),
             Closeable(open: _state.isSigningIn, child: const ClerkSignInPanel()),
             Closeable(open: _state.isSigningUp, child: const ClerkSignUpPanel()),
-            ClerkErrorMessage(),
+            const ClerkErrorMessage(),
           ],
         ),
         bottomPortion: _BottomPortion(state: _state, onChange: _toggle),
@@ -68,7 +69,7 @@ class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
 class _TopPortion extends StatelessWidget {
   final _AuthState state;
 
-  const _TopPortion({super.key, required this.state});
+  const _TopPortion({required this.state});
 
   @override
   Widget build(BuildContext context) {

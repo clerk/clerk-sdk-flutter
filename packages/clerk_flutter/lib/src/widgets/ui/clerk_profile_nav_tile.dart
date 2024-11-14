@@ -8,8 +8,13 @@ import 'package:flutter/material.dart';
 @immutable
 class ProfileNavTile extends StatelessWidget {
   /// Constructs a const [ProfileNavTile].
-  const ProfileNavTile(
-      {required this.icon, required this.title, required this.selected, this.onTap});
+  const ProfileNavTile({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.selected,
+    this.onTap,
+  });
 
   /// The icon to display in the navigation tile.
   final Widget icon;

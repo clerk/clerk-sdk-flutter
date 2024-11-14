@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:clerk_auth/clerk_auth.dart' as Clerk;
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -14,7 +14,7 @@ class ClerkAuth extends StatefulWidget {
   final String? publishableKey;
 
   /// Persistence service for caching tokens
-  final Clerk.Persistor? persistor;
+  final clerk.Persistor? persistor;
 
   /// Injectable translations for strings
   final ClerkTranslator translator;
@@ -56,8 +56,9 @@ class ClerkAuth extends StatefulWidget {
     return result!.auth;
   }
 
-  static Clerk.User? userOf(BuildContext context) => of(context).user;
-  static Clerk.Session? sessionOf(BuildContext context) => of(context).session;
+  static clerk.User? userOf(BuildContext context) => of(context).user;
+
+  static clerk.Session? sessionOf(BuildContext context) => of(context).session;
 
   static ClerkAuthProvider nonDependentOf(BuildContext context) {
     final result = context.findAncestorWidgetOfExactType<_ClerkAuthData>();
@@ -66,9 +67,11 @@ class ClerkAuth extends StatefulWidget {
   }
 
   static ClerkTranslator translatorOf(BuildContext context) => nonDependentOf(context).translator;
-  static Clerk.DisplayConfig displayConfigOf(BuildContext context) =>
+
+  static clerk.DisplayConfig displayConfigOf(BuildContext context) =>
       nonDependentOf(context).env.display;
-  static Stream<Clerk.AuthError> errorStreamOf(BuildContext context) =>
+
+  static Stream<clerk.AuthError> errorStreamOf(BuildContext context) =>
       nonDependentOf(context).errorStream;
 }
 
@@ -109,7 +112,10 @@ class _ClerkAuthState extends State<ClerkAuth> {
       future: _authFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return _ClerkAuthData(child: widget.child, auth: snapshot.data!);
+          return _ClerkAuthData(
+            auth: snapshot.data!,
+            child: widget.child,
+          );
         }
         return widget.loading ?? emptyWidget;
       },
@@ -119,28 +125,31 @@ class _ClerkAuthState extends State<ClerkAuth> {
 
 /// Data class holding the auth object
 class _ClerkAuthData extends InheritedWidget {
+  _ClerkAuthData({
+    required this.auth,
+    required super.child,
+  })  : client = auth.client,
+        env = auth.env;
+
   /// Clerk auth object
   final ClerkAuthProvider auth;
-  final Clerk.Client client;
-  final Clerk.Environment env;
-
-  _ClerkAuthData({
-    required super.child,
-    required this.auth,
-  })  : this.client = auth.client,
-        this.env = auth.env;
+  final clerk.Client client;
+  final clerk.Environment env;
 
   @override
-  bool updateShouldNotify(_ClerkAuthData old) => old.client != client || old.env != env;
+  bool updateShouldNotify(_ClerkAuthData old) {
+    return old.client != client || old.env != env;
+  }
 }
 
-class ClerkAuthProvider extends Clerk.Auth with ChangeNotifier {
+class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   static const _kRotatingTokenNonce = 'rotating_token_nonce';
 
   final ClerkTranslator translator;
-  final _errors = StreamController<Clerk.AuthError>();
+  final _errors = StreamController<clerk.AuthError>();
   late final errorStream = _errors.stream.asBroadcastStream();
   final OverlayEntry _loadingOverlay;
+  OverlayEntry? _ssoOverlay;
 
   ClerkAuthProvider({
     required super.publicKey,
@@ -156,52 +165,60 @@ class ClerkAuthProvider extends Clerk.Auth with ChangeNotifier {
   /// Performs SSO authentication according to the `strategy`
   Future<void> sso(
     BuildContext context,
-    Clerk.Strategy strategy, {
-    void Function(Clerk.AuthError)? onError,
+    clerk.Strategy strategy, {
+    void Function(clerk.AuthError)? onError,
   }) async {
     final auth = ClerkAuth.of(context);
-    final client =
-        await call(context, () => auth.oauthSignIn(strategy: strategy), onError: onError);
+    final overlay = Overlay.of(context);
+    final client = await call(
+      context,
+      () => auth.oauthSignIn(strategy: strategy),
+      onError: onError,
+    );
     final url = client?.signIn?.firstFactorVerification?.providerUrl;
     if (url case String url) {
-      OverlayEntry? overlay;
-      overlay = OverlayEntry(
-        builder: (context) {
-          final controller = WebViewController()
-            ..setUserAgent('Clerk Flutter SDK v${Clerk.Auth.jsVersion}')
-            ..setJavaScriptMode(JavaScriptMode.unrestricted)
-            ..setNavigationDelegate(
-              NavigationDelegate(
-                onNavigationRequest: (request) async {
-                  if (request.url.startsWith(Clerk.Auth.oauthRedirect)) {
-                    if (overlay is OverlayEntry) {
-                      final uri = Uri.parse(request.url);
-                      final token = uri.queryParameters[_kRotatingTokenNonce];
-                      if (token case String token) {
-                        await call(
-                          context,
-                          () => auth.attemptSignIn(strategy: strategy, token: token),
-                          onError: onError,
-                        );
-                      } else {
-                        await auth.refreshClient();
-                        await call(context, () => auth.transfer(), onError: onError);
-                      }
-                      overlay?.remove();
-                      overlay = null;
-                    }
-                    return NavigationDecision.prevent;
-                  }
-                  return NavigationDecision.navigate;
-                },
-              ),
-            )
-            ..loadRequest(Uri.parse(url));
-          return Scaffold(body: WebViewWidget(controller: controller));
+      _ssoOverlay = OverlayEntry(
+        builder: (BuildContext context) {
+          return _SsoWebViewHost(
+            url: url,
+            callback: _ssoCallback(
+              strategy,
+              onError: onError,
+            ),
+          );
         },
       );
-      Overlay.of(context).insert(overlay!);
+      overlay.insert(_ssoOverlay!);
     }
+  }
+
+  Function(BuildContext, String) _ssoCallback(
+    clerk.Strategy strategy, {
+    void Function(clerk.AuthError)? onError,
+  }) {
+    return (BuildContext context, String redirectUrl) async {
+      final auth = ClerkAuth.of(context);
+      final uri = Uri.parse(redirectUrl);
+      final token = uri.queryParameters[_kRotatingTokenNonce];
+      if (token case String token) {
+        await call(
+          context,
+          () => auth.attemptSignIn(strategy: strategy, token: token),
+          onError: onError,
+        );
+      } else {
+        await auth.refreshClient();
+        if (context.mounted) {
+          await call(
+            context,
+            () => auth.transfer(),
+            onError: onError,
+          );
+        }
+      }
+      _ssoOverlay?.remove();
+      _ssoOverlay = null;
+    };
   }
 
   /// Convenience method to make an auth call to the backend via ClerkAuth
@@ -209,13 +226,15 @@ class ClerkAuthProvider extends Clerk.Auth with ChangeNotifier {
   Future<T?> call<T>(
     BuildContext context,
     Future<T> Function() fn, {
-    void Function(Clerk.AuthError)? onError,
+    void Function(clerk.AuthError)? onError,
   }) async {
     T? result;
     try {
-      Overlay.of(context).insert(_loadingOverlay);
+      if (context.mounted) {
+        Overlay.of(context).insert(_loadingOverlay);
+      }
       result = await fn.call();
-    } on Clerk.AuthError catch (error) {
+    } on clerk.AuthError catch (error) {
       _errors.add(error);
       onError?.call(error);
     } finally {
@@ -274,5 +293,49 @@ class ClerkAuthProvider extends Clerk.Auth with ChangeNotifier {
     return null;
   }
 
-  void addError(String message) => _errors.add(Clerk.AuthError(message: message));
+  void addError(String message) => _errors.add(clerk.AuthError(message: message));
+}
+
+class _SsoWebViewHost extends StatefulWidget {
+  const _SsoWebViewHost({
+    required this.url,
+    required this.callback,
+  });
+
+  final String url;
+  final Function(BuildContext context, String redirectUrl) callback;
+
+  @override
+  State<_SsoWebViewHost> createState() => _SsoWebViewHostState();
+}
+
+class _SsoWebViewHostState extends State<_SsoWebViewHost> {
+  late final WebViewController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setUserAgent('Clerk Flutter SDK v${clerk.Auth.jsVersion}')
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onNavigationRequest: (NavigationRequest request) async {
+            if (request.url.startsWith(clerk.Auth.oauthRedirect)) {
+              widget.callback(context, request.url);
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      );
+    controller.loadRequest(Uri.parse(widget.url));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: WebViewWidget(controller: controller),
+    );
+  }
 }

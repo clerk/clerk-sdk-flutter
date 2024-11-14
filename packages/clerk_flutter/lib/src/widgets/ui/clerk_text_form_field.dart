@@ -10,14 +10,14 @@ class ClerkTextFormField extends StatelessWidget {
     this.label,
     this.optional = false,
     this.obscureText = false,
-    required this.onChanged,
+    this.onChanged,
     this.onSubmit,
     this.initial,
     this.onObscure,
   });
 
   /// Report changes back to calling widget
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onChanged;
 
   /// Callback for when field submitted
   final ValueChanged<String>? onSubmit;

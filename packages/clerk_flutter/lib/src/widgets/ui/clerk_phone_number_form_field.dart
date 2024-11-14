@@ -79,7 +79,7 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
             ),
             countrySelectorNavigator: const CountrySelectorNavigator.dialog(
               addFavoriteSeparator: true,
-              favorites: const [IsoCode.US, IsoCode.GB],
+              favorites: [IsoCode.US, IsoCode.GB],
             ),
             validator: PhoneValidator.valid(),
           ),

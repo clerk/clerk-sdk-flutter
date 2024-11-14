@@ -94,7 +94,7 @@ class _SecondChild extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         verticalMargin20,
-        const Padding(
+        Padding(
           padding: horizontalPadding32,
           child: divider,
         ),

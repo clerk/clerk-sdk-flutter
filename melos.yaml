@@ -2,7 +2,6 @@ name: clerk_sdk
 
 packages:
   - packages/**
-  - packages/clerk_flutter/widgetbook
 
 ide:
   intellij:
@@ -10,9 +9,34 @@ ide:
     moduleNamePrefix: ''
 
 scripts:
+  # Clean all packages
+  clean:
+    name: Clean all
+    description: Run flutter clean in all packages
+    run: melos exec -- flutter clean
+
+  # Pub get all packages
+  get:
+    name: Get all
+    description: Run pub get in all packages
+    run: melos exec -o -- dart pub get
+
+  # Pub upgrade all packages
+  upgrade:
+    name: Upgrade all
+    description: Run pub upgrade in all packages
+    run: melos exec -o -- dart pub upgrade
+
+  # Build runner (code generation)
   brunner:
-    run: melos exec --fail-fast -c 1 --depends-on="build_runner" -- dart run build_runner build --delete-conflicting-outputs
+    run: melos exec -o -- dart run build_runner build --delete-conflicting-outputs
+    packageFilters:
+      scope: "clerk_auth"
+
+  # Format code
   format:
-    run: melos exec --fail-fast -c 1 -- dart format --line-length=100 --output=none .
+    run: melos exec -- dart format MELOS_PACKAGE_PATH --line-length=100
+
+  # Run build and format code
   brunner_format:
     run: melos brunner && melos format

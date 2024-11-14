@@ -133,7 +133,7 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
     if (loading) return emptyWidget;
 
     final text = _editingValue.text;
-    final color = ClerkColors.midGrey;
+    const color = ClerkColors.midGrey;
 
     bool isSmall = widget.isSmall;
     if (isSmall == false) {
@@ -165,7 +165,10 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
                         child: Text(
                           text[index],
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: color, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            color: color,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       )
                     : _focusNode.hasFocus && index == text.length

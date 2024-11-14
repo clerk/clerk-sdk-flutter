@@ -76,9 +76,9 @@ class _TopPortion extends StatelessWidget {
             ],
           ),
           verticalMargin28,
-          ClerkTextFormField(label: 'Name', onChanged: (_) => null),
+          const ClerkTextFormField(label: 'Name'),
           verticalMargin28,
-          ClerkTextFormField(label: 'Slug URL', onChanged: (_) => null),
+          const ClerkTextFormField(label: 'Slug URL'),
           verticalMargin28,
           const Align(
             alignment: Alignment.centerRight,

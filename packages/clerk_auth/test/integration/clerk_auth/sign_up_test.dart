@@ -1,6 +1,4 @@
 import 'package:clerk_auth/clerk_auth.dart';
-import 'package:common/common.dart';
-import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,7 +14,7 @@ void main() {
   String password = '';
 
   setUp(() async {
-    password = Uuid().v4();
+    password = const Uuid().v4();
     username = 'user-$password';
     emailAddress = '$username+clerk_test@some.domain';
     phoneNumber = '+15555550179';
@@ -33,7 +31,7 @@ void main() {
   group('SignUp', () {
     test('can sign up with emailCode in separate steps', () async {
       await runWithLogging(() async {
-        expect(await auth.user, null);
+        expect(auth.user, null);
 
         Client client = await auth.attemptSignUp(emailAddress: emailAddress);
         expect(client.signUp?.status, Status.missingRequirements);
@@ -42,7 +40,8 @@ void main() {
           strategy: Strategy.emailCode,
           username: username,
           password: password,
-          passwordConfirmation: "$password", // technically a 'different' string
+          // ignore: unnecessary_string_interpolations
+          passwordConfirmation: '$password', // technically a 'different' string
         );
         expect(client.signUp?.status, Status.missingRequirements);
         expect(client.signUp?.unverifiedFields.contains(Field.emailAddress), true);
@@ -58,7 +57,7 @@ void main() {
 
     test('can sign up with phoneCode in separate steps', () async {
       await runWithLogging(() async {
-        expect(await auth.user, null);
+        expect(auth.user, null);
 
         Client client = await auth.attemptSignUp(phoneNumber: phoneNumber);
         expect(client.signUp?.status, Status.missingRequirements);
@@ -67,7 +66,8 @@ void main() {
           strategy: Strategy.phoneCode,
           username: username,
           password: password,
-          passwordConfirmation: "$password", // technically a 'different' string
+          // ignore: unnecessary_string_interpolations
+          passwordConfirmation: '$password', // technically a 'different' string
         );
         expect(client.signUp?.status, Status.missingRequirements);
         expect(client.signUp?.unverifiedFields.contains(Field.phoneNumber), true);

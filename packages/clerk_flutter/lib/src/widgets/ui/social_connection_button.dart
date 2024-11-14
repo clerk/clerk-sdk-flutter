@@ -1,4 +1,4 @@
-import 'package:clerk_auth/clerk_auth.dart' as Clerk;
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ class SocialConnectionButton extends StatelessWidget {
   const SocialConnectionButton({super.key, required this.connection});
 
   /// The oAuth provider this button represents.
-  final Clerk.SocialConnection connection;
+  final clerk.SocialConnection connection;
 
   @override
   Widget build(BuildContext context) {

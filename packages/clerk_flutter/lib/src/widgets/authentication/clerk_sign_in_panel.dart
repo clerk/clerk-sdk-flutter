@@ -1,7 +1,6 @@
-import 'package:clerk_auth/clerk_auth.dart' as Clerk;
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:collection/collection.dart';
-import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 
 /// The [ClerkSignInPanel] renders a UI for signing in users.
@@ -12,30 +11,28 @@ import 'package:flutter/material.dart';
 /// properties.
 
 class ClerkSignInPanel extends StatefulWidget {
-  const ClerkSignInPanel();
+  const ClerkSignInPanel({super.key});
 
   @override
   State<ClerkSignInPanel> createState() => _ClerkSignInPanelState();
 }
 
 class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
-  static const _errorDisplayDuration = Duration(seconds: 3);
-
-  Clerk.Strategy _strategy = Clerk.Strategy.password;
+  clerk.Strategy _strategy = clerk.Strategy.password;
   String _identifier = '';
   String _password = '';
   String _code = '';
 
   bool get _hasIdentifier => _identifier.isNotEmpty;
 
-  void _onError(Clerk.AuthError _) {
+  void _onError(clerk.AuthError _) {
     setState(() {
       _code = '';
-      _strategy = Clerk.Strategy.password;
+      _strategy = clerk.Strategy.password;
     });
   }
 
-  Future<void> _continue(ClerkAuthProvider auth, {Clerk.Strategy? strategy, String? code}) async {
+  Future<void> _continue(ClerkAuthProvider auth, {clerk.Strategy? strategy, String? code}) async {
     if (_hasIdentifier) {
       final newStrategy = strategy ?? _strategy;
       final newCode = code ?? _code;
@@ -65,7 +62,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
     final translator = auth.translator;
     final env = auth.env;
     final otherStrategies = env.config.firstFactors.where((f) => f.isOtherStrategy);
-    final hasPasswordStrategy = env.config.firstFactors.contains(Clerk.Strategy.password);
+    final hasPasswordStrategy = env.config.firstFactors.contains(clerk.Strategy.password);
     final identifiers =
         env.config.identificationStrategies.where((i) => i.isOauth == false).map((i) => i.title);
     final factor =
@@ -76,7 +73,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        ClerkErrorMessage(),
+        const ClerkErrorMessage(),
         Padding(
           padding: horizontalPadding32 + bottomPadding8,
           child: ClerkTextFormField(
@@ -95,7 +92,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
         ),
         Closeable(
           key: const Key('emailLinkMessage'),
-          open: _strategy == Clerk.Strategy.emailLink,
+          open: _strategy == clerk.Strategy.emailLink,
           child: Padding(
             padding: horizontalPadding32,
             child: Text(
@@ -118,7 +115,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
           },
         ),
         Closeable(
-          open: _strategy == Clerk.Strategy.password && _hasIdentifier,
+          open: _strategy == clerk.Strategy.password && _hasIdentifier,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -129,7 +126,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
                     label: translator.translate('Password'),
                     obscureText: true,
                     onChanged: (password) => _password = password,
-                    onSubmit: (_) => _continue(auth, strategy: Clerk.Strategy.password),
+                    onSubmit: (_) => _continue(auth, strategy: clerk.Strategy.password),
                   ),
                 ),
               if (otherStrategies.isNotEmpty) ...[
@@ -143,7 +140,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
                     Padding(
                       padding: topPadding4 + horizontalPadding32,
                       child: StrategyButton(
-                          key: ValueKey<Clerk.Strategy>(strategy),
+                          key: ValueKey<clerk.Strategy>(strategy),
                           strategy: strategy,
                           onClick: () => _continue(auth, strategy: strategy)),
                     ),
@@ -167,7 +164,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
             ],
           ),
         ),
-        ClerkErrorMessage(),
+        const ClerkErrorMessage(),
         verticalMargin32,
       ],
     );

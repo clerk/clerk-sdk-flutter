@@ -4,13 +4,11 @@ import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
-typedef FutureCallback<T> = Future<T?> Function<T>(Future<T> Function());
-
 extension NullExtension on String {
   String? get orNullIfEmpty => isEmpty ? null : this;
 }
 
-final defaultLoadingWidget = const SizedBox(
+const defaultLoadingWidget = SizedBox(
   width: double.infinity,
   height: double.infinity,
   child: ColoredBox(
@@ -28,7 +26,7 @@ const outlineInputBorder = OutlineInputBorder(
   borderSide: BorderSide.none,
 );
 
-const insetBoxShadowDecoration = const BoxDecoration(
+const insetBoxShadowDecoration = BoxDecoration(
   boxShadow: [
     BoxShadow(
       color: ClerkColors.seashell,

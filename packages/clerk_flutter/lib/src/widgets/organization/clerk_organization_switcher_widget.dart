@@ -29,8 +29,8 @@ class ClerkOrganizationSwitcherWidget extends StatelessWidget {
       child: MenuAnchor(
         alignmentOffset: const Offset(0.0, 8.0),
         style: MenuStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.transparent),
-          shadowColor: MaterialStateProperty.all(Colors.transparent),
+          backgroundColor: WidgetStateProperty.all(Colors.transparent),
+          shadowColor: WidgetStateProperty.all(Colors.transparent),
         ),
         menuChildren: [
           SizedBox(
@@ -156,7 +156,7 @@ class _TopPortion extends StatelessWidget {
           Padding(
             padding: verticalPadding16 + horizontalPadding20,
             child: Row(
-              children: [
+              children: const [
                 ClerkIcon(ClerkAssets.addIcon, size: 24.0),
                 horizontalMargin8,
                 Text('Create organization', maxLines: 1),

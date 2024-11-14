@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:common/common.dart';
+import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:dart_dotenv/dart_dotenv.dart';
 
 class TestEnv {

@@ -14,7 +14,7 @@ class ClerkColors {
   static final lightGrey = Colors.grey.shade100;
 
   /// Almost Black.
-  static final almostBlack = Colors.black;
+  static const almostBlack = Colors.black;
 
   /// Bright Grey (icon and button colors).
   static const brightGrey = Color(0xFF42434d);

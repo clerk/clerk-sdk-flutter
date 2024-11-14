@@ -6,11 +6,6 @@ const _defaultDuration = Duration(milliseconds: 250);
 /// on the `open` or `closed` parameter values. One and only one of `open` or `closed` must
 /// be provided.
 class Closeable extends StatelessWidget {
-  final Duration duration;
-  final double _value;
-  final Widget child;
-  final Axis orientation;
-
   const Closeable({
     super.key,
     bool? closed,
@@ -22,6 +17,12 @@ class Closeable extends StatelessWidget {
         assert((closed is bool) != (open is bool), 'Only one of closed or open allowed'),
         _value = (open == true || closed == false) ? 1 : 0;
 
+  final Duration duration;
+  final double _value;
+  final Widget child;
+  final Axis orientation;
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedOpacity(
       duration: duration,

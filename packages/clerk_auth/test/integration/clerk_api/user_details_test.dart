@@ -1,6 +1,5 @@
-import 'package:clerk_auth/clerk_api/clerk_api.dart';
-import 'package:common/common.dart';
-import 'package:dart_dotenv/dart_dotenv.dart';
+import 'package:clerk_auth/src/clerk_api/api.dart';
+import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
 
@@ -76,7 +75,7 @@ void main() {
         user = response.client?.activeSession?.user;
         expect(user is User, true);
 
-        final emailAddress = 'user-${Uuid().v4()}+clerk_test@some.domain';
+        final emailAddress = 'user-${const Uuid().v4()}+clerk_test@some.domain';
 
         response = await api.addEmailAddressToCurrentUser(emailAddress);
         expect(response.isOkay, true);
@@ -102,7 +101,7 @@ void main() {
         user = response.client?.activeSession?.user;
         expect(user is User, true);
 
-        final phoneNumber = '+447700777777';
+        const phoneNumber = '+447700777777';
 
         response = await api.addPhoneNumberToCurrentUser(phoneNumber);
         expect(response.isOkay, true);

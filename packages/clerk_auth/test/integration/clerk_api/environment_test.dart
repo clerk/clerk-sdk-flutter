@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import 'package:clerk_auth/clerk_api/clerk_api.dart';
-import 'package:common/common.dart';
-import 'package:dart_dotenv/dart_dotenv.dart';
+import 'package:clerk_auth/src/clerk_api/api.dart';
+import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
@@ -21,6 +20,7 @@ void main() {
     test('can fetch', () async {
       await runWithLogging(() async {
         final data = await api.environment();
+        // ignore: avoid_print
         print(jsonEncode(data.toJson()));
         expect(data.isEmpty, false);
       });

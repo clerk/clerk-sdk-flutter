@@ -1,4 +1,4 @@
-import 'package:clerk_auth/clerk_auth.dart' as Clerk;
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 ///
 @immutable
 class ClerkSignUpPanel extends StatefulWidget {
-  const ClerkSignUpPanel();
+  const ClerkSignUpPanel({super.key});
 
   @override
   State<ClerkSignUpPanel> createState() => _ClerkSignUpPanelState();
@@ -22,23 +22,23 @@ class ClerkSignUpPanel extends StatefulWidget {
 class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
   static final _phoneNumberRE = RegExp(r'[^0-9+]');
 
-  final _values = <Clerk.UserAttribute, String>{};
+  final _values = <clerk.UserAttribute, String>{};
   bool _obscurePassword = true;
 
-  Future<void> _continue(ClerkAuthProvider auth, {String? code, Clerk.Strategy? strategy}) async {
+  Future<void> _continue(ClerkAuthProvider auth, {String? code, clerk.Strategy? strategy}) async {
     await auth.call(context, () async {
-      final password = _values[Clerk.UserAttribute.password];
-      final passwordConfirmation = _values[Clerk.UserAttribute.passwordConfirmation];
+      final password = _values[clerk.UserAttribute.password];
+      final passwordConfirmation = _values[clerk.UserAttribute.passwordConfirmation];
       if (auth.checkPassword(password, passwordConfirmation) case String errorMessage) {
         auth.addError(errorMessage);
       } else {
         await auth.attemptSignUp(
-          strategy: strategy ?? Clerk.Strategy.password,
-          firstName: _values[Clerk.UserAttribute.firstName],
-          lastName: _values[Clerk.UserAttribute.lastName],
-          username: _values[Clerk.UserAttribute.username],
-          emailAddress: _values[Clerk.UserAttribute.emailAddress],
-          phoneNumber: _values[Clerk.UserAttribute.phoneNumber]?.replaceAll(_phoneNumberRE, ''),
+          strategy: strategy ?? clerk.Strategy.password,
+          firstName: _values[clerk.UserAttribute.firstName],
+          lastName: _values[clerk.UserAttribute.lastName],
+          username: _values[clerk.UserAttribute.username],
+          emailAddress: _values[clerk.UserAttribute.emailAddress],
+          phoneNumber: _values[clerk.UserAttribute.phoneNumber]?.replaceAll(_phoneNumberRE, ''),
           password: password,
           passwordConfirmation: passwordConfirmation,
           code: code,
@@ -54,7 +54,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
     final env = auth.env;
     final attributes = [
       ...env.user.attributes.entries.where((a) => a.value.isEnabled).map(_Attribute.fromMapEntry),
-      const _Attribute(Clerk.UserAttribute.passwordConfirmation, true),
+      const _Attribute(clerk.UserAttribute.passwordConfirmation, true),
     ]..sort((a, b) => a.index - b.index);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -62,27 +62,27 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
       children: [
         ClerkCodeInput(
           key: const Key('phone_code'),
-          open: auth.signUp?.unverified(Clerk.Field.phoneNumber) == true,
+          open: auth.signUp?.unverified(clerk.Field.phoneNumber) == true,
           title: translator.translate('Verify your phone number'),
           subtitle: translator.translate(
             'Enter code sent to ###',
-            substitution: _values[Clerk.UserAttribute.phoneNumber],
+            substitution: _values[clerk.UserAttribute.phoneNumber],
           ),
           onSubmit: (code) async {
-            await _continue(auth, strategy: Clerk.Strategy.phoneCode, code: code);
+            await _continue(auth, strategy: clerk.Strategy.phoneCode, code: code);
             return false;
           },
         ),
         ClerkCodeInput(
           key: const Key('email_code'),
-          open: auth.signUp?.unverified(Clerk.Field.emailAddress) == true,
+          open: auth.signUp?.unverified(clerk.Field.emailAddress) == true,
           title: translator.translate('Verify your email address'),
           subtitle: translator.translate(
             'Enter code sent to ###',
-            substitution: _values[Clerk.UserAttribute.emailAddress],
+            substitution: _values[clerk.UserAttribute.emailAddress],
           ),
           onSubmit: (code) async {
-            await _continue(auth, strategy: Clerk.Strategy.emailCode, code: code);
+            await _continue(auth, strategy: clerk.Strategy.emailCode, code: code);
             return false;
           },
         ),
@@ -136,17 +136,21 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
 }
 
 class _Attribute {
-  final Clerk.UserAttribute attr;
+  final clerk.UserAttribute attr;
   final bool isRequired;
 
   const _Attribute(this.attr, this.isRequired);
 
-  factory _Attribute.fromMapEntry(MapEntry<Clerk.UserAttribute, Clerk.UserAttributeData> entry) =>
+  factory _Attribute.fromMapEntry(MapEntry<clerk.UserAttribute, clerk.UserAttributeData> entry) =>
       _Attribute(entry.key, entry.value.isRequired);
 
   int get index => attr.index;
+
   bool get needsObscuring => attr.obscure;
-  bool get isPhoneNumber => attr == Clerk.UserAttribute.phoneNumber;
+
+  bool get isPhoneNumber => attr == clerk.UserAttribute.phoneNumber;
+
   bool get isOptional => isRequired == false;
+
   String get title => attr.title;
 }

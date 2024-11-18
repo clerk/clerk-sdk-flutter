@@ -10,6 +10,7 @@ void main() {
   setUpAll(() async {
     env = TestEnv('.env.test');
     auth = Auth(publicKey: env.publicKey, publishableKey: env.publishableKey);
+    await auth.init();
     await setUpLogging(printer: TestLogPrinter());
   });
 
@@ -45,6 +46,7 @@ void main() {
     test('can sign in with email code', () async {
       await runWithLogging(() async {
         expect(auth.user, null);
+
         final client = await auth.attemptSignIn(
           identifier: 'test1+clerk_test@devangels.london',
           strategy: Strategy.emailCode,
@@ -58,6 +60,7 @@ void main() {
     test('can sign in with phone code', () async {
       await runWithLogging(() async {
         expect(auth.user, null);
+
         final client = await auth.attemptSignIn(
           identifier: 'test1+clerk_test@devangels.london',
           strategy: Strategy.phoneCode,

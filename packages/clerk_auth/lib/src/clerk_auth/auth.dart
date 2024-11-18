@@ -1,9 +1,6 @@
 import 'dart:async';
 
-import 'package:clerk_auth/src/clerk_api/api.dart';
-
-import 'auth_error.dart';
-import 'persistor.dart';
+import 'package:clerk_auth/clerk_auth.dart';
 
 export 'auth_error.dart';
 export 'http_client.dart';
@@ -25,6 +22,7 @@ class Auth {
   static const jsVersion = '4.70.0';
   static const oauthRedirect = 'https://www.clerk.com/oauth-redirect';
   static const emailLinkRedirect = 'https://www.clerk.com';
+  static const _codeLength = 6;
 
   /// A method to be overridden by extending subclasses to cope with updating their systems when
   /// things change
@@ -142,12 +140,14 @@ class Auth {
 
       case SignIn signIn when signIn.status.needsFactor && strategy?.requiresCode == true:
         final stage = Stage.forStatus(signIn.status);
-        if (code?.isNotEmpty == true) {
+        if (signIn.verificationFor(stage) is! Verification) {
+          await _api.prepareSignIn(signIn, stage: stage, strategy: strategy!).then(_housekeeping);
+        }
+        if (client.signIn case SignIn signIn
+            when signIn.verificationFor(stage) is Verification && code?.length == _codeLength) {
           await _api
               .attemptSignIn(signIn, stage: stage, strategy: strategy!, code: code)
               .then(_housekeeping);
-        } else {
-          await _api.prepareSignIn(signIn, stage: stage, strategy: strategy!).then(_housekeeping);
         }
 
       case SignIn signIn when signIn.status.needsFactor && strategy is Strategy:

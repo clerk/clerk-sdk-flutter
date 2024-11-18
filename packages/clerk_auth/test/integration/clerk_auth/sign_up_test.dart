@@ -14,7 +14,7 @@ void main() {
   String password = '';
 
   setUp(() async {
-    password = const Uuid().v4();
+    password = 'A${const Uuid().v4()}';
     username = 'user-$password';
     emailAddress = '$username+clerk_test@some.domain';
     phoneNumber = '+15555550179';
@@ -23,6 +23,7 @@ void main() {
   setUpAll(() async {
     env = TestEnv('.env.test');
     auth = Auth(publicKey: env.publicKey, publishableKey: env.publishableKey);
+    await auth.init();
     await setUpLogging(printer: TestLogPrinter());
   });
 

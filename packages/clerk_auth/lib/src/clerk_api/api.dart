@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show HttpStatus, HttpHeaders;
 
-import 'package:clerk_auth/src/clerk_api/token_cache.dart';
 import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/src/clerk_api/token_cache.dart';
 import 'package:http/http.dart' as http;
 
 export 'package:clerk_auth/src/models/models.dart';
@@ -69,7 +69,7 @@ class Api with Logging {
   // Sign out / delete user
 
   Future<Client> deleteUser() async {
-    await _delete('/me');
+    await _delete('/me', requiresSessionId: true);
     return Client.empty;
   }
 
@@ -78,15 +78,20 @@ class Api with Logging {
     return Client.empty;
   }
 
-  Future<bool> _delete(String path) async {
+  Future<bool> _delete(String path, {bool requiresSessionId = false}) async {
     try {
       final headers = _headers(HttpMethod.delete);
-      final resp = await _fetch(method: HttpMethod.delete, path: path, headers: headers);
+      final resp = await _fetch(
+        method: HttpMethod.delete,
+        path: path,
+        headers: headers,
+        requiresSessionId: requiresSessionId,
+      );
       if (resp.statusCode == 200) {
         _tokenCache.clear();
         return true;
       } else {
-        logSevere('HTTP error on DELETE $path: ${resp.statusCode}', resp);
+        logSevere('HTTP error on DELETE $path: ${resp.statusCode}', resp.body);
       }
     } catch (error, stacktrace) {
       logSevere('Error during DELETE $path', error, stacktrace);
@@ -292,12 +297,17 @@ class Api with Logging {
 
   // User
 
-  Future<ApiResponse> getUser() => _fetchApiResponse('/me', method: HttpMethod.get);
+  Future<ApiResponse> getUser() => _fetchApiResponse(
+        '/me',
+        method: HttpMethod.get,
+        requiresSessionId: true,
+      );
 
   Future<ApiResponse> updateUser(User user) async {
     return _fetchApiResponse(
       '/me',
       method: HttpMethod.patch,
+      requiresSessionId: true,
       params: {
         'first_name': user.firstName,
         'last_name': user.lastName,

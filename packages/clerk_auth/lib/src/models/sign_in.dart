@@ -42,6 +42,13 @@ class SignIn {
 
   Map<String, dynamic> toJson() => _$SignInToJson(this);
 
+  Verification? verificationFor(Stage stage) {
+    return switch (stage) {
+      Stage.first => firstFactorVerification,
+      Stage.second => secondFactorVerification,
+    };
+  }
+
   Factor? factorFor(Strategy strategy, Stage stage) {
     final factors = switch (stage) {
       Stage.first => supportedFirstFactors,

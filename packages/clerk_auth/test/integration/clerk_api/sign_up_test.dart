@@ -19,7 +19,7 @@ void main() {
   String password = '';
 
   setUp(() async {
-    password = const Uuid().v4();
+    password = 'A${const Uuid().v4()}';
     username = 'user-$password';
     emailAddress = '$username+clerk_test@some.domain';
     phoneNumber = '+15555550109';

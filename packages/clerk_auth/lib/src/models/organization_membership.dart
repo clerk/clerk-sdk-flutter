@@ -1,8 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'helpers.dart';
-import 'organization.dart';
-import 'user_public.dart';
+import 'models.dart';
 
 part 'organization_membership.g.dart';
 

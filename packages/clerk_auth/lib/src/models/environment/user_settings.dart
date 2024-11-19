@@ -1,8 +1,6 @@
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import '../enums.dart';
-import '../environment.dart';
 
 part 'user_settings.g.dart';
 

@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 
 const _defaultDuration = Duration(milliseconds: 250);
 
+enum ClosingAxis {
+  both,
+  horizontal,
+  vertical;
+
+  bool get isVertical => this != horizontal;
+  bool get isHorizontal => this != vertical;
+}
+
 /// [Closeable] provides a widget that will animate to closed or open positions depending
 /// on the `open` or `closed` parameter values. One and only one of `open` or `closed` must
 /// be provided.
@@ -12,7 +21,8 @@ class Closeable extends StatelessWidget {
     bool? open,
     required this.child,
     this.duration = _defaultDuration,
-    this.orientation = Axis.vertical,
+    this.axis = ClosingAxis.vertical,
+    this.alignment = Alignment.topLeft,
   })  : assert((closed is bool) || (open is bool), 'One of closed or open required'),
         assert((closed is bool) != (open is bool), 'Only one of closed or open allowed'),
         _value = (open == true || closed == false) ? 1 : 0;
@@ -20,19 +30,19 @@ class Closeable extends StatelessWidget {
   final Duration duration;
   final double _value;
   final Widget child;
-  final Axis orientation;
+  final ClosingAxis axis;
+  final Alignment alignment;
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      duration: duration,
-      opacity: _value,
+    return IgnorePointer(
+      ignoring: _value == 0,
       child: ClipRect(
         child: AnimatedAlign(
           duration: duration,
-          alignment: Alignment.topLeft,
-          heightFactor: orientation == Axis.vertical ? _value : null,
-          widthFactor: orientation == Axis.horizontal ? _value : null,
+          alignment: alignment,
+          heightFactor: axis.isVertical ? _value : null,
+          widthFactor: axis.isHorizontal ? _value : null,
           child: child,
         ),
       ),
@@ -47,7 +57,8 @@ class AnimatingCloseable extends StatefulWidget {
   final bool? open;
   final bool? closed;
   final Widget child;
-  final Axis orientation;
+  final ClosingAxis axis;
+  final Alignment alignment;
 
   const AnimatingCloseable({
     super.key,
@@ -55,7 +66,8 @@ class AnimatingCloseable extends StatefulWidget {
     this.closed,
     required this.child,
     this.duration = _defaultDuration,
-    this.orientation = Axis.vertical,
+    this.axis = ClosingAxis.vertical,
+    this.alignment = Alignment.topLeft,
   })  : assert((closed is bool) || (open is bool), 'One of closed or open required'),
         assert((closed is bool) != (open is bool), 'Only one of closed or open allowed');
 
@@ -70,12 +82,24 @@ class _AnimatingCloseableState extends State<AnimatingCloseable> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        open = widget.open;
-        closed = widget.closed;
+    if (widget.open == true || widget.closed == false) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          open = widget.open;
+          closed = widget.closed;
+        });
       });
-    });
+    } else {
+      open = widget.open;
+      closed = widget.closed;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant AnimatingCloseable oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    open = widget.open;
+    closed = widget.closed;
   }
 
   @override
@@ -84,7 +108,8 @@ class _AnimatingCloseableState extends State<AnimatingCloseable> {
       duration: widget.duration,
       open: open,
       closed: closed,
-      orientation: widget.orientation,
+      axis: widget.axis,
+      alignment: widget.alignment,
       child: widget.child,
     );
   }

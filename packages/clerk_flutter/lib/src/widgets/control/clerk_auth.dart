@@ -84,16 +84,20 @@ class _ClerkAuthState extends State<ClerkAuth> {
   @override
   void initState() {
     super.initState();
-    _auth = widget.auth ??
-        ClerkAuthProvider(
-          publishableKey: widget.publishableKey!,
-          publicKey: widget.publicKey!,
-          persistor: widget.persistor,
-          translator: widget.translator,
-          loading: widget.loading,
-        );
+    if (widget.auth case ClerkAuthProvider auth) {
+      _auth = auth;
+      _authFuture = Future.value(_auth);
+    } else {
+      _auth = ClerkAuthProvider(
+        publishableKey: widget.publishableKey!,
+        publicKey: widget.publicKey!,
+        persistor: widget.persistor,
+        translator: widget.translator,
+        loading: widget.loading,
+      );
+      _authFuture = _auth.init().then((_) => _auth);
+    }
     _auth.addListener(_update);
-    _authFuture = _auth.init().then((_) => _auth);
   }
 
   @override

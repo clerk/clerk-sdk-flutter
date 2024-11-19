@@ -1,9 +1,6 @@
 import 'dart:async';
 
-import 'package:clerk_auth/src/clerk_api/api.dart';
-
-import 'auth_error.dart';
-import 'persistor.dart';
+import 'package:clerk_auth/clerk_auth.dart';
 
 export 'auth_error.dart';
 export 'http_client.dart';
@@ -14,17 +11,19 @@ class Auth {
     required String publishableKey,
     required String publicKey,
     Persistor? persistor,
+    HttpClient? client,
   }) : _api = Api(
           publicKey: publicKey,
           publishableKey: publishableKey,
           persistor: persistor,
+          client: client,
         );
 
   final Api _api;
 
   static const jsVersion = '4.70.0';
   static const oauthRedirect = 'https://www.clerk.com/oauth-redirect';
-  static const emailLinkRedirect = 'https://www.clerk.com';
+  static const _codeLength = 6;
 
   /// A method to be overridden by extending subclasses to cope with updating their systems when
   /// things change
@@ -98,6 +97,7 @@ class Auth {
     String? password,
     String? code,
     String? token,
+    String? redirectUrl,
   }) async {
     if (client.signIn == null && identifier is String) {
       // if a password has been presented, we can immediately attempt a sign in
@@ -109,13 +109,13 @@ class Auth {
       case SignIn signIn when strategy?.isOauth == true:
         await _api.sendOauthToken(signIn, strategy: strategy!, token: token).then(_housekeeping);
 
-      case SignIn signIn when strategy == Strategy.emailLink:
+      case SignIn signIn when strategy == Strategy.emailLink && redirectUrl is String:
         await _api
             .prepareSignIn(
               signIn,
               stage: Stage.first,
               strategy: Strategy.emailLink,
-              redirectUrl: emailLinkRedirect,
+              redirectUrl: redirectUrl,
             )
             .then(_housekeeping);
 
@@ -142,12 +142,14 @@ class Auth {
 
       case SignIn signIn when signIn.status.needsFactor && strategy?.requiresCode == true:
         final stage = Stage.forStatus(signIn.status);
-        if (code?.isNotEmpty == true) {
+        if (signIn.verificationFor(stage) is! Verification) {
+          await _api.prepareSignIn(signIn, stage: stage, strategy: strategy!).then(_housekeeping);
+        }
+        if (client.signIn case SignIn signIn
+            when signIn.verificationFor(stage) is Verification && code?.length == _codeLength) {
           await _api
               .attemptSignIn(signIn, stage: stage, strategy: strategy!, code: code)
               .then(_housekeeping);
-        } else {
-          await _api.prepareSignIn(signIn, stage: stage, strategy: strategy!).then(_housekeeping);
         }
 
       case SignIn signIn when signIn.status.needsFactor && strategy is Strategy:

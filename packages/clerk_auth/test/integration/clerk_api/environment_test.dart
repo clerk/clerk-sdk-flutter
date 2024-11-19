@@ -1,7 +1,5 @@
-import 'dart:convert';
-
-import 'package:clerk_auth/src/clerk_api/api.dart';
-import 'package:clerk_auth/src/utils/logging.dart';
+import 'package:clerk_auth/clerk_auth.dart';
+import 'package:logging/logging.dart';
 import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
@@ -9,19 +7,27 @@ import '../../test_helpers.dart';
 void main() {
   late final Api api;
   late final TestEnv env;
+  final httpClient = TestHttpClient();
 
   setUpAll(() async {
     env = TestEnv('.env.test');
-    api = Api(publicKey: env.publicKey, publishableKey: env.publishableKey);
-    await setUpLogging(printer: TestLogPrinter());
+    api = Api(
+      publicKey: env.publicKey,
+      publishableKey: env.publishableKey,
+      client: httpClient,
+    );
+    await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });
 
   group('Environment:', () {
     test('can fetch', () async {
       await runWithLogging(() async {
+        httpClient.expect(
+          'GET /v1/environment',
+          200,
+          '{}',
+        );
         final data = await api.environment();
-        // ignore: avoid_print
-        print(jsonEncode(data.toJson()));
         expect(data.isEmpty, false);
       });
     });

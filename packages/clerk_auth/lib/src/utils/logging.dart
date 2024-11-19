@@ -120,10 +120,11 @@ Future<void> runWithLogging(Future<void> Function() fn) async {
 Future<void> setUpLogging({
   required Printer printer,
   bool structuredLogging = false,
+  Level level = Level.ALL,
 }) async {
   /// Setup logging
   hierarchicalLoggingEnabled = true;
-  Logger.root.level = Level.ALL;
+  Logger.root.level = level;
   Logger.root.onRecord.listen((record) {
     if (structuredLogging) {
       final jsonString = json.encode({

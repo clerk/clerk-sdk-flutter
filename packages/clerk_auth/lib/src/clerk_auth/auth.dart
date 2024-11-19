@@ -11,17 +11,18 @@ class Auth {
     required String publishableKey,
     required String publicKey,
     Persistor? persistor,
+    HttpClient? client,
   }) : _api = Api(
           publicKey: publicKey,
           publishableKey: publishableKey,
           persistor: persistor,
+          client: client,
         );
 
   final Api _api;
 
   static const jsVersion = '4.70.0';
   static const oauthRedirect = 'https://www.clerk.com/oauth-redirect';
-  static const emailLinkRedirect = 'https://www.clerk.com';
   static const _codeLength = 6;
 
   /// A method to be overridden by extending subclasses to cope with updating their systems when
@@ -96,6 +97,7 @@ class Auth {
     String? password,
     String? code,
     String? token,
+    String? redirectUrl,
   }) async {
     if (client.signIn == null && identifier is String) {
       // if a password has been presented, we can immediately attempt a sign in
@@ -107,13 +109,13 @@ class Auth {
       case SignIn signIn when strategy?.isOauth == true:
         await _api.sendOauthToken(signIn, strategy: strategy!, token: token).then(_housekeeping);
 
-      case SignIn signIn when strategy == Strategy.emailLink:
+      case SignIn signIn when strategy == Strategy.emailLink && redirectUrl is String:
         await _api
             .prepareSignIn(
               signIn,
               stage: Stage.first,
               strategy: Strategy.emailLink,
-              redirectUrl: emailLinkRedirect,
+              redirectUrl: redirectUrl,
             )
             .then(_housekeeping);
 

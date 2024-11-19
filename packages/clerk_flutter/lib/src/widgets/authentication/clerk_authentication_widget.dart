@@ -1,6 +1,6 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
-import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/assets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -81,7 +81,7 @@ class _TopPortion extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: bottomPadding24,
+          padding: verticalPadding32,
           child: Center(
             child: SizedBox.square(
               dimension: 32.0,

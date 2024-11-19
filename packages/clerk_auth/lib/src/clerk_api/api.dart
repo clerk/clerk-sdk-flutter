@@ -202,10 +202,8 @@ class Api with Logging {
     );
   }
 
-  Future<ApiResponse> transfer() => _fetchApiResponse(
-        '/client/sign_ups',
-        params: {'transfer': true},
-      );
+  Future<ApiResponse> transfer() =>
+      _fetchApiResponse('/client/sign_ups', params: {'transfer': true});
 
   // Sign In API
 
@@ -433,12 +431,10 @@ class Api with Logging {
     final body = method.isNotGet ? params : null;
     final uri = _uri(path, queryParams);
 
-    logInfo('$method $uri ${body.toString()}');
-
     final resp = await _client.send(method, uri, headers, body);
 
     if (resp.statusCode == HttpStatus.tooManyRequests) {
-      final delay = int.tryParse(resp.headers['retry-after'] ?? '') ?? 500;
+      final delay = int.tryParse(resp.headers['retry-after'] ?? '') ?? 5;
       logSevere('Delaying ${delay}secs');
       await Future.delayed(Duration(seconds: delay));
       return _fetch(

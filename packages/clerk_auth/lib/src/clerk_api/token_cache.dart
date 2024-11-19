@@ -105,8 +105,8 @@ class TokenCache {
           _sessionTokenExpiry.millisecondsSinceEpoch.toString(),
         );
       }
-    } catch (error, stackTrace) {
-      logger.severe('ERROR SETTING SESSION TOKEN: $error', error, stackTrace);
+    } catch (error, _) {
+      logger.info('ERROR SETTING SESSION TOKEN: $error', error);
     }
   }
 

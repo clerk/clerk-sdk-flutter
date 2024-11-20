@@ -71,9 +71,9 @@ class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
 
 @immutable
 class _TopPortion extends StatelessWidget {
-  final _AuthState state;
-
   const _TopPortion({required this.state});
+
+  final _AuthState state;
 
   @override
   Widget build(BuildContext context) {
@@ -128,10 +128,10 @@ class _TopPortion extends StatelessWidget {
 
 @immutable
 class _BottomPortion extends StatelessWidget {
+  const _BottomPortion({required this.onChange, required this.state});
+
   final VoidCallback onChange;
   final _AuthState state;
-
-  const _BottomPortion({required this.onChange, required this.state});
 
   @override
   Widget build(BuildContext context) {

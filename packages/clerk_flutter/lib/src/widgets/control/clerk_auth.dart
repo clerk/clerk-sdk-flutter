@@ -7,7 +7,6 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 /// Control widget initialising Clerk Auth system
 class ClerkAuth extends StatefulWidget {
-  /// Constructor that constructs a construct constructingly
   const ClerkAuth({
     super.key,
     this.publicKey,
@@ -148,7 +147,15 @@ class _ClerkAuthData extends InheritedWidget {
 }
 
 class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
-  static const _kRotatingTokenNonce = 'rotating_token_nonce';
+  ClerkAuthProvider({
+    required super.publicKey,
+    required super.publishableKey,
+    this.translator = const DefaultClerkTranslator(),
+    Widget? loading,
+    super.persistor,
+  }) : _loadingOverlay = OverlayEntry(
+          builder: (context) => loading ?? defaultLoadingWidget,
+        );
 
   final ClerkTranslator translator;
   final _errors = StreamController<clerk.AuthError>();
@@ -156,14 +163,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   final OverlayEntry _loadingOverlay;
   OverlayEntry? _ssoOverlay;
 
-  ClerkAuthProvider({
-    required super.publicKey,
-    required super.publishableKey,
-    this.translator = const DefaultClerkTranslator(),
-    Widget? loading,
-    super.persistor,
-  }) : _loadingOverlay =
-            OverlayEntry(builder: (context) => loading ?? defaultLoadingWidget);
+  static const _kRotatingTokenNonce = 'rotating_token_nonce';
 
   @override
   void update() => notifyListeners();

@@ -5,9 +5,9 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
 class ClerkUserButton extends StatefulWidget {
-  final bool showName;
-
   const ClerkUserButton({super.key, this.showName = true});
+
+  final bool showName;
 
   @override
   State<ClerkUserButton> createState() => _ClerkUserButtonState();
@@ -162,12 +162,6 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
 }
 
 class CircleIcon extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final Color backgroundColor;
-  final Color? borderColor;
-  final bool dashed;
-
   const CircleIcon({
     super.key,
     required this.icon,
@@ -176,6 +170,12 @@ class CircleIcon extends StatelessWidget {
     this.borderColor,
     this.dashed = false,
   });
+
+  final IconData icon;
+  final Color color;
+  final Color backgroundColor;
+  final Color? borderColor;
+  final bool dashed;
 
   @override
   Widget build(BuildContext context) {
@@ -195,14 +195,6 @@ class CircleIcon extends StatelessWidget {
 }
 
 class _DottedBorderPainter extends CustomPainter {
-  static const _twoPi = 2 * math.pi;
-
-  final double dashLength;
-  final double gapLength; // actually, minimum gap length
-
-  final Paint _paint;
-  final Paint _backgroundPaint;
-
   _DottedBorderPainter({
     required Color color,
     required Color backgroundColor,
@@ -218,6 +210,14 @@ class _DottedBorderPainter extends CustomPainter {
         _backgroundPaint = Paint()
           ..style = PaintingStyle.fill
           ..color = backgroundColor;
+
+  final double dashLength;
+  final double gapLength; // actually, minimum gap length
+
+  final Paint _paint;
+  final Paint _backgroundPaint;
+
+  static const _twoPi = 2 * math.pi;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -243,12 +243,6 @@ class _DottedBorderPainter extends CustomPainter {
 }
 
 class _SessionRow extends StatelessWidget {
-  final clerk.Session session;
-  final bool closed;
-  final bool selected;
-  final bool showName;
-  final VoidCallback? onTap;
-
   const _SessionRow({
     super.key,
     required this.session,
@@ -257,6 +251,12 @@ class _SessionRow extends StatelessWidget {
     this.selected = false,
     this.showName = true,
   });
+
+  final clerk.Session session;
+  final bool closed;
+  final bool selected;
+  final bool showName;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

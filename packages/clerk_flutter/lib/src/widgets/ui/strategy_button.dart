@@ -4,9 +4,21 @@ import 'package:flutter/material.dart';
 
 /// The [StrategyButton] is to be used with the authentication flow when working with
 /// a an non-oAuth strategy
-
 @immutable
 class StrategyButton extends StatelessWidget {
+  /// Constructs a new [StrategyButton].
+  const StrategyButton({
+    super.key,
+    required this.strategy,
+    required this.onClick,
+  });
+
+  /// The oAuth provider this button represents.
+  final clerk.Strategy strategy;
+
+  /// The function called when a button is tapped
+  final VoidCallback onClick;
+
   /// details for strategies we support
   static const _descriptors = {
     clerk.Strategy.emailLink: _StrategyDescriptor(
@@ -25,19 +37,6 @@ class StrategyButton extends StatelessWidget {
 
   static bool supports(clerk.Strategy strategy) =>
       _descriptors[strategy] is _StrategyDescriptor;
-
-  /// Constructs a new [StrategyButton].
-  const StrategyButton({
-    super.key,
-    required this.strategy,
-    required this.onClick,
-  });
-
-  /// The oAuth provider this button represents.
-  final clerk.Strategy strategy;
-
-  /// The function called when a button is tapped
-  final VoidCallback onClick;
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +76,8 @@ class StrategyButton extends StatelessWidget {
 }
 
 class _StrategyDescriptor {
+  const _StrategyDescriptor({required this.icon, required this.title});
+
   final IconData icon;
   final String title;
-
-  const _StrategyDescriptor({required this.icon, required this.title});
 }

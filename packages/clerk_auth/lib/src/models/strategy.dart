@@ -1,10 +1,7 @@
 import 'package:clerk_auth/clerk_auth.dart';
 
 class Strategy {
-  const Strategy({
-    required this.name,
-    this.provider,
-  });
+  const Strategy({required this.name, this.provider});
 
   factory Strategy.fromJson(String name) => named(name) ?? Strategy.unknown;
 
@@ -94,17 +91,21 @@ class Strategy {
 
         case null when name.startsWith(_oauthToken):
           return _strategies[name] = Strategy(
-              name: _oauthToken,
-              provider: name.substring(_oauthToken.length + 1));
+            name: _oauthToken,
+            provider: name.substring(_oauthToken.length + 1),
+          );
 
         case null when name.startsWith(_oauthCustom):
           return _strategies[name] = Strategy(
-              name: _oauthCustom,
-              provider: name.substring(_oauthCustom.length + 1));
+            name: _oauthCustom,
+            provider: name.substring(_oauthCustom.length + 1),
+          );
 
         case null when name.startsWith(_oauth):
           return _strategies[name] = Strategy(
-              name: _oauth, provider: name.substring(_oauth.length + 1));
+            name: _oauth,
+            provider: name.substring(_oauth.length + 1),
+          );
 
         default:
           return null;

@@ -37,7 +37,7 @@ class SocialConnectionButton extends StatelessWidget {
                 child: connection.logoUrl.isNotEmpty
                     ? Image.network(connection.logoUrl)
                     : Text(
-                        connection.name[0].toUpperCase(),
+                        connection.name.initials,
                         textAlign: TextAlign.center,
                         style: ClerkTextStyle.title.copyWith(height: .95),
                       ),
@@ -50,8 +50,11 @@ class SocialConnectionButton extends StatelessWidget {
                 children: [
                   logo,
                   horizontalMargin8,
-                  Text(connection.name,
-                      maxLines: 1, style: ClerkTextStyle.buttonTitle),
+                  Text(
+                    connection.name,
+                    maxLines: 1,
+                    style: ClerkTextStyle.buttonTitle,
+                  ),
                 ],
               );
             },

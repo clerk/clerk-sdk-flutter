@@ -4,9 +4,7 @@ part 'session_token.g.dart';
 
 @JsonSerializable()
 class SessionToken {
-  const SessionToken({
-    required this.jwt,
-  });
+  const SessionToken({required this.jwt});
 
   final String jwt;
 

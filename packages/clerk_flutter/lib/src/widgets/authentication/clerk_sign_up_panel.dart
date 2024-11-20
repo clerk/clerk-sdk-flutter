@@ -146,14 +146,15 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
 }
 
 class _Attribute {
-  final clerk.UserAttribute attr;
-  final bool isRequired;
-
   const _Attribute(this.attr, this.isRequired);
 
   factory _Attribute.fromMapEntry(
-          MapEntry<clerk.UserAttribute, clerk.UserAttributeData> entry) =>
+    MapEntry<clerk.UserAttribute, clerk.UserAttributeData> entry,
+  ) =>
       _Attribute(entry.key, entry.value.isRequired);
+
+  final clerk.UserAttribute attr;
+  final bool isRequired;
 
   int get index => attr.index;
 

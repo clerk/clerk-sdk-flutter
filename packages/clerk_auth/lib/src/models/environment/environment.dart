@@ -2,8 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'auth_config.dart';
 import 'display_config.dart';
-import 'user_settings.dart';
 import 'organization_settings.dart';
+import 'user_settings.dart';
 
 part 'environment.g.dart';
 
@@ -16,8 +16,6 @@ class Environment {
     this.organization = OrganizationSettings.empty,
     this.maintenanceMode = false,
   });
-
-  static const empty = Environment();
 
   @JsonKey(name: 'auth_config')
   final AuthConfig config;
@@ -34,6 +32,8 @@ class Environment {
   final bool maintenanceMode;
 
   bool get isEmpty => this == empty;
+
+  static const empty = Environment();
 
   static Environment fromJson(Map<String, dynamic> json) =>
       _$EnvironmentFromJson(json);

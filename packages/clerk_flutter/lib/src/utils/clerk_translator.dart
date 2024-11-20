@@ -1,14 +1,20 @@
 abstract class ClerkTranslator {
-  String translate(String phrase,
-      {String? substitution, List<String> substitutions = const []});
-  String alternatives(List<String> items,
-      {String connector = 'or', String? prefix});
+  String translate(
+    String phrase, {
+    String? substitution,
+    List<String> substitutions = const [],
+  });
+  String alternatives(
+    List<String> items, {
+    String connector = 'or',
+    String? prefix,
+  });
 }
 
 class DefaultClerkTranslator implements ClerkTranslator {
-  final substitutionKey = '###';
-
   const DefaultClerkTranslator();
+
+  final substitutionKey = '###';
 
   /// Translate a string into a different language. Identity function for English
   @override

@@ -17,9 +17,9 @@ class ClerkErrorMessage extends StatelessWidget {
 }
 
 class _ErrorMessage extends StatefulWidget {
-  final clerk.AuthError? error;
-
   const _ErrorMessage({required this.error});
+
+  final clerk.AuthError? error;
 
   @override
   State<_ErrorMessage> createState() => _ErrorMessageState();

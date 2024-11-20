@@ -16,20 +16,23 @@ class TokenCache {
   final logger = Logger('TokenCache');
   late final rsaKey = RSAPublicKey(publicKey);
 
-  bool get canRefreshSessionToken => clientToken.isNotEmpty && sessionId.isNotEmpty;
+  bool get canRefreshSessionToken =>
+      clientToken.isNotEmpty && sessionId.isNotEmpty;
 
   String _sessionId = '';
   String _clientToken = '';
   String _sessionToken = '';
   DateTime _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
 
-  bool get _sessionTokenHasExpired => DateTime.now().isAfter(_sessionTokenExpiry);
+  bool get _sessionTokenHasExpired =>
+      DateTime.now().isAfter(_sessionTokenExpiry);
 
   String get _sessionIdKey => '_clerkSessionId_${publicKey.hashCode}';
 
   String get _sessionTokenKey => '_clerkSessionToken_${publicKey.hashCode}';
 
-  String get _sessionTokenExpiryKey => '_clerkSessionTokenExpiry_${publicKey.hashCode}';
+  String get _sessionTokenExpiryKey =>
+      '_clerkSessionTokenExpiry_${publicKey.hashCode}';
 
   String get _clientTokenKey => '_clerkClientToken_${publicKey.hashCode}';
 
@@ -49,7 +52,8 @@ class TokenCache {
       _sessionId = sessionId ?? '';
       _sessionToken = sessionToken ?? '';
       _clientToken = clientToken ?? '';
-      _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(int.tryParse(ms.toString()) ?? 0);
+      _sessionTokenExpiry =
+          DateTime.fromMillisecondsSinceEpoch(int.tryParse(ms.toString()) ?? 0);
     }
   }
 

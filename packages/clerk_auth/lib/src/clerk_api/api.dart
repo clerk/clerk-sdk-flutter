@@ -102,9 +102,11 @@ class Api with Logging {
 
   // Sessions
 
-  Future<ApiResponse> activateSession(String id) => _fetchApiResponse('/client/sessions/$id/touch');
+  Future<ApiResponse> activateSession(String id) =>
+      _fetchApiResponse('/client/sessions/$id/touch');
 
-  Future<ApiResponse> signOutSession(String id) => _fetchApiResponse('/client/sessions/$id/remove');
+  Future<ApiResponse> signOutSession(String id) =>
+      _fetchApiResponse('/client/sessions/$id/remove');
 
   // Sign Up API
 
@@ -224,7 +226,8 @@ class Api with Logging {
       );
 
   Future<ApiResponse> retrieveSignIn(SignIn signIn) =>
-      _fetchApiResponse('/client/sign_ins/${signIn.id}', method: HttpMethod.get);
+      _fetchApiResponse('/client/sign_ins/${signIn.id}',
+          method: HttpMethod.get);
 
   Future<ApiResponse> prepareSignIn(
     SignIn signIn, {
@@ -328,7 +331,8 @@ class Api with Logging {
     );
   }
 
-  Future<ApiResponse> deleteEmailAddress(String emailAddressId) => _fetchApiResponse(
+  Future<ApiResponse> deleteEmailAddress(String emailAddressId) =>
+      _fetchApiResponse(
         '/me/email_addresses/$emailAddressId',
         requiresSessionId: true,
         method: HttpMethod.delete,
@@ -346,7 +350,8 @@ class Api with Logging {
     );
   }
 
-  Future<ApiResponse> deletePhoneNumber(String phoneNumberId) => _fetchApiResponse(
+  Future<ApiResponse> deletePhoneNumber(String phoneNumberId) =>
+      _fetchApiResponse(
         '/me/phone_numbers/$phoneNumberId',
         requiresSessionId: true,
         method: HttpMethod.delete,
@@ -355,8 +360,10 @@ class Api with Logging {
   // Session
 
   Future<String> sessionToken() async {
-    if (_tokenCache.sessionToken.isEmpty && _tokenCache.canRefreshSessionToken) {
-      final resp = await _fetch(path: '/client/sessions/${_tokenCache.sessionId}/tokens');
+    if (_tokenCache.sessionToken.isEmpty &&
+        _tokenCache.canRefreshSessionToken) {
+      final resp = await _fetch(
+          path: '/client/sessions/${_tokenCache.sessionId}/tokens');
       if (resp.statusCode == HttpStatus.ok) {
         final body = jsonDecode(resp.body) as Map<String, dynamic>;
         _tokenCache.sessionToken = body[_kJwtKey] as String;
@@ -389,7 +396,9 @@ class Api with Logging {
 
       final body = json.decode(resp.body) as Map<String, dynamic>;
       final errors = body[_kErrorsKey] != null
-          ? List<Map<String, dynamic>>.from(body[_kErrorsKey]).map(ApiError.fromJson).toList()
+          ? List<Map<String, dynamic>>.from(body[_kErrorsKey])
+              .map(ApiError.fromJson)
+              .toList()
           : null;
       final clientData = switch (body[_kClientKey]) {
         Map<String, dynamic> client when client.isNotEmpty => client,
@@ -398,7 +407,8 @@ class Api with Logging {
       if (clientData case Map<String, dynamic> clientJson) {
         final client = Client.fromJson(clientJson);
         _tokenCache.updateFrom(resp, client.activeSession);
-        return ApiResponse(client: client, status: resp.statusCode, errors: errors);
+        return ApiResponse(
+            client: client, status: resp.statusCode, errors: errors);
       } else {
         logSevere(body);
         return ApiResponse(status: resp.statusCode, errors: errors);
@@ -449,14 +459,19 @@ class Api with Logging {
     return resp;
   }
 
-  Uri _uri(String path, Map<String, dynamic> params) =>
-      Uri(scheme: _scheme, host: _domain, path: 'v1$path', queryParameters: params.toStringMap());
+  Uri _uri(String path, Map<String, dynamic> params) => Uri(
+      scheme: _scheme,
+      host: _domain,
+      path: 'v1$path',
+      queryParameters: params.toStringMap());
 
-  Map<String, String> _headers(HttpMethod method, [Map<String, String>? headers]) {
+  Map<String, String> _headers(HttpMethod method,
+      [Map<String, String>? headers]) {
     return {
       HttpHeaders.acceptHeader: 'application/json',
-      HttpHeaders.contentTypeHeader:
-          method.isGet ? 'application/json' : 'application/x-www-form-urlencoded',
+      HttpHeaders.contentTypeHeader: method.isGet
+          ? 'application/json'
+          : 'application/x-www-form-urlencoded',
       if (_tokenCache.clientToken.isNotEmpty) //
         HttpHeaders.authorizationHeader: _tokenCache.clientToken,
       ...?headers,
@@ -474,7 +489,8 @@ class Api with Logging {
     // decodes the string and then removes unnecessary trailing characters.
     // It's messy, and should be improved. I've probably missed something obvious.
     final domainPart = key.substring(domainStartPosition);
-    final encodedPart = domainPart.padRight(((domainPart.length - 1) ~/ 4) * 4 + 4, '=');
+    final encodedPart =
+        domainPart.padRight(((domainPart.length - 1) ~/ 4) * 4 + 4, '=');
     final encodedDomain = utf8.decode(base64.decode(encodedPart));
     return encodedDomain.split('\$').first;
   }

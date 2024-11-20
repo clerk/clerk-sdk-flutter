@@ -35,7 +35,8 @@ class _TopPortion extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('Create Organization', style: ClerkTextStyle.title, maxLines: 1),
+          const Text('Create Organization',
+              style: ClerkTextStyle.title, maxLines: 1),
           verticalMargin32,
           const Text('Logo', style: ClerkTextStyle.subtitle, maxLines: 1),
           verticalMargin10,
@@ -60,7 +61,8 @@ class _TopPortion extends StatelessWidget {
                           style: ClerkMaterialButtonStyle.light,
                           label: Text(
                             'Upload',
-                            style: TextStyle(color: ClerkColors.darkJungleGreen),
+                            style:
+                                TextStyle(color: ClerkColors.darkJungleGreen),
                           ),
                         ),
                       ),

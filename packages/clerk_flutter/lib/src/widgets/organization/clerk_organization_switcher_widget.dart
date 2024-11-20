@@ -40,7 +40,8 @@ class ClerkOrganizationSwitcherWidget extends StatelessWidget {
             ),
           ),
         ],
-        builder: (BuildContext context, MenuController controller, Widget? child) {
+        builder:
+            (BuildContext context, MenuController controller, Widget? child) {
           return GestureDetector(
             onTap: () {
               if (controller.isOpen) {

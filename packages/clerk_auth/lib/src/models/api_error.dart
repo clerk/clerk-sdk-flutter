@@ -16,7 +16,8 @@ class ApiError {
   final Map<String, String>? meta;
   final String? longMessage;
 
-  static ApiError fromJson(Map<String, dynamic> json) => _$ApiErrorFromJson(json);
+  static ApiError fromJson(Map<String, dynamic> json) =>
+      _$ApiErrorFromJson(json);
 
   Map<String, dynamic> toJson() => _$ApiErrorToJson(this);
 

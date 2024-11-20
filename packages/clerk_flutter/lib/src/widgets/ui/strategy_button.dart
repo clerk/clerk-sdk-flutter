@@ -23,7 +23,8 @@ class StrategyButton extends StatelessWidget {
     ),
   };
 
-  static bool supports(clerk.Strategy strategy) => _descriptors[strategy] is _StrategyDescriptor;
+  static bool supports(clerk.Strategy strategy) =>
+      _descriptors[strategy] is _StrategyDescriptor;
 
   /// Constructs a new [StrategyButton].
   const StrategyButton({

@@ -57,7 +57,8 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
                   closed: sessions.contains(session) == false,
                   selected: session == auth.client.activeSession,
                   showName: widget.showName,
-                  onTap: () => auth.call(context, () => auth.setActiveSession(session)),
+                  onTap: () =>
+                      auth.call(context, () => auth.setActiveSession(session)),
                 ),
               if (auth.env.config.singleSessionMode == false)
                 Padding(
@@ -279,7 +280,8 @@ class _SessionRow extends StatelessWidget {
                       backgroundColor: ClerkColors.mountainMist,
                       child: user.imageUrl is String
                           ? ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(16)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(16)),
                               child: Image.network(
                                 user.imageUrl!,
                                 width: 32,
@@ -287,7 +289,8 @@ class _SessionRow extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             )
-                          : Text(user.name.initials, style: ClerkTextStyle.subtitleDark),
+                          : Text(user.name.initials,
+                              style: ClerkTextStyle.subtitleDark),
                     ),
                     horizontalMargin16,
                     Column(
@@ -348,14 +351,16 @@ class _SessionRow extends StatelessWidget {
                               if (auth.client.sessions.length == 1) {
                                 auth.call(context, () => auth.signOut());
                               } else {
-                                auth.call(context, () => auth.signOutSession(session));
+                                auth.call(context,
+                                    () => auth.signOutSession(session));
                               }
                             },
                             label: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                const Icon(Icons.logout, color: ClerkColors.charcoalGrey, size: 11),
+                                const Icon(Icons.logout,
+                                    color: ClerkColors.charcoalGrey, size: 11),
                                 horizontalMargin8,
                                 Text(
                                   translator.translate('Sign Out'),

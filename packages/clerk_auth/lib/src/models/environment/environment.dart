@@ -35,7 +35,8 @@ class Environment {
 
   bool get isEmpty => this == empty;
 
-  static Environment fromJson(Map<String, dynamic> json) => _$EnvironmentFromJson(json);
+  static Environment fromJson(Map<String, dynamic> json) =>
+      _$EnvironmentFromJson(json);
 
   Map<String, dynamic> toJson() => _$EnvironmentToJson(this);
 }

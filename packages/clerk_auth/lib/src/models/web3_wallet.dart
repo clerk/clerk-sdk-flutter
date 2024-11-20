@@ -26,7 +26,8 @@ class Web3Wallet extends UserIdentifyingData {
   @override
   String get identifier => web3Wallet;
 
-  static Web3Wallet fromJson(Map<String, dynamic> json) => _$Web3WalletFromJson(json);
+  static Web3Wallet fromJson(Map<String, dynamic> json) =>
+      _$Web3WalletFromJson(json);
 
   Map<String, dynamic> toJson() => _$Web3WalletToJson(this);
 }

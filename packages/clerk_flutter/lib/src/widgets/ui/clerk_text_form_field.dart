@@ -103,7 +103,8 @@ class ClerkTextFormField extends StatelessWidget {
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onObscure,
-        child: Icon(obscureText ? Icons.visibility : Icons.visibility_off, size: 16),
+        child: Icon(obscureText ? Icons.visibility : Icons.visibility_off,
+            size: 16),
       );
     }
     return null;

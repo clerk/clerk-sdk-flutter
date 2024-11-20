@@ -27,5 +27,6 @@ class ApiResponse {
     };
   }
 
-  String get errorMessage => errors?.isNotEmpty == true ? errors!.join('; ') : 'Unknown error';
+  String get errorMessage =>
+      errors?.isNotEmpty == true ? errors!.join('; ') : 'Unknown error';
 }

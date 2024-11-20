@@ -22,7 +22,8 @@ Widget buildClerkUserButtonUseCase(BuildContext context) {
       padding: switch (quadrant) {
         _Quadrant.topLeft => const EdgeInsets.only(left: 16.0, top: 16.0),
         _Quadrant.topRight => const EdgeInsets.only(right: 16.0, top: 16.0),
-        _Quadrant.bottomRight => const EdgeInsets.only(right: 16.0, bottom: 16.0),
+        _Quadrant.bottomRight =>
+          const EdgeInsets.only(right: 16.0, bottom: 16.0),
         _Quadrant.bottomLeft => const EdgeInsets.only(left: 16.0, bottom: 16.0),
       },
       child: const ClerkUserButton(),

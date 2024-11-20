@@ -40,7 +40,8 @@ class Organization {
   @JsonKey(fromJson: intToDateTime)
   final DateTime? createdAt;
 
-  static Organization fromJson(Map<String, dynamic> json) => _$OrganizationFromJson(json);
+  static Organization fromJson(Map<String, dynamic> json) =>
+      _$OrganizationFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrganizationToJson(this);
 }

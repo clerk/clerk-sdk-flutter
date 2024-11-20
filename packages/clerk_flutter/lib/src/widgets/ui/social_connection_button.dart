@@ -20,7 +20,8 @@ class SocialConnectionButton extends StatelessWidget {
     return SizedBox(
       height: 30.0,
       child: MaterialButton(
-        onPressed: () => ClerkAuth.nonDependentOf(context).sso(context, connection.strategy),
+        onPressed: () =>
+            ClerkAuth.nonDependentOf(context).sso(context, connection.strategy),
         elevation: 2.0,
         shape: RoundedRectangleBorder(
           borderRadius: borderRadius4,
@@ -49,7 +50,8 @@ class SocialConnectionButton extends StatelessWidget {
                 children: [
                   logo,
                   horizontalMargin8,
-                  Text(connection.name, maxLines: 1, style: ClerkTextStyle.buttonTitle),
+                  Text(connection.name,
+                      maxLines: 1, style: ClerkTextStyle.buttonTitle),
                 ],
               );
             },

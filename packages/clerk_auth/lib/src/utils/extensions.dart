@@ -1,5 +1,6 @@
 extension MapExtension on Map {
-  Map<String, String> toStringMap() => map((k, v) => MapEntry(k.toString(), v.toString()));
+  Map<String, String> toStringMap() =>
+      map((k, v) => MapEntry(k.toString(), v.toString()));
 }
 
 extension StringExtension on String {

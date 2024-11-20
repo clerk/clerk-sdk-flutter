@@ -14,7 +14,8 @@ class PasskeySettings {
   final bool allowAutofill;
   final bool showSignInButton;
 
-  static PasskeySettings fromJson(Map<String, dynamic> json) => _$PasskeySettingsFromJson(json);
+  static PasskeySettings fromJson(Map<String, dynamic> json) =>
+      _$PasskeySettingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PasskeySettingsToJson(this);
 }

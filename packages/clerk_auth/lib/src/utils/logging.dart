@@ -35,7 +35,8 @@ mixin Logging {
   /// was made. This can be advantageous if a log listener wants to handler
   /// records of different zones differently (e.g. group log records by HTTP
   /// request if each HTTP request handler runs in it's own zone).
-  void log(Level logLevel, Object? message, [Object? error, StackTrace? stackTrace, Zone? zone]) {
+  void log(Level logLevel, Object? message,
+      [Object? error, StackTrace? stackTrace, Zone? zone]) {
     if (message is Map) {
       message = const JsonEncoder.withIndent('  ').convert(message);
     }

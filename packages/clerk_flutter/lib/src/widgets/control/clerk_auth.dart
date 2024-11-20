@@ -66,7 +66,8 @@ class ClerkAuth extends StatefulWidget {
     return result!.auth;
   }
 
-  static ClerkTranslator translatorOf(BuildContext context) => nonDependentOf(context).translator;
+  static ClerkTranslator translatorOf(BuildContext context) =>
+      nonDependentOf(context).translator;
 
   static clerk.DisplayConfig displayConfigOf(BuildContext context) =>
       nonDependentOf(context).env.display;
@@ -161,7 +162,8 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
     this.translator = const DefaultClerkTranslator(),
     Widget? loading,
     super.persistor,
-  }) : _loadingOverlay = OverlayEntry(builder: (context) => loading ?? defaultLoadingWidget);
+  }) : _loadingOverlay =
+            OverlayEntry(builder: (context) => loading ?? defaultLoadingWidget);
 
   @override
   void update() => notifyListeners();
@@ -264,7 +266,8 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   /// but may still not be acceptable to the back end
   String? checkPassword(String? password, String? confirmation) {
     if (password != confirmation) {
-      return translator.translate('Password and password confirmation must match');
+      return translator
+          .translate('Password and password confirmation must match');
     }
 
     if (password case String password when password.isNotEmpty) {
@@ -288,8 +291,8 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
       }
 
       if (missing.isNotEmpty) {
-        final value =
-            translator.alternatives(missing, connector: 'and', prefix: 'Password requires');
+        final value = translator.alternatives(missing,
+            connector: 'and', prefix: 'Password requires');
         return value.replaceFirst('###', criteria.allowedSpecialCharacters);
       }
     }
@@ -297,7 +300,8 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
     return null;
   }
 
-  void addError(String message) => _errors.add(clerk.AuthError(message: message));
+  void addError(String message) =>
+      _errors.add(clerk.AuthError(message: message));
 }
 
 class _SsoWebViewHost extends StatefulWidget {

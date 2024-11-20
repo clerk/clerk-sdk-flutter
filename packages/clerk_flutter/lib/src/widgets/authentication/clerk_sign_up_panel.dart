@@ -25,11 +25,14 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
   final _values = <clerk.UserAttribute, String>{};
   bool _obscurePassword = true;
 
-  Future<void> _continue(ClerkAuthProvider auth, {String? code, clerk.Strategy? strategy}) async {
+  Future<void> _continue(ClerkAuthProvider auth,
+      {String? code, clerk.Strategy? strategy}) async {
     await auth.call(context, () async {
       final password = _values[clerk.UserAttribute.password];
-      final passwordConfirmation = _values[clerk.UserAttribute.passwordConfirmation];
-      if (auth.checkPassword(password, passwordConfirmation) case String errorMessage) {
+      final passwordConfirmation =
+          _values[clerk.UserAttribute.passwordConfirmation];
+      if (auth.checkPassword(password, passwordConfirmation)
+          case String errorMessage) {
         auth.addError(errorMessage);
       } else {
         await auth.attemptSignUp(
@@ -38,7 +41,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
           lastName: _values[clerk.UserAttribute.lastName],
           username: _values[clerk.UserAttribute.username],
           emailAddress: _values[clerk.UserAttribute.emailAddress],
-          phoneNumber: _values[clerk.UserAttribute.phoneNumber]?.replaceAll(_phoneNumberRE, ''),
+          phoneNumber: _values[clerk.UserAttribute.phoneNumber]
+              ?.replaceAll(_phoneNumberRE, ''),
           password: password,
           passwordConfirmation: passwordConfirmation,
           code: code,
@@ -53,7 +57,9 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
     final translator = auth.translator;
     final env = auth.env;
     final attributes = [
-      ...env.user.attributes.entries.where((a) => a.value.isEnabled).map(_Attribute.fromMapEntry),
+      ...env.user.attributes.entries
+          .where((a) => a.value.isEnabled)
+          .map(_Attribute.fromMapEntry),
       const _Attribute(clerk.UserAttribute.passwordConfirmation, true),
     ]..sort((a, b) => a.index - b.index);
     return Column(
@@ -69,7 +75,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
             substitution: _values[clerk.UserAttribute.phoneNumber],
           ),
           onSubmit: (code) async {
-            await _continue(auth, strategy: clerk.Strategy.phoneCode, code: code);
+            await _continue(auth,
+                strategy: clerk.Strategy.phoneCode, code: code);
             return false;
           },
         ),
@@ -82,7 +89,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
             substitution: _values[clerk.UserAttribute.emailAddress],
           ),
           onSubmit: (code) async {
-            await _continue(auth, strategy: clerk.Strategy.emailCode, code: code);
+            await _continue(auth,
+                strategy: clerk.Strategy.emailCode, code: code);
             return false;
           },
         ),
@@ -104,9 +112,11 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
                           initial: _values[attribute.attr],
                           label: attribute.title,
                           optional: attribute.isOptional,
-                          obscureText: attribute.needsObscuring && _obscurePassword,
+                          obscureText:
+                              attribute.needsObscuring && _obscurePassword,
                           onObscure: attribute.needsObscuring
-                              ? () => setState(() => _obscurePassword = !_obscurePassword)
+                              ? () => setState(
+                                  () => _obscurePassword = !_obscurePassword)
                               : null,
                           onChanged: (value) => _values[attribute.attr] = value,
                         ),
@@ -141,7 +151,8 @@ class _Attribute {
 
   const _Attribute(this.attr, this.isRequired);
 
-  factory _Attribute.fromMapEntry(MapEntry<clerk.UserAttribute, clerk.UserAttributeData> entry) =>
+  factory _Attribute.fromMapEntry(
+          MapEntry<clerk.UserAttribute, clerk.UserAttributeData> entry) =>
       _Attribute(entry.key, entry.value.isRequired);
 
   int get index => attr.index;

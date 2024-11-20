@@ -82,7 +82,8 @@ class DisplayConfig {
   final String? termsUrl;
   final String? userProfileUrl;
 
-  static DisplayConfig fromJson(Map<String, dynamic> json) => _$DisplayConfigFromJson(json);
+  static DisplayConfig fromJson(Map<String, dynamic> json) =>
+      _$DisplayConfigFromJson(json);
 
   Map<String, dynamic> toJson() => _$DisplayConfigToJson(this);
 }

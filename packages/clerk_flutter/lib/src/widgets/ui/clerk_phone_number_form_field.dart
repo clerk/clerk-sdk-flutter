@@ -62,7 +62,8 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
         DecoratedBox(
           decoration: insetBoxShadowDecoration,
           child: PhoneInput(
-            initialValue: initial is String ? PhoneNumber.parse(initial!) : null,
+            initialValue:
+                initial is String ? PhoneNumber.parse(initial!) : null,
             showFlagInInput: true,
             flagSize: 16,
             onChanged: (phoneNumber) {
@@ -72,7 +73,8 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
             },
             decoration: const InputDecoration(
               errorStyle: TextStyle(
-                  color: Colors.transparent, height: 0.01), // weird hack because 0 doesn't work
+                  color: Colors.transparent,
+                  height: 0.01), // weird hack because 0 doesn't work
               isDense: true,
               border: InputBorder.none,
               constraints: BoxConstraints(maxHeight: 32, minHeight: 32),

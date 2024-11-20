@@ -54,7 +54,8 @@ class PasswordSettings {
   @JsonKey(fromJson: isTrue)
   final bool enforceHibpOnSignIn;
 
-  static PasswordSettings fromJson(Map<String, dynamic> json) => _$PasswordSettingsFromJson(json);
+  static PasswordSettings fromJson(Map<String, dynamic> json) =>
+      _$PasswordSettingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PasswordSettingsToJson(this);
 
@@ -69,7 +70,10 @@ class PasswordSettings {
 
   bool meetsSpecialCharCriteria(String password) =>
       requireSpecialChar == false ||
-      allowedSpecialCharacters.runes.toSet().intersection(password.runes.toSet()).isNotEmpty;
+      allowedSpecialCharacters.runes
+          .toSet()
+          .intersection(password.runes.toSet())
+          .isNotEmpty;
 
   bool meetsRequiredCriteria(String password) =>
       meetsLowerCaseCriteria(password) &&

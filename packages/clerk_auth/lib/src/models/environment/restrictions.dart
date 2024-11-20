@@ -29,7 +29,8 @@ class Restrictions {
   @JsonKey(name: 'ignore_dots_for_email_addresses', readValue: _readStatus)
   final bool ignoreDotsForEmailAddresses;
 
-  static Restrictions fromJson(Map<String, dynamic> json) => _$RestrictionsFromJson(json);
+  static Restrictions fromJson(Map<String, dynamic> json) =>
+      _$RestrictionsFromJson(json);
 
   Map<String, dynamic> toJson() => _$RestrictionsToJson(this);
 }

@@ -43,7 +43,8 @@ class SocialConnection {
   @JsonKey(name: 'deprecated', fromJson: isTrue)
   final bool deprecated;
 
-  static SocialConnection fromJson(Map<String, dynamic> json) => _$SocialConnectionFromJson(json);
+  static SocialConnection fromJson(Map<String, dynamic> json) =>
+      _$SocialConnectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$SocialConnectionToJson(this);
 }

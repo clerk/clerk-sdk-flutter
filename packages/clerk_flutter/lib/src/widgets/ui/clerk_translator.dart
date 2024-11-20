@@ -1,6 +1,8 @@
 abstract class ClerkTranslator {
-  String translate(String phrase, {String? substitution, List<String> substitutions = const []});
-  String alternatives(List<String> items, {String connector = 'or', String? prefix});
+  String translate(String phrase,
+      {String? substitution, List<String> substitutions = const []});
+  String alternatives(List<String> items,
+      {String connector = 'or', String? prefix});
 }
 
 class DefaultClerkTranslator implements ClerkTranslator {
@@ -10,7 +12,8 @@ class DefaultClerkTranslator implements ClerkTranslator {
 
   /// Translate a string into a different language. Identity function for English
   @override
-  String translate(String phrase, {String? substitution, List<String> substitutions = const []}) {
+  String translate(String phrase,
+      {String? substitution, List<String> substitutions = const []}) {
     // if a single `substitution` is present, replace the first instance of `substitutionKey`
     // (default `###`) with it
     if (substitution case String sub) {
@@ -42,7 +45,8 @@ class DefaultClerkTranslator implements ClerkTranslator {
   /// Should be overridden for languages where this does not provide the correct
   /// representation for alternates
   @override
-  String alternatives(List<String> items, {String connector = 'or', String? prefix}) {
+  String alternatives(List<String> items,
+      {String connector = 'or', String? prefix}) {
     if (items.isEmpty) return '';
 
     final buf = StringBuffer();

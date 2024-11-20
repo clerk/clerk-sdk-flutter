@@ -20,7 +20,8 @@ class AttackProtection {
   @JsonKey(readValue: _readEmailLinkRequireSameClient)
   final bool emailLinkRequireSameClient;
 
-  static AttackProtection fromJson(Map<String, dynamic> json) => _$AttackProtectionFromJson(json);
+  static AttackProtection fromJson(Map<String, dynamic> json) =>
+      _$AttackProtectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$AttackProtectionToJson(this);
 }
@@ -40,10 +41,12 @@ class UserLockout {
   @JsonKey(name: 'enabled')
   final bool isEnabled;
 
-  @JsonKey(name: 'duration_in_minutes', toJson: _fromDuration, fromJson: _toDuration)
+  @JsonKey(
+      name: 'duration_in_minutes', toJson: _fromDuration, fromJson: _toDuration)
   final Duration duration;
 
-  static UserLockout fromJson(Map<String, dynamic> json) => _$UserLockoutFromJson(json);
+  static UserLockout fromJson(Map<String, dynamic> json) =>
+      _$UserLockoutFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserLockoutToJson(this);
 }
@@ -55,4 +58,5 @@ int _fromDuration(Duration duration) => duration.inMinutes;
 
 bool _readPiiEnabled(map, _) => map['pii']?['enabled'] == true;
 
-bool _readEmailLinkRequireSameClient(map, _) => map['email_link']?['require_same_client'] == true;
+bool _readEmailLinkRequireSameClient(map, _) =>
+    map['email_link']?['require_same_client'] == true;

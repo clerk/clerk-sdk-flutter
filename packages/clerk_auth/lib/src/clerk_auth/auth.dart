@@ -31,7 +31,8 @@ class Auth {
 
   // `init` must be called before `env` or `client` are accessed
   Future<void> init() async {
-    final [client, env] = await Future.wait([_api.createClient(), _api.environment()]);
+    final [client, env] =
+        await Future.wait([_api.createClient(), _api.environment()]);
     this.client = client as Client;
     this.env = env as Environment;
   }
@@ -77,10 +78,15 @@ class Auth {
   }
 
   Future<Client> oauthSignIn({required Strategy strategy}) async {
-    await _api.createSignIn(strategy: strategy, redirectUrl: oauthRedirect).then(_housekeeping);
+    await _api
+        .createSignIn(strategy: strategy, redirectUrl: oauthRedirect)
+        .then(_housekeeping);
     if (client.signIn case SignIn signIn) {
       await _api
-          .prepareSignIn(signIn, stage: Stage.first, strategy: strategy, redirectUrl: oauthRedirect)
+          .prepareSignIn(signIn,
+              stage: Stage.first,
+              strategy: strategy,
+              redirectUrl: oauthRedirect)
           .then(_housekeeping);
     }
 
@@ -102,14 +108,19 @@ class Auth {
     if (client.signIn == null && identifier is String) {
       // if a password has been presented, we can immediately attempt a sign in
       // if `password` is null it will be ignored
-      await _api.createSignIn(identifier: identifier, password: password).then(_housekeeping);
+      await _api
+          .createSignIn(identifier: identifier, password: password)
+          .then(_housekeeping);
     }
 
     switch (client.signIn) {
       case SignIn signIn when strategy?.isOauth == true:
-        await _api.sendOauthToken(signIn, strategy: strategy!, token: token).then(_housekeeping);
+        await _api
+            .sendOauthToken(signIn, strategy: strategy!, token: token)
+            .then(_housekeeping);
 
-      case SignIn signIn when strategy == Strategy.emailLink && redirectUrl is String:
+      case SignIn signIn
+          when strategy == Strategy.emailLink && redirectUrl is String:
         await _api
             .prepareSignIn(
               signIn,
@@ -130,7 +141,8 @@ class Auth {
         return signInCompleter.future;
 
       case SignIn signIn
-          when signIn.status == Status.needsFirstFactor && strategy == Strategy.password:
+          when signIn.status == Status.needsFirstFactor &&
+              strategy == Strategy.password:
         await _api
             .attemptSignIn(
               signIn,
@@ -140,21 +152,28 @@ class Auth {
             )
             .then(_housekeeping);
 
-      case SignIn signIn when signIn.status.needsFactor && strategy?.requiresCode == true:
+      case SignIn signIn
+          when signIn.status.needsFactor && strategy?.requiresCode == true:
         final stage = Stage.forStatus(signIn.status);
         if (signIn.verificationFor(stage) is! Verification) {
-          await _api.prepareSignIn(signIn, stage: stage, strategy: strategy!).then(_housekeeping);
+          await _api
+              .prepareSignIn(signIn, stage: stage, strategy: strategy!)
+              .then(_housekeeping);
         }
         if (client.signIn case SignIn signIn
-            when signIn.verificationFor(stage) is Verification && code?.length == _codeLength) {
+            when signIn.verificationFor(stage) is Verification &&
+                code?.length == _codeLength) {
           await _api
-              .attemptSignIn(signIn, stage: stage, strategy: strategy!, code: code)
+              .attemptSignIn(signIn,
+                  stage: stage, strategy: strategy!, code: code)
               .then(_housekeeping);
         }
 
       case SignIn signIn when signIn.status.needsFactor && strategy is Strategy:
         final stage = Stage.forStatus(signIn.status);
-        await _api.prepareSignIn(signIn, stage: stage, strategy: strategy).then(_housekeeping);
+        await _api
+            .prepareSignIn(signIn, stage: stage, strategy: strategy)
+            .then(_housekeeping);
         await _api
             .attemptSignIn(signIn, stage: stage, strategy: strategy, code: code)
             .then(_housekeeping);
@@ -199,8 +218,11 @@ class Auth {
 
     if (client.user is! User) {
       switch (client.signUp) {
-        case SignUp signUp when strategy?.requiresCode == true && code is String:
-          await _api.attemptSignUp(signUp, strategy: strategy!, code: code).then(_housekeeping);
+        case SignUp signUp
+            when strategy?.requiresCode == true && code is String:
+          await _api
+              .attemptSignUp(signUp, strategy: strategy!, code: code)
+              .then(_housekeeping);
 
         case SignUp signUp
             when signUp.status == Status.missingRequirements &&
@@ -216,9 +238,12 @@ class Auth {
             when signUp.status == Status.missingRequirements &&
                 signUp.missingFields.isEmpty &&
                 strategy is Strategy:
-          await _api.prepareSignUp(signUp, strategy: strategy).then(_housekeeping);
           await _api
-              .attemptSignUp(signUp, strategy: strategy, code: code, signature: signature)
+              .prepareSignUp(signUp, strategy: strategy)
+              .then(_housekeeping);
+          await _api
+              .attemptSignUp(signUp,
+                  strategy: strategy, code: code, signature: signature)
               .then(_housekeeping);
 
         case SignUp signUp when signUp.status == Status.missingRequirements:
@@ -253,12 +278,14 @@ class Auth {
     update();
   }
 
-  void _pollForCompletion<T>(Completer<T> completer, Future<T?> Function() fn) async {
+  void _pollForCompletion<T>(
+      Completer<T> completer, Future<T?> Function() fn) async {
     while (true) {
       final expiry = signIn?.firstFactorVerification?.expireAt;
       if (expiry?.isAfter(DateTime.now()) != true) {
         // return if expiry has expired or is null
-        completer.completeError(AuthError(message: 'Email Link not clicked in required timeframe'));
+        completer.completeError(
+            AuthError(message: 'Email Link not clicked in required timeframe'));
         update();
         return;
       }

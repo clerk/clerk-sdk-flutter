@@ -56,7 +56,8 @@ class _MainAppState extends State<MainApp> {
             child: Center(
               child: ClerkAuthBuilder(
                 signedInBuilder: (context, auth) => const ClerkUserButton(),
-                signedOutBuilder: (context, auth) => const ClerkAuthenticationWidget(),
+                signedOutBuilder: (context, auth) =>
+                    const ClerkAuthenticationWidget(),
               ),
             ),
           ),

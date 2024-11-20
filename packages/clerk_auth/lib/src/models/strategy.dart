@@ -37,12 +37,16 @@ class Strategy {
   static const passkey = Strategy(name: 'passkey');
   static const password = Strategy(name: 'password');
   static const phoneCode = Strategy(name: 'phone_code');
-  static const resetPasswordEmailCode = Strategy(name: 'reset_password_email_code');
-  static const resetPasswordPhoneCode = Strategy(name: 'reset_password_phone_code');
+  static const resetPasswordEmailCode =
+      Strategy(name: 'reset_password_email_code');
+  static const resetPasswordPhoneCode =
+      Strategy(name: 'reset_password_phone_code');
   static const saml = Strategy(name: 'saml');
   static const ticket = Strategy(name: 'ticket');
-  static const web3MetamaskSignature = Strategy(name: 'web3_metamask_signature');
-  static const web3CoinbaseSignature = Strategy(name: 'web3_coinbase_signature');
+  static const web3MetamaskSignature =
+      Strategy(name: 'web3_metamask_signature');
+  static const web3CoinbaseSignature =
+      Strategy(name: 'web3_coinbase_signature');
   static final verificationStrategies = {
     admin.name: admin,
     emailCode.name: emailCode,
@@ -89,16 +93,18 @@ class Strategy {
           return strategy;
 
         case null when name.startsWith(_oauthToken):
-          return _strategies[name] =
-              Strategy(name: _oauthToken, provider: name.substring(_oauthToken.length + 1));
+          return _strategies[name] = Strategy(
+              name: _oauthToken,
+              provider: name.substring(_oauthToken.length + 1));
 
         case null when name.startsWith(_oauthCustom):
-          return _strategies[name] =
-              Strategy(name: _oauthCustom, provider: name.substring(_oauthCustom.length + 1));
+          return _strategies[name] = Strategy(
+              name: _oauthCustom,
+              provider: name.substring(_oauthCustom.length + 1));
 
         case null when name.startsWith(_oauth):
-          return _strategies[name] =
-              Strategy(name: _oauth, provider: name.substring(_oauth.length + 1));
+          return _strategies[name] = Strategy(
+              name: _oauth, provider: name.substring(_oauth.length + 1));
 
         default:
           return null;

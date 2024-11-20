@@ -67,7 +67,8 @@ class AuthConfig {
   @JsonKey(name: 'password', fromJson: isOn)
   final bool usesPassword;
 
-  static AuthConfig fromJson(Map<String, dynamic> json) => _$AuthConfigFromJson(json);
+  static AuthConfig fromJson(Map<String, dynamic> json) =>
+      _$AuthConfigFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthConfigToJson(this);
 }

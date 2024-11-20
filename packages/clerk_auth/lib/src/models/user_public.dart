@@ -22,7 +22,8 @@ class UserPublic {
   @JsonKey(defaultValue: false)
   final bool hasImage;
 
-  static UserPublic fromJson(Map<String, dynamic> json) => _$UserPublicFromJson(json);
+  static UserPublic fromJson(Map<String, dynamic> json) =>
+      _$UserPublicFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserPublicToJson(this);
 }

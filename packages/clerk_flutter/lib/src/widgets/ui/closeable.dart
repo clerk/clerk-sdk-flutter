@@ -23,8 +23,10 @@ class Closeable extends StatelessWidget {
     this.duration = _defaultDuration,
     this.axis = ClosingAxis.vertical,
     this.alignment = Alignment.topLeft,
-  })  : assert((closed is bool) || (open is bool), 'One of closed or open required'),
-        assert((closed is bool) != (open is bool), 'Only one of closed or open allowed'),
+  })  : assert((closed is bool) || (open is bool),
+            'One of closed or open required'),
+        assert((closed is bool) != (open is bool),
+            'Only one of closed or open allowed'),
         _value = (open == true || closed == false) ? 1 : 0;
 
   final Duration duration;
@@ -68,8 +70,10 @@ class AnimatingCloseable extends StatefulWidget {
     this.duration = _defaultDuration,
     this.axis = ClosingAxis.vertical,
     this.alignment = Alignment.topLeft,
-  })  : assert((closed is bool) || (open is bool), 'One of closed or open required'),
-        assert((closed is bool) != (open is bool), 'Only one of closed or open allowed');
+  })  : assert((closed is bool) || (open is bool),
+            'One of closed or open required'),
+        assert((closed is bool) != (open is bool),
+            'Only one of closed or open allowed');
 
   @override
   State<AnimatingCloseable> createState() => _AnimatingCloseableState();

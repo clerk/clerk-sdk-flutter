@@ -10,7 +10,8 @@ class SessionToken {
 
   final String jwt;
 
-  static SessionToken fromJson(Map<String, dynamic> json) => _$SessionTokenFromJson(json);
+  static SessionToken fromJson(Map<String, dynamic> json) =>
+      _$SessionTokenFromJson(json);
 
   Map<String, dynamic> toJson() => _$SessionTokenToJson(this);
 }

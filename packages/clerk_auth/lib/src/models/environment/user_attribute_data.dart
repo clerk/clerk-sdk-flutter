@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../strategy.dart';
 import '../helpers.dart';
+import '../strategy.dart';
 
 part 'user_attribute_data.g.dart';
 
@@ -17,8 +17,6 @@ class UserAttributeData {
     this.verifyAtSignUp = false,
     this.verifications = const [],
   });
-
-  static const empty = UserAttributeData();
 
   @JsonKey(fromJson: toStrategyList)
   final List<Strategy> firstFactors;
@@ -43,6 +41,8 @@ class UserAttributeData {
 
   @JsonKey(name: 'required', fromJson: isTrue)
   final bool isRequired;
+
+  static const empty = UserAttributeData();
 
   static UserAttributeData fromJson(Map<String, dynamic> json) =>
       _$UserAttributeDataFromJson(json);

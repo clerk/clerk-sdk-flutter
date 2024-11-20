@@ -2,11 +2,6 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
 class ClerkCodeInput extends StatelessWidget {
-  final bool open;
-  final String? title;
-  final String? subtitle;
-  final Future<bool> Function(String) onSubmit;
-
   const ClerkCodeInput({
     super.key,
     required this.open,
@@ -14,6 +9,11 @@ class ClerkCodeInput extends StatelessWidget {
     this.title,
     this.subtitle,
   });
+
+  final bool open;
+  final String? title;
+  final String? subtitle;
+  final Future<bool> Function(String) onSubmit;
 
   @override
   Widget build(BuildContext context) {

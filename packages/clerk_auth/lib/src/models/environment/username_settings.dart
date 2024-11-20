@@ -9,10 +9,10 @@ class UsernameSettings {
     this.maxLength = 0,
   });
 
-  static const empty = UsernameSettings();
-
   final int minLength;
   final int maxLength;
+
+  static const empty = UsernameSettings();
 
   static UsernameSettings fromJson(Map<String, dynamic> json) =>
       _$UsernameSettingsFromJson(json);

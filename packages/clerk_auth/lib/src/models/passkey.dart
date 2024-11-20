@@ -7,7 +7,7 @@ part 'passkey.g.dart';
 
 @JsonSerializable()
 class Passkey {
-  Passkey({
+  const Passkey({
     required this.id,
     required this.name,
     required this.verification,

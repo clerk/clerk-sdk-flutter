@@ -22,12 +22,6 @@ class PasswordSettings {
     this.enforceHibpOnSignIn = false,
   });
 
-  static final _lowerCaseRE = RegExp(r'[a-z]');
-  static final _upperCaseRE = RegExp(r'[A-Z]');
-  static final _numberRE = RegExp(r'[0-9]');
-
-  static const empty = PasswordSettings();
-
   final String allowedSpecialCharacters;
   final int minZxcvbnStrength;
   final int minLength;
@@ -53,6 +47,12 @@ class PasswordSettings {
 
   @JsonKey(fromJson: isTrue)
   final bool enforceHibpOnSignIn;
+
+  static final _lowerCaseRE = RegExp(r'[a-z]');
+  static final _upperCaseRE = RegExp(r'[A-Z]');
+  static final _numberRE = RegExp(r'[0-9]');
+
+  static const empty = PasswordSettings();
 
   static PasswordSettings fromJson(Map<String, dynamic> json) =>
       _$PasswordSettingsFromJson(json);

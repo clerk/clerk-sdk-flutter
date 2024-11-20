@@ -20,8 +20,6 @@ class UserSettings {
     this.saml = false,
   });
 
-  static const empty = UserSettings();
-
   final SignInSettings signIn;
   final SignUpSettings signUp;
   final Restrictions restrictions;
@@ -39,6 +37,8 @@ class UserSettings {
 
   @JsonKey(name: 'social')
   final Map<String, SocialConnection> socialSettings;
+
+  static const empty = UserSettings();
 
   static UserSettings fromJson(Map<String, dynamic> json) =>
       _$UserSettingsFromJson(json);

@@ -8,9 +8,9 @@ class OrganizationActions {
     this.adminDelete = false,
   });
 
-  static const empty = OrganizationActions();
-
   final bool adminDelete;
+
+  static const empty = OrganizationActions();
 
   static OrganizationActions fromJson(Map<String, dynamic> json) =>
       _$OrganizationActionsFromJson(json);

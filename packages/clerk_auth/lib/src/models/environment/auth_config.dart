@@ -27,8 +27,6 @@ class AuthConfig {
     this.usesPassword = false,
   });
 
-  static const empty = AuthConfig();
-
   final String id;
   final bool singleSessionMode;
   final bool enhancedEmailDeliverability;
@@ -66,6 +64,8 @@ class AuthConfig {
 
   @JsonKey(name: 'password', fromJson: isOn)
   final bool usesPassword;
+
+  static const empty = AuthConfig();
 
   static AuthConfig fromJson(Map<String, dynamic> json) =>
       _$AuthConfigFromJson(json);

@@ -10,10 +10,10 @@ class SignInSettings {
     this.secondFactorRequired = false,
   });
 
-  static const empty = SignInSettings();
-
   @JsonKey(readValue: _readSecondFactorRequired)
   final bool secondFactorRequired;
+
+  static const empty = SignInSettings();
 
   static SignInSettings fromJson(Map<String, dynamic> json) =>
       _$SignInSettingsFromJson(json);

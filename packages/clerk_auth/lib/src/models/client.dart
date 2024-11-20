@@ -16,8 +16,6 @@ class Client {
     this.createdAt,
   });
 
-  static const empty = Client();
-
   final String? id;
   final SignIn? signIn;
   final SignUp? signUp;
@@ -29,6 +27,8 @@ class Client {
 
   @JsonKey(fromJson: intToDateTime)
   final DateTime? createdAt;
+
+  static const empty = Client();
 
   bool get isEmpty => this == empty;
 

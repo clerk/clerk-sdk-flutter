@@ -6,7 +6,7 @@ part 'organization_membership.g.dart';
 
 @JsonSerializable()
 class OrganizationMembership {
-  OrganizationMembership({
+  const OrganizationMembership({
     required this.id,
     required this.role,
     required this.updatedAt,

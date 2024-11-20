@@ -12,10 +12,10 @@ class OrganizationDomains {
     this.isEnabled = false,
   });
 
-  static const empty = OrganizationDomains();
-
   final String defaultRole;
   final List<EnrollmentMode> enrollmentModes;
+
+  static const empty = OrganizationDomains();
 
   @JsonKey(name: 'enabled')
   final bool isEnabled;

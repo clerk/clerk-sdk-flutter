@@ -6,10 +6,7 @@ import 'clerk_auth.dart';
 /// A widget that builds its child only if we are signed out
 /// i.e. a user is not present on the client
 class ClerkSignedOut extends StatelessWidget {
-  const ClerkSignedOut({
-    super.key,
-    required this.child,
-  });
+  const ClerkSignedOut({super.key, required this.child});
 
   final Widget child;
 

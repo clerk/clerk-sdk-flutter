@@ -14,7 +14,8 @@ class _ClerkSSOPanelState extends State<ClerkSSOPanel> {
   Widget build(BuildContext context) {
     final auth = ClerkAuth.of(context);
     final env = auth.env;
-    final oauthStrategies = env.config.identificationStrategies.where((i) => i.isOauth);
+    final oauthStrategies =
+        env.config.identificationStrategies.where((i) => i.isOauth);
     final socialConnections = env.user.socialSettings.values.where(
       (s) => oauthStrategies.contains(s.strategy),
     );

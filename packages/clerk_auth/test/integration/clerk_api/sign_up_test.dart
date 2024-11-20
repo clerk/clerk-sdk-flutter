@@ -14,7 +14,8 @@ void main() {
   late final Api api;
   late final TestEnv env;
   final httpClient = TestHttpClient();
-  final expireAt = DateTime.now().add(const Duration(minutes: 5)).millisecondsSinceEpoch;
+  final expireAt =
+      DateTime.now().add(const Duration(minutes: 5)).millisecondsSinceEpoch;
 
   String emailAddress = '';
   String phoneNumber = '';
@@ -30,7 +31,10 @@ void main() {
 
   setUpAll(() async {
     env = TestEnv('.env.test');
-    api = Api(publicKey: env.publicKey, publishableKey: env.publishableKey, client: httpClient);
+    api = Api(
+        publicKey: env.publicKey,
+        publishableKey: env.publishableKey,
+        client: httpClient);
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });
 
@@ -81,7 +85,8 @@ void main() {
         final client = response.client;
         expect(client?.signUp, null);
         expect(client?.activeSession?.status, Status.active);
-        expect(client?.activeSession?.publicUserData.identifier.isNotEmpty, true);
+        expect(
+            client?.activeSession?.publicUserData.identifier.isNotEmpty, true);
       });
     });
 
@@ -126,7 +131,8 @@ void main() {
         final client = response.client;
         expect(client?.signUp, null);
         expect(client?.activeSession?.status, Status.active);
-        expect(client?.activeSession?.publicUserData.identifier.isNotEmpty, true);
+        expect(
+            client?.activeSession?.publicUserData.identifier.isNotEmpty, true);
       });
     });
   });

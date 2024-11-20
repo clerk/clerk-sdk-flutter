@@ -12,8 +12,6 @@ class Restrictions {
     this.ignoreDotsForEmailAddresses = false,
   });
 
-  static const empty = Restrictions();
-
   @JsonKey(name: 'allowlist', readValue: _readStatus)
   final bool allowlistEnabled;
 
@@ -29,7 +27,10 @@ class Restrictions {
   @JsonKey(name: 'ignore_dots_for_email_addresses', readValue: _readStatus)
   final bool ignoreDotsForEmailAddresses;
 
-  static Restrictions fromJson(Map<String, dynamic> json) => _$RestrictionsFromJson(json);
+  static const empty = Restrictions();
+
+  static Restrictions fromJson(Map<String, dynamic> json) =>
+      _$RestrictionsFromJson(json);
 
   Map<String, dynamic> toJson() => _$RestrictionsToJson(this);
 }

@@ -9,12 +9,13 @@ class PasskeySettings {
     this.showSignInButton = false,
   });
 
-  static const empty = PasskeySettings();
-
   final bool allowAutofill;
   final bool showSignInButton;
 
-  static PasskeySettings fromJson(Map<String, dynamic> json) => _$PasskeySettingsFromJson(json);
+  static const empty = PasskeySettings();
+
+  static PasskeySettings fromJson(Map<String, dynamic> json) =>
+      _$PasskeySettingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PasskeySettingsToJson(this);
 }

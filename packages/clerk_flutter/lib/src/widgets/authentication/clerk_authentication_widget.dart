@@ -29,7 +29,8 @@ class ClerkAuthenticationWidget extends StatefulWidget {
   const ClerkAuthenticationWidget({super.key});
 
   @override
-  State<ClerkAuthenticationWidget> createState() => _ClerkAuthenticationWidgetState();
+  State<ClerkAuthenticationWidget> createState() =>
+      _ClerkAuthenticationWidgetState();
 }
 
 class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
@@ -49,13 +50,16 @@ class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
             ClerkAuthBuilder(
               builder: (context, auth) {
                 return Closeable(
-                  closed: auth.signIn is clerk.SignIn || auth.signUp is clerk.SignUp,
+                  closed: auth.signIn is clerk.SignIn ||
+                      auth.signUp is clerk.SignUp,
                   child: const ClerkSSOPanel(),
                 );
               },
             ),
-            Closeable(open: _state.isSigningIn, child: const ClerkSignInPanel()),
-            Closeable(open: _state.isSigningUp, child: const ClerkSignUpPanel()),
+            Closeable(
+                open: _state.isSigningIn, child: const ClerkSignInPanel()),
+            Closeable(
+                open: _state.isSigningUp, child: const ClerkSignUpPanel()),
             const ClerkErrorMessage(),
           ],
         ),
@@ -67,9 +71,9 @@ class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
 
 @immutable
 class _TopPortion extends StatelessWidget {
-  final _AuthState state;
-
   const _TopPortion({required this.state});
+
+  final _AuthState state;
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +91,8 @@ class _TopPortion extends StatelessWidget {
               dimension: 32.0,
               child: display.logoUrl?.isNotEmpty == true
                   ? Image.network(display.logoUrl!)
-                  : SvgPicture.asset(ClerkAssets.defaultOrganizationLogo, package: 'clerk_flutter'),
+                  : SvgPicture.asset(ClerkAssets.defaultOrganizationLogo,
+                      package: 'clerk_flutter'),
             ),
           ),
         ),
@@ -123,10 +128,10 @@ class _TopPortion extends StatelessWidget {
 
 @immutable
 class _BottomPortion extends StatelessWidget {
+  const _BottomPortion({required this.onChange, required this.state});
+
   final VoidCallback onChange;
   final _AuthState state;
-
-  const _BottomPortion({required this.onChange, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +157,8 @@ class _BottomPortion extends StatelessWidget {
                   text: state.isSigningIn
                       ? translator.translate('Sign up')
                       : translator.translate('Sign in'),
-                  style: ClerkTextStyle.subtitle.copyWith(color: ClerkColors.darkJungleGreen),
+                  style: ClerkTextStyle.subtitle
+                      .copyWith(color: ClerkColors.darkJungleGreen),
                   recognizer: TapGestureRecognizer()..onTap = onChange,
                 ),
               ],

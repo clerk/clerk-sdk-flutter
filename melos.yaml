@@ -35,7 +35,7 @@ scripts:
 
   # Format code
   format:
-    run: melos exec -- dart format --line-length=100 MELOS_PACKAGE_PATH
+    run: melos exec -- dart format --line-length=80 MELOS_PACKAGE_PATH
 
   # Run build and format code
   brunner_format:

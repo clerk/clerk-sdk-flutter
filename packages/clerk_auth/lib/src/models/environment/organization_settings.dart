@@ -14,12 +14,12 @@ class OrganizationSettings {
     this.isEnabled = false,
   });
 
-  static const empty = OrganizationSettings();
-
   final int maxAllowedMemberships;
   final String creatorRole;
   final OrganizationDomains domains;
   final OrganizationActions actions;
+
+  static const empty = OrganizationSettings();
 
   @JsonKey(name: 'enabled')
   final bool isEnabled;

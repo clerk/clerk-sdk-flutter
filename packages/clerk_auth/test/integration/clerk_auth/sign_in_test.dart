@@ -8,11 +8,15 @@ void main() {
   late final Auth auth;
   late final TestEnv env;
   final httpClient = TestHttpClient();
-  final expireAt = DateTime.now().add(const Duration(minutes: 5)).millisecondsSinceEpoch;
+  final expireAt =
+      DateTime.now().add(const Duration(minutes: 5)).millisecondsSinceEpoch;
 
   setUpAll(() async {
     env = TestEnv('.env.test');
-    auth = Auth(publicKey: env.publicKey, publishableKey: env.publishableKey, client: httpClient);
+    auth = Auth(
+        publicKey: env.publicKey,
+        publishableKey: env.publishableKey,
+        client: httpClient);
 
     httpClient.expect(
       'POST /v1/client',
@@ -50,11 +54,12 @@ void main() {
         );
 
         expect(auth.user, null);
-        final client = await auth.attemptSignIn(identifier: 'test1+clerk_test@some.domain');
+        final client = await auth.attemptSignIn(
+            identifier: 'test1+clerk_test@some.domain');
         expect(client.signIn?.status, Status.needsFirstFactor);
 
-        final client2 =
-            await auth.attemptSignIn(strategy: Strategy.password, password: env.password);
+        final client2 = await auth.attemptSignIn(
+            strategy: Strategy.password, password: env.password);
         expect(client2.signIn, null);
         expect(client2.user is User, true);
       });

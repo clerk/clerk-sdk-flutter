@@ -13,8 +13,6 @@ class SignUpSettings {
     this.legalConsentEnabled = false,
   });
 
-  static const empty = SignUpSettings();
-
   final bool captchaEnabled;
   final String captchaWidgetType;
   final bool customActionRequired;
@@ -22,7 +20,10 @@ class SignUpSettings {
   final String mode;
   final bool legalConsentEnabled;
 
-  static SignUpSettings fromJson(Map<String, dynamic> json) => _$SignUpSettingsFromJson(json);
+  static const empty = SignUpSettings();
+
+  static SignUpSettings fromJson(Map<String, dynamic> json) =>
+      _$SignUpSettingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$SignUpSettingsToJson(this);
 }

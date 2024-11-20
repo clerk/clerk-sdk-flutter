@@ -20,8 +20,6 @@ class UserSettings {
     this.saml = false,
   });
 
-  static const empty = UserSettings();
-
   final SignInSettings signIn;
   final SignUpSettings signUp;
   final Restrictions restrictions;
@@ -40,7 +38,10 @@ class UserSettings {
   @JsonKey(name: 'social')
   final Map<String, SocialConnection> socialSettings;
 
-  static UserSettings fromJson(Map<String, dynamic> json) => _$UserSettingsFromJson(json);
+  static const empty = UserSettings();
+
+  static UserSettings fromJson(Map<String, dynamic> json) =>
+      _$UserSettingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserSettingsToJson(this);
 }
@@ -51,8 +52,10 @@ Map<UserAttribute, UserAttributeData> _toAttributeMap(dynamic data) {
   final result = <UserAttribute, UserAttributeData>{};
   if (data case Map<String, dynamic> data) {
     for (final entry in data.entries) {
-      final key = UserAttribute.values.firstWhereOrNull((a) => a.toString() == entry.key);
-      if (key case UserAttribute key) result[key] = UserAttributeData.fromJson(entry.value);
+      final key = UserAttribute.values
+          .firstWhereOrNull((a) => a.toString() == entry.key);
+      if (key case UserAttribute key)
+        result[key] = UserAttributeData.fromJson(entry.value);
     }
   }
   return result;

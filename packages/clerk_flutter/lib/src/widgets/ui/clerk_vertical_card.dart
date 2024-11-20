@@ -62,7 +62,8 @@ class ClerkVerticalCard extends StatelessWidget {
               child: SizedBox(
                 height: 14.0,
                 width: 121.46,
-                child: SvgPicture.asset(ClerkAssets.securedByClerkLogo, package: 'clerk_flutter'),
+                child: SvgPicture.asset(ClerkAssets.securedByClerkLogo,
+                    package: 'clerk_flutter'),
               ),
             ),
             verticalMargin12,

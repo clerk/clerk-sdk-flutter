@@ -100,13 +100,16 @@ class User {
   String? get web3WalletId => _persisted(primaryWeb3WalletId, web3Wallets);
 
   bool get emailIsPersisted =>
-      email is String && email == _persisted(primaryEmailAddressId, emailAddresses);
+      email is String &&
+      email == _persisted(primaryEmailAddressId, emailAddresses);
 
   bool get phoneNumberIsPersisted =>
-      phoneNumber is String && phoneNumber == _persisted(primaryPhoneNumberId, phoneNumbers);
+      phoneNumber is String &&
+      phoneNumber == _persisted(primaryPhoneNumberId, phoneNumbers);
 
   bool get web3WalletIdIsPersisted =>
-      web3WalletId is String && web3WalletId == _persisted(primaryWeb3WalletId, web3Wallets);
+      web3WalletId is String &&
+      web3WalletId == _persisted(primaryWeb3WalletId, web3Wallets);
 
   User copyWith({
     String? firstName,
@@ -146,7 +149,8 @@ class User {
         profileImageUrl: profileImageUrl ?? this.profileImageUrl,
         imageUrl: imageUrl ?? this.imageUrl,
         hasImage: hasImage ?? this.hasImage,
-        primaryEmailAddressId: primaryEmailAddressId ?? this.primaryEmailAddressId,
+        primaryEmailAddressId:
+            primaryEmailAddressId ?? this.primaryEmailAddressId,
         primaryPhoneNumberId: primaryPhoneNumberId ?? this.primaryPhoneNumberId,
         primaryWeb3WalletId: primaryWeb3WalletId ?? this.primaryWeb3WalletId,
         publicMetadata: publicMetadata ?? this.publicMetadata,
@@ -156,7 +160,8 @@ class User {
         phoneNumbers: phoneNumbers ?? this.phoneNumbers,
         web3Wallets: web3Wallets ?? this.web3Wallets,
         passkeys: passkeys ?? this.passkeys,
-        organizationMemberships: organizationMemberships ?? this.organizationMemberships,
+        organizationMemberships:
+            organizationMemberships ?? this.organizationMemberships,
         passwordEnabled: passwordEnabled ?? this.passwordEnabled,
         twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
         totpEnabled: totpEnabled ?? this.totpEnabled,
@@ -164,7 +169,8 @@ class User {
         lastSignInAt: lastSignInAt ?? this.lastSignInAt,
         banned: banned ?? this.banned,
         locked: locked ?? this.locked,
-        lockoutExpiresInSeconds: lockoutExpiresInSeconds ?? this.lockoutExpiresInSeconds,
+        lockoutExpiresInSeconds:
+            lockoutExpiresInSeconds ?? this.lockoutExpiresInSeconds,
         verificationAttemptsRemaining:
             verificationAttemptsRemaining ?? this.verificationAttemptsRemaining,
         updatedAt: updatedAt ?? this.updatedAt,

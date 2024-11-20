@@ -22,12 +22,6 @@ class PasswordSettings {
     this.enforceHibpOnSignIn = false,
   });
 
-  static final _lowerCaseRE = RegExp(r'[a-z]');
-  static final _upperCaseRE = RegExp(r'[A-Z]');
-  static final _numberRE = RegExp(r'[0-9]');
-
-  static const empty = PasswordSettings();
-
   final String allowedSpecialCharacters;
   final int minZxcvbnStrength;
   final int minLength;
@@ -54,7 +48,14 @@ class PasswordSettings {
   @JsonKey(fromJson: isTrue)
   final bool enforceHibpOnSignIn;
 
-  static PasswordSettings fromJson(Map<String, dynamic> json) => _$PasswordSettingsFromJson(json);
+  static final _lowerCaseRE = RegExp(r'[a-z]');
+  static final _upperCaseRE = RegExp(r'[A-Z]');
+  static final _numberRE = RegExp(r'[0-9]');
+
+  static const empty = PasswordSettings();
+
+  static PasswordSettings fromJson(Map<String, dynamic> json) =>
+      _$PasswordSettingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PasswordSettingsToJson(this);
 
@@ -69,7 +70,10 @@ class PasswordSettings {
 
   bool meetsSpecialCharCriteria(String password) =>
       requireSpecialChar == false ||
-      allowedSpecialCharacters.runes.toSet().intersection(password.runes.toSet()).isNotEmpty;
+      allowedSpecialCharacters.runes
+          .toSet()
+          .intersection(password.runes.toSet())
+          .isNotEmpty;
 
   bool meetsRequiredCriteria(String password) =>
       meetsLowerCaseCriteria(password) &&

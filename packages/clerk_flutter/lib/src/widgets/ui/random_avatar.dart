@@ -9,11 +9,7 @@ import 'package:flutter_svg/svg.dart';
 @immutable
 class RandomAvatar extends StatelessWidget {
   /// Constructs a new [RandomAvatar].
-  const RandomAvatar({
-    super.key,
-    required this.seed,
-    this.size = 28.0,
-  });
+  const RandomAvatar({super.key, required this.seed, this.size = 28.0});
 
   /// The seed to use for generating the avatar.
   final String seed;

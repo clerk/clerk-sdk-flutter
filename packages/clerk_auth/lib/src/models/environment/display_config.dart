@@ -43,8 +43,6 @@ class DisplayConfig {
     this.userProfileUrl = '',
   });
 
-  static const empty = DisplayConfig();
-
   final String id;
   final String applicationName;
   final bool branded;
@@ -82,7 +80,10 @@ class DisplayConfig {
   final String? termsUrl;
   final String? userProfileUrl;
 
-  static DisplayConfig fromJson(Map<String, dynamic> json) => _$DisplayConfigFromJson(json);
+  static const empty = DisplayConfig();
+
+  static DisplayConfig fromJson(Map<String, dynamic> json) =>
+      _$DisplayConfigFromJson(json);
 
   Map<String, dynamic> toJson() => _$DisplayConfigToJson(this);
 }

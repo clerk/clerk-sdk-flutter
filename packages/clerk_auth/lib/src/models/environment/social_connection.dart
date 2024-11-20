@@ -19,8 +19,6 @@ class SocialConnection {
     this.logoUrl = '',
   });
 
-  static const empty = SocialConnection();
-
   final String name;
   final String logoUrl;
   final Strategy strategy;
@@ -43,7 +41,10 @@ class SocialConnection {
   @JsonKey(name: 'deprecated', fromJson: isTrue)
   final bool deprecated;
 
-  static SocialConnection fromJson(Map<String, dynamic> json) => _$SocialConnectionFromJson(json);
+  static const empty = SocialConnection();
+
+  static SocialConnection fromJson(Map<String, dynamic> json) =>
+      _$SocialConnectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$SocialConnectionToJson(this);
 }

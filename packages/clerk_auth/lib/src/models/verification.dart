@@ -26,7 +26,8 @@ class Verification {
   @JsonKey(fromJson: intToDateTime)
   final DateTime? expireAt;
 
-  static Verification fromJson(Map<String, dynamic> json) => _$VerificationFromJson(json);
+  static Verification fromJson(Map<String, dynamic> json) =>
+      _$VerificationFromJson(json);
 
   Map<String, dynamic> toJson() => _$VerificationToJson(this);
 }

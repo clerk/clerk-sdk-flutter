@@ -4,13 +4,7 @@ import 'package:flutter/material.dart';
 
 /// Style of [ClerkMaterialButton].
 ///
-enum ClerkMaterialButtonStyle {
-  /// Light.
-  light,
-
-  /// Dark.
-  dark;
-}
+enum ClerkMaterialButtonStyle { light, dark }
 
 /// A reusable and Clerk themed [MaterialButton].
 ///

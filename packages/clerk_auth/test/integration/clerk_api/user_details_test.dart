@@ -14,11 +14,15 @@ void main() {
   late final Api api;
   late final TestEnv env;
   final httpClient = TestHttpClient();
-  final expireAt = DateTime.now().add(const Duration(minutes: 5)).millisecondsSinceEpoch;
+  final expireAt =
+      DateTime.now().add(const Duration(minutes: 5)).millisecondsSinceEpoch;
 
   setUpAll(() async {
     env = TestEnv('.env.test');
-    api = Api(publicKey: env.publicKey, publishableKey: env.publishableKey, client: httpClient);
+    api = Api(
+        publicKey: env.publicKey,
+        publishableKey: env.publishableKey,
+        client: httpClient);
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });
 
@@ -31,7 +35,8 @@ void main() {
       200,
       '{"response":{"object":"sign_in_attempt","id":"SIGN_IN_ATTEMPT_ID","status":"needs_first_factor","supported_identifiers":["email_address","phone_number","username"],"supported_first_factors":[{"strategy":"password"},{"strategy":"phone_code","safe_identifier":"+*********01","phone_number_id":"IDENTIFIER_ID","primary":true},{"strategy":"email_code","safe_identifier":"test$id+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true},{"strategy":"email_link","safe_identifier":"test$id+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true},{"strategy":"reset_password_email_code","safe_identifier":"test$id+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true}],"supported_second_factors":null,"first_factor_verification":null,"second_factor_verification":null,"identifier":"test$id+clerk_test@some.domain","USER_ID":null,"created_session_id":null,"abandon_at":1732103021570},"client":{"object":"client","id":"CLIENT_ID","sessions":[],"sign_in":{"object":"sign_in_attempt","id":"SIGN_IN_ATTEMPT_ID","status":"needs_first_factor","supported_identifiers":["email_address","phone_number","username"],"supported_first_factors":[{"strategy":"password"},{"strategy":"phone_code","safe_identifier":"+*********01","phone_number_id":"IDENTIFIER_ID","primary":true},{"strategy":"email_code","safe_identifier":"test$id+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true},{"strategy":"email_link","safe_identifier":"test$id+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true},{"strategy":"reset_password_email_code","safe_identifier":"test$id+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true}],"supported_second_factors":null,"first_factor_verification":null,"second_factor_verification":null,"identifier":"test$id+clerk_test@some.domain","USER_ID":null,"created_session_id":null,"abandon_at":1732103021570},"sign_up":null,"last_active_session_id":null,"cookie_expires_at":null,"created_at":1732016621555,"updated_at":1732016621596}}',
     );
-    final response = await api.createSignIn(identifier: 'test$id+clerk_test@some.domain');
+    final response =
+        await api.createSignIn(identifier: 'test$id+clerk_test@some.domain');
 
     httpClient.expect(
       'POST /v1/client/sign_ins/SIGN_IN_ATTEMPT_ID/attempt_first_factor strategy=password&password=password',
@@ -89,7 +94,8 @@ void main() {
         expect(response.client?.activeSession?.user is User, true);
 
         user = response.client!.activeSession!.user;
-        response = await api.updateUser(user.copyWith(firstName: 'New', lastName: 'Cognomen'));
+        response = await api
+            .updateUser(user.copyWith(firstName: 'New', lastName: 'Cognomen'));
         expect(response.isOkay, true);
 
         response = await api.getUser();
@@ -97,7 +103,8 @@ void main() {
         expect(user?.name, 'New Cognomen');
 
         user = response.client!.activeSession!.user;
-        response = await api.updateUser(user.copyWith(firstName: 'Test', lastName: 'User'));
+        response = await api
+            .updateUser(user.copyWith(firstName: 'Test', lastName: 'User'));
         expect(response.isOkay, true);
 
         response = await api.getUser();
@@ -145,7 +152,9 @@ void main() {
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
-        final email = user?.emailAddresses?.where((e) => e.emailAddress == emailAddress).first;
+        final email = user?.emailAddresses
+            ?.where((e) => e.emailAddress == emailAddress)
+            .first;
         expect(email is Email, true);
 
         response = await api.deleteEmailAddress(email!.id);
@@ -192,7 +201,9 @@ void main() {
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
-        final number = user?.phoneNumbers?.where((p) => p.phoneNumber == phoneNumber).first;
+        final number = user?.phoneNumbers
+            ?.where((p) => p.phoneNumber == phoneNumber)
+            .first;
         expect(number is PhoneNumber, true);
 
         response = await api.deletePhoneNumber(number!.id);

@@ -48,7 +48,8 @@ class TestHttpClient implements HttpClient {
   ) async {
     final key = _key(method, uri, headers, body);
 
-    if (_expectations[key] case List<Response> responses when responses.isNotEmpty) {
+    if (_expectations[key] case List<Response> responses
+        when responses.isNotEmpty) {
       final resp = responses.removeAt(0);
       return Future.value(resp);
     }
@@ -90,7 +91,8 @@ class TestHttpClient implements HttpClient {
     ].join(' ');
   }
 
-  String _mapToString(Map map) => map.entries.map((me) => '${me.key}=${me.value}').join('&');
+  String _mapToString(Map map) =>
+      map.entries.map((me) => '${me.key}=${me.value}').join('&');
 }
 
 class TestHttpClientError extends Error {

@@ -7,7 +7,6 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 /// Control widget initialising Clerk Auth system
 class ClerkAuth extends StatefulWidget {
-  /// Constructor that constructs a construct constructingly
   const ClerkAuth({
     super.key,
     this.publicKey,
@@ -66,7 +65,8 @@ class ClerkAuth extends StatefulWidget {
     return result!.auth;
   }
 
-  static ClerkTranslator translatorOf(BuildContext context) => nonDependentOf(context).translator;
+  static ClerkTranslator translatorOf(BuildContext context) =>
+      nonDependentOf(context).translator;
 
   static clerk.DisplayConfig displayConfigOf(BuildContext context) =>
       nonDependentOf(context).env.display;
@@ -147,7 +147,15 @@ class _ClerkAuthData extends InheritedWidget {
 }
 
 class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
-  static const _kRotatingTokenNonce = 'rotating_token_nonce';
+  ClerkAuthProvider({
+    required super.publicKey,
+    required super.publishableKey,
+    this.translator = const DefaultClerkTranslator(),
+    Widget? loading,
+    super.persistor,
+  }) : _loadingOverlay = OverlayEntry(
+          builder: (context) => loading ?? defaultLoadingWidget,
+        );
 
   final ClerkTranslator translator;
   final _errors = StreamController<clerk.AuthError>();
@@ -155,13 +163,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   final OverlayEntry _loadingOverlay;
   OverlayEntry? _ssoOverlay;
 
-  ClerkAuthProvider({
-    required super.publicKey,
-    required super.publishableKey,
-    this.translator = const DefaultClerkTranslator(),
-    Widget? loading,
-    super.persistor,
-  }) : _loadingOverlay = OverlayEntry(builder: (context) => loading ?? defaultLoadingWidget);
+  static const _kRotatingTokenNonce = 'rotating_token_nonce';
 
   @override
   void update() => notifyListeners();
@@ -264,7 +266,8 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   /// but may still not be acceptable to the back end
   String? checkPassword(String? password, String? confirmation) {
     if (password != confirmation) {
-      return translator.translate('Password and password confirmation must match');
+      return translator
+          .translate('Password and password confirmation must match');
     }
 
     if (password case String password when password.isNotEmpty) {
@@ -288,8 +291,8 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
       }
 
       if (missing.isNotEmpty) {
-        final value =
-            translator.alternatives(missing, connector: 'and', prefix: 'Password requires');
+        final value = translator.alternatives(missing,
+            connector: 'and', prefix: 'Password requires');
         return value.replaceFirst('###', criteria.allowedSpecialCharacters);
       }
     }
@@ -297,7 +300,8 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
     return null;
   }
 
-  void addError(String message) => _errors.add(clerk.AuthError(message: message));
+  void addError(String message) =>
+      _errors.add(clerk.AuthError(message: message));
 }
 
 class _SsoWebViewHost extends StatefulWidget {

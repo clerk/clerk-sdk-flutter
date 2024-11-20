@@ -17,9 +17,9 @@ class ClerkErrorMessage extends StatelessWidget {
 }
 
 class _ErrorMessage extends StatefulWidget {
-  final clerk.AuthError? error;
-
   const _ErrorMessage({required this.error});
+
+  final clerk.AuthError? error;
 
   @override
   State<_ErrorMessage> createState() => _ErrorMessageState();
@@ -38,7 +38,8 @@ class _ErrorMessageState extends State<_ErrorMessage> {
     if (mounted && error != _error) {
       _error = error;
       _timer?.cancel();
-      _timer = Timer(_errorDisplayDuration, () => setState(() => _timer = null));
+      _timer =
+          Timer(_errorDisplayDuration, () => setState(() => _timer = null));
     }
   }
 
@@ -49,7 +50,8 @@ class _ErrorMessageState extends State<_ErrorMessage> {
       open: _timer is Timer && _error.isNotEmpty,
       child: Padding(
         padding: horizontalPadding32 + bottomPadding8,
-        child: Text(translator.translate(_error), maxLines: 2, style: ClerkTextStyle.error),
+        child: Text(translator.translate(_error),
+            maxLines: 2, style: ClerkTextStyle.error),
       ),
     );
   }

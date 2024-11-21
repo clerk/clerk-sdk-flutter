@@ -1,3 +1,7 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 import 'package:json_annotation/json_annotation.dart';
 
 import '../enums.dart';

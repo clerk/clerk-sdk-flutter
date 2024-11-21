@@ -1,3 +1,7 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'restrictions.g.dart';
@@ -29,8 +33,7 @@ class Restrictions {
 
   static const empty = Restrictions();
 
-  static Restrictions fromJson(Map<String, dynamic> json) =>
-      _$RestrictionsFromJson(json);
+  static Restrictions fromJson(Map<String, dynamic> json) => _$RestrictionsFromJson(json);
 
   Map<String, dynamic> toJson() => _$RestrictionsToJson(this);
 }

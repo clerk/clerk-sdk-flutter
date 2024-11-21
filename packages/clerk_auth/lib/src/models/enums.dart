@@ -1,9 +1,11 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'enums.g.dart';
-
-typedef AuthParameters = Map<Field, dynamic>;
 
 @JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
 enum EnrollmentMode {

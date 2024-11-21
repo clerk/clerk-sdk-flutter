@@ -49,7 +49,7 @@ void main() {
         late ApiResponse response;
 
         httpClient.expect(
-          'POST /v1/client/sign_ups username=user-$password&password=$password&email_address=user-$password+clerk_test@some.domain',
+          'POST /v1/client/sign_ups strategy=email_code&username=user-$password&password=$password&email_address=user-$password+clerk_test@some.domain',
           200,
           '{"response":{"object":"sign_up_attempt","id":"SIGN_UP_ATTEMPT_ID","status":"missing_requirements","required_fields":["password"],"optional_fields":["oauth_google","email_address","phone_number","username","last_name","first_name","oauth_apple","oauth_github"],"missing_fields":[],"unverified_fields":["email_address"],"verifications":{"email_address":null,"phone_number":null,"web3_wallet":null,"external_account":null},"username":"user-a8d714a45-cd24-4205-9084-5f1dc5882bdd","email_address":"user-a8d714a45-cd24-4205-9084-5f1dc5882bdd+clerk_test@some.domain","phone_number":null,"web3_wallet":null,"password_enabled":true,"first_name":null,"last_name":null,"unsafe_metadata":{},"public_metadata":{},"custom_action":false,"external_id":null,"created_session_id":null,"created_user_id":null,"abandon_at":1732101514123,"legal_accepted_at":null},"client":{"object":"client","id":"CLIENT_ID","sessions":[],"sign_in":null,"sign_up":{"object":"sign_up_attempt","id":"SIGN_UP_ATTEMPT_ID","status":"missing_requirements","required_fields":["password"],"optional_fields":["oauth_apple","oauth_github","oauth_google","email_address","phone_number","username","last_name","first_name"],"missing_fields":[],"unverified_fields":["email_address"],"verifications":{"email_address":null,"phone_number":null,"web3_wallet":null,"external_account":null},"username":"user-a8d714a45-cd24-4205-9084-5f1dc5882bdd","email_address":"user-a8d714a45-cd24-4205-9084-5f1dc5882bdd+clerk_test@some.domain","phone_number":null,"web3_wallet":null,"password_enabled":true,"first_name":null,"last_name":null,"unsafe_metadata":{},"public_metadata":{},"custom_action":false,"external_id":null,"created_session_id":null,"created_user_id":null,"abandon_at":1732101514123,"legal_accepted_at":null},"last_active_session_id":null,"cookie_expires_at":null,"created_at":1732015114083,"updated_at":1732015114138}}',
         );
@@ -65,6 +65,7 @@ void main() {
         );
 
         response = await api.createSignUp(
+          strategy: Strategy.emailCode,
           emailAddress: emailAddress,
           username: username,
           password: password,
@@ -95,7 +96,7 @@ void main() {
         late ApiResponse response;
 
         httpClient.expect(
-          'POST /v1/client/sign_ups username=user-$password&password=$password&phone_number=+15555550109',
+          'POST /v1/client/sign_ups strategy=phone_code&username=user-$password&password=$password&phone_number=+15555550109',
           200,
           '{"response":{"object":"sign_up_attempt","id":"SIGN_UP_ATTEMPT_ID","status":"missing_requirements","required_fields":["password"],"optional_fields":["email_address","phone_number","username","last_name","first_name","oauth_github","oauth_google","oauth_apple"],"missing_fields":[],"unverified_fields":["phone_number"],"verifications":{"email_address":null,"phone_number":null,"web3_wallet":null,"external_account":null},"username":"user-a4b3f7063-d0f5-4d19-b377-428b0ef73a47","email_address":null,"phone_number":"+15555550109","web3_wallet":null,"password_enabled":true,"first_name":null,"last_name":null,"unsafe_metadata":{},"public_metadata":{},"custom_action":false,"external_id":null,"created_session_id":null,"created_user_id":null,"abandon_at":1732102859167,"legal_accepted_at":null},"client":{"object":"client","id":"CLIENT_ID","sessions":[],"sign_in":null,"sign_up":{"object":"sign_up_attempt","id":"SIGN_UP_ATTEMPT_ID","status":"missing_requirements","required_fields":["password"],"optional_fields":["first_name","last_name","oauth_apple","oauth_github","oauth_google","email_address","phone_number","username"],"missing_fields":[],"unverified_fields":["phone_number"],"verifications":{"email_address":null,"phone_number":null,"web3_wallet":null,"external_account":null},"username":"user-a4b3f7063-d0f5-4d19-b377-428b0ef73a47","email_address":null,"phone_number":"+15555550109","web3_wallet":null,"password_enabled":true,"first_name":null,"last_name":null,"unsafe_metadata":{},"public_metadata":{},"custom_action":false,"external_id":null,"created_session_id":null,"created_user_id":null,"abandon_at":1732102859167,"legal_accepted_at":null},"last_active_session_id":null,"cookie_expires_at":null,"created_at":1732016459154,"updated_at":1732016459186}}',
         );
@@ -111,6 +112,7 @@ void main() {
         );
 
         response = await api.createSignUp(
+          strategy: Strategy.phoneCode,
           phoneNumber: phoneNumber,
           username: username,
           password: password,

@@ -2,9 +2,13 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// Typedef for function that will verify input
 typedef InputVerifier = Future<bool> Function(String);
 
+/// A widget which takes a multiple-digit OTC code
+///
 class MultiDigitCodeInput extends StatefulWidget {
+  /// Construct a [MultiDigitCodeInput]
   const MultiDigitCodeInput({
     super.key,
     required this.onSubmit,
@@ -12,8 +16,13 @@ class MultiDigitCodeInput extends StatefulWidget {
     this.isSmall = false,
   });
 
+  /// Function to call once all digits have been entered
   final InputVerifier onSubmit;
+
+  /// The number of digits to be entered
   final int length;
+
+  /// Whether the widget should display in a trimmer form
   final bool isSmall;
 
   @override
@@ -70,8 +79,7 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
   }
 
   bool _onHwKeyChanged(KeyEvent event) {
-    if (event case KeyUpEvent event
-        when event.logicalKey == LogicalKeyboardKey.backspace) {
+    if (event case KeyUpEvent event when event.logicalKey == LogicalKeyboardKey.backspace) {
       final text = _editingValue.text;
       if (text.isNotEmpty) {
         final newEditingValue = TextEditingValue(
@@ -242,8 +250,7 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
   }
 
   @override
-  void didChangeInputControl(
-      TextInputControl? oldControl, TextInputControl? newControl) {
+  void didChangeInputControl(TextInputControl? oldControl, TextInputControl? newControl) {
     // Not required
   }
 
@@ -292,20 +299,17 @@ class _PulsingCursor extends StatefulWidget {
   State<_PulsingCursor> createState() => _PulsingCursorState();
 }
 
-class _PulsingCursorState extends State<_PulsingCursor>
-    with SingleTickerProviderStateMixin {
+class _PulsingCursorState extends State<_PulsingCursor> with SingleTickerProviderStateMixin {
   static const _cycleDuration = Duration(milliseconds: 1200);
 
   void _update() {
     if (mounted) setState(() {});
   }
 
-  late final _controller =
-      AnimationController(duration: _cycleDuration, vsync: this)
-        ..repeat(period: _cycleDuration, reverse: true)
-        ..addListener(_update);
-  late final _curve =
-      CurvedAnimation(parent: _controller, curve: Curves.decelerate);
+  late final _controller = AnimationController(duration: _cycleDuration, vsync: this)
+    ..repeat(period: _cycleDuration, reverse: true)
+    ..addListener(_update);
+  late final _curve = CurvedAnimation(parent: _controller, curve: Curves.decelerate);
 
   @override
   void dispose() {

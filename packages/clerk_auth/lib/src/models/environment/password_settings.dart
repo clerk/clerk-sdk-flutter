@@ -1,3 +1,7 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 // ignore_for_file: sort_constructors_first
 
 import 'package:json_annotation/json_annotation.dart';
@@ -54,8 +58,7 @@ class PasswordSettings {
 
   static const empty = PasswordSettings();
 
-  static PasswordSettings fromJson(Map<String, dynamic> json) =>
-      _$PasswordSettingsFromJson(json);
+  static PasswordSettings fromJson(Map<String, dynamic> json) => _$PasswordSettingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PasswordSettingsToJson(this);
 
@@ -70,10 +73,7 @@ class PasswordSettings {
 
   bool meetsSpecialCharCriteria(String password) =>
       requireSpecialChar == false ||
-      allowedSpecialCharacters.runes
-          .toSet()
-          .intersection(password.runes.toSet())
-          .isNotEmpty;
+      allowedSpecialCharacters.runes.toSet().intersection(password.runes.toSet()).isNotEmpty;
 
   bool meetsRequiredCriteria(String password) =>
       meetsLowerCaseCriteria(password) &&

@@ -1,3 +1,7 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 import 'package:json_annotation/json_annotation.dart';
 
 import '../helpers.dart';
@@ -67,8 +71,7 @@ class AuthConfig {
 
   static const empty = AuthConfig();
 
-  static AuthConfig fromJson(Map<String, dynamic> json) =>
-      _$AuthConfigFromJson(json);
+  static AuthConfig fromJson(Map<String, dynamic> json) => _$AuthConfigFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthConfigToJson(this);
 }

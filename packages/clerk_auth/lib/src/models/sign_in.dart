@@ -1,3 +1,7 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 import 'package:json_annotation/json_annotation.dart';
 
 import 'models.dart';
@@ -42,6 +46,9 @@ class SignIn {
 
   Map<String, dynamic> toJson() => _$SignInToJson(this);
 
+  /// Find a [Verification] if one exists for this [SignIn]
+  /// at the giver [Stage]
+  ///
   Verification? verificationFor(Stage stage) {
     return switch (stage) {
       Stage.first => firstFactorVerification,
@@ -49,16 +56,19 @@ class SignIn {
     };
   }
 
-  Factor? factorFor(Strategy strategy, Stage stage) {
+  /// Find the [Factor] for this [SignIn] that matches
+  /// the [strategy] and [stage]
+  ///
+  /// Thrpw an error on failure
+  ///
+  Factor factorFor(Strategy strategy, Stage stage) {
     final factors = switch (stage) {
       Stage.first => supportedFirstFactors,
       Stage.second => supportedSecondFactors,
     };
     for (final factor in factors) {
-      if (factor.strategy == strategy) {
-        return factor;
-      }
+      if (factor.strategy == strategy) return factor;
     }
-    return null;
+    throw ApiError(message: 'Strategy $strategy unsupported for $stage factor');
   }
 }

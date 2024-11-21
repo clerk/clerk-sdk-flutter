@@ -1,3 +1,7 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'display_config.g.dart';
@@ -82,8 +86,7 @@ class DisplayConfig {
 
   static const empty = DisplayConfig();
 
-  static DisplayConfig fromJson(Map<String, dynamic> json) =>
-      _$DisplayConfigFromJson(json);
+  static DisplayConfig fromJson(Map<String, dynamic> json) => _$DisplayConfigFromJson(json);
 
   Map<String, dynamic> toJson() => _$DisplayConfigToJson(this);
 }

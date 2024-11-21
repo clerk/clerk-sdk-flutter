@@ -1,3 +1,7 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'api_error.g.dart';
@@ -16,8 +20,7 @@ class ApiError {
   final Map<String, String>? meta;
   final String? longMessage;
 
-  static ApiError fromJson(Map<String, dynamic> json) =>
-      _$ApiErrorFromJson(json);
+  static ApiError fromJson(Map<String, dynamic> json) => _$ApiErrorFromJson(json);
 
   Map<String, dynamic> toJson() => _$ApiErrorToJson(this);
 

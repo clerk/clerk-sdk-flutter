@@ -1,3 +1,7 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 import 'package:clerk_auth/clerk_auth.dart';
 
 class Strategy {
@@ -34,16 +38,12 @@ class Strategy {
   static const passkey = Strategy(name: 'passkey');
   static const password = Strategy(name: 'password');
   static const phoneCode = Strategy(name: 'phone_code');
-  static const resetPasswordEmailCode =
-      Strategy(name: 'reset_password_email_code');
-  static const resetPasswordPhoneCode =
-      Strategy(name: 'reset_password_phone_code');
+  static const resetPasswordEmailCode = Strategy(name: 'reset_password_email_code');
+  static const resetPasswordPhoneCode = Strategy(name: 'reset_password_phone_code');
   static const saml = Strategy(name: 'saml');
   static const ticket = Strategy(name: 'ticket');
-  static const web3MetamaskSignature =
-      Strategy(name: 'web3_metamask_signature');
-  static const web3CoinbaseSignature =
-      Strategy(name: 'web3_coinbase_signature');
+  static const web3MetamaskSignature = Strategy(name: 'web3_metamask_signature');
+  static const web3CoinbaseSignature = Strategy(name: 'web3_coinbase_signature');
   static final verificationStrategies = {
     admin.name: admin,
     emailCode.name: emailCode,
@@ -77,12 +77,20 @@ class Strategy {
 
   bool get isOauth => const [_oauthToken, _oauthCustom, _oauth].contains(name);
 
-  bool get isPassword => this == Strategy.password;
+  bool get isOtherStrategy => isOauth == false && requiresPassword == false;
 
-  bool get isOtherStrategy => isOauth == false && isPassword == false;
+  bool get requiresPassword =>
+      const [password, resetPasswordPhoneCode, resetPasswordEmailCode].contains(this);
 
   bool get requiresCode => const [emailCode, phoneCode].contains(this);
 
+  bool get requiresSignature => const [web3MetamaskSignature, web3CoinbaseSignature].contains(this);
+
+  bool get requiresRedirect => name == _oauth || const [emailLink, saml].contains(this);
+
+  /// For a given [name] return the [Strategy] it identifies.
+  /// Create one if necessary and possible
+  ///
   static Strategy? named(dynamic name) {
     if (name case String name) {
       switch (_strategies[name]) {
@@ -115,6 +123,9 @@ class Strategy {
     return null;
   }
 
+  /// For a given field, return an appropriate [Strategy], or
+  /// throw an error
+  ///
   static Strategy forField(Field field) {
     return switch (field) {
       Field.phoneNumber => Strategy.phoneCode,
@@ -124,8 +135,6 @@ class Strategy {
   }
 
   String toJson() => toString();
-
-  String get title => name.replaceAll('_', ' ');
 
   @override
   String toString() => [name, provider].nonNulls.join('_');

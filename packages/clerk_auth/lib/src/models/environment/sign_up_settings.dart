@@ -1,3 +1,7 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'sign_up_settings.g.dart';
@@ -22,8 +26,7 @@ class SignUpSettings {
 
   static const empty = SignUpSettings();
 
-  static SignUpSettings fromJson(Map<String, dynamic> json) =>
-      _$SignUpSettingsFromJson(json);
+  static SignUpSettings fromJson(Map<String, dynamic> json) => _$SignUpSettingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$SignUpSettingsToJson(this);
 }

@@ -22,7 +22,7 @@ class ClerkVerticalCard extends StatelessWidget {
   /// Widget to be displayed under the topPortion
   final Widget? middlePortion;
 
-  /// Widget to be displayed in the bottom card of the stack. Typically brandind and a
+  /// Widget to be displayed in the bottom card of the stack. Typically branding and a
   /// text based c.t.a.
   final Widget bottomPortion;
 
@@ -62,8 +62,7 @@ class ClerkVerticalCard extends StatelessWidget {
               child: SizedBox(
                 height: 14.0,
                 width: 121.46,
-                child: SvgPicture.asset(ClerkAssets.securedByClerkLogo,
-                    package: 'clerk_flutter'),
+                child: SvgPicture.asset(ClerkAssets.securedByClerkLogo, package: 'clerk_flutter'),
               ),
             ),
             verticalMargin12,

@@ -1,3 +1,7 @@
+// ignore_for_file: public_member_api_docs
+// See https://clerk.com/docs/reference/frontend-api for
+// more details
+
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -40,8 +44,7 @@ class UserSettings {
 
   static const empty = UserSettings();
 
-  static UserSettings fromJson(Map<String, dynamic> json) =>
-      _$UserSettingsFromJson(json);
+  static UserSettings fromJson(Map<String, dynamic> json) => _$UserSettingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserSettingsToJson(this);
 }
@@ -52,10 +55,8 @@ Map<UserAttribute, UserAttributeData> _toAttributeMap(dynamic data) {
   final result = <UserAttribute, UserAttributeData>{};
   if (data case Map<String, dynamic> data) {
     for (final entry in data.entries) {
-      final key = UserAttribute.values
-          .firstWhereOrNull((a) => a.toString() == entry.key);
-      if (key case UserAttribute key)
-        result[key] = UserAttributeData.fromJson(entry.value);
+      final key = UserAttribute.values.firstWhereOrNull((a) => a.toString() == entry.key);
+      if (key case UserAttribute key) result[key] = UserAttributeData.fromJson(entry.value);
     }
   }
   return result;

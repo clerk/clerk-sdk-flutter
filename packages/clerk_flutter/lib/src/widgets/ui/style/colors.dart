@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Reusable color pallette.
+/// Reusable color palette.
 class ClerkColors {
   const ClerkColors._();
 

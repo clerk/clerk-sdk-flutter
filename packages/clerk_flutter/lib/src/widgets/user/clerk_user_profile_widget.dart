@@ -148,11 +148,11 @@ class _SecondChild extends StatelessWidget {
                   child: Row(
                     children: [
                       RandomAvatar(
-                        seed: 'Jaylon Dias',
+                        seed: 'Jason Dias',
                         size: 48.0,
                       ),
                       horizontalMargin16,
-                      Text('Jaylon Dias', maxLines: 1),
+                      Text('Jason Dias', maxLines: 1),
                     ],
                   ),
                 ),

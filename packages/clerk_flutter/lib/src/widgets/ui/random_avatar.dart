@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 /// An avatar for testing purposes.
 ///
-/// Will genereate a random avatar based on the provided seed.
+/// Will generate a random avatar based on the provided seed.
 ///
 @immutable
 class RandomAvatar extends StatelessWidget {

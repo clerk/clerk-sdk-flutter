@@ -157,7 +157,7 @@ void main() {
             .first;
         expect(email is Email, true);
 
-        response = await api.deleteEmailAddress(email!.id);
+        response = await api.deleteEmailAddress(email!);
         expect(response.isOkay, true);
       });
     });
@@ -206,7 +206,7 @@ void main() {
             .first;
         expect(number is PhoneNumber, true);
 
-        response = await api.deletePhoneNumber(number!.id);
+        response = await api.deletePhoneNumber(number!);
         expect(response.isOkay, true);
       });
     });

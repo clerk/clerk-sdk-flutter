@@ -10,8 +10,9 @@ const Level _NOTICE = Level('NOTICE', 850);
 
 /// Mixin to hide some of the boilerplate around initializing and using a logger.
 mixin Logging {
-  late final logger = Logger('$runtimeType');
+  late final _logger = Logger('$runtimeType');
 
+  /// the [ZoneSpecification] for the logging object
   late final loggerZoneSpec = ZoneSpecification(
     print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
       logInfo(line);
@@ -40,7 +41,7 @@ mixin Logging {
     if (message is Map) {
       message = const JsonEncoder.withIndent('  ').convert(message);
     }
-    logger.log(logLevel, message, error, stackTrace, zone);
+    _logger.log(logLevel, message, error, stackTrace, zone);
   }
 
   /// Log message at level [Level.FINEST].
@@ -107,6 +108,7 @@ mixin Logging {
       log(Level.SHOUT, message, error, stackTrace);
 }
 
+/// Run [fn] with logging enabled
 Future<void> runWithLogging(Future<void> Function() fn) async {
   await runZoned(
     fn,
@@ -118,6 +120,7 @@ Future<void> runWithLogging(Future<void> Function() fn) async {
   );
 }
 
+/// Set up logging
 Future<void> setUpLogging({
   required Printer printer,
   bool structuredLogging = false,
@@ -199,8 +202,9 @@ String _withColor(String text, Level level) {
 /// Must implement a [print] method.
 ///
 abstract class Printer {
+  /// Construct a [Printer]
   const Printer();
 
-  /// Takes a string and logs it to the console.
+  /// Takes a string and logs it
   void print(String output);
 }

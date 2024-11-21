@@ -6,7 +6,10 @@ export 'auth_error.dart';
 export 'http_client.dart';
 export 'persistor.dart';
 
+/// [Auth] provides more abstracted access to the Clerk API
+///
 class Auth {
+  /// Create an [Auth] object using appropriate Clerk credentials
   Auth({
     required String publishableKey,
     required String publicKey,
@@ -21,39 +24,62 @@ class Auth {
 
   final Api _api;
 
-  static const jsVersion = '4.70.0';
-  static const oauthRedirect = 'https://www.clerk.com/oauth-redirect';
   static const _codeLength = 6;
 
-  /// A method to be overridden by extending subclasses to cope with updating their systems when
-  /// things change
+  /// JsVersion of API
+  static const jsVersion = '4.70.0';
+
+  /// default redirect URL for use with oAuth
+  static const oauthRedirect = 'https://www.clerk.com/oauth-redirect';
+
+  /// The [Environment] object
+  ///
+  /// configuration of the Clerk account - rarely changes
+  ///
+  late Environment env;
+
+  /// The [Client] object
+  ///
+  /// The current state of authentication - changes frequently
+  ///
+  late Client client;
+
+  /// The current [SignIn] object, or null
+  SignIn? get signIn => client.signIn;
+
+  /// The current [SignUp] object, or null
+  SignUp? get signUp => client.signUp;
+
+  /// The current [Session] object, or null
+  Session? get session => client.activeSession;
+
+  /// The current [User] object, or null
+  User? get user => session?.user;
+
+  /// A method to be overridden by extension classes to cope with
+  /// updating their systems when things change (e.g. the clerk_flutter
+  /// [ClerkAuthProvider] class)
+  ///
   void update() {}
 
-  // `init` must be called before `env` or `client` are accessed
+  /// Initialisation of the [Auth] object
+  ///
+  /// [init] must be called before any further use of the [Auth]
+  /// object is made
+  ///
   Future<void> init() async {
-    final [client, env] =
-        await Future.wait([_api.createClient(), _api.environment()]);
-    this.client = client as Client;
-    this.env = env as Environment;
+    client = await _api.createClient();
+    env = await _api.environment();
   }
 
+  /// Refresh the current [Client]
+  ///
   Future<void> refreshClient() async {
     client = await _api.currentClient();
     update();
   }
 
-  late Environment env;
-  late Client client;
-
-  SignIn? get signIn => client.signIn;
-
-  SignUp? get signUp => client.signUp;
-
-  Session? get session => client.activeSession;
-
-  User? get user => session?.user;
-
-  Future<ApiResponse> _housekeeping(ApiResponse resp) async {
+  ApiResponse _housekeeping(ApiResponse resp) {
     if (resp.client case Client client when resp.isOkay) {
       this.client = client;
     } else {
@@ -62,31 +88,34 @@ class Auth {
     return resp;
   }
 
+  /// Sign out of all [Session]s and delete the current [Client]
+  ///
   Future<void> signOut() async {
     client = await _api.signOut();
     update();
   }
 
-  Future<void> deleteUser() async {
-    client = await _api.deleteUser();
-    update();
-  }
-
+  /// Transfer an oAuth authentication into a [User]
+  ///
   Future<void> transfer() async {
     await _api.transfer().then(_housekeeping);
     update();
   }
 
+  /// Prepare for sign in via an oAuth provider
+  ///
   Future<Client> oauthSignIn({required Strategy strategy}) async {
     await _api
         .createSignIn(strategy: strategy, redirectUrl: oauthRedirect)
         .then(_housekeeping);
     if (client.signIn case SignIn signIn) {
       await _api
-          .prepareSignIn(signIn,
-              stage: Stage.first,
-              strategy: strategy,
-              redirectUrl: oauthRedirect)
+          .prepareSignIn(
+            signIn,
+            stage: Stage.first,
+            strategy: strategy,
+            redirectUrl: oauthRedirect,
+          )
           .then(_housekeeping);
     }
 
@@ -94,12 +123,14 @@ class Auth {
     return client;
   }
 
-  /// Progressive sign in
+  /// Progressively attempt sign in
   ///
-  /// Repeatedly call with updated parameters until the user is signed in.
+  /// Can be repeatedly called with updated parameters
+  /// until the user is signed in.
+  ///
   Future<Client> attemptSignIn({
+    required Strategy strategy,
     String? identifier,
-    Strategy? strategy,
     String? password,
     String? code,
     String? token,
@@ -114,7 +145,7 @@ class Auth {
     }
 
     switch (client.signIn) {
-      case SignIn signIn when strategy?.isOauth == true:
+      case SignIn signIn when strategy.isOauth == true && token is String:
         await _api
             .sendOauthToken(signIn, strategy: strategy!, token: token)
             .then(_housekeeping);
@@ -132,10 +163,13 @@ class Auth {
 
         final signInCompleter = Completer<Client>();
 
-        _pollForCompletion(signInCompleter, () async {
-          final client = await _api.currentClient();
-          return client.user is User ? client : null;
-        });
+        _pollForCompletion().then(
+          (client) {
+            this.client = client;
+            signInCompleter.complete(client);
+            update();
+          },
+        );
 
         update();
         return signInCompleter.future;
@@ -153,7 +187,7 @@ class Auth {
             .then(_housekeeping);
 
       case SignIn signIn
-          when signIn.status.needsFactor && strategy?.requiresCode == true:
+          when signIn.status.needsFactor && strategy.requiresCode == true:
         final stage = Stage.forStatus(signIn.status);
         if (signIn.verificationFor(stage) is! Verification) {
           await _api
@@ -165,11 +199,11 @@ class Auth {
                 code?.length == _codeLength) {
           await _api
               .attemptSignIn(signIn,
-                  stage: stage, strategy: strategy!, code: code)
+                  stage: stage, strategy: strategy, code: code)
               .then(_housekeeping);
         }
 
-      case SignIn signIn when signIn.status.needsFactor && strategy is Strategy:
+      case SignIn signIn when signIn.status.needsFactor:
         final stage = Stage.forStatus(signIn.status);
         await _api
             .prepareSignIn(signIn, stage: stage, strategy: strategy)
@@ -183,8 +217,13 @@ class Auth {
     return client;
   }
 
+  /// Progressively attempt sign up
+  ///
+  /// Can be repeatedly called with updated parameters
+  /// until the user is signed up and in.
+  ///
   Future<Client> attemptSignUp({
-    Strategy? strategy,
+    required Strategy strategy,
     String? firstName,
     String? lastName,
     String? username,
@@ -218,10 +257,9 @@ class Auth {
 
     if (client.user is! User) {
       switch (client.signUp) {
-        case SignUp signUp
-            when strategy?.requiresCode == true && code is String:
+        case SignUp signUp when strategy.requiresCode == true && code is String:
           await _api
-              .attemptSignUp(signUp, strategy: strategy!, code: code)
+              .attemptSignUp(signUp, strategy: strategy, code: code)
               .then(_housekeeping);
 
         case SignUp signUp
@@ -236,8 +274,7 @@ class Auth {
 
         case SignUp signUp
             when signUp.status == Status.missingRequirements &&
-                signUp.missingFields.isEmpty &&
-                strategy is Strategy:
+                signUp.missingFields.isEmpty:
           await _api
               .prepareSignUp(signUp, strategy: strategy)
               .then(_housekeeping);
@@ -268,33 +305,29 @@ class Auth {
     return client;
   }
 
-  Future<void> signOutSession(Session session) async {
-    await _api.signOutSession(session.id).then(_housekeeping);
+  /// Sign out of the given [Session]
+  ///
+  Future<void> signOutOf(Session session) async {
+    await _api.signOutOf(session).then(_housekeeping);
     update();
   }
 
-  Future<void> setActiveSession(Session session) async {
-    await _api.activateSession(session.id).then(_housekeeping);
+  /// Activate the given [Session]
+  ///
+  Future<void> activate(Session session) async {
+    await _api.activate(session).then(_housekeeping);
     update();
   }
 
-  void _pollForCompletion<T>(
-      Completer<T> completer, Future<T?> Function() fn) async {
+  Future<Client> _pollForCompletion() async {
     while (true) {
-      final expiry = signIn?.firstFactorVerification?.expireAt;
-      if (expiry?.isAfter(DateTime.now()) != true) {
-        // return if expiry has expired or is null
-        completer.completeError(
-            AuthError(message: 'Email Link not clicked in required timeframe'));
-        update();
-        return;
-      }
+      final client = await _api.currentClient();
+      if (client.user is User) return client;
 
-      final result = await fn.call();
-      if (result is T) {
-        completer.complete(result);
-        update();
-        return;
+      final expiry = client.signIn?.firstFactorVerification?.expireAt;
+      if (expiry?.isAfter(DateTime.now()) != true) {
+        throw AuthError(
+            message: 'Awaited user action not completed in required timeframe');
       }
 
       await Future.delayed(const Duration(seconds: 1));

@@ -55,11 +55,15 @@ void main() {
 
         expect(auth.user, null);
         final client = await auth.attemptSignIn(
-            identifier: 'test1+clerk_test@some.domain');
+          strategy: Strategy.password,
+          identifier: 'test1+clerk_test@some.domain',
+        );
         expect(client.signIn?.status, Status.needsFirstFactor);
 
         final client2 = await auth.attemptSignIn(
-            strategy: Strategy.password, password: env.password);
+          strategy: Strategy.password,
+          password: env.password,
+        );
         expect(client2.signIn, null);
         expect(client2.user is User, true);
       });

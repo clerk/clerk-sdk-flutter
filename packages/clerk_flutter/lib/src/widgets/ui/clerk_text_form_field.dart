@@ -31,7 +31,7 @@ class ClerkTextFormField extends StatelessWidget {
   /// can we see the text or not?
   final bool obscureText;
 
-  /// function to change obscuritu
+  /// function to change obscurity
   final VoidCallback? onObscure;
 
   /// initial value
@@ -103,8 +103,7 @@ class ClerkTextFormField extends StatelessWidget {
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onObscure,
-        child: Icon(obscureText ? Icons.visibility : Icons.visibility_off,
-            size: 16),
+        child: Icon(obscureText ? Icons.visibility : Icons.visibility_off, size: 16),
       );
     }
     return null;

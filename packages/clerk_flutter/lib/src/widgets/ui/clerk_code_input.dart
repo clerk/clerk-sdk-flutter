@@ -1,12 +1,10 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
+/// Widget which wraps a [MultiDigitCodeInput] widget, providing
+/// [title] and [subtitle] etc
 class ClerkCodeInput extends StatelessWidget {
-  final bool open;
-  final String? title;
-  final String? subtitle;
-  final Future<bool> Function(String) onSubmit;
-
+  /// Construct a [ClerkCodeInput]
   const ClerkCodeInput({
     super.key,
     required this.open,
@@ -14,6 +12,18 @@ class ClerkCodeInput extends StatelessWidget {
     this.title,
     this.subtitle,
   });
+
+  /// Should this widget be open?
+  final bool open;
+
+  /// Title for the input
+  final String? title;
+
+  /// Subtitle for the input
+  final String? subtitle;
+
+  /// Function to call when code is submitted
+  final Future<bool> Function(String) onSubmit;
 
   @override
   Widget build(BuildContext context) {

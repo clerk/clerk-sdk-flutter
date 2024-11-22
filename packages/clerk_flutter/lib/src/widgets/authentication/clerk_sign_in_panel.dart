@@ -9,8 +9,9 @@ import 'package:flutter/material.dart';
 /// specify in your Clerk Dashboard, such as sign-in and sign-ip options and social
 /// connections. You can further customize you [ClerkSignInPanel] by passing additional
 /// properties.
-
+///
 class ClerkSignInPanel extends StatefulWidget {
+  /// Constructs a new [ClerkSignInPanel].
   const ClerkSignInPanel({super.key});
 
   @override
@@ -32,7 +33,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
     });
   }
 
-  Future<void> _continue(ClerkAuthProvider auth, {clerk.Strategy? strategy, String? code}) async {
+  Future<void> _continue(ClerkAuthProvider auth,
+      {clerk.Strategy? strategy, String? code}) async {
     if (_hasIdentifier) {
       final newStrategy = strategy ?? _strategy;
       final newCode = code ?? _code;
@@ -61,12 +63,15 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
     final auth = ClerkAuth.of(context);
     final translator = auth.translator;
     final env = auth.env;
-    final otherStrategies = env.config.firstFactors.where((f) => f.isOtherStrategy);
-    final hasPasswordStrategy = env.config.firstFactors.contains(clerk.Strategy.password);
-    final identifiers =
-        env.config.identificationStrategies.where((i) => i.isOauth == false).map((i) => i.title);
-    final factor =
-        auth.client.signIn?.supportedFirstFactors.firstWhereOrNull((f) => f.strategy == _strategy);
+    final otherStrategies =
+        env.config.firstFactors.where((f) => f.isOtherStrategy);
+    final hasPasswordStrategy =
+        env.config.firstFactors.contains(clerk.Strategy.password);
+    final identifiers = env.config.identificationStrategies
+        .where((i) => i.isOauth == false)
+        .map((i) => i.toString().replaceAll('_', ' '));
+    final factor = auth.client.signIn?.supportedFirstFactors
+        .firstWhereOrNull((f) => f.strategy == _strategy);
     final safeIdentifier = factor?.safeIdentifier;
 
     return Column(
@@ -108,7 +113,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
         ClerkCodeInput(
           key: const Key('code'),
           open: _strategy.requiresCode,
-          title: translator.translate('Enter code sent to ###', substitution: safeIdentifier),
+          title: translator.translate('Enter code sent to ###',
+              substitution: safeIdentifier),
           onSubmit: (code) async {
             await _continue(auth, code: code, strategy: _strategy);
             return false;
@@ -126,7 +132,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
                     label: translator.translate('Password'),
                     obscureText: true,
                     onChanged: (password) => _password = password,
-                    onSubmit: (_) => _continue(auth, strategy: clerk.Strategy.password),
+                    onSubmit: (_) =>
+                        _continue(auth, strategy: clerk.Strategy.password),
                   ),
                 ),
               if (otherStrategies.isNotEmpty) ...[

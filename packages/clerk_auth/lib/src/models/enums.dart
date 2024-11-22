@@ -3,77 +3,137 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'enums.g.dart';
 
-typedef AuthParameters = Map<Field, dynamic>;
-
+/// [EnrollmentMode] Clerk object
 @JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
 enum EnrollmentMode {
+  /// manual invitation
   manualInvitation;
 
   @override
   String toString() => _$EnrollmentModeEnumMap[this]!;
 }
 
+/// [Status] Clerk object
 @JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
 enum Status {
+  /// abandoned
   abandoned,
+
+  /// active
   active,
+
+  /// missing requirements
   missingRequirements,
+
+  /// needs identifier
   needsIdentifier,
+
+  /// needs first factor
   needsFirstFactor,
+
+  /// needs second factor
   needsSecondFactor,
+
+  /// transferable
   transferable,
+
+  /// unverified
   unverified,
+
+  /// verified
   verified,
+
+  /// complete
   complete;
 
+  /// is active?
   bool get isActive => this == active;
 
+  /// needs factor?
   bool get needsFactor => this == needsFirstFactor || this == needsSecondFactor;
 
   @override
   String toString() => _$StatusEnumMap[this]!;
 }
 
+/// [IdentificationStrategy] Clerk object
 @JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
 enum IdentificationStrategy {
+  /// email address
   emailAddress,
+
+  /// oauth apple
   oauthApple,
+
+  /// oauth github
   oauthGithub,
+
+  /// oauth google
   oauthGoogle,
+
+  /// phone number
   phoneNumber,
+
+  /// username
   username;
 
   @override
   String toString() => _$IdentificationStrategyEnumMap[this]!;
 }
 
+/// [UserAttribute] Clerk object
 @JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
 enum UserAttribute {
+  /// username
   username,
+
+  /// email address
   emailAddress,
+
+  /// phone number
   phoneNumber,
+
+  /// first name
   firstName,
+
+  /// last name
   lastName,
+
+  /// password
   password,
+
+  /// password confirmation
   passwordConfirmation,
+
+  /// web3 wallet
   web3Wallet,
+
+  /// authenticator app
   authenticatorApp,
+
+  /// backup code
   backupCode,
+
+  /// passkey
   passkey;
 
-  bool get obscure => this == password || this == passwordConfirmation;
-
-  String get title => toString().replaceAll('_', ' ').capitalized;
+  /// is password?
+  bool get isPassword => this == password || this == passwordConfirmation;
 
   @override
   String toString() => _$UserAttributeEnumMap[this]!;
 }
 
+/// [Stage] Clerk object
 @JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
 enum Stage {
+  /// first
   first,
+
+  /// second
   second;
 
+  /// return the appropriate stage for a status
   static Stage forStatus(Status status) {
     return switch (status) {
       Status.needsFirstFactor => first,
@@ -86,21 +146,49 @@ enum Stage {
   String toString() => _$StageEnumMap[this]!;
 }
 
+/// [Field] Clerk object
 @JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
 enum Field {
+  /// email address
   emailAddress,
+
+  /// external account
   externalAccount,
+
+  /// first name
   firstName,
+
+  /// last name
   lastName,
+
+  /// password
   password,
+
+  /// phone number
   phoneNumber,
+
+  /// oauth apple
   oauthApple,
+
+  /// oauth github
   oauthGithub,
+
+  /// oauth google
   oauthGoogle,
+
+  /// username
   username,
+
+  /// web3 wallet
   web3Wallet,
+
+  /// code
   code,
+
+  /// token
   token,
+
+  /// signature
   signature;
 
   @override

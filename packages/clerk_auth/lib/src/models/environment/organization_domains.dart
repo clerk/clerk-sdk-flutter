@@ -4,24 +4,33 @@ import '../enums.dart';
 
 part 'organization_domains.g.dart';
 
+/// [OrganizationDomains] Clerk object
 @JsonSerializable()
 class OrganizationDomains {
+  /// Constructor
   const OrganizationDomains({
     this.defaultRole = '',
     this.enrollmentModes = const [],
     this.isEnabled = false,
   });
 
-  static const empty = OrganizationDomains();
-
+  /// default role
   final String defaultRole;
+
+  /// enrollment modes
   final List<EnrollmentMode> enrollmentModes;
 
+  /// empty [OrganizationDomains]
+  static const empty = OrganizationDomains();
+
+  /// is enabled?
   @JsonKey(name: 'enabled')
   final bool isEnabled;
 
+  /// fromJson
   static OrganizationDomains fromJson(Map<String, dynamic> json) =>
       _$OrganizationDomainsFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$OrganizationDomainsToJson(this);
 }

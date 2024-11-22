@@ -4,10 +4,16 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
+/// The [ClerkUserButton] renders a list of all users from
+/// [clerk.Session]s currently signed in, plus controls to sign
+/// out of all sessions
+///
 class ClerkUserButton extends StatefulWidget {
-  final bool showName;
-
+  /// Construct a [ClerkUserButton]
   const ClerkUserButton({super.key, this.showName = true});
+
+  /// Whether to show the user's name or not
+  final bool showName;
 
   @override
   State<ClerkUserButton> createState() => _ClerkUserButtonState();
@@ -57,7 +63,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
                   closed: sessions.contains(session) == false,
                   selected: session == auth.client.activeSession,
                   showName: widget.showName,
-                  onTap: () => auth.call(context, () => auth.setActiveSession(session)),
+                  onTap: () => auth.call(context, () => auth.activate(session)),
                 ),
               if (auth.env.config.singleSessionMode == false)
                 Padding(
@@ -68,7 +74,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const CircleIcon(
+                        const _CircleIcon(
                           icon: Icons.add,
                           backgroundColor: ClerkColors.dawnPink,
                           borderColor: ClerkColors.nobel,
@@ -113,7 +119,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
   }
 
   Future<void> _signIn(BuildContext context) async {
-    final auth = ClerkAuth.nonDependentOf(context);
+    final auth = ClerkAuth.above(context);
     final sessionIds = auth.client.sessionIds;
 
     late final OverlayEntry overlay;
@@ -146,7 +152,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: unload,
-                    child: const CircleIcon(icon: Icons.close),
+                    child: const _CircleIcon(icon: Icons.close),
                   ),
                 ),
               ],
@@ -160,21 +166,20 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
   }
 }
 
-class CircleIcon extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final Color backgroundColor;
-  final Color? borderColor;
-  final bool dashed;
-
-  const CircleIcon({
-    super.key,
+class _CircleIcon extends StatelessWidget {
+  const _CircleIcon({
     required this.icon,
-    this.color = ClerkColors.stormGrey,
     this.backgroundColor = Colors.transparent,
     this.borderColor,
     this.dashed = false,
   });
+
+  final IconData icon;
+  final Color backgroundColor;
+  final Color? borderColor;
+  final bool dashed;
+
+  static const color = ClerkColors.stormGrey;
 
   @override
   Widget build(BuildContext context) {
@@ -194,14 +199,6 @@ class CircleIcon extends StatelessWidget {
 }
 
 class _DottedBorderPainter extends CustomPainter {
-  static const _twoPi = 2 * math.pi;
-
-  final double dashLength;
-  final double gapLength; // actually, minimum gap length
-
-  final Paint _paint;
-  final Paint _backgroundPaint;
-
   _DottedBorderPainter({
     required Color color,
     required Color backgroundColor,
@@ -217,6 +214,14 @@ class _DottedBorderPainter extends CustomPainter {
         _backgroundPaint = Paint()
           ..style = PaintingStyle.fill
           ..color = backgroundColor;
+
+  final double dashLength;
+  final double gapLength; // actually, minimum gap length
+
+  final Paint _paint;
+  final Paint _backgroundPaint;
+
+  static const _twoPi = 2 * math.pi;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -242,12 +247,6 @@ class _DottedBorderPainter extends CustomPainter {
 }
 
 class _SessionRow extends StatelessWidget {
-  final clerk.Session session;
-  final bool closed;
-  final bool selected;
-  final bool showName;
-  final VoidCallback? onTap;
-
   const _SessionRow({
     super.key,
     required this.session,
@@ -256,6 +255,12 @@ class _SessionRow extends StatelessWidget {
     this.selected = false,
     this.showName = true,
   });
+
+  final clerk.Session session;
+  final bool closed;
+  final bool selected;
+  final bool showName;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +284,8 @@ class _SessionRow extends StatelessWidget {
                       backgroundColor: ClerkColors.mountainMist,
                       child: user.imageUrl is String
                           ? ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(16)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(16)),
                               child: Image.network(
                                 user.imageUrl!,
                                 width: 32,
@@ -287,7 +293,8 @@ class _SessionRow extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             )
-                          : Text(user.name.initials, style: ClerkTextStyle.subtitleDark),
+                          : Text(user.name.initials,
+                              style: ClerkTextStyle.subtitleDark),
                     ),
                     horizontalMargin16,
                     Column(
@@ -315,7 +322,7 @@ class _SessionRow extends StatelessWidget {
                 padding: horizontalPadding16 + leftPadding48 + bottomPadding8,
                 child: Builder(
                   builder: (context) {
-                    final auth = ClerkAuth.nonDependentOf(context);
+                    final auth = ClerkAuth.above(context);
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -348,14 +355,16 @@ class _SessionRow extends StatelessWidget {
                               if (auth.client.sessions.length == 1) {
                                 auth.call(context, () => auth.signOut());
                               } else {
-                                auth.call(context, () => auth.signOutSession(session));
+                                auth.call(
+                                    context, () => auth.signOutOf(session));
                               }
                             },
                             label: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                const Icon(Icons.logout, color: ClerkColors.charcoalGrey, size: 11),
+                                const Icon(Icons.logout,
+                                    color: ClerkColors.charcoalGrey, size: 11),
                                 horizontalMargin8,
                                 Text(
                                   translator.translate('Sign Out'),

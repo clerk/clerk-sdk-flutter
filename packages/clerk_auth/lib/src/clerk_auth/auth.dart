@@ -8,6 +8,18 @@ export 'persistor.dart';
 
 /// [Auth] provides more abstracted access to the Clerk API
 ///
+/// Requires a [publicKey] and [publishableKey] found in the Clerk dashboard
+/// for you account. Additional arguments:
+///
+/// [persistor]: an optional instance of a [Persistor] which will keep track of
+/// tokens and expiry between app activations
+///
+/// [client]: an optional instance of [HttpClient] to manage low-level communications
+/// with the back end. Injected for e.g. test mocking
+///
+/// [pollForSession]: a boolean, default false, which if true causes the back end
+/// to be polled regularly for new [sessionToken]s.
+///
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
   Auth({
@@ -15,11 +27,13 @@ class Auth {
     required String publicKey,
     Persistor? persistor,
     HttpClient? client,
+    bool pollForSession = false,
   }) : _api = Api(
           publicKey: publicKey,
           publishableKey: publishableKey,
           persistor: persistor,
           client: client,
+          pollForSession: pollForSession,
         );
 
   final Api _api;
@@ -64,12 +78,24 @@ class Auth {
 
   /// Initialisation of the [Auth] object
   ///
-  /// [init] must be called before any further use of the [Auth]
+  /// [initialize] must be called before any further use of the [Auth]
   /// object is made
   ///
-  Future<void> init() async {
-    client = await _api.createClient();
-    env = await _api.environment();
+  Future<void> initialize() async {
+    await _api.initialize();
+    final [client, env] =
+        await Future.wait([_api.createClient(), _api.environment()]);
+    this.client = client as Client;
+    this.env = env as Environment;
+  }
+
+  /// Disposal of the [Auth] object
+  ///
+  /// Named [terminate] so as not to clash with [ChangeNotifier]'s [dispose]
+  /// method, if that is mixed in e.g. in clerk_flutter
+  ///
+  void terminate() {
+    _api.terminate();
   }
 
   /// Refresh the current [Client]

@@ -1,31 +1,36 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
 import 'package:json_annotation/json_annotation.dart';
 
 import '../enums.dart';
 
 part 'organization_domains.g.dart';
 
+/// [OrganizationDomains] Clerk object
 @JsonSerializable()
 class OrganizationDomains {
+  /// Constructor
   const OrganizationDomains({
     this.defaultRole = '',
     this.enrollmentModes = const [],
     this.isEnabled = false,
   });
 
+  /// default role
   final String defaultRole;
+
+  /// enrollment modes
   final List<EnrollmentMode> enrollmentModes;
 
+  /// empty [OrganizationDomains]
   static const empty = OrganizationDomains();
 
+  /// is enabled?
   @JsonKey(name: 'enabled')
   final bool isEnabled;
 
+  /// fromJson
   static OrganizationDomains fromJson(Map<String, dynamic> json) =>
       _$OrganizationDomainsFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$OrganizationDomainsToJson(this);
 }

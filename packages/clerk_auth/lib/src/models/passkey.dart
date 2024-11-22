@@ -1,7 +1,3 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
 import 'package:json_annotation/json_annotation.dart';
 
 import 'helpers.dart';
@@ -9,8 +5,10 @@ import 'verification.dart';
 
 part 'passkey.g.dart';
 
+/// [Passkey] Clerk object
 @JsonSerializable()
 class Passkey {
+  /// Constructor
   const Passkey({
     required this.id,
     required this.name,
@@ -20,20 +18,30 @@ class Passkey {
     required this.createdAt,
   });
 
+  /// id
   final String id;
+
+  /// name
   final String name;
+
+  /// verification
   final Verification verification;
 
+  /// updated at
   @JsonKey(fromJson: intToDateTime)
   final DateTime? updatedAt;
 
+  /// created at
   @JsonKey(fromJson: intToDateTime)
   final DateTime? createdAt;
 
+  /// last used at
   @JsonKey(fromJson: intToDateTime)
   final DateTime? lastUsedAt;
 
+  /// fromJson
   static Passkey fromJson(Map<String, dynamic> json) => _$PasskeyFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$PasskeyToJson(this);
 }

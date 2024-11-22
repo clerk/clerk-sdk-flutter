@@ -18,6 +18,7 @@ class ClerkIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(assetName, height: size, width: size, package: 'clerk_flutter');
+    return SvgPicture.asset(assetName,
+        height: size, width: size, package: 'clerk_flutter');
   }
 }

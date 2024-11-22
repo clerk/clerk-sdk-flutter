@@ -46,7 +46,8 @@ const insetBoxShadowDecoration = BoxDecoration(
 const firstColumnWidth = 215.0;
 const secondColumnWidth = 280.0;
 
-const divider = Divider(color: ClerkColors.seashell, thickness: 2.0, height: 2.0);
+const divider =
+    Divider(color: ClerkColors.seashell, thickness: 2.0, height: 2.0);
 
 // Margins
 
@@ -75,11 +76,16 @@ const verticalMargin96 = SizedBox(height: 96.0);
 
 const sliverVerticalMargin4 = SliverToBoxAdapter(child: SizedBox(height: 4.0));
 const sliverVerticalMargin8 = SliverToBoxAdapter(child: SizedBox(height: 8.0));
-const sliverVerticalMargin12 = SliverToBoxAdapter(child: SizedBox(height: 12.0));
-const sliverVerticalMargin16 = SliverToBoxAdapter(child: SizedBox(height: 16.0));
-const sliverVerticalMargin24 = SliverToBoxAdapter(child: SizedBox(height: 24.0));
-const sliverVerticalMargin32 = SliverToBoxAdapter(child: SizedBox(height: 32.0));
-const sliverVerticalMargin48 = SliverToBoxAdapter(child: SizedBox(height: 48.0));
+const sliverVerticalMargin12 =
+    SliverToBoxAdapter(child: SizedBox(height: 12.0));
+const sliverVerticalMargin16 =
+    SliverToBoxAdapter(child: SizedBox(height: 16.0));
+const sliverVerticalMargin24 =
+    SliverToBoxAdapter(child: SizedBox(height: 24.0));
+const sliverVerticalMargin32 =
+    SliverToBoxAdapter(child: SizedBox(height: 32.0));
+const sliverVerticalMargin48 =
+    SliverToBoxAdapter(child: SizedBox(height: 48.0));
 
 // Paddings
 

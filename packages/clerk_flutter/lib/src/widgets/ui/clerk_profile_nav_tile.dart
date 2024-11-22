@@ -45,7 +45,8 @@ class ProfileNavTile extends StatelessWidget {
               Text(
                 title,
                 style: selected
-                    ? ClerkTextStyle.subtitle.copyWith(color: ClerkColors.darkJungleGreen)
+                    ? ClerkTextStyle.subtitle
+                        .copyWith(color: ClerkColors.darkJungleGreen)
                     : ClerkTextStyle.subtitle,
                 maxLines: 1,
               ),

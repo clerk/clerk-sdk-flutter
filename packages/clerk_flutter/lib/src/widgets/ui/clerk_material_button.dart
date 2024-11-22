@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 /// Style of [ClerkMaterialButton].
 ///
 enum ClerkMaterialButtonStyle {
-  /// Light.
+  /// light
   light,
 
-  /// Dark.
+  /// dark
   dark;
 }
 

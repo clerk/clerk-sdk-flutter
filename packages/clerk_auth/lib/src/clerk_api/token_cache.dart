@@ -13,29 +13,30 @@ import 'package:logging/logging.dart';
 class TokenCache {
   /// Create a [TokenCache] instance
   ///
-  TokenCache(this._publicKey, this._persistor) {
-    _init();
-  }
+  TokenCache(this._publicKey, this._persistor);
 
   final String _publicKey;
   final Persistor? _persistor;
 
+  /// the date at which, if in the future, the current [sessionToken]
+  /// is due to expire
+  DateTime sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
+
   static const _tokenExpiryBuffer = Duration(seconds: 10);
 
   final _logger = Logger('TokenCache');
-  late final RSAPublicKey _rsaKey;
+  late final RSAPublicKey _rsaKey = RSAPublicKey(_publicKey);
 
   String _sessionId = '';
   String _clientToken = '';
   String _sessionToken = '';
-  DateTime _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
 
   /// Whether or not the [sessionToken] can be refreshed
   bool get canRefreshSessionToken =>
       clientToken.isNotEmpty && sessionId.isNotEmpty;
 
   bool get _sessionTokenHasExpired =>
-      DateTime.now().isAfter(_sessionTokenExpiry);
+      DateTime.now().isAfter(sessionTokenExpiry);
 
   String get _sessionIdKey => '_clerkSessionId_${_publicKey.hashCode}';
 
@@ -53,18 +54,22 @@ class TokenCache {
         _clientTokenKey,
       ];
 
-  Future<void> _init() async {
-    _rsaKey = RSAPublicKey(_publicKey);
+  /// Initialise the cache
+  Future<void> initialize() async {
     if (_persistor case Persistor persistor) {
-      final [sessionId, sessionToken, ms, clientToken] = await Future.wait(
-        _persistorKeys.map(persistor.read),
-      );
+      final [sessionId, sessionToken, ms, clientToken] = await Future.wait([
+        persistor.read(_sessionIdKey),
+        persistor.read(_sessionTokenKey),
+        persistor.read(_sessionTokenExpiryKey),
+        persistor.read(_clientTokenKey),
+      ]);
 
       _sessionId = sessionId ?? '';
       _sessionToken = sessionToken ?? '';
       _clientToken = clientToken ?? '';
-      _sessionTokenExpiry =
-          DateTime.fromMillisecondsSinceEpoch(int.tryParse(ms ?? '') ?? 0);
+
+      final milliseconds = int.tryParse(ms ?? '') ?? 0;
+      sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(milliseconds);
     }
   }
 
@@ -74,7 +79,7 @@ class TokenCache {
     _sessionId = '';
     _clientToken = '';
     _sessionToken = '';
-    _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
+    sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
     for (final key in _persistorKeys) {
       _persistor?.delete(key);
     }
@@ -120,12 +125,12 @@ class TokenCache {
       final exp = jwt.payload['exp'];
       if (exp is int) {
         final expiry = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
-        _sessionTokenExpiry = expiry.subtract(_tokenExpiryBuffer);
+        sessionTokenExpiry = expiry.subtract(_tokenExpiryBuffer);
         _sessionToken = token;
         _persistor?.write(_sessionTokenKey, token);
         _persistor?.write(
           _sessionTokenExpiryKey,
-          _sessionTokenExpiry.millisecondsSinceEpoch.toString(),
+          sessionTokenExpiry.millisecondsSinceEpoch.toString(),
         );
       }
     } catch (error, _) {

@@ -4,6 +4,22 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
+/// [ClerkSessionTokenPollMode] manages how to refresh the [sessionToken]
+/// [regular]: refresh whenever token expires (more http access and power use)
+/// [onDemand]: refresh if expired when accessed (with possible increased
+/// latency at that time)
+///
+enum ClerkSessionTokenPollMode {
+  /// regular
+  regular,
+
+  /// on demand
+  onDemand;
+
+  /// is regular?
+  bool get isRegular => this == regular;
+}
+
 /// Control widget initialising Clerk Auth system
 class ClerkAuth extends StatefulWidget {
   /// Construct a [ClerkAuth]
@@ -11,6 +27,7 @@ class ClerkAuth extends StatefulWidget {
     super.key,
     this.publicKey,
     this.publishableKey,
+    this.pollMode = ClerkSessionTokenPollMode.onDemand,
     this.auth,
     this.translator = const DefaultClerkTranslator(),
     this.persistor,
@@ -39,6 +56,9 @@ class ClerkAuth extends StatefulWidget {
 
   /// Injectable translations for strings
   final ClerkTranslator translator;
+
+  /// Poll mode: should we regularly poll for session token?
+  final ClerkSessionTokenPollMode pollMode;
 
   /// Loading widget
   final Widget? loading;
@@ -103,6 +123,7 @@ class _ClerkAuthState extends State<ClerkAuth> {
         persistor: widget.persistor,
         translator: widget.translator,
         loading: widget.loading,
+        pollForSession: widget.pollMode.isRegular,
       );
       _authFuture = _auth.initialize().then((_) => _auth);
     }

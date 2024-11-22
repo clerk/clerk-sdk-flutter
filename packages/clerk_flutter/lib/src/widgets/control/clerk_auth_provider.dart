@@ -16,6 +16,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
     this.translator = const DefaultClerkTranslator(),
     Widget? loading,
     super.persistor,
+    super.pollForSession,
   }) : _loadingOverlay = OverlayEntry(
           builder: (context) => loading ?? defaultLoadingWidget,
         );

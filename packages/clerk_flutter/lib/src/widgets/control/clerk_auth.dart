@@ -53,7 +53,7 @@ class ClerkAuth extends StatefulWidget {
   /// with rebuild on change
   static ClerkAuthProvider of(BuildContext context) {
     final result = context.dependOnInheritedWidgetOfExactType<_ClerkAuthData>();
-    assert(result != null, 'No Clerk `Auth` found in context');
+    assert(result != null, 'No `ClerkAuthProvider` found in context');
     return result!.auth;
   }
 
@@ -65,27 +65,28 @@ class ClerkAuth extends StatefulWidget {
 
   /// Get the [context]'s nearest [ClerkAuthProvider]
   /// without rebuild on change
-  static ClerkAuthProvider nonDependentOf(BuildContext context) {
+  static ClerkAuthProvider above(BuildContext context) {
     final result = context.findAncestorWidgetOfExactType<_ClerkAuthData>();
-    assert(result != null, 'No Clerk `Auth` found in context');
+    assert(result != null, 'No `ClerkAuthProvider` found in context');
     return result!.auth;
   }
 
   /// Get the [ClerkTranslator]
-  static ClerkTranslator translatorOf(BuildContext context) => nonDependentOf(context).translator;
+  static ClerkTranslator translatorOf(BuildContext context) =>
+      above(context).translator;
 
   /// Get the [clerk.DisplayConfig]
   static clerk.DisplayConfig displayConfigOf(BuildContext context) =>
-      nonDependentOf(context).env.display;
+      above(context).env.display;
 
   /// get the stream of [clerk.AuthError]
   static Stream<clerk.AuthError> errorStreamOf(BuildContext context) =>
-      nonDependentOf(context).errorStream;
+      above(context).errorStream;
 }
 
 class _ClerkAuthState extends State<ClerkAuth> {
-  late ClerkAuthProvider _auth;
-  late Future<ClerkAuthProvider> _authFuture;
+  late final ClerkAuthProvider _auth;
+  late final Future<ClerkAuthProvider> _authFuture;
 
   void _update() => setState(() {});
 
@@ -94,7 +95,7 @@ class _ClerkAuthState extends State<ClerkAuth> {
     super.initState();
     if (widget.auth case ClerkAuthProvider auth) {
       _auth = auth;
-      _authFuture = Future.value(_auth);
+      _authFuture = Future.value(auth);
     } else {
       _auth = ClerkAuthProvider(
         publishableKey: widget.publishableKey!,
@@ -103,7 +104,7 @@ class _ClerkAuthState extends State<ClerkAuth> {
         translator: widget.translator,
         loading: widget.loading,
       );
-      _authFuture = _auth.init().then((_) => _auth);
+      _authFuture = _auth.initialize().then((_) => _auth);
     }
     _auth.addListener(_update);
   }
@@ -113,7 +114,7 @@ class _ClerkAuthState extends State<ClerkAuth> {
     if (widget.auth is ClerkAuthProvider) {
       _auth.removeListener(_update);
     } else {
-      _auth.dispose();
+      _auth.terminate();
     }
     super.dispose();
   }
@@ -124,10 +125,7 @@ class _ClerkAuthState extends State<ClerkAuth> {
       future: _authFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return _ClerkAuthData(
-            auth: snapshot.data!,
-            child: widget.child,
-          );
+          return _ClerkAuthData(auth: snapshot.data!, child: widget.child);
         }
         return widget.loading ?? emptyWidget;
       },

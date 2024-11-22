@@ -1,17 +1,13 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
-// ignore_for_file: sort_constructors_first
-
 import 'package:json_annotation/json_annotation.dart';
 
 import '../helpers.dart';
 
 part 'password_settings.g.dart';
 
+/// [PasswordSettings] Clerk object
 @JsonSerializable()
 class PasswordSettings {
+  /// Constructor
   const PasswordSettings({
     this.allowedSpecialCharacters = '',
     this.minZxcvbnStrength = 0,
@@ -26,29 +22,43 @@ class PasswordSettings {
     this.enforceHibpOnSignIn = false,
   });
 
+  /// allowed special characters
   final String allowedSpecialCharacters;
+
+  /// min zxcvbn strength
   final int minZxcvbnStrength;
+
+  /// min length
   final int minLength;
+
+  /// max length
   final int maxLength;
 
+  /// disable hibp?
   @JsonKey(fromJson: isTrue)
   final bool disableHibp;
 
+  /// require special characters?
   @JsonKey(fromJson: isTrue)
   final bool requireSpecialChar;
 
+  /// require numbers?
   @JsonKey(fromJson: isTrue)
   final bool requireNumbers;
 
+  /// require upper case?
   @JsonKey(fromJson: isTrue)
   final bool requireUppercase;
 
+  /// require lower case?
   @JsonKey(fromJson: isTrue)
   final bool requireLowercase;
 
+  /// show zxcvbn?
   @JsonKey(fromJson: isTrue)
   final bool showZxcvbn;
 
+  /// enforce hibp on sign in?
   @JsonKey(fromJson: isTrue)
   final bool enforceHibpOnSignIn;
 
@@ -56,25 +66,37 @@ class PasswordSettings {
   static final _upperCaseRE = RegExp(r'[A-Z]');
   static final _numberRE = RegExp(r'[0-9]');
 
+  /// empty [PasswordSettings]
   static const empty = PasswordSettings();
 
-  static PasswordSettings fromJson(Map<String, dynamic> json) => _$PasswordSettingsFromJson(json);
+  /// fromJson
+  static PasswordSettings fromJson(Map<String, dynamic> json) =>
+      _$PasswordSettingsFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$PasswordSettingsToJson(this);
 
+  /// does a password meet the lower case criteria?
   bool meetsLowerCaseCriteria(String password) =>
       requireLowercase == false || _lowerCaseRE.hasMatch(password);
 
+  /// does a password meet the upper case criteria?
   bool meetsUpperCaseCriteria(String password) =>
       requireUppercase == false || _upperCaseRE.hasMatch(password);
 
+  /// does a password meet the number criteria?
   bool meetsNumberCriteria(String password) =>
       requireNumbers == false || _numberRE.hasMatch(password);
 
+  /// does a password meet the special character criteria?
   bool meetsSpecialCharCriteria(String password) =>
       requireSpecialChar == false ||
-      allowedSpecialCharacters.runes.toSet().intersection(password.runes.toSet()).isNotEmpty;
+      allowedSpecialCharacters.runes
+          .toSet()
+          .intersection(password.runes.toSet())
+          .isNotEmpty;
 
+  /// does a password meet all criteria?
   bool meetsRequiredCriteria(String password) =>
       meetsLowerCaseCriteria(password) &&
       meetsUpperCaseCriteria(password) &&

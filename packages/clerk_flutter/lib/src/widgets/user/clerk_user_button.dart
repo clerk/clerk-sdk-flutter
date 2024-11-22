@@ -119,7 +119,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
   }
 
   Future<void> _signIn(BuildContext context) async {
-    final auth = ClerkAuth.nonDependentOf(context);
+    final auth = ClerkAuth.above(context);
     final sessionIds = auth.client.sessionIds;
 
     late final OverlayEntry overlay;
@@ -284,7 +284,8 @@ class _SessionRow extends StatelessWidget {
                       backgroundColor: ClerkColors.mountainMist,
                       child: user.imageUrl is String
                           ? ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(16)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(16)),
                               child: Image.network(
                                 user.imageUrl!,
                                 width: 32,
@@ -292,7 +293,8 @@ class _SessionRow extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             )
-                          : Text(user.name.initials, style: ClerkTextStyle.subtitleDark),
+                          : Text(user.name.initials,
+                              style: ClerkTextStyle.subtitleDark),
                     ),
                     horizontalMargin16,
                     Column(
@@ -320,7 +322,7 @@ class _SessionRow extends StatelessWidget {
                 padding: horizontalPadding16 + leftPadding48 + bottomPadding8,
                 child: Builder(
                   builder: (context) {
-                    final auth = ClerkAuth.nonDependentOf(context);
+                    final auth = ClerkAuth.above(context);
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -353,14 +355,16 @@ class _SessionRow extends StatelessWidget {
                               if (auth.client.sessions.length == 1) {
                                 auth.call(context, () => auth.signOut());
                               } else {
-                                auth.call(context, () => auth.signOutOf(session));
+                                auth.call(
+                                    context, () => auth.signOutOf(session));
                               }
                             },
                             label: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                const Icon(Icons.logout, color: ClerkColors.charcoalGrey, size: 11),
+                                const Icon(Icons.logout,
+                                    color: ClerkColors.charcoalGrey, size: 11),
                                 horizontalMargin8,
                                 Text(
                                   translator.translate('Sign Out'),

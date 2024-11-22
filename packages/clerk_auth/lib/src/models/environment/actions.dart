@@ -1,26 +1,32 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'actions.g.dart';
 
+/// [Actions] Clerk object
 @JsonSerializable()
 class Actions {
+  /// Constructor
   const Actions({
     this.deleteSelf = false,
     this.createOrganization = false,
     this.createOrganizationsLimit = 0,
   });
 
+  /// empty [Actions]
   static const empty = Actions();
 
+  /// can user delete self?
   final bool deleteSelf;
+
+  /// can user create organization?
   final bool createOrganization;
+
+  /// how many organizations can use create?
   final int? createOrganizationsLimit;
 
+  /// create [Actions] from Json
   static Actions fromJson(Map<String, dynamic> json) => _$ActionsFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$ActionsToJson(this);
 }

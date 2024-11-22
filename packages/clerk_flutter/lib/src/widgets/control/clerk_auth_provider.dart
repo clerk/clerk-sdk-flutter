@@ -35,6 +35,12 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   @override
   void update() => notifyListeners();
 
+  @override
+  void terminate() {
+    super.terminate();
+    dispose();
+  }
+
   /// Performs SSO authentication according to the `strategy`
   Future<void> sso(
     BuildContext context,
@@ -133,7 +139,8 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   /// but may still not be acceptable to the back end
   String? checkPassword(String? password, String? confirmation) {
     if (password != confirmation) {
-      return translator.translate('Password and password confirmation must match');
+      return translator
+          .translate('Password and password confirmation must match');
     }
 
     if (password case String password when password.isNotEmpty) {
@@ -157,8 +164,8 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
       }
 
       if (missing.isNotEmpty) {
-        final value =
-            translator.alternatives(missing, connector: 'and', prefix: 'Password requires');
+        final value = translator.alternatives(missing,
+            connector: 'and', prefix: 'Password requires');
         return value.replaceFirst('###', criteria.allowedSpecialCharacters);
       }
     }
@@ -167,7 +174,8 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   }
 
   /// Add an [clerk.AuthError] for [message] to the [errorStream]
-  void addError(String message) => _errors.add(clerk.AuthError(message: message));
+  void addError(String message) =>
+      _errors.add(clerk.AuthError(message: message));
 }
 
 class _SsoWebViewHost extends StatefulWidget {

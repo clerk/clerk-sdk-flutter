@@ -55,7 +55,8 @@ class DefaultClerkTranslator extends ClerkTranslator {
   const DefaultClerkTranslator();
 
   @override
-  String translate(String phrase, {String? substitution, List<String> substitutions = const []}) {
+  String translate(String phrase,
+      {String? substitution, List<String> substitutions = const []}) {
     if (substitution case String sub) {
       return phrase.replaceFirst(substitutionKey, sub);
     }
@@ -68,7 +69,8 @@ class DefaultClerkTranslator extends ClerkTranslator {
   }
 
   @override
-  String alternatives(List<String> items, {String connector = 'or', String? prefix}) {
+  String alternatives(List<String> items,
+      {String connector = 'or', String? prefix}) {
     if (items.isEmpty) return '';
 
     final buf = StringBuffer();

@@ -1,15 +1,13 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
 import 'package:json_annotation/json_annotation.dart';
 
 import 'helpers.dart';
 
 part 'organization.g.dart';
 
+/// [Organization] Clerk object
 @JsonSerializable()
 class Organization {
+  /// Constructor
   const Organization({
     required this.id,
     required this.name,
@@ -26,25 +24,51 @@ class Organization {
     required this.createdAt,
   });
 
+  /// id
   final String id;
+
+  /// name
   final String name;
+
+  /// max allowed memberships
   final int maxAllowedMemberships;
+
+  /// admin delete enabled
   final bool adminDeleteEnabled;
+
+  /// slug
   final String slug;
+
+  /// logo url
   final String logoUrl;
+
+  /// image url
   final String imageUrl;
+
+  /// has image
   final bool hasImage;
+
+  /// members count
   final int membersCount;
+
+  /// pending invitations count
   final int pendingInvitationsCount;
+
+  /// public metadata
   final Map<String, dynamic> publicMetadata;
 
+  /// updated at
   @JsonKey(fromJson: intToDateTime)
   final DateTime? updatedAt;
 
+  /// created at
   @JsonKey(fromJson: intToDateTime)
   final DateTime? createdAt;
 
-  static Organization fromJson(Map<String, dynamic> json) => _$OrganizationFromJson(json);
+  /// fromJson
+  static Organization fromJson(Map<String, dynamic> json) =>
+      _$OrganizationFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$OrganizationToJson(this);
 }

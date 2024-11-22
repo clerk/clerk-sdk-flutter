@@ -1,13 +1,11 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'sign_up_settings.g.dart';
 
+/// [SignUpSettings] Clerk object
 @JsonSerializable()
 class SignUpSettings {
+  /// Constructor
   const SignUpSettings({
     this.captchaEnabled = false,
     this.captchaWidgetType = '',
@@ -17,16 +15,31 @@ class SignUpSettings {
     this.legalConsentEnabled = false,
   });
 
+  /// captcha enabled?
   final bool captchaEnabled;
+
+  /// captcha widget type
   final String captchaWidgetType;
+
+  /// custom action required?
   final bool customActionRequired;
+
+  /// progressive?
   final bool progressive;
+
+  /// mode
   final String mode;
+
+  /// legal consent enabled
   final bool legalConsentEnabled;
 
+  /// empty [SignUpSettings] object
   static const empty = SignUpSettings();
 
-  static SignUpSettings fromJson(Map<String, dynamic> json) => _$SignUpSettingsFromJson(json);
+  /// fromJson
+  static SignUpSettings fromJson(Map<String, dynamic> json) =>
+      _$SignUpSettingsFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$SignUpSettingsToJson(this);
 }

@@ -1,15 +1,13 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
 import 'package:json_annotation/json_annotation.dart';
 
 import 'models.dart';
 
 part 'verification.g.dart';
 
+/// [Verification] Clerk object
 @JsonSerializable()
 class Verification {
+  /// Constructor
   const Verification({
     required this.status,
     required this.strategy,
@@ -19,18 +17,30 @@ class Verification {
     this.nonce,
   });
 
+  /// status
   final Status status;
+
+  /// strategy
   final Strategy strategy;
+
+  /// attempts
   final int? attempts;
+
+  /// nonce
   final String? nonce;
 
+  /// provider url
   @JsonKey(name: 'external_verification_redirect_url')
   final String? providerUrl;
 
+  /// expire at
   @JsonKey(fromJson: intToDateTime)
   final DateTime? expireAt;
 
-  static Verification fromJson(Map<String, dynamic> json) => _$VerificationFromJson(json);
+  /// fromJson
+  static Verification fromJson(Map<String, dynamic> json) =>
+      _$VerificationFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$VerificationToJson(this);
 }

@@ -1,13 +1,11 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_public.g.dart';
 
+/// [UserPublic] Clerk object
 @JsonSerializable()
 class UserPublic {
+  /// Constructor
   const UserPublic({
     required this.identifier,
     required this.firstName,
@@ -17,16 +15,29 @@ class UserPublic {
     required this.hasImage,
   });
 
+  /// identifier
   final String identifier;
+
+  /// first name
   final String? firstName;
+
+  /// last name
   final String? lastName;
+
+  /// profile image url
   final String? profileImageUrl;
+
+  /// image url
   final String? imageUrl;
 
+  /// has image?
   @JsonKey(defaultValue: false)
   final bool hasImage;
 
-  static UserPublic fromJson(Map<String, dynamic> json) => _$UserPublicFromJson(json);
+  /// fromJson
+  static UserPublic fromJson(Map<String, dynamic> json) =>
+      _$UserPublicFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$UserPublicToJson(this);
 }

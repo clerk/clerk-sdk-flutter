@@ -1,27 +1,31 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
 import 'package:json_annotation/json_annotation.dart';
 
 import '../helpers.dart';
 
 part 'sign_in_settings.g.dart';
 
+/// [SignInSettings] Clerk object
 @JsonSerializable()
 class SignInSettings {
+  /// Constructor
   const SignInSettings({
     this.secondFactorRequired = false,
   });
 
+  /// second factor required?
   @JsonKey(readValue: _readSecondFactorRequired)
   final bool secondFactorRequired;
 
+  /// empty [SignInSettings] object
   static const empty = SignInSettings();
 
-  static SignInSettings fromJson(Map<String, dynamic> json) => _$SignInSettingsFromJson(json);
+  /// fromJson
+  static SignInSettings fromJson(Map<String, dynamic> json) =>
+      _$SignInSettingsFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$SignInSettingsToJson(this);
 }
 
-bool _readSecondFactorRequired(map, _) => isTrue(map['second_factor']?['required']);
+bool _readSecondFactorRequired(map, _) =>
+    isTrue(map['second_factor']?['required']);

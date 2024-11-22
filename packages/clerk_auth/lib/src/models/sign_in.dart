@@ -1,15 +1,13 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
 import 'package:json_annotation/json_annotation.dart';
 
 import 'models.dart';
 
 part 'sign_in.g.dart';
 
+/// [SignIn] Clerk object
 @JsonSerializable()
 class SignIn {
+  /// Constructor
   const SignIn({
     required this.id,
     required this.status,
@@ -24,26 +22,46 @@ class SignIn {
     required this.abandonAt,
   });
 
+  /// id
   final String id;
+
+  /// status
   final Status status;
+
+  /// supported identifiers
   final List<String> supportedIdentifiers;
+
+  /// identifier
   final String? identifier;
+
+  /// user data
   final UserPublic? userData;
+
+  /// first factor verification
   final Verification? firstFactorVerification;
+
+  /// second factor verification
   final Verification? secondFactorVerification;
+
+  /// created session id
   final String? createdSessionId;
 
+  /// abandon at
   @JsonKey(fromJson: intToDateTime)
   final DateTime? abandonAt;
 
+  /// supported first factors
   @JsonKey(defaultValue: [])
   final List<Factor> supportedFirstFactors;
 
+  /// supported second factors
   @JsonKey(defaultValue: [])
   final List<Factor> supportedSecondFactors;
 
+  /// fromJson
   static SignIn fromJson(Map<String, dynamic> json) => _$SignInFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$SignInToJson(this);
 
   /// Find a [Verification] if one exists for this [SignIn]
@@ -59,7 +77,7 @@ class SignIn {
   /// Find the [Factor] for this [SignIn] that matches
   /// the [strategy] and [stage]
   ///
-  /// Thrpw an error on failure
+  /// Throw an error on failure
   ///
   Factor factorFor(Strategy strategy, Stage stage) {
     final factors = switch (stage) {

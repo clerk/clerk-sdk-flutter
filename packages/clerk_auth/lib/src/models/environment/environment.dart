@@ -1,7 +1,3 @@
-// ignore_for_file: public_member_api_docs
-// See https://clerk.com/docs/reference/frontend-api for
-// more details
-
 import 'package:json_annotation/json_annotation.dart';
 
 import 'auth_config.dart';
@@ -11,8 +7,10 @@ import 'user_settings.dart';
 
 part 'environment.g.dart';
 
+/// [Environment] Clerk object
 @JsonSerializable()
 class Environment {
+  /// Construction
   const Environment({
     this.config = AuthConfig.empty,
     this.display = DisplayConfig.empty,
@@ -21,25 +19,35 @@ class Environment {
     this.maintenanceMode = false,
   });
 
+  /// auth config
   @JsonKey(name: 'auth_config')
   final AuthConfig config;
 
+  /// display config
   @JsonKey(name: 'display_config')
   final DisplayConfig display;
 
+  /// user settings
   @JsonKey(name: 'user_settings')
   final UserSettings user;
 
+  /// organization settings
   @JsonKey(name: 'organization_settings')
   final OrganizationSettings organization;
 
+  /// maintenance mode?
   final bool maintenanceMode;
 
+  /// isEmpty?
   bool get isEmpty => this == empty;
 
+  /// empty [Environment]
   static const empty = Environment();
 
-  static Environment fromJson(Map<String, dynamic> json) => _$EnvironmentFromJson(json);
+  /// fromJson
+  static Environment fromJson(Map<String, dynamic> json) =>
+      _$EnvironmentFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$EnvironmentToJson(this);
 }

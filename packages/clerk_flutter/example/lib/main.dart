@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:clerk_auth/clerk_auth.dart' as Clerk;
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/logging.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +14,10 @@ Future<void> main() async {
   const publicKey = String.fromEnvironment('public_key');
   const publishableKey = String.fromEnvironment('publishable_key');
   if (publicKey.isEmpty || publishableKey.isEmpty) {
-    print('Please run the example with: '
-        '--dart-define-from-file=example.env');
+    print(
+      'Please run the example with: '
+      '--dart-define-from-file=example.env',
+    );
     exit(1);
   }
 
@@ -42,11 +44,13 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   final persistor = const _Persistor();
 
+  late final publicKey = widget.publicKey.replaceAll('\\n', '\n');
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: ClerkAuth(
-        publicKey: widget.publicKey,
+        publicKey: publicKey,
         publishableKey: widget.publishableKey,
         persistor: persistor,
         child: Scaffold(
@@ -56,7 +60,8 @@ class _MainAppState extends State<MainApp> {
             child: Center(
               child: ClerkAuthBuilder(
                 signedInBuilder: (context, auth) => const ClerkUserButton(),
-                signedOutBuilder: (context, auth) => const ClerkAuthenticationWidget(),
+                signedOutBuilder: (context, auth) =>
+                    const ClerkAuthenticationWidget(),
               ),
             ),
           ),
@@ -75,7 +80,7 @@ class LogPrinter extends Printer {
   }
 }
 
-class _Persistor implements Clerk.Persistor {
+class _Persistor implements clerk.Persistor {
   const _Persistor();
 
   @override

@@ -4,16 +4,12 @@ import 'package:flutter_svg/svg.dart';
 
 /// An avatar for testing purposes.
 ///
-/// Will genereate a random avatar based on the provided seed.
+/// Will generate a random avatar based on the provided seed.
 ///
 @immutable
 class RandomAvatar extends StatelessWidget {
   /// Constructs a new [RandomAvatar].
-  const RandomAvatar({
-    super.key,
-    required this.seed,
-    this.size = 28.0,
-  });
+  const RandomAvatar({super.key, required this.seed, this.size = 28.0});
 
   /// The seed to use for generating the avatar.
   final String seed;

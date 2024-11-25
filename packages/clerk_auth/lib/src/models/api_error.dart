@@ -2,8 +2,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'api_error.g.dart';
 
+/// [ApiError] Clerk object
 @JsonSerializable()
 class ApiError {
+  /// Constructor
   const ApiError({
     required this.message,
     this.code,
@@ -11,13 +13,23 @@ class ApiError {
     this.longMessage,
   });
 
+  /// message
   final String message;
+
+  /// code
   final String? code;
+
+  /// meta data
   final Map<String, String>? meta;
+
+  /// long message
   final String? longMessage;
 
-  static ApiError fromJson(Map<String, dynamic> json) => _$ApiErrorFromJson(json);
+  /// fromJson
+  static ApiError fromJson(Map<String, dynamic> json) =>
+      _$ApiErrorFromJson(json);
 
+  /// toJson
   Map<String, dynamic> toJson() => _$ApiErrorToJson(this);
 
   @override

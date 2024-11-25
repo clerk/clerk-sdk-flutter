@@ -27,13 +27,13 @@ class Auth {
     required String publicKey,
     Persistor? persistor,
     HttpClient? client,
-    bool pollForSession = false,
+    SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
   }) : _api = Api(
           publicKey: publicKey,
           publishableKey: publishableKey,
           persistor: persistor,
           client: client,
-          pollForSession: pollForSession,
+          pollMode: pollMode,
         );
 
   final Api _api;

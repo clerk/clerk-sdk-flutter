@@ -44,11 +44,13 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   final persistor = const _Persistor();
 
+  late final publicKey = widget.publicKey.replaceAll('\\n', '\n');
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: ClerkAuth(
-        publicKey: widget.publicKey,
+        publicKey: publicKey,
         publishableKey: widget.publishableKey,
         persistor: persistor,
         child: Scaffold(

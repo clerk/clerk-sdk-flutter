@@ -16,7 +16,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
     this.translator = const DefaultClerkTranslator(),
     Widget? loading,
     super.persistor,
-    super.pollForSession,
+    super.pollMode,
   }) : _loadingOverlay = OverlayEntry(
           builder: (context) => loading ?? defaultLoadingWidget,
         );
@@ -64,6 +64,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
             callback: _ssoCallback(
               strategy,
               onError: onError,
+              auth: auth,
             ),
           );
         },
@@ -75,9 +76,9 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   Function(BuildContext, String) _ssoCallback(
     clerk.Strategy strategy, {
     void Function(clerk.AuthError)? onError,
+    required ClerkAuthProvider auth,
   }) {
     return (BuildContext context, String redirectUrl) async {
-      final auth = ClerkAuth.of(context);
       final uri = Uri.parse(redirectUrl);
       final token = uri.queryParameters[_kRotatingTokenNonce];
       if (token case String token) {
@@ -89,11 +90,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
       } else {
         await auth.refreshClient();
         if (context.mounted) {
-          await call(
-            context,
-            () => auth.transfer(),
-            onError: onError,
-          );
+          await call(context, () => auth.transfer(), onError: onError);
         }
       }
       _ssoOverlay?.remove();

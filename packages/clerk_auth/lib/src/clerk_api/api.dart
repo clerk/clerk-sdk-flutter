@@ -8,10 +8,26 @@ import 'package:http/http.dart' as http;
 
 export 'package:clerk_auth/src/models/models.dart';
 
+/// [SessionTokenPollMode] manages how to refresh the [sessionToken]
+/// [regular]: refresh whenever token expires (more http access and power use)
+/// [onDemand]: refresh if expired when accessed (with possible increased
+/// latency at that time)
+///
+enum SessionTokenPollMode {
+  /// regular
+  regular,
+
+  /// on demand
+  onDemand;
+
+  /// is regular?
+  bool get isRegular => this == regular;
+}
+
 /// [Api] manages communication with the Clerk frontend API
 ///
 class Api with Logging {
-  Api._(this._tokenCache, this._domain, this._client, this._pollForSession);
+  Api._(this._tokenCache, this._domain, this._client, this._pollMode);
 
   /// Create an [Api] object for a given public key, or return the existing one
   /// if such already exists for that key. Requires a [publicKey] and [publishableKey]
@@ -29,21 +45,21 @@ class Api with Logging {
   factory Api({
     required String publishableKey,
     required String publicKey,
-    bool pollForSession = false,
+    SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
     HttpClient? client,
     Persistor? persistor,
   }) =>
       _caches[publicKey] ??= Api._(
         TokenCache(publicKey, persistor),
         _deriveDomainFrom(publishableKey),
-        client ?? DefaultHttpClient(),
-        pollForSession,
+        client ?? const DefaultHttpClient(),
+        pollMode,
       );
 
   final TokenCache _tokenCache;
   final String _domain;
   final HttpClient _client;
-  final bool _pollForSession;
+  final SessionTokenPollMode _pollMode;
   Timer? _pollTimer;
 
   static final _caches = <String, Api>{};
@@ -60,7 +76,7 @@ class Api with Logging {
   /// Initialise the API
   Future<void> initialize() async {
     await _tokenCache.initialize();
-    if (_pollForSession) _pollForSessionToken();
+    if (_pollMode.isRegular) _pollForSessionToken();
   }
 
   /// Dispose of the API

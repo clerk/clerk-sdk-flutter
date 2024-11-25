@@ -25,7 +25,7 @@ class TokenCache {
   static const _tokenExpiryBuffer = Duration(seconds: 10);
 
   final _logger = Logger('TokenCache');
-  late final RSAPublicKey _rsaKey = RSAPublicKey(_publicKey);
+  late final RSAPublicKey _rsaKey;
 
   String _sessionId = '';
   String _clientToken = '';
@@ -56,6 +56,8 @@ class TokenCache {
 
   /// Initialise the cache
   Future<void> initialize() async {
+    _rsaKey = RSAPublicKey(_publicKey);
+
     if (_persistor case Persistor persistor) {
       final [sessionId, sessionToken, ms, clientToken] = await Future.wait([
         persistor.read(_sessionIdKey),

@@ -32,6 +32,9 @@ enum HttpMethod {
 /// Clerk back-end over http
 ///
 abstract class HttpClient {
+  /// Constructor
+  const HttpClient();
+
   /// [send] date to the back end, and receive a [Response]
   ///
   Future<Response> send(
@@ -45,6 +48,9 @@ abstract class HttpClient {
 /// Default implementation of [HttpClient]
 ///
 class DefaultHttpClient implements HttpClient {
+  /// Constructor
+  const DefaultHttpClient();
+
   @override
   Future<Response> send(
     HttpMethod method,

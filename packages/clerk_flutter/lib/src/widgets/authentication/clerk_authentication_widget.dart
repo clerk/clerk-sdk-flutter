@@ -1,4 +1,5 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:flutter/gestures.dart';
@@ -50,20 +51,29 @@ class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
             ClerkAuthBuilder(
               builder: (context, auth) {
                 return Closeable(
-                  closed: auth.signIn is clerk.SignIn ||
-                      auth.signUp is clerk.SignUp,
+                  closed: (auth.signIn is clerk.SignIn &&
+                          auth.signIn!.status.isActive) ||
+                      (auth.signUp is clerk.SignUp &&
+                          auth.signUp!.status.isActive),
                   child: const ClerkSSOPanel(),
                 );
               },
             ),
             Closeable(
-                open: _state.isSigningIn, child: const ClerkSignInPanel()),
+              open: _state.isSigningIn,
+              child: const ClerkSignInPanel(),
+            ),
             Closeable(
-                open: _state.isSigningUp, child: const ClerkSignUpPanel()),
+              open: _state.isSigningUp,
+              child: const ClerkSignUpPanel(),
+            ),
             const ClerkErrorMessage(),
           ],
         ),
-        bottomPortion: _BottomPortion(state: _state, onChange: _toggle),
+        bottomPortion: _BottomPortion(
+          state: _state,
+          onChange: _toggle,
+        ),
       ),
     );
   }

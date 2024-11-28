@@ -51,9 +51,10 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
 
   final _errors = StreamController<clerk.AuthError>();
   final OverlayEntry _loadingOverlay;
-  OverlayEntry? _ssoOverlay;
 
   static const _kRotatingTokenNonce = 'rotating_token_nonce';
+
+  static const _kSsoRouteName = 'clerk_sso_popup';
 
   @override
   void update() => notifyListeners();
@@ -71,53 +72,42 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
     void Function(clerk.AuthError)? onError,
   }) async {
     final auth = ClerkAuth.of(context);
-    final overlay = Overlay.of(context);
     final client = await call(
       context,
       () => auth.oauthSignIn(strategy: strategy),
       onError: onError,
     );
     final url = client?.signIn?.firstFactorVerification?.providerUrl;
-    if (url case String url) {
-      _ssoOverlay = OverlayEntry(
-        builder: (BuildContext context) {
-          return _SsoWebViewHost(
-            url: url,
-            callback: _ssoCallback(
-              strategy,
-              onError: onError,
-              auth: auth,
-            ),
-          );
-        },
+    if (url != null && context.mounted) {
+      final redirectUrl = await showDialog<String>(
+        context: context,
+        useSafeArea: false,
+        useRootNavigator: true,
+        routeSettings: const RouteSettings(name: _kSsoRouteName),
+        builder: (context) => _SsoWebViewOverlay(url: url),
       );
-      overlay.insert(_ssoOverlay!);
-    }
-  }
-
-  Function(BuildContext, String) _ssoCallback(
-    clerk.Strategy strategy, {
-    void Function(clerk.AuthError)? onError,
-    required ClerkAuthProvider auth,
-  }) {
-    return (BuildContext context, String redirectUrl) async {
-      final uri = Uri.parse(redirectUrl);
-      final token = uri.queryParameters[_kRotatingTokenNonce];
-      if (token case String token) {
-        await call(
-          context,
-          () => auth.attemptSignIn(strategy: strategy, token: token),
-          onError: onError,
-        );
-      } else {
-        await auth.refreshClient();
+      if (redirectUrl != null && context.mounted) {
+        final uri = Uri.parse(redirectUrl);
+        final token = uri.queryParameters[_kRotatingTokenNonce];
+        if (token case String token) {
+          await call(
+            context,
+            () => auth.attemptSignIn(strategy: strategy, token: token),
+            onError: onError,
+          );
+        } else {
+          await auth.refreshClient();
+          if (context.mounted) {
+            await call(context, () => auth.transfer(), onError: onError);
+          }
+        }
         if (context.mounted) {
-          await call(context, () => auth.transfer(), onError: onError);
+          Navigator.of(context).popUntil(
+            (route) => route.settings.name != _kSsoRouteName,
+          );
         }
       }
-      _ssoOverlay?.remove();
-      _ssoOverlay = null;
-    };
+    }
   }
 
   /// Convenience method to make an auth call to the backend via ClerkAuth
@@ -198,21 +188,20 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
       _errors.add(clerk.AuthError(message: message));
 }
 
-class _SsoWebViewHost extends StatefulWidget {
-  const _SsoWebViewHost({
+class _SsoWebViewOverlay extends StatefulWidget {
+  const _SsoWebViewOverlay({
     required this.url,
-    required this.callback,
   });
 
   final String url;
-  final Function(BuildContext context, String redirectUrl) callback;
 
   @override
-  State<_SsoWebViewHost> createState() => _SsoWebViewHostState();
+  State<_SsoWebViewOverlay> createState() => _SsoWebViewOverlayState();
 }
 
-class _SsoWebViewHostState extends State<_SsoWebViewHost> {
+class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
   late final WebViewController controller;
+  var _title = Future<String?>.value('Loading…');
 
   @override
   void initState() {
@@ -220,11 +209,17 @@ class _SsoWebViewHostState extends State<_SsoWebViewHost> {
     controller = WebViewController()
       ..setUserAgent('Clerk Flutter SDK v${clerk.Auth.jsVersion}')
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Colors.white)
       ..setNavigationDelegate(
         NavigationDelegate(
+          onPageFinished: (_) => _updateTitle(),
           onNavigationRequest: (NavigationRequest request) async {
             if (request.url.startsWith(clerk.Auth.oauthRedirect)) {
-              widget.callback(context, request.url);
+              scheduleMicrotask(() {
+                if (mounted) {
+                  Navigator.of(context).pop(request.url);
+                }
+              });
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
@@ -234,9 +229,25 @@ class _SsoWebViewHostState extends State<_SsoWebViewHost> {
     controller.loadRequest(Uri.parse(widget.url));
   }
 
+  void _updateTitle() {
+    setState(() {
+      _title = controller.getTitle();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: FutureBuilder(
+          future: _title,
+          builder: (context, snapshot) {
+            return Text(snapshot.data ?? '');
+          },
+        ),
+        actions: const [CloseButton()],
+      ),
       body: WebViewWidget(controller: controller),
     );
   }

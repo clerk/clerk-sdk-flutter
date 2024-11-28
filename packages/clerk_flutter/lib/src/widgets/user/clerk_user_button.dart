@@ -356,27 +356,34 @@ class _SessionRow extends StatelessWidget {
                                 auth.call(context, () => auth.signOut());
                               } else {
                                 auth.call(
-                                    context, () => auth.signOutOf(session));
+                                  context,
+                                  () => auth.signOutOf(session),
+                                );
                               }
                             },
-                            label: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                const Icon(Icons.logout,
-                                    color: ClerkColors.charcoalGrey, size: 11),
-                                horizontalMargin8,
-                                Text(
-                                  translator.translate('Sign Out'),
-                                  style: ClerkTextStyle.buttonSubtitle.copyWith(
-                                    fontSize: 8,
+                            label: Padding(
+                              padding: verticalPadding4,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.logout,
                                     color: ClerkColors.charcoalGrey,
+                                    size: 20,
                                   ),
-                                ),
-                              ],
+                                  horizontalMargin8,
+                                  Text(
+                                    translator.translate('Sign Out'),
+                                    style: ClerkTextStyle.buttonSubtitle.copyWith(
+                                      fontSize: 12,
+                                      color: ClerkColors.charcoalGrey,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             style: ClerkMaterialButtonStyle.light,
-                            height: 16,
                           ),
                         ),
                       ],

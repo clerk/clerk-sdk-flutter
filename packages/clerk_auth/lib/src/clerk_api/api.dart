@@ -494,7 +494,7 @@ class Api with Logging {
 
     await sessionToken(); // make sure updated
 
-    final diff = _tokenCache.sessionTokenExpiry.difference(DateTime.now());
+    final diff = _tokenCache.sessionTokenExpiry.difference(DateTime.timestamp());
     final delay = diff.isNegative ? const Duration(seconds: 55) : diff;
     _pollTimer = Timer(delay, _pollForSessionToken);
   }

@@ -9,8 +9,9 @@ void main() {
   late final Api api;
   late final TestEnv env;
   final httpClient = TestHttpClient();
-  final expireAt =
-      DateTime.now().add(const Duration(minutes: 5)).millisecondsSinceEpoch;
+  final expireAt = DateTime.timestamp() //
+      .add(const Duration(minutes: 5))
+      .millisecondsSinceEpoch;
 
   setUpAll(() async {
     env = TestEnv('.env.test');

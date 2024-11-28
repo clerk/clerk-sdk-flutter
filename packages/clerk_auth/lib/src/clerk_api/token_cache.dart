@@ -18,7 +18,8 @@ class TokenCache {
   final String _publicKey;
   final Persistor _persistor;
 
-  DateTime _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
+  DateTime _sessionTokenExpiry =
+      DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
 
   /// the date at which, if in the future, the current [sessionToken]
   /// is due to expire
@@ -38,7 +39,7 @@ class TokenCache {
       clientToken.isNotEmpty && sessionId.isNotEmpty;
 
   bool get _sessionTokenHasExpired =>
-      DateTime.now().isAfter(sessionTokenExpiry);
+      DateTime.timestamp().isAfter(sessionTokenExpiry);
 
   String get _sessionIdKey => '_clerkSessionId_${_publicKey.hashCode}';
 
@@ -67,6 +68,7 @@ class TokenCache {
     final milliseconds = await _persistor.read(_sessionTokenExpiryKey) ?? '';
     final sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(
       int.tryParse(milliseconds) ?? 0,
+      isUtc: true,
     );
 
     _sessionId = sessionId;
@@ -81,7 +83,7 @@ class TokenCache {
     _sessionId = '';
     _clientToken = '';
     _sessionToken = '';
-    _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
+    _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
     for (final key in _persistorKeys) {
       _persistor.delete(key);
     }
@@ -127,7 +129,9 @@ class TokenCache {
       final expirySeconds = jwt.payload['exp'];
       if (expirySeconds is int) {
         final expiry = DateTime.fromMillisecondsSinceEpoch(
-            expirySeconds * Duration.millisecondsPerSecond);
+          expirySeconds * Duration.millisecondsPerSecond,
+          isUtc: true,
+        );
         _sessionTokenExpiry = expiry.subtract(_tokenExpiryBuffer);
         _sessionToken = token;
         _persistor.write(_sessionTokenKey, token);

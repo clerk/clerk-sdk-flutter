@@ -8,7 +8,7 @@ void main() {
   late final Auth auth;
   late final TestEnv env;
   final httpClient = TestHttpClient();
-  final expireAt = DateTime.now() //
+  final expireAt = DateTime.timestamp() //
       .add(const Duration(minutes: 5))
       .millisecondsSinceEpoch;
 

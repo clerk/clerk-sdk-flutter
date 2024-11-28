@@ -353,7 +353,7 @@ class Auth {
       if (client.user is User) return client;
 
       final expiry = client.signIn?.firstFactorVerification?.expireAt;
-      if (expiry?.isAfter(DateTime.now()) != true) {
+      if (expiry?.isAfter(DateTime.timestamp()) != true) {
         throw AuthError(
             message: 'Awaited user action not completed in required timeframe');
       }

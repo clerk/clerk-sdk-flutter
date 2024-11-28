@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -10,16 +11,37 @@ import 'package:webview_flutter/webview_flutter.dart';
 ///
 class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   /// Construct a [ClerkAuthProvider]
-  ClerkAuthProvider({
+  ClerkAuthProvider._({
     required super.publicKey,
     required super.publishableKey,
-    this.translator = const DefaultClerkTranslator(),
-    Widget? loading,
-    super.persistor,
+    required super.persistor,
+    required this.translator,
     super.pollMode,
+    Widget? loading,
   }) : _loadingOverlay = OverlayEntry(
           builder: (context) => loading ?? defaultLoadingWidget,
         );
+
+  /// Create an [ClerkAuthProvider] object using appropriate Clerk credentials
+  static Future<ClerkAuthProvider> create({
+    required String publicKey,
+    required String publishableKey,
+    Persistor persistor = Persistor.none,
+    ClerkTranslator translator = const DefaultClerkTranslator(),
+    SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
+    Widget? loading,
+  }) async {
+    final provider = ClerkAuthProvider._(
+      publicKey: publicKey,
+      publishableKey: publishableKey,
+      persistor: persistor,
+      translator: translator,
+      pollMode: pollMode,
+      loading: loading,
+    );
+    await provider.initialize();
+    return provider;
+  }
 
   /// The [ClerkTranslator] for auth UI
   final ClerkTranslator translator;

@@ -16,11 +16,13 @@ class TokenCache {
   TokenCache(this._publicKey, this._persistor);
 
   final String _publicKey;
-  final Persistor? _persistor;
+  final Persistor _persistor;
+
+  DateTime _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
 
   /// the date at which, if in the future, the current [sessionToken]
   /// is due to expire
-  DateTime sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
+  DateTime get sessionTokenExpiry => _sessionTokenExpiry;
 
   static const _tokenExpiryBuffer = Duration(seconds: 10);
 
@@ -58,21 +60,19 @@ class TokenCache {
   Future<void> initialize() async {
     _rsaKey = RSAPublicKey(_publicKey);
 
-    if (_persistor case Persistor persistor) {
-      final [sessionId, sessionToken, ms, clientToken] = await Future.wait([
-        persistor.read(_sessionIdKey),
-        persistor.read(_sessionTokenKey),
-        persistor.read(_sessionTokenExpiryKey),
-        persistor.read(_clientTokenKey),
-      ]);
+    // Read all stored variables first before assignment
+    final sessionId = await _persistor.read(_sessionIdKey) ?? '';
+    final sessionToken = await _persistor.read(_sessionTokenKey) ?? '';
+    final clientToken = await _persistor.read(_clientTokenKey) ?? '';
+    final milliseconds = await _persistor.read(_sessionTokenExpiryKey) ?? '';
+    final sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(
+      int.tryParse(milliseconds) ?? 0,
+    );
 
-      _sessionId = sessionId ?? '';
-      _sessionToken = sessionToken ?? '';
-      _clientToken = clientToken ?? '';
-
-      final milliseconds = int.tryParse(ms ?? '') ?? 0;
-      sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(milliseconds);
-    }
+    _sessionId = sessionId;
+    _sessionToken = sessionToken;
+    _clientToken = clientToken;
+    _sessionTokenExpiry = sessionTokenExpiry;
   }
 
   /// Reset the [TokenCache]
@@ -81,9 +81,9 @@ class TokenCache {
     _sessionId = '';
     _clientToken = '';
     _sessionToken = '';
-    sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
+    _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0);
     for (final key in _persistorKeys) {
-      _persistor?.delete(key);
+      _persistor.delete(key);
     }
   }
 
@@ -93,7 +93,7 @@ class TokenCache {
   /// Set the [sessionId]
   set sessionId(String id) {
     _sessionId = id;
-    _persistor?.write(_sessionIdKey, id);
+    _persistor.write(_sessionIdKey, id);
   }
 
   /// Get the [clientToken]
@@ -106,7 +106,7 @@ class TokenCache {
     try {
       JWT.verify(token, _rsaKey);
       _clientToken = token;
-      _persistor?.write(_clientTokenKey, token);
+      _persistor.write(_clientTokenKey, token);
     } catch (error, stackTrace) {
       _logger.severe('ERROR SETTING CLIENT TOKEN: $error', error, stackTrace);
     }
@@ -124,13 +124,14 @@ class TokenCache {
 
     try {
       final jwt = JWT.verify(token, _rsaKey);
-      final exp = jwt.payload['exp'];
-      if (exp is int) {
-        final expiry = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
-        sessionTokenExpiry = expiry.subtract(_tokenExpiryBuffer);
+      final expirySeconds = jwt.payload['exp'];
+      if (expirySeconds is int) {
+        final expiry = DateTime.fromMillisecondsSinceEpoch(
+            expirySeconds * Duration.millisecondsPerSecond);
+        _sessionTokenExpiry = expiry.subtract(_tokenExpiryBuffer);
         _sessionToken = token;
-        _persistor?.write(_sessionTokenKey, token);
-        _persistor?.write(
+        _persistor.write(_sessionTokenKey, token);
+        _persistor.write(
           _sessionTokenExpiryKey,
           sessionTokenExpiry.millisecondsSinceEpoch.toString(),
         );

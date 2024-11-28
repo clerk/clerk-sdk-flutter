@@ -2,8 +2,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'display_config.g.dart';
 
+/// Display Configuration
+///
 @JsonSerializable()
 class DisplayConfig {
+  /// Constructs an instance of [DisplayConfig]
   const DisplayConfig({
     this.id = '',
     this.applicationName = '',

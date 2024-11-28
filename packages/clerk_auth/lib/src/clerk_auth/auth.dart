@@ -17,15 +17,15 @@ export 'persistor.dart';
 /// [client]: an optional instance of [HttpClient] to manage low-level communications
 /// with the back end. Injected for e.g. test mocking
 ///
-/// [pollForSession]: a boolean, default false, which if true causes the back end
-/// to be polled regularly for new [sessionToken]s.
+/// [pollMode]: session token poll mode, default on-demand,
+/// manages how to refresh the [sessionToken].
 ///
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
   Auth({
-    required String publishableKey,
     required String publicKey,
-    Persistor? persistor,
+    required String publishableKey,
+    required Persistor persistor,
     HttpClient? client,
     SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
   }) : _api = Api(
@@ -83,8 +83,10 @@ class Auth {
   ///
   Future<void> initialize() async {
     await _api.initialize();
-    final [client, env] =
-        await Future.wait([_api.createClient(), _api.environment()]);
+    final [client, env] = await Future.wait([
+      _api.createClient(),
+      _api.environment(),
+    ]);
     this.client = client as Client;
     this.env = env as Environment;
   }
@@ -173,7 +175,7 @@ class Auth {
     switch (client.signIn) {
       case SignIn signIn when strategy.isOauth == true && token is String:
         await _api
-            .sendOauthToken(signIn, strategy: strategy!, token: token)
+            .sendOauthToken(signIn, strategy: strategy, token: token)
             .then(_housekeeping);
 
       case SignIn signIn
@@ -217,7 +219,7 @@ class Auth {
         final stage = Stage.forStatus(signIn.status);
         if (signIn.verificationFor(stage) is! Verification) {
           await _api
-              .prepareSignIn(signIn, stage: stage, strategy: strategy!)
+              .prepareSignIn(signIn, stage: stage, strategy: strategy)
               .then(_housekeeping);
         }
         if (client.signIn case SignIn signIn

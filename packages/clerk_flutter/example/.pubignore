@@ -21,3 +21,6 @@ linux/
 macos/
 web/
 windows/
+
+# Dont publish me
+example.env

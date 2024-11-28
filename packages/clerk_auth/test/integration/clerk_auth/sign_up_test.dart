@@ -9,8 +9,9 @@ void main() {
   late final Auth auth;
   late final TestEnv env;
   final httpClient = TestHttpClient();
-  final expireAt =
-      DateTime.now().add(const Duration(minutes: 5)).millisecondsSinceEpoch;
+  final expireAt = DateTime.now() //
+      .add(const Duration(minutes: 5))
+      .millisecondsSinceEpoch;
 
   String emailAddress = '';
   String phoneNumber = '';
@@ -27,9 +28,11 @@ void main() {
   setUpAll(() async {
     env = TestEnv('.env.test');
     auth = Auth(
-        publicKey: env.publicKey,
-        publishableKey: env.publishableKey,
-        client: httpClient);
+      publicKey: env.publicKey,
+      publishableKey: env.publishableKey,
+      persistor: Persistor.none,
+      client: httpClient,
+    );
 
     httpClient.expect(
       'POST /v1/client',

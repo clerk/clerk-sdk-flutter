@@ -24,7 +24,7 @@ class TestEnv {
 
   String get code => _map['code'] ?? '';
 
-  String get publicKey => _map['public_key']?.replaceAll('\\n', '\n') ?? '';
+  String get publicKey => _map['public_key']?.replaceAll(r'\n', '\n') ?? '';
 
   String get publishableKey => _map['publishable_key'] ?? '';
 }

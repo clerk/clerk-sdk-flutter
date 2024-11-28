@@ -11,3 +11,6 @@ build/
 
 # Dont need to package this
 build.yaml
+
+# Test environment
+.env.test

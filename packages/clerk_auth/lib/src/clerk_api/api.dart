@@ -8,30 +8,53 @@ import 'package:http/http.dart' as http;
 
 export 'package:clerk_auth/src/models/models.dart';
 
+/// [SessionTokenPollMode] manages how to refresh the [sessionToken]
+///
+enum SessionTokenPollMode {
+  /// Refresh whenever token expires (more http access and power use)
+  regular,
+
+  /// Refresh if expired when accessed (with possible increased latency at that time)
+  onDemand;
+}
+
 /// [Api] manages communication with the Clerk frontend API
 ///
 class Api with Logging {
-  Api._(this._tokenCache, this._domain, this._client);
+  Api._(this._tokenCache, this._domain, this._client, this._pollMode);
 
   /// Create an [Api] object for a given public key, or return the existing one
   /// if such already exists for that key. Requires a [publicKey] and [publishableKey]
-  /// found in the Clerk dashboard for you account. Can also take an optional http [client]
-  /// and [persistor]
+  /// found in the Clerk dashboard for you account. Additional arguments:
+  ///
+  /// [persistor]: an optional instance of a [Persistor] which will keep track of
+  /// tokens and expiry between app activations
+  ///
+  /// [client]: an optional instance of [HttpClient] to manage low-level communications
+  /// with the back end. Injected for e.g. test mocking
+  ///
+  /// [pollMode]: session token poll mode, default on-demand,
+  /// manages how to refresh the [sessionToken].
+  ///
   factory Api({
     required String publishableKey,
     required String publicKey,
+    Persistor persistor = Persistor.none,
+    SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
     HttpClient? client,
-    Persistor? persistor,
   }) =>
       _caches[publicKey] ??= Api._(
         TokenCache(publicKey, persistor),
         _deriveDomainFrom(publishableKey),
-        client ?? DefaultHttpClient(),
+        client ?? const DefaultHttpClient(),
+        pollMode,
       );
 
   final TokenCache _tokenCache;
   final String _domain;
   final HttpClient _client;
+  final SessionTokenPollMode _pollMode;
+  Timer? _pollTimer;
 
   static final _caches = <String, Api>{};
 
@@ -43,6 +66,19 @@ class Api with Logging {
   static const _kErrorsKey = 'errors';
   static const _kClientKey = 'client';
   static const _kResponseKey = 'response';
+
+  /// Initialise the API
+  Future<void> initialize() async {
+    await _tokenCache.initialize();
+    if (_pollMode == SessionTokenPollMode.regular) {
+      await _pollForSessionToken();
+    }
+  }
+
+  /// Dispose of the API
+  void terminate() {
+    _pollTimer?.cancel();
+  }
 
   // environment & client
 
@@ -451,6 +487,16 @@ class Api with Logging {
       }
     }
     return _tokenCache.sessionToken;
+  }
+
+  Future<void> _pollForSessionToken() async {
+    _pollTimer?.cancel();
+
+    await sessionToken(); // make sure updated
+
+    final diff = _tokenCache.sessionTokenExpiry.difference(DateTime.now());
+    final delay = diff.isNegative ? const Duration(seconds: 55) : diff;
+    _pollTimer = Timer(delay, _pollForSessionToken);
   }
 
   // Internal

@@ -77,8 +77,9 @@ Map<UserAttribute, UserAttributeData> _toAttributeMap(dynamic data) {
     for (final entry in data.entries) {
       final key = UserAttribute.values
           .firstWhereOrNull((a) => a.toString() == entry.key);
-      if (key case UserAttribute key)
+      if (key case UserAttribute key) {
         result[key] = UserAttributeData.fromJson(entry.value);
+      }
     }
   }
   return result;

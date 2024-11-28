@@ -8,18 +8,32 @@ export 'persistor.dart';
 
 /// [Auth] provides more abstracted access to the Clerk API
 ///
+/// Requires a [publicKey] and [publishableKey] found in the Clerk dashboard
+/// for you account. Additional arguments:
+///
+/// [persistor]: an optional instance of a [Persistor] which will keep track of
+/// tokens and expiry between app activations
+///
+/// [client]: an optional instance of [HttpClient] to manage low-level communications
+/// with the back end. Injected for e.g. test mocking
+///
+/// [pollMode]: session token poll mode, default on-demand,
+/// manages how to refresh the [sessionToken].
+///
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
   Auth({
-    required String publishableKey,
     required String publicKey,
-    Persistor? persistor,
+    required String publishableKey,
+    required Persistor persistor,
     HttpClient? client,
+    SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
   }) : _api = Api(
           publicKey: publicKey,
           publishableKey: publishableKey,
           persistor: persistor,
           client: client,
+          pollMode: pollMode,
         );
 
   final Api _api;
@@ -64,12 +78,26 @@ class Auth {
 
   /// Initialisation of the [Auth] object
   ///
-  /// [init] must be called before any further use of the [Auth]
+  /// [initialize] must be called before any further use of the [Auth]
   /// object is made
   ///
-  Future<void> init() async {
-    client = await _api.createClient();
-    env = await _api.environment();
+  Future<void> initialize() async {
+    await _api.initialize();
+    final [client, env] = await Future.wait([
+      _api.createClient(),
+      _api.environment(),
+    ]);
+    this.client = client as Client;
+    this.env = env as Environment;
+  }
+
+  /// Disposal of the [Auth] object
+  ///
+  /// Named [terminate] so as not to clash with [ChangeNotifier]'s [dispose]
+  /// method, if that is mixed in e.g. in clerk_flutter
+  ///
+  void terminate() {
+    _api.terminate();
   }
 
   /// Refresh the current [Client]
@@ -147,7 +175,7 @@ class Auth {
     switch (client.signIn) {
       case SignIn signIn when strategy.isOauth == true && token is String:
         await _api
-            .sendOauthToken(signIn, strategy: strategy!, token: token)
+            .sendOauthToken(signIn, strategy: strategy, token: token)
             .then(_housekeeping);
 
       case SignIn signIn
@@ -191,7 +219,7 @@ class Auth {
         final stage = Stage.forStatus(signIn.status);
         if (signIn.verificationFor(stage) is! Verification) {
           await _api
-              .prepareSignIn(signIn, stage: stage, strategy: strategy!)
+              .prepareSignIn(signIn, stage: stage, strategy: strategy)
               .then(_housekeeping);
         }
         if (client.signIn case SignIn signIn

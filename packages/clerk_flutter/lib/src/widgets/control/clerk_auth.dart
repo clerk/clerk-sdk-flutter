@@ -11,9 +11,10 @@ class ClerkAuth extends StatefulWidget {
     super.key,
     this.publicKey,
     this.publishableKey,
+    this.pollMode = clerk.SessionTokenPollMode.onDemand,
     this.auth,
     this.translator = const DefaultClerkTranslator(),
-    this.persistor,
+    this.persistor = clerk.Persistor.none,
     this.loading,
     required this.child,
   })  : assert(
@@ -35,10 +36,13 @@ class ClerkAuth extends StatefulWidget {
   final ClerkAuthProvider? auth;
 
   /// Persistence service for caching tokens
-  final clerk.Persistor? persistor;
+  final clerk.Persistor persistor;
 
   /// Injectable translations for strings
   final ClerkTranslator translator;
+
+  /// Poll mode: should we regularly poll for session token?
+  final clerk.SessionTokenPollMode pollMode;
 
   /// Loading widget
   final Widget? loading;
@@ -85,47 +89,50 @@ class ClerkAuth extends StatefulWidget {
 }
 
 class _ClerkAuthState extends State<ClerkAuth> {
-  late final ClerkAuthProvider _auth;
-  late final Future<ClerkAuthProvider> _authFuture;
-
-  void _update() => setState(() {});
+  final _completer = Completer<ClerkAuthProvider>();
 
   @override
   void initState() {
     super.initState();
-    if (widget.auth case ClerkAuthProvider auth) {
-      _auth = auth;
-      _authFuture = Future.value(auth);
-    } else {
-      _auth = ClerkAuthProvider(
-        publishableKey: widget.publishableKey!,
+    if (widget.auth == null) {
+      ClerkAuthProvider.create(
         publicKey: widget.publicKey!,
+        publishableKey: widget.publishableKey!,
         persistor: widget.persistor,
         translator: widget.translator,
         loading: widget.loading,
-      );
-      _authFuture = _auth.initialize().then((_) => _auth);
+        pollMode: widget.pollMode,
+      ) //
+          .then(_completer.complete)
+          .catchError(_completer.completeError);
     }
-    _auth.addListener(_update);
   }
 
   @override
   void dispose() {
-    if (widget.auth is ClerkAuthProvider) {
-      _auth.removeListener(_update);
-    } else {
-      _auth.terminate();
+    if (widget.auth == null) {
+      _completer.future.then((auth) => auth.terminate());
     }
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _authFuture,
+    return FutureBuilder<ClerkAuthProvider>(
+      initialData: widget.auth,
+      future: _completer.future,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return _ClerkAuthData(auth: snapshot.data!, child: widget.child);
+        if (snapshot.data case ClerkAuthProvider auth) {
+          return ListenableBuilder(
+            listenable: auth,
+            builder: (BuildContext context, Widget? child) {
+              return _ClerkAuthData(
+                auth: auth,
+                child: widget.child,
+              );
+            },
+          );
         }
         return widget.loading ?? emptyWidget;
       },

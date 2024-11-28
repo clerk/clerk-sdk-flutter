@@ -4,6 +4,7 @@ import 'models.dart';
 
 /// [ApiResponse] holds parsed Clerk data from a back-end http response
 class ApiResponse {
+  /// Constructs an instance of [ApiResponse]
   const ApiResponse({
     required this.status,
     this.errors,

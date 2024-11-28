@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -10,15 +11,37 @@ import 'package:webview_flutter/webview_flutter.dart';
 ///
 class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   /// Construct a [ClerkAuthProvider]
-  ClerkAuthProvider({
+  ClerkAuthProvider._({
     required super.publicKey,
     required super.publishableKey,
-    this.translator = const DefaultClerkTranslator(),
+    required super.persistor,
+    required this.translator,
+    super.pollMode,
     Widget? loading,
-    super.persistor,
   }) : _loadingOverlay = OverlayEntry(
           builder: (context) => loading ?? defaultLoadingWidget,
         );
+
+  /// Create an [ClerkAuthProvider] object using appropriate Clerk credentials
+  static Future<ClerkAuthProvider> create({
+    required String publicKey,
+    required String publishableKey,
+    Persistor persistor = Persistor.none,
+    ClerkTranslator translator = const DefaultClerkTranslator(),
+    SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
+    Widget? loading,
+  }) async {
+    final provider = ClerkAuthProvider._(
+      publicKey: publicKey,
+      publishableKey: publishableKey,
+      persistor: persistor,
+      translator: translator,
+      pollMode: pollMode,
+      loading: loading,
+    );
+    await provider.initialize();
+    return provider;
+  }
 
   /// The [ClerkTranslator] for auth UI
   final ClerkTranslator translator;
@@ -63,6 +86,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
             callback: _ssoCallback(
               strategy,
               onError: onError,
+              auth: auth,
             ),
           );
         },
@@ -74,9 +98,9 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   Function(BuildContext, String) _ssoCallback(
     clerk.Strategy strategy, {
     void Function(clerk.AuthError)? onError,
+    required ClerkAuthProvider auth,
   }) {
     return (BuildContext context, String redirectUrl) async {
-      final auth = ClerkAuth.of(context);
       final uri = Uri.parse(redirectUrl);
       final token = uri.queryParameters[_kRotatingTokenNonce];
       if (token case String token) {
@@ -88,11 +112,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
       } else {
         await auth.refreshClient();
         if (context.mounted) {
-          await call(
-            context,
-            () => auth.transfer(),
-            onError: onError,
-          );
+          await call(context, () => auth.transfer(), onError: onError);
         }
       }
       _ssoOverlay?.remove();

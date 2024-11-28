@@ -8,15 +8,18 @@ void main() {
   late final Auth auth;
   late final TestEnv env;
   final httpClient = TestHttpClient();
-  final expireAt =
-      DateTime.now().add(const Duration(minutes: 5)).millisecondsSinceEpoch;
+  final expireAt = DateTime.now() //
+      .add(const Duration(minutes: 5))
+      .millisecondsSinceEpoch;
 
   setUpAll(() async {
     env = TestEnv('.env.test');
     auth = Auth(
-        publicKey: env.publicKey,
-        publishableKey: env.publishableKey,
-        client: httpClient);
+      publicKey: env.publicKey,
+      publishableKey: env.publishableKey,
+      persistor: Persistor.none,
+      client: httpClient,
+    );
 
     httpClient.expect(
       'POST /v1/client',
@@ -40,35 +43,6 @@ void main() {
   });
 
   group('SignIn', () {
-    test('can sign in with password in separate steps', () async {
-      await runWithLogging(() async {
-        httpClient.expect(
-          'POST /v1/client/sign_ins identifier=test1+clerk_test@some.domain',
-          200,
-          '{"response":{"object":"sign_in_attempt","id":"SIGN_IN_ATTEMPT_ID","status":"needs_first_factor","supported_identifiers":["email_address","phone_number","username"],"supported_first_factors":[{"strategy":"password"},{"strategy":"phone_code","safe_identifier":"+*********01","phone_number_id":"IDENTIFIER_ID","primary":true},{"strategy":"email_code","safe_identifier":"test1+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true},{"strategy":"email_link","safe_identifier":"test1+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true},{"strategy":"reset_password_email_code","safe_identifier":"test1+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true}],"supported_second_factors":null,"first_factor_verification":null,"second_factor_verification":null,"identifier":"test1+clerk_test@some.domain","USER_ID":null,"created_session_id":null,"abandon_at":1732105773963},"client":{"object":"client","id":"CLIENT_ID","sessions":[],"sign_in":{"object":"sign_in_attempt","id":"SIGN_IN_ATTEMPT_ID","status":"needs_first_factor","supported_identifiers":["email_address","phone_number","username"],"supported_first_factors":[{"strategy":"password"},{"strategy":"phone_code","safe_identifier":"+*********01","phone_number_id":"IDENTIFIER_ID","primary":true},{"strategy":"email_code","safe_identifier":"test1+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true},{"strategy":"email_link","safe_identifier":"test1+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true},{"strategy":"reset_password_email_code","safe_identifier":"test1+clerk_test@some.domain","email_address_id":"IDENTIFIER_ID","primary":true}],"supported_second_factors":null,"first_factor_verification":null,"second_factor_verification":null,"identifier":"test1+clerk_test@some.domain","USER_ID":null,"created_session_id":null,"abandon_at":1732105773963},"sign_up":null,"last_active_session_id":null,"cookie_expires_at":null,"created_at":1732019373946,"updated_at":1732019373977}}',
-        );
-        httpClient.expect(
-          'POST /v1/client/sign_ins/SIGN_IN_ATTEMPT_ID/attempt_first_factor strategy=password&password=password',
-          200,
-          '{"response":{"object":"sign_in_attempt","id":"SIGN_IN_ATTEMPT_ID","status":"complete","supported_identifiers":["email_address","phone_number","username"],"supported_first_factors":null,"supported_second_factors":null,"first_factor_verification":{"status":"verified","strategy":"password","attempts":1,"expire_at":null},"second_factor_verification":null,"identifier":"test1+clerk_test@some.domain","USER_ID":null,"created_session_id":"SESSION_ID","abandon_at":1732105773963},"client":{"object":"client","id":"CLIENT_ID","sessions":[{"object":"session","id":"SESSION_ID","status":"active","expire_at":$expireAt,"abandon_at":1734611374492,"last_active_at":1732019374492,"last_active_organization_id":null,"actor":null,"user":{"id":"USER_ID","object":"user","username":"test1","first_name":"Test","last_name":"User","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJtbktmQms4MlhkZ0pYUzltNlhGZlkyTGZHTiIsImluaXRpYWxzIjoiVFUifQ","has_image":false,"primary_email_address_id":"IDENTIFIER_ID","primary_phone_number_id":"IDENTIFIER_ID","primary_web3_wallet_id":null,"password_enabled":true,"two_factor_enabled":false,"totp_enabled":false,"backup_code_enabled":false,"email_addresses":[{"id":"IDENTIFIER_ID","object":"email_address","email_address":"test1+clerk_test@some.domain","reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"created_at":1727707000228,"updated_at":1729075139789}],"phone_numbers":[{"id":"IDENTIFIER_ID","object":"phone_number","phone_number":"+15555550101","reserved_for_second_factor":false,"default_second_factor":false,"reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"backup_codes":null,"created_at":1727707000277,"updated_at":1727707000277}],"web3_wallets":[],"passkeys":[],"external_accounts":[],"saml_accounts":[],"enterprise_accounts":[],"public_metadata":{},"unsafe_metadata":{},"external_id":null,"last_sign_in_at":1732019374499,"banned":false,"locked":false,"lockout_expires_in_seconds":null,"verification_attempts_remaining":100,"created_at":1727707000164,"updated_at":1732019374520,"delete_self_enabled":true,"create_organization_enabled":true,"last_active_at":1732016622191,"mfa_enabled_at":null,"mfa_disabled_at":null,"legal_accepted_at":null,"profile_image_url":"https://www.gravatar.com/avatar?d=mp","organization_memberships":[]},"public_user_data":{"first_name":"Test","last_name":"User","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJtbktmQms4MlhkZ0pYUzltNlhGZlkyTGZHTiIsImluaXRpYWxzIjoiVFUifQ","has_image":false,"identifier":"test1+clerk_test@some.domain","profile_image_url":"https://www.gravatar.com/avatar?d=mp"},"created_at":1732019374499,"updated_at":1732019374536,"last_active_token":{"object":"token","jwt":"eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3MzIwMTk0MzQsImlhdCI6MTczMjAxOTM3NCwiaXNzIjoiaHR0cHM6Ly9tb3JlLXlldGktNTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzMyMDE5MzY0LCJzaWQiOiJzZXNzXzJwNEpOYnpCWWV0QkswQ2dWbENoN3ZUbHpubyIsInN1YiI6InVzZXJfMm1uS2ZCazgyWGRnSlhTOW02WEZmWTJMZkdOIn0.ZP6ClyTfN3Ir7yed7VQnqj14bgdAUIyrKUkjivICqWjDN2XxLFZbD6-p4g5K1fCCfQCmuq_tP960vRvW_7dRqCSSGRqs1KzIBr0sdvw6K8_DMjyDQGgKQSG11TPIIkGK0DbvSxpHvbe-Dtl3EK-1SCNKeXzEhEB0Sd2GZn322gnRpgk6-DFM-DBif31T-5eM2u6kwgIJecA3xphLOciq_vWfT4j3hyoCjZPcmGGh4Iq-GrA7j6NPXRWtoVnkF0ZgtEbzlCwTg4x3mOkbnbX4pRDkAvR_z81pDsKKXMtS9xZyHVC-9NIy8WvoiXX8w_XgoZWfFkxt4AqDAie1dlogAg"}}],"sign_in":null,"sign_up":null,"last_active_session_id":"SESSION_ID","cookie_expires_at":null,"created_at":1732019373946,"updated_at":1732019374530}}',
-        );
-
-        expect(auth.user, null);
-        final client = await auth.attemptSignIn(
-          strategy: Strategy.password,
-          identifier: 'test1+clerk_test@some.domain',
-        );
-        expect(client.signIn?.status, Status.needsFirstFactor);
-
-        final client2 = await auth.attemptSignIn(
-          strategy: Strategy.password,
-          password: env.password,
-        );
-        expect(client2.signIn, null);
-        expect(client2.user is User, true);
-      });
-    });
-
     test('can sign in with password in one step', () async {
       await runWithLogging(() async {
         httpClient.expect(

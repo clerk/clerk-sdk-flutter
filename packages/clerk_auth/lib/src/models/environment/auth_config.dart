@@ -62,6 +62,7 @@ class AuthConfig {
   @JsonKey(fromJson: toStrategyList)
   final List<Strategy> secondFactors;
 
+  /// email address verification strategy
   @JsonKey(fromJson: toStrategyList)
   final List<Strategy> emailAddressVerificationStrategies;
 

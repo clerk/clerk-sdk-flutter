@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 /// organization management UI that allows users to manage their organization profile and
 /// security settings.
 ///
+@Deprecated('Not ready for use')
 @immutable
 class ClerkOrganizationProfileWidget extends StatelessWidget {
   /// Constructs a const [ClerkOrganizationProfileWidget].

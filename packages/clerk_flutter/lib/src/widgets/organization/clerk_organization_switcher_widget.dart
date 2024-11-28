@@ -15,6 +15,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 /// is useful for applications that have a multi-tenant architecture, where users can be
 /// part of multiple organizations.
 ///
+@Deprecated('Not ready for use')
 @immutable
 class ClerkOrganizationSwitcherWidget extends StatelessWidget {
   /// Constructs a const [ClerkOrganizationSwitcherWidget].

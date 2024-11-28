@@ -11,6 +11,7 @@ import 'package:flutter_svg/svg.dart';
 ///The [ClerkCreateOrganizationWidget] component is used to render an organization creation
 /// UI that allows users to create brand new organizations within your application.
 ///
+@Deprecated('Not ready for use')
 @immutable
 class ClerkCreateOrganizationWidget extends StatelessWidget {
   /// Constructs a const [ClerkCreateOrganizationWidget].

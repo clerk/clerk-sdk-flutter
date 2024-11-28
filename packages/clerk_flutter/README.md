@@ -1,19 +1,8 @@
 <p align="center">
-  <a href="https://clerk.com?utm_source=github&utm_medium=sdk_flutter" target="_blank" rel="noopener noreferrer">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://images.clerk.com/static/logo-dark-mode-400x400.png">
-      <img src="https://images.clerk.com/static/logo-light-mode-400x400.png" height="64">
-    </picture>
-  </a>
-  <br />
+<img src="https://images.clerk.com/static/logo-light-mode-400x400.png" height="90">
 </p>
 
-
-# Clerk Flutter / Pre-release Alpha
-
-The official [Clerk](https://clerk.com) Flutter client library.
-
-This package  will allow you to authenticate your users and use Clerk services from your Flutter code.
+## Official [Clerk](https://clerk.com) Flutter SDK (Pre-release Alpha)
 
 [![Pub Version](https://img.shields.io/pub/v/clerk_flutter?color=blueviolet)](https://pub.dev/packages/clerk_flutter)
 [![Pub Points](https://img.shields.io/pub/points/clerk_flutter?label=pub%20points)](https://pub.dev/packages/clerk_flutter/score)
@@ -21,15 +10,24 @@ This package  will allow you to authenticate your users and use Clerk services f
 [![documentation](https://img.shields.io/badge/documentation-clerk-green.svg)](https://clerk.com/docs)
 [![twitter](https://img.shields.io/twitter/follow/ClerkDev?style=social)](https://twitter.com/intent/follow?screen_name=ClerkDev)
 
+> ### ⚠️ The Clerk Flutter SDK is in Alpha and not recommended for use in production. ⚠️
+> ❗️ Breaking changes should be expected until the first stable release (1.0.0) ❗️
+
+**Clerk helps developers build user management. We provide streamlined user experiences
+for your users to sign up, sign in, and manage their profile from your Flutter code.**
+
 ## Requirements
 
 * Flutter >= 3.24.0
 * Dart >= 3.5.0
 
+## In Development
+
+* Organization support
 
 ## Example Usage
 
-To use this package you will need to go to your [Clerk Dashboard](https://dashboard.clerk.com/) 
+To use this package you will need to go to your [Clerk Dashboard](https://dashboard.clerk.com/)
 create an application and copy the public and publishable API keys into your project.
 
 ```dart
@@ -74,6 +72,7 @@ class _MainAppState extends State<MainApp> {
   }
 }
 ```
+
 ## License
 
 This SDK is licensed under the MIT license found in the [LICENSE](./LICENSE) file.

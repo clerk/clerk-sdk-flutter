@@ -1,9 +1,9 @@
 name: clerk_auth
 description: Package that will allow you to authenticate and use Clerk from Dart code.
-version: 0.0.3-dev
+version: 0.0.4-dev
 homepage: https://clerk.com/docs
 repository: https://github.com/clerk/clerk-sdk-flutter/tree/main/packages/clerk_auth
-issue_tracker: https://github.com/clerk/clerk-sdk-flutter/labels/package%3A%20clerk_auth
+issue_tracker: https://github.com/clerk/clerk-sdk-flutter/labels/clerk_auth
 topics:
   - authentication
 

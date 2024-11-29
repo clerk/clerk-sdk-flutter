@@ -12,9 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main() async {
   await setUpLogging(printer: const LogPrinter());
 
-  const publicKey = String.fromEnvironment('public_key');
   const publishableKey = String.fromEnvironment('publishable_key');
-  if (publicKey.isEmpty || publishableKey.isEmpty) {
+  if (publishableKey.isEmpty) {
     if (kDebugMode) {
       print(
         'Please run the example with: '
@@ -24,10 +23,11 @@ Future<void> main() async {
     exit(1);
   }
 
-  runApp(const ExampleApp(
-    publicKey: publicKey,
-    publishableKey: publishableKey,
-  ));
+  runApp(
+    const ExampleApp(
+      publishableKey: publishableKey,
+    ),
+  );
 }
 
 /// Example App
@@ -35,12 +35,8 @@ class ExampleApp extends StatefulWidget {
   /// Constructs an instance of Example App
   const ExampleApp({
     super.key,
-    required this.publicKey,
     required this.publishableKey,
   });
-
-  /// Public Key
-  final String publicKey;
 
   /// Publishable KEy
   final String publishableKey;
@@ -52,14 +48,11 @@ class ExampleApp extends StatefulWidget {
 class _ExampleAppState extends State<ExampleApp> {
   final persistor = const _Persistor();
 
-  late final publicKey = widget.publicKey.replaceAll(r'\n', '\n');
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: ClerkAuth(
-        publicKey: publicKey,
         publishableKey: widget.publishableKey,
         persistor: persistor,
         child: Scaffold(

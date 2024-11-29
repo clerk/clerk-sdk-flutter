@@ -13,7 +13,7 @@ class ClerkAuth extends StatefulWidget {
     this.pollMode = clerk.SessionTokenPollMode.onDemand,
     this.auth,
     this.translator = const DefaultClerkTranslator(),
-    this.persistor = clerk.Persistor.none,
+    this.persistor,
     this.loading,
     required this.child,
   }) : assert(
@@ -29,7 +29,7 @@ class ClerkAuth extends StatefulWidget {
   final ClerkAuthProvider? auth;
 
   /// Persistence service for caching tokens
-  final clerk.Persistor persistor;
+  final clerk.Persistor? persistor;
 
   /// Injectable translations for strings
   final ClerkTranslator translator;

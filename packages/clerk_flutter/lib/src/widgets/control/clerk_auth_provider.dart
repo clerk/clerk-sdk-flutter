@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
-import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -24,14 +23,14 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   /// Create an [ClerkAuthProvider] object using appropriate Clerk credentials
   static Future<ClerkAuthProvider> create({
     required String publishableKey,
-    Persistor persistor = Persistor.none,
+    clerk.Persistor? persistor,
     ClerkTranslator translator = const DefaultClerkTranslator(),
-    SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
+    clerk.SessionTokenPollMode pollMode = clerk.SessionTokenPollMode.onDemand,
     Widget? loading,
   }) async {
     final provider = ClerkAuthProvider._(
       publishableKey: publishableKey,
-      persistor: persistor,
+      persistor: persistor ?? await ClerkPersistor.create(),
       translator: translator,
       pollMode: pollMode,
       loading: loading,

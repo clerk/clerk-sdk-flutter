@@ -50,29 +50,24 @@ class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
             ClerkAuthBuilder(
               builder: (context, auth) {
                 return Closeable(
-                  closed: (auth.signIn is clerk.SignIn &&
-                          auth.signIn!.status.isActive) ||
-                      (auth.signUp is clerk.SignUp &&
-                          auth.signUp!.status.isActive),
+                  closed: auth.signIn is clerk.SignIn ||
+                      auth.signUp is clerk.SignUp,
                   child: const ClerkSSOPanel(),
                 );
               },
             ),
             Closeable(
-              open: _state.isSigningIn,
+              closed: _state.isSigningIn == false,
               child: const ClerkSignInPanel(),
             ),
             Closeable(
-              open: _state.isSigningUp,
+              closed: _state.isSigningUp == false,
               child: const ClerkSignUpPanel(),
             ),
             const ClerkErrorMessage(),
           ],
         ),
-        bottomPortion: _BottomPortion(
-          state: _state,
-          onChange: _toggle,
-        ),
+        bottomPortion: _BottomPortion(state: _state, onChange: _toggle),
       ),
     );
   }

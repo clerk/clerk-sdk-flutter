@@ -50,3 +50,20 @@ extension ListExtension on List {
     }
   }
 }
+
+/// Extension class to create extra statics for [DateTime] use
+///
+class DateTimeExt {
+  const DateTimeExt._();
+
+  /// The epoch as a [DateTime]
+  static final zero = DateTimeExt.utcEpochSeconds(0);
+
+  /// returns a [DateTime] in UTC in seconds since epoch
+  static DateTime utcEpochSeconds(int seconds) =>
+      utcEpochMillis(seconds * Duration.millisecondsPerSecond);
+
+  /// returns a [DateTime] in UTC in milliseconds since epoch
+  static DateTime utcEpochMillis(int milliseconds) =>
+      DateTime.fromMillisecondsSinceEpoch(milliseconds, isUtc: true);
+}

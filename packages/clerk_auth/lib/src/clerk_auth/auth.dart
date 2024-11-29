@@ -8,7 +8,7 @@ export 'persistor.dart';
 
 /// [Auth] provides more abstracted access to the Clerk API
 ///
-/// Requires a [publicKey] and [publishableKey] found in the Clerk dashboard
+/// Requires a [publishableKey] found in the Clerk dashboard
 /// for you account. Additional arguments:
 ///
 /// [persistor]: an optional instance of a [Persistor] which will keep track of
@@ -23,13 +23,11 @@ export 'persistor.dart';
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
   Auth({
-    required String publicKey,
     required String publishableKey,
     required Persistor persistor,
     HttpClient? client,
     SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
   }) : _api = Api(
-          publicKey: publicKey,
           publishableKey: publishableKey,
           persistor: persistor,
           client: client,

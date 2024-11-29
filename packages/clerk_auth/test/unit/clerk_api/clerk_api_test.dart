@@ -15,18 +15,18 @@ void main() {
 
     test('will fail unless encoded part follows underscore', () {
       expect(
-        () => Api(publicKey: '', publishableKey: 'NOT A PUBLIC KEY'),
+        () => Api(publishableKey: 'NOT A PUBLIC KEY'),
         throwsA(const TypeMatcher<FormatException>()),
       );
     });
 
     test('will pass when encoded part follows underscore', () {
-      final result = Api(publicKey: '', publishableKey: publishableKey);
+      final result = Api(publishableKey: publishableKey);
       expect(result.domain, isA<String>());
     });
 
     test('will return correct domain from decoded key', () {
-      final result = Api(publicKey: '', publishableKey: publishableKey);
+      final result = Api(publishableKey: publishableKey);
       expect(result.domain, domain);
     });
   });

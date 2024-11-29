@@ -2,7 +2,6 @@ import 'package:clerk_auth/clerk_auth.dart';
 
 Future<void> main() async {
   final api = Api(
-    publicKey: '<YOUR-PUBLIC-KEY>',
     publishableKey: '<YOUR-PUBLISHABLE-KEY>',
   );
 

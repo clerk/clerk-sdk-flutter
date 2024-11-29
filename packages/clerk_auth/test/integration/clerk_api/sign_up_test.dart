@@ -32,10 +32,7 @@ void main() {
 
   setUpAll(() async {
     env = TestEnv('.env.test');
-    api = Api(
-        publicKey: env.publicKey,
-        publishableKey: env.publishableKey,
-        client: httpClient);
+    api = Api(publishableKey: env.publishableKey, client: httpClient);
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });
 

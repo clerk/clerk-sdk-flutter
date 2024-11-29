@@ -57,7 +57,6 @@ class _ExampleAppState extends State<ExampleApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       home: ClerkAuth(
         publicKey: publicKey,
         publishableKey: widget.publishableKey,

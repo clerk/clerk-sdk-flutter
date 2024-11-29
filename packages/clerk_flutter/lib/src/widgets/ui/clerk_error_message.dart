@@ -51,7 +51,7 @@ class _ErrorMessageState extends State<_ErrorMessage> {
   Widget build(BuildContext context) {
     final translator = ClerkAuth.translatorOf(context);
     return Closeable(
-      open: _timer is Timer && _error.isNotEmpty,
+      closed: _timer is! Timer || _error.isEmpty,
       child: Padding(
         padding: horizontalPadding32 + bottomPadding8,
         child: Text(translator.translate(_error),

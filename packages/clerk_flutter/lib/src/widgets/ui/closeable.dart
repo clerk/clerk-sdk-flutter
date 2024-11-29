@@ -27,21 +27,13 @@ class Closeable extends StatelessWidget {
   /// Construct a [Closeable] panel
   const Closeable({
     super.key,
-    bool? closed,
-    bool? open,
+    required this.closed,
     required this.child,
     this.duration = _defaultDuration,
     this.axis = ClosingAxis.vertical,
     this.alignment = Alignment.topLeft,
-  })  : assert(
-          (closed is bool) || (open is bool),
-          'One of closed or open required',
-        ),
-        assert(
-          (closed is bool) != (open is bool),
-          'Only one of closed or open allowed',
-        ),
-        _value = (open == true || closed == false) ? 1 : 0;
+    this.onEnd,
+  });
 
   /// Animation's [Duration]
   final Duration duration;
@@ -55,18 +47,25 @@ class Closeable extends StatelessWidget {
   /// Alignment of child widget within the panel
   final Alignment alignment;
 
-  final double _value;
+  /// is the panel closed?
+  final bool closed;
+
+  /// optional function to call when closing or opening has
+  /// finished animating
+  final ValueChanged<bool>? onEnd;
 
   @override
   Widget build(BuildContext context) {
+    final value = closed ? 0.0 : 1.0;
     return IgnorePointer(
-      ignoring: _value == 0,
+      ignoring: closed,
       child: ClipRect(
         child: AnimatedAlign(
           duration: duration,
           alignment: alignment,
-          heightFactor: axis.isVertical ? _value : null,
-          widthFactor: axis.isHorizontal ? _value : null,
+          heightFactor: axis.isVertical ? value : null,
+          widthFactor: axis.isHorizontal ? value : null,
+          onEnd: () => onEnd?.call(closed),
           child: child,
         ),
       ),

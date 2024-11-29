@@ -28,7 +28,7 @@ class ClerkCodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Closeable(
-      open: open,
+      closed: open == false,
       child: Padding(
         padding: horizontalPadding32 + verticalPadding8,
         child: Column(

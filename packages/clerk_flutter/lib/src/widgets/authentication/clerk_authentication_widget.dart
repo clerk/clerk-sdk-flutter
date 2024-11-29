@@ -57,9 +57,13 @@ class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
               },
             ),
             Closeable(
-                open: _state.isSigningIn, child: const ClerkSignInPanel()),
+              closed: _state.isSigningIn == false,
+              child: const ClerkSignInPanel(),
+            ),
             Closeable(
-                open: _state.isSigningUp, child: const ClerkSignUpPanel()),
+              closed: _state.isSigningUp == false,
+              child: const ClerkSignUpPanel(),
+            ),
             const ClerkErrorMessage(),
           ],
         ),

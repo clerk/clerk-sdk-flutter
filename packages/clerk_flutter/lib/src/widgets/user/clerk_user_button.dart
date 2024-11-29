@@ -24,20 +24,6 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
 
   final _sessions = <clerk.Session>[];
 
-  Future<void> _manage(List<clerk.Session> sessions) async {
-    // adding to a list of existing sessions means we have ones that are now deleted
-    // still available in `_sessions`, making for prettier UI
-    _sessions.addOrReplaceAll(sessions, by: (s) => s.id);
-
-    // after a delay period, all deleted sessions will have been closed, so we can
-    // clear the `_sessions` cache of any such for next time round
-    // Using `removeWhere` maintains the list order in `_sessions`, stopping weird
-    // UI jumping as arbitrary list order is imposed
-    await Future.delayed(_closeDelay);
-
-    _sessions.removeWhere((s) => sessions.contains(s) == false);
-  }
-
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -46,75 +32,83 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
         color: ClerkColors.white,
         boxShadow: [BoxShadow(color: ClerkColors.mercury, blurRadius: 15)],
       ),
-      child: ClerkAuthBuilder(builder: (context, auth) {
-        final translator = auth.translator;
-        final sessions = auth.client.sessions;
+      child: ClerkAuthBuilder(
+        builder: (context, auth) {
+          final translator = auth.translator;
+          final sessions = auth.client.sessions;
 
-        _manage(sessions);
+          _sessions.addOrReplaceAll(sessions, by: (s) => s.id);
+          final displaySessions = List<clerk.Session>.from(_sessions);
 
-        return ClerkVerticalCard(
-          topPortion: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final session in _sessions)
-                _SessionRow(
-                  key: Key(session.id),
-                  session: session,
-                  closed: sessions.contains(session) == false,
-                  selected: session == auth.client.activeSession,
-                  showName: widget.showName,
-                  onTap: () => auth.call(context, () => auth.activate(session)),
-                ),
-              if (auth.env.config.singleSessionMode == false)
-                Padding(
-                  padding: allPadding16 + leftPadding4,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => _AddAccountScreen.show(context),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const _CircleIcon(
-                          icon: Icons.add,
-                          backgroundColor: ClerkColors.dawnPink,
-                          borderColor: ClerkColors.nobel,
-                          dashed: true,
-                        ),
-                        horizontalMargin24,
-                        Text(
-                          translator.translate('Add account'),
-                          style: ClerkTextStyle.buttonTitle.copyWith(
-                            color: ClerkColors.almostBlack,
+          return ClerkVerticalCard(
+            topPortion: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final session in displaySessions)
+                  _SessionRow(
+                    key: Key(session.id),
+                    session: session,
+                    closed: sessions.contains(session) == false,
+                    selected: session == auth.client.activeSession,
+                    showName: widget.showName,
+                    onTap: () =>
+                        auth.call(context, () => auth.activate(session)),
+                    onEnd: (closed) {
+                      if (closed) _sessions.remove(session);
+                    },
+                  ),
+                if (auth.env.config.singleSessionMode == false)
+                  Padding(
+                    padding: allPadding16 + leftPadding4,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => _AddAccountScreen.show(context),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const _CircleIcon(
+                            icon: Icons.add,
+                            backgroundColor: ClerkColors.dawnPink,
+                            borderColor: ClerkColors.nobel,
+                            dashed: true,
                           ),
-                        ),
-                      ],
+                          horizontalMargin24,
+                          Text(
+                            translator.translate('Add account'),
+                            style: ClerkTextStyle.buttonTitle.copyWith(
+                              color: ClerkColors.almostBlack,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-            ],
-          ),
-          bottomPortion: Closeable(
-            open: sessions.length > 1,
-            child: Padding(
-              padding: horizontalPadding16 + verticalPadding12,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => auth.call(context, () => auth.signOut()),
-                child: Row(
-                  children: [
-                    const Icon(Icons.logout, color: ClerkColors.grey, size: 16),
-                    horizontalMargin8,
-                    Text(
-                      translator.translate('Sign out of all accounts'),
-                      style: ClerkTextStyle.buttonTitle,
-                    )
-                  ],
+              ],
+            ),
+            bottomPortion: Closeable(
+              closed: sessions.length <= 1,
+              child: Padding(
+                padding: horizontalPadding16 + verticalPadding12,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => auth.call(context, () => auth.signOut()),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.logout,
+                          color: ClerkColors.grey, size: 16),
+                      horizontalMargin8,
+                      Text(
+                        translator.translate('Sign out of all accounts'),
+                        style: ClerkTextStyle.buttonTitle,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }
@@ -271,7 +265,8 @@ class _SessionRow extends StatelessWidget {
     super.key,
     required this.session,
     required this.closed,
-    this.onTap,
+    required this.onTap,
+    required this.onEnd,
     this.selected = false,
     this.showName = true,
   });
@@ -280,7 +275,8 @@ class _SessionRow extends StatelessWidget {
   final bool closed;
   final bool selected;
   final bool showName;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
+  final ValueChanged<bool> onEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -288,6 +284,7 @@ class _SessionRow extends StatelessWidget {
     final user = session.user;
     return Closeable(
       closed: closed,
+      onEnd: onEnd,
       child: Padding(
         padding: topPadding8,
         child: Column(
@@ -337,7 +334,7 @@ class _SessionRow extends StatelessWidget {
               ),
             ),
             Closeable(
-              open: selected,
+              closed: selected == false,
               child: Padding(
                 padding: horizontalPadding16 + leftPadding48 + bottomPadding8,
                 child: Builder(

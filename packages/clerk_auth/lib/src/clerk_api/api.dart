@@ -24,7 +24,7 @@ class Api with Logging {
   Api._(this._tokenCache, this._domain, this._client, this._pollMode);
 
   /// Create an [Api] object for a given public key, or return the existing one
-  /// if such already exists for that key. Requires a [publicKey] and [publishableKey]
+  /// if such already exists for that key. Requires a [publishableKey]
   /// found in the Clerk dashboard for you account. Additional arguments:
   ///
   /// [persistor]: an optional instance of a [Persistor] which will keep track of
@@ -38,13 +38,12 @@ class Api with Logging {
   ///
   factory Api({
     required String publishableKey,
-    required String publicKey,
     Persistor persistor = Persistor.none,
     SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
     HttpClient? client,
   }) =>
-      _caches[publicKey] ??= Api._(
-        TokenCache(publicKey, persistor),
+      Api._(
+        TokenCache(persistor, publishableKey),
         _deriveDomainFrom(publishableKey),
         client ?? const DefaultHttpClient(),
         pollMode,
@@ -55,8 +54,6 @@ class Api with Logging {
   final HttpClient _client;
   final SessionTokenPollMode _pollMode;
   Timer? _pollTimer;
-
-  static final _caches = <String, Api>{};
 
   static const _scheme = 'https';
   static const _kJwtKey = 'jwt';

@@ -12,7 +12,6 @@ void main() {
   setUpAll(() async {
     env = TestEnv('.env.test');
     api = Api(
-      publicKey: env.publicKey,
       publishableKey: env.publishableKey,
       client: httpClient,
     );

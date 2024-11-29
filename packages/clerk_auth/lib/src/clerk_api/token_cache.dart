@@ -1,7 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
@@ -13,22 +13,22 @@ import 'package:logging/logging.dart';
 class TokenCache {
   /// Create a [TokenCache] instance
   ///
-  TokenCache(this._publicKey, this._persistor);
+  TokenCache(this._persistor, String publishableKey)
+      : _cacheId = publishableKey.hashCode;
 
-  final String _publicKey;
   final Persistor _persistor;
+  final int _cacheId;
 
-  DateTime _sessionTokenExpiry =
-      DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+  late DateTime _sessionTokenExpiry = DateTimeExt.zero;
 
   /// the date at which, if in the future, the current [sessionToken]
   /// is due to expire
   DateTime get sessionTokenExpiry => _sessionTokenExpiry;
 
   static const _tokenExpiryBuffer = Duration(seconds: 10);
+  static const _kJwtExpiryKey = 'exp';
 
   final _logger = Logger('TokenCache');
-  late final RSAPublicKey _rsaKey;
 
   String _sessionId = '';
   String _clientToken = '';
@@ -41,14 +41,13 @@ class TokenCache {
   bool get _sessionTokenHasExpired =>
       DateTime.timestamp().isAfter(sessionTokenExpiry);
 
-  String get _sessionIdKey => '_clerkSessionId_${_publicKey.hashCode}';
+  String get _sessionIdKey => '_clerkSession_Id_$_cacheId';
 
-  String get _sessionTokenKey => '_clerkSessionToken_${_publicKey.hashCode}';
+  String get _sessionTokenKey => '_clerkSession_TokenValue_$_cacheId';
 
-  String get _sessionTokenExpiryKey =>
-      '_clerkSessionTokenExpiry_${_publicKey.hashCode}';
+  String get _sessionTokenExpiryKey => '_clerkSession_TokenExpiry_$_cacheId';
 
-  String get _clientTokenKey => '_clerkClientToken_${_publicKey.hashCode}';
+  String get _clientTokenKey => '_clerkClient_TokenValue_$_cacheId';
 
   List<String> get _persistorKeys => [
         _sessionIdKey,
@@ -59,17 +58,13 @@ class TokenCache {
 
   /// Initialise the cache
   Future<void> initialize() async {
-    _rsaKey = RSAPublicKey(_publicKey);
-
     // Read all stored variables first before assignment
     final sessionId = await _persistor.read(_sessionIdKey) ?? '';
     final sessionToken = await _persistor.read(_sessionTokenKey) ?? '';
     final clientToken = await _persistor.read(_clientTokenKey) ?? '';
-    final milliseconds = await _persistor.read(_sessionTokenExpiryKey) ?? '';
-    final sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(
-      int.tryParse(milliseconds) ?? 0,
-      isUtc: true,
-    );
+    final seconds = await _persistor.read(_sessionTokenExpiryKey) ?? '';
+    final sessionTokenExpiry =
+        DateTimeExt.utcEpochSeconds(int.tryParse(seconds) ?? 0);
 
     _sessionId = sessionId;
     _sessionToken = sessionToken;
@@ -83,7 +78,7 @@ class TokenCache {
     _sessionId = '';
     _clientToken = '';
     _sessionToken = '';
-    _sessionTokenExpiry = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+    _sessionTokenExpiry = DateTimeExt.zero;
     for (final key in _persistorKeys) {
       _persistor.delete(key);
     }
@@ -106,7 +101,6 @@ class TokenCache {
     if (token == _clientToken) return;
 
     try {
-      JWT.verify(token, _rsaKey);
       _clientToken = token;
       _persistor.write(_clientTokenKey, token);
     } catch (error, stackTrace) {
@@ -125,20 +119,22 @@ class TokenCache {
     if (token == _sessionToken) return;
 
     try {
-      final jwt = JWT.verify(token, _rsaKey);
-      final expirySeconds = jwt.payload['exp'];
+      final body = token.split('.')[1];
+      final data = switch (body.length) {
+        int len when len == 3 => body.padRight(len + 1, '='),
+        int len when len == 2 => body.padRight(len + 2, '='),
+        _ => body,
+      };
+      final payload = json.decode(utf8.decode(base64Url.decode(data)));
+      final expirySeconds = payload[_kJwtExpiryKey];
       if (expirySeconds is int) {
-        final expiry = DateTime.fromMillisecondsSinceEpoch(
-          expirySeconds * Duration.millisecondsPerSecond,
-          isUtc: true,
-        );
-        _sessionTokenExpiry = expiry.subtract(_tokenExpiryBuffer);
-        _sessionToken = token;
-        _persistor.write(_sessionTokenKey, token);
-        _persistor.write(
-          _sessionTokenExpiryKey,
-          sessionTokenExpiry.millisecondsSinceEpoch.toString(),
-        );
+        final expiry = expirySeconds - _tokenExpiryBuffer.inSeconds;
+        _sessionTokenExpiry = DateTimeExt.utcEpochSeconds(expiry);
+        if (_sessionTokenExpiry.isAfter(DateTime.now())) {
+          _sessionToken = token;
+          _persistor.write(_sessionTokenKey, token);
+          _persistor.write(_sessionTokenExpiryKey, expiry.toString());
+        }
       }
     } catch (error, _) {
       _logger.info('ERROR SETTING SESSION TOKEN: $error', error);

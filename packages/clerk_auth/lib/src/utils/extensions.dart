@@ -31,7 +31,7 @@ extension StringExtension on String {
 }
 
 /// Extensions to the [List] class
-extension ListExtension on List {
+extension ListExtension<T> on List<T> {
   /// Add all the items in an [Iterable] into the current list, either
   /// at the end of the list, or preferably replacing an existing item.
   ///
@@ -39,11 +39,10 @@ extension ListExtension on List {
   /// return equal values from the [by] function, or in its absence
   /// are themselves [Comparable]ly equal
   ///
-  void addOrReplaceAll<T>(Iterable<T> list, {dynamic Function(T)? by}) {
-    by ??= (t) => t;
+  void addOrReplaceAll<ID>(Iterable<T> list, {required ID Function(T) by}) {
     for (final item in list) {
-      final identifier = by.call(item);
-      switch (indexWhere((i) => by!.call(i) == identifier)) {
+      final identifier = by(item);
+      switch (indexWhere((i) => by(i) == identifier)) {
         case int idx when idx > -1:
           this[idx] = item;
         default:

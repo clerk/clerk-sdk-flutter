@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/logging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   await setUpLogging(printer: const LogPrinter());
@@ -46,15 +44,12 @@ class ExampleApp extends StatefulWidget {
 }
 
 class _ExampleAppState extends State<ExampleApp> {
-  final persistor = const _Persistor();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: ClerkAuth(
         publishableKey: widget.publishableKey,
-        persistor: persistor,
         child: Scaffold(
           backgroundColor: ClerkColors.whiteSmoke,
           body: Padding(
@@ -81,27 +76,5 @@ class LogPrinter extends Printer {
   @override
   void print(String output) {
     Zone.root.print(output);
-  }
-}
-
-class _Persistor implements clerk.Persistor {
-  const _Persistor();
-
-  @override
-  Future<void> delete(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(key);
-  }
-
-  @override
-  Future<String?> read(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key);
-  }
-
-  @override
-  Future<void> write(String key, String value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(key, value);
   }
 }

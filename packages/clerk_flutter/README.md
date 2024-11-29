@@ -46,15 +46,12 @@ class ExampleApp extends StatefulWidget {
 }
 
 class _ExampleAppState extends State<ExampleApp> {
-  final persistor = const _Persistor();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: ClerkAuth(
         publishableKey: widget.publishableKey,
-        persistor: persistor,
         child: Scaffold(
           backgroundColor: ClerkColors.whiteSmoke,
           body: Padding(

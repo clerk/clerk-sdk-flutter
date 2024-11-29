@@ -14,7 +14,6 @@ dependencies:
     path: ../
   clerk_auth:
     path: ../../clerk_auth/
-  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_lints: ^5.0.0

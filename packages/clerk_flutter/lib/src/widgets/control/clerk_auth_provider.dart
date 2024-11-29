@@ -12,7 +12,6 @@ import 'package:webview_flutter/webview_flutter.dart';
 class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   /// Construct a [ClerkAuthProvider]
   ClerkAuthProvider._({
-    required super.publicKey,
     required super.publishableKey,
     required super.persistor,
     required this.translator,
@@ -24,7 +23,6 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
 
   /// Create an [ClerkAuthProvider] object using appropriate Clerk credentials
   static Future<ClerkAuthProvider> create({
-    required String publicKey,
     required String publishableKey,
     Persistor persistor = Persistor.none,
     ClerkTranslator translator = const DefaultClerkTranslator(),
@@ -32,7 +30,6 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
     Widget? loading,
   }) async {
     final provider = ClerkAuthProvider._(
-      publicKey: publicKey,
       publishableKey: publishableKey,
       persistor: persistor,
       translator: translator,

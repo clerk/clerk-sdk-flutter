@@ -15,7 +15,6 @@ void main() {
   setUpAll(() async {
     env = TestEnv('.env.test');
     auth = Auth(
-      publicKey: env.publicKey,
       publishableKey: env.publishableKey,
       persistor: Persistor.none,
       client: httpClient,

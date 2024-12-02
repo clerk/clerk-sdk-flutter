@@ -79,11 +79,12 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
         builder: (BuildContext context) {
           return _SsoWebViewHost(
             url: url,
-            callback: _ssoCallback(
-              strategy,
-              onError: onError,
-              auth: auth,
-            ),
+            callback: _ssoCallback(strategy, onError: onError, auth: auth),
+            onClose: () async {
+              await call(context, () => auth.createClient(), onError: onError);
+              _ssoOverlay?.remove();
+              _ssoOverlay = null;
+            },
           );
         },
       );
@@ -198,10 +199,12 @@ class _SsoWebViewHost extends StatefulWidget {
   const _SsoWebViewHost({
     required this.url,
     required this.callback,
+    required this.onClose,
   });
 
   final String url;
   final Function(BuildContext context, String redirectUrl) callback;
+  final VoidCallback onClose;
 
   @override
   State<_SsoWebViewHost> createState() => _SsoWebViewHostState();
@@ -232,8 +235,17 @@ class _SsoWebViewHostState extends State<_SsoWebViewHost> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WebViewWidget(controller: controller),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: widget.onClose,
+            child: const Icon(Icons.close),
+          ),
+        ),
+        body: WebViewWidget(controller: controller),
+      ),
     );
   }
 }

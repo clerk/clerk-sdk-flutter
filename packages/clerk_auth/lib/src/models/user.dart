@@ -141,6 +141,11 @@ class User {
   /// toJson
   Map<String, dynamic> toJson() => _$UserToJson(this);
 
+  /// test the [UserIdentifyingData] to see if it is
+  /// one of the [User]'s primary identifiers
+  bool isPrimary(UserIdentifyingData item) =>
+      item.id == primaryEmailAddressId || item.id == primaryPhoneNumberId;
+
   String? _persisted(String? id, List<UserIdentifyingData>? items) {
     if (id is String && items is List<UserIdentifyingData>) {
       for (final item in items) {

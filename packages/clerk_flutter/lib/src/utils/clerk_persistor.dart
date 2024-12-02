@@ -39,7 +39,9 @@ class ClerkPersistor implements clerk.Persistor {
       try {
         if (file.existsSync()) {
           final data = await file.readAsString();
-          _cache.addAll(json.decode(data) as Map<String, String>);
+          final map = json.decode(data);
+          final cache = Map<String, String>.from(map);
+          _cache.addAll(cache);
         }
       } finally {}
     });

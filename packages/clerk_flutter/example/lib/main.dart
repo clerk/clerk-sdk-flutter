@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/logging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'pages/pages.dart';
 
 Future<void> main() async {
   await setUpLogging(printer: const LogPrinter());
@@ -46,29 +46,71 @@ class ExampleApp extends StatefulWidget {
 }
 
 class _ExampleAppState extends State<ExampleApp> {
-  final persistor = const _Persistor();
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ClerkAuth(
-        publishableKey: widget.publishableKey,
-        persistor: persistor,
-        child: Scaffold(
+    return ClerkAuth(
+      publishableKey: widget.publishableKey,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
           backgroundColor: ClerkColors.whiteSmoke,
-          body: Padding(
-            padding: horizontalPadding32,
-            child: Center(
-              child: ClerkAuthBuilder(
-                signedInBuilder: (context, auth) => const ClerkUserButton(),
-                signedOutBuilder: (context, auth) =>
-                    const ClerkAuthenticationWidget(),
+          body: SafeArea(
+            child: Padding(
+              padding: horizontalPadding32,
+              child: Center(
+                child: ClerkAuthBuilder(
+                  signedInBuilder: (context, auth) {
+                    final translator = auth.translator;
+                    return ClerkUserButton(
+                      sessionActions: [
+                        ClerkUserAction(
+                          icon: Icons.settings,
+                          label: translator.translate('Manage account'),
+                          callback: _manageAccount,
+                        ),
+                        ClerkUserAction(
+                          icon: Icons.logout,
+                          label: translator.translate('Sign out'),
+                          callback: _signOut,
+                        ),
+                      ],
+                      additionalActions: [
+                        if (auth.env.config.singleSessionMode == false)
+                          ClerkUserAction(
+                            icon: Icons.add,
+                            label: translator.translate('Add account'),
+                            callback: _addAccount,
+                          ),
+                      ],
+                    );
+                  },
+                  signedOutBuilder: (context, auth) {
+                    return const ClerkAuthenticationWidget();
+                  },
+                ),
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<T?> _addAccount<T>(BuildContext context, ClerkAuthProvider auth) =>
+      _navigateTo<T>(context, (_) => AddAccountPage(auth: auth));
+
+  Future<T?> _manageAccount<T>(BuildContext context, ClerkAuthProvider auth) =>
+      _navigateTo<T>(context, (_) => const ManageAccountPage());
+
+  Future<T?> _navigateTo<T>(BuildContext context, WidgetBuilder builder) =>
+      Navigator.of(context).push<T>(MaterialPageRoute(builder: builder));
+
+  Future<void> _signOut<T>(BuildContext context, ClerkAuthProvider auth) async {
+    if (auth.client.sessions.length == 1) {
+      auth.call(context, () => auth.signOut());
+    } else {
+      auth.call(context, () => auth.signOutOf(auth.client.activeSession!));
+    }
   }
 }
 
@@ -80,27 +122,5 @@ class LogPrinter extends Printer {
   @override
   void print(String output) {
     Zone.root.print(output);
-  }
-}
-
-class _Persistor implements clerk.Persistor {
-  const _Persistor();
-
-  @override
-  Future<void> delete(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(key);
-  }
-
-  @override
-  Future<String?> read(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key);
-  }
-
-  @override
-  Future<void> write(String key, String value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(key, value);
   }
 }

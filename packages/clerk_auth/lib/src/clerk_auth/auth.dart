@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
 
@@ -8,7 +9,7 @@ export 'persistor.dart';
 
 /// [Auth] provides more abstracted access to the Clerk API
 ///
-/// Requires a [publicKey] and [publishableKey] found in the Clerk dashboard
+/// Requires a [publishableKey] found in the Clerk dashboard
 /// for you account. Additional arguments:
 ///
 /// [persistor]: an optional instance of a [Persistor] which will keep track of
@@ -23,13 +24,11 @@ export 'persistor.dart';
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
   Auth({
-    required String publicKey,
     required String publishableKey,
     required Persistor persistor,
     HttpClient? client,
     SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
   }) : _api = Api(
-          publicKey: publicKey,
           publishableKey: publishableKey,
           persistor: persistor,
           client: client,
@@ -98,6 +97,13 @@ class Auth {
   ///
   void terminate() {
     _api.terminate();
+  }
+
+  /// Create a new [Client]
+  ///
+  Future<void> createClient() async {
+    client = await _api.createClient();
+    update();
   }
 
   /// Refresh the current [Client]
@@ -344,6 +350,28 @@ class Auth {
   ///
   Future<void> activate(Session session) async {
     await _api.activate(session).then(_housekeeping);
+    update();
+  }
+
+  /// Update the [name] of the current [User]
+  ///
+  Future<void> updateUserName(String name) async {
+    if (user case User user when name.isNotEmpty) {
+      final names = name.split(' ').where((s) => s.isNotEmpty).toList();
+      final lastName = names.length == 1 ? '' : names.removeLast();
+      final newUser = user.copyWith(
+        lastName: lastName,
+        firstName: names.join(' '),
+      );
+      await _api.updateUser(newUser).then(_housekeeping);
+      update();
+    }
+  }
+
+  /// Update the [avatar] of the current [User]
+  ///
+  Future<void> updateUserImage(File file) async {
+    await _api.updateAvatar(file).then(_housekeeping);
     update();
   }
 

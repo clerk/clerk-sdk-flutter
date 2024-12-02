@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Extensions to the [Map] class
 extension MapExtension on Map {
   /// Return a version of this map where all keys
@@ -26,6 +28,20 @@ extension StringExtension on String {
       .where((t) => t.isNotEmpty && _isAlphaNumeric(t.runes.first))
       .map((t) => t[0])
       .join();
+
+  /// Adds [padChar] to a string until its length is a
+  /// multiple of [boundary]
+  ///
+  String padRightToMultipleOf(int boundary, [String padChar = ' ']) {
+    return switch (length % boundary) {
+      0 => this,
+      int overBy => padRight(length + boundary - overBy, padChar),
+    };
+  }
+
+  /// Decode a [String] that has been base64 encoded
+  ///
+  String get b64decoded => utf8.decode(base64.decode(this));
 }
 
 /// Extensions to the [List] class
@@ -34,19 +50,39 @@ extension ListExtension on List {
   /// at the end of the list, or preferably replacing an existing item.
   ///
   /// Existing items are deemed replaceable if they and the new item
-  /// return equal values from the [by] function, or in its absence
-  /// are themselves [Comparable]ly equal
+  /// return equal values from the [by] function
   ///
-  void addOrReplaceAll<T>(Iterable<T> list, {dynamic Function(T)? by}) {
-    by ??= (t) => t;
+  void addOrReplaceAll<T, S>(
+    Iterable<T> list, {
+    required S Function(T) by,
+  }) {
+    final ids = map((i) => by.call(i)).toList();
     for (final item in list) {
       final identifier = by.call(item);
-      switch (indexWhere((i) => by!.call(i) == identifier)) {
+      switch (ids.indexOf(identifier)) {
         case int idx when idx > -1:
           this[idx] = item;
         default:
+          ids.add(identifier);
           add(item);
       }
     }
   }
+}
+
+/// Extension class to create extra statics for [DateTime] use
+///
+class DateTimeExt {
+  const DateTimeExt._();
+
+  /// The epoch as a [DateTime]
+  static final zero = utcEpochMillis(0);
+
+  /// returns a [DateTime] in UTC in seconds since epoch
+  static DateTime utcEpochSeconds(int seconds) =>
+      utcEpochMillis(seconds * Duration.millisecondsPerSecond);
+
+  /// returns a [DateTime] in UTC in milliseconds since epoch
+  static DateTime utcEpochMillis(int milliseconds) =>
+      DateTime.fromMillisecondsSinceEpoch(milliseconds, isUtc: true);
 }

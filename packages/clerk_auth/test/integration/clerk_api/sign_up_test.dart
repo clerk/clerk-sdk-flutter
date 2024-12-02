@@ -32,15 +32,12 @@ void main() {
 
   setUpAll(() async {
     env = TestEnv('.env.test');
-    api = Api(
-        publicKey: env.publicKey,
-        publishableKey: env.publishableKey,
-        client: httpClient);
+    api = Api(publishableKey: env.publishableKey, client: httpClient);
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });
 
   tearDown(() async {
-    httpClient.expect('DELETE /v1/me?_clerk_session_id=SESSION_ID', 200, '');
+    httpClient.expect('DELETE /v1/me _clerk_session_id=SESSION_ID', 200, '');
     await api.deleteUser();
   });
 

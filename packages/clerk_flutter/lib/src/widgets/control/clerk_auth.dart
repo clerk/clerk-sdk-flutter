@@ -9,25 +9,18 @@ class ClerkAuth extends StatefulWidget {
   /// Construct a [ClerkAuth]
   const ClerkAuth({
     super.key,
-    this.publicKey,
     this.publishableKey,
     this.pollMode = clerk.SessionTokenPollMode.onDemand,
     this.auth,
     this.translator = const DefaultClerkTranslator(),
-    this.persistor = clerk.Persistor.none,
+    this.persistor,
     this.loading,
     required this.child,
-  })  : assert(
-          (publicKey is String) != (auth is ClerkAuthProvider),
-          'Either publicKey or an auth instance must be provided, but not both',
-        ),
-        assert(
-          (publicKey is String) == (publishableKey is String),
-          'Both publicKey and publishableKey must be provided, or neither',
+  }) : assert(
+          (publishableKey is String) != (auth is ClerkAuthProvider),
+          'Either publishableKey or an auth instance must '
+          'be provided, but not both',
         );
-
-  /// Clerk public key from dashboard
-  final String? publicKey;
 
   /// Clerk publishable key from dashboard
   final String? publishableKey;
@@ -36,7 +29,7 @@ class ClerkAuth extends StatefulWidget {
   final ClerkAuthProvider? auth;
 
   /// Persistence service for caching tokens
-  final clerk.Persistor persistor;
+  final clerk.Persistor? persistor;
 
   /// Injectable translations for strings
   final ClerkTranslator translator;
@@ -96,7 +89,6 @@ class _ClerkAuthState extends State<ClerkAuth> {
     super.initState();
     if (widget.auth == null) {
       ClerkAuthProvider.create(
-        publicKey: widget.publicKey!,
         publishableKey: widget.publishableKey!,
         persistor: widget.persistor,
         translator: widget.translator,

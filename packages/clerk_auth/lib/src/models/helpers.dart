@@ -3,7 +3,7 @@ import 'package:clerk_auth/clerk_auth.dart';
 /// Convert a value to a [DateTime?]. For JsonSerializable
 DateTime? intToDateTime(dynamic input) {
   if (input is num) {
-    return DateTime.fromMillisecondsSinceEpoch(input.toInt(), isUtc: true);
+    return DateTimeExt.utcEpochMillis(input.toInt());
   }
   return null;
 }

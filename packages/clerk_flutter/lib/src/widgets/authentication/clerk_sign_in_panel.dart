@@ -24,7 +24,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
   String _password = '';
   String _code = '';
 
-  bool get _hasIdentifier => _identifier.isNotEmpty;
+  bool get _hasIdent => _identifier.isNotEmpty;
 
   void _onError(clerk.AuthError _) {
     setState(() {
@@ -35,7 +35,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
 
   Future<void> _continue(ClerkAuthProvider auth,
       {clerk.Strategy? strategy, String? code}) async {
-    if (_hasIdentifier) {
+    if (_hasIdent) {
       final newStrategy = strategy ?? _strategy;
       final newCode = code ?? _code;
       if (_strategy != newStrategy || _code != newCode) {
@@ -97,7 +97,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
         ),
         Closeable(
           key: const Key('emailLinkMessage'),
-          open: _strategy == clerk.Strategy.emailLink,
+          closed: _strategy != clerk.Strategy.emailLink,
           child: Padding(
             padding: horizontalPadding32,
             child: Text(
@@ -121,7 +121,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
           },
         ),
         Closeable(
-          open: _strategy == clerk.Strategy.password && _hasIdentifier,
+          closed: _strategy != clerk.Strategy.password || _hasIdent == false,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

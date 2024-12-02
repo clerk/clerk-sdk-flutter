@@ -37,7 +37,7 @@ void main() {
   });
 
   tearDown(() async {
-    httpClient.expect('DELETE /v1/me?_clerk_session_id=SESSION_ID', 200, '');
+    httpClient.expect('DELETE /v1/me _clerk_session_id=SESSION_ID', 200, '');
     await api.deleteUser();
   });
 

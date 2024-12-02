@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
 
@@ -96,6 +97,13 @@ class Auth {
   ///
   void terminate() {
     _api.terminate();
+  }
+
+  /// Create a new [Client]
+  ///
+  Future<void> createClient() async {
+    client = await _api.createClient();
+    update();
   }
 
   /// Refresh the current [Client]
@@ -342,6 +350,28 @@ class Auth {
   ///
   Future<void> activate(Session session) async {
     await _api.activate(session).then(_housekeeping);
+    update();
+  }
+
+  /// Update the [name] of the current [User]
+  ///
+  Future<void> updateUserName(String name) async {
+    if (user case User user when name.isNotEmpty) {
+      final names = name.split(' ').where((s) => s.isNotEmpty).toList();
+      final lastName = names.length == 1 ? '' : names.removeLast();
+      final newUser = user.copyWith(
+        lastName: lastName,
+        firstName: names.join(' '),
+      );
+      await _api.updateUser(newUser).then(_housekeeping);
+      update();
+    }
+  }
+
+  /// Update the [avatar] of the current [User]
+  ///
+  Future<void> updateUserImage(File file) async {
+    await _api.updateAvatar(file).then(_housekeeping);
     update();
   }
 

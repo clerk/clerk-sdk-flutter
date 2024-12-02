@@ -40,15 +40,14 @@ class TestHttpClient implements HttpClient {
   @override
   Future<Response> send(
     HttpMethod method,
-    Uri uri,
+    Uri uri, {
     Map<String, String>? headers,
-    Map<String, dynamic>? body,
-  ) async {
-    final key = _key(method, uri, headers, body);
+    Map<String, dynamic>? params,
+  }) async {
+    final key = _key(method, uri, headers, params);
 
-    if (_expectations[key] case List<Response> responses
-        when responses.isNotEmpty) {
-      final resp = responses.removeAt(0);
+    if (_expectations[key] case List<Response> resps when resps.isNotEmpty) {
+      final resp = resps.removeAt(0);
       return Future.value(resp);
     }
     throw TestHttpClientError(message: 'No response available for $key');
@@ -91,6 +90,17 @@ class TestHttpClient implements HttpClient {
 
   String _mapToString(Map map) =>
       map.entries.map((me) => '${me.key}=${me.value}').join('&');
+
+  @override
+  Future<Response> sendFile(
+    HttpMethod method,
+    Uri uri,
+    File file,
+    Map<String, String> headers,
+  ) {
+    // TODO: add tests for sendFile
+    throw UnimplementedError();
+  }
 }
 
 class TestHttpClientError extends Error {

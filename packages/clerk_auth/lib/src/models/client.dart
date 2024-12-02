@@ -53,8 +53,8 @@ class Client {
   /// toJson
   Map<String, dynamic> toJson() => _$ClientToJson(this);
 
-  /// set of current sessions
-  Set<String> get sessionIds => sessions.map((s) => s.id).toSet();
+  /// iterable of current user ids
+  Iterable<String> get userIds => sessions.map((s) => s.user.id);
 
   /// find the current active session
   Session? get activeSession {

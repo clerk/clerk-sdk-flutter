@@ -55,11 +55,12 @@ class Api with Logging {
   final SessionTokenPollMode _pollMode;
   Timer? _pollTimer;
 
+  static const kIsNative = '_is_native';
+  static const kClerkSessionId = '_clerk_session_id';
+  static const kClerkJsVersion = '_clerk_js_version';
+
   static const _scheme = 'https';
   static const _kJwtKey = 'jwt';
-  static const _kIsNative = '_is_native';
-  static const _kClerkSessionId = '_clerk_session_id';
-  static const _kClerkJsVersion = '_clerk_js_version';
   static const _kErrorsKey = 'errors';
   static const _kClientKey = 'client';
   static const _kResponseKey = 'response';
@@ -556,10 +557,10 @@ class Api with Logging {
   }) async {
     params?.removeWhere((key, value) => value == null);
     final queryParams = {
-      _kIsNative: true,
-      _kClerkJsVersion: Auth.jsVersion,
+      kIsNative: true,
+      kClerkJsVersion: Auth.jsVersion,
       if (requiresSessionId) //
-        _kClerkSessionId: _tokenCache.sessionId,
+        kClerkSessionId: _tokenCache.sessionId,
       if (method.isGet) //
         ...?params,
     };

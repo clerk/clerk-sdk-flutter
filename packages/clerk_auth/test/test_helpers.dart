@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:clerk_auth/src/clerk_auth/http_client.dart';
-import 'package:clerk_auth/src/utils/logging.dart';
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:http/http.dart' show Response;
 
@@ -51,7 +50,12 @@ class TestHttpClient implements HttpClient {
       final resp = responses.removeAt(0);
       return Future.value(resp);
     }
-    throw TestHttpClientError(message: 'No response available for $key');
+    final remaining = _expectations.keys.where((k) => _expectations[k]?.isNotEmpty == true);
+    if (key.closestFrom(remaining) case String closest when closest.isNotEmpty) {
+      throw TestHttpClientError(message: 'No response for $key. Possibly `$closest`?');
+    } else {
+      throw TestHttpClientError(message: 'No response for $key.');
+    }
   }
 
   void expect(String key, int status, String body) {
@@ -72,18 +76,16 @@ class TestHttpClient implements HttpClient {
 
     final queryParams = {
       ...uri.queryParameters,
-      if (uri.queryParameters.containsKey('_clerk_session_id')) //
-        '_clerk_session_id': 'SESSION_ID',
+      if (uri.queryParameters.containsKey(Api.kClerkSessionId)) //
+        Api.kClerkSessionId: 'SESSION_ID',
     }
-      ..remove('_is_native')
-      ..remove('_clerk_js_version');
-
-    final path =
-        '${Uri(path: uri.path, queryParameters: queryParams.isNotEmpty ? queryParams : null)}';
+      ..remove(Api.kIsNative)
+      ..remove(Api.kClerkJsVersion);
 
     return [
-      method,
-      path,
+      method.toString(),
+      uri.path,
+      if (queryParams.isNotEmpty) _mapToString(queryParams),
       if (hdrs.isNotEmpty) _mapToString(hdrs),
       if (body?.isNotEmpty == true) _mapToString(body!),
     ].join(' ');
@@ -100,4 +102,32 @@ class TestHttpClientError extends Error {
 
   @override
   String toString() => 'TestHttpClientError: $message';
+}
+
+extension on String {
+  int _matchLength(String other) {
+    int i;
+
+    for (i = 0; i < length && i < other.length; ++i) {
+      if (this[i] != other[i]) break;
+    }
+
+    return i;
+  }
+
+  String closestFrom(Iterable<String> list) {
+    if (list.isEmpty) return '';
+
+    String result = list.first;
+    int mostMatched = _matchLength(result);
+    for (final item in list.skip(1)) {
+      final thisMatch = _matchLength(item);
+      if (thisMatch > mostMatched) {
+        mostMatched = thisMatch;
+        result = item;
+      }
+    }
+
+    return result;
+  }
 }

@@ -70,7 +70,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
                   padding: allPadding16 + leftPadding4,
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () => _signIn(context),
+                    onTap: () => _AddAccountScreen.show(context),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -117,52 +117,72 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
       }),
     );
   }
+}
 
-  Future<void> _signIn(BuildContext context) async {
-    final auth = ClerkAuth.above(context);
-    final sessionIds = auth.client.sessionIds;
+class _AddAccountScreen extends StatefulWidget {
+  const _AddAccountScreen._({
+    required this.auth,
+  });
 
-    late final OverlayEntry overlay;
-    late final VoidCallback unloadOverlay;
+  final ClerkAuthProvider auth;
 
-    void unload() {
-      overlay.remove();
-      auth.removeListener(unloadOverlay);
-    }
+  static const routeName = 'clerk_add_account';
 
-    unloadOverlay = () {
-      if (auth.client.sessionIds.difference(sessionIds).isNotEmpty) unload();
-    };
-
-    overlay = OverlayEntry(
-      builder: (context) {
-        return ClerkAuth(
-          auth: auth,
-          child: Scaffold(
-            backgroundColor: ClerkColors.whiteSmoke,
-            body: Stack(
-              children: [
-                const Padding(
-                  padding: allPadding32,
-                  child: ClerkAuthenticationWidget(),
-                ),
-                Positioned(
-                  top: 40,
-                  left: 40,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: unload,
-                    child: const _CircleIcon(icon: Icons.close),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+  static Future<void> show(BuildContext context) async {
+    final auth = ClerkAuth.of(context);
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        settings: const RouteSettings(name: routeName),
+        fullscreenDialog: true,
+        builder: (BuildContext context) {
+          return _AddAccountScreen._(auth: auth);
+        },
+      ),
     );
-    auth.addListener(unloadOverlay);
-    Overlay.of(context).insert(overlay);
+  }
+
+  @override
+  State<_AddAccountScreen> createState() => _AddAccountScreenState();
+}
+
+class _AddAccountScreenState extends State<_AddAccountScreen> {
+  late Set<String> sessions;
+
+  @override
+  void initState() {
+    super.initState();
+    sessions = widget.auth.client.sessionIds;
+    widget.auth.addListener(_onAuthStateChanged);
+  }
+
+  void _onAuthStateChanged() {
+    // if we successfully logged in and got a new session, pop the screen
+    if (widget.auth.client.sessionIds.difference(sessions).isNotEmpty) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.auth.removeListener(_onAuthStateChanged);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ClerkAuth(
+      auth: widget.auth,
+      child: Scaffold(
+        backgroundColor: ClerkColors.whiteSmoke,
+        appBar: AppBar(
+          forceMaterialTransparency: true,
+        ),
+        body: const Padding(
+          padding: horizontalPadding32,
+          child: ClerkAuthenticationWidget(),
+        ),
+      ),
+    );
   }
 }
 

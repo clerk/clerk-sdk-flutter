@@ -55,8 +55,10 @@ class ClerkAuth extends StatefulWidget {
 
   /// Get the [context]'s nearest [ClerkAuthProvider]
   /// with rebuild on change
-  static ClerkAuthProvider of(BuildContext context) {
-    final result = context.dependOnInheritedWidgetOfExactType<_ClerkAuthData>();
+  static ClerkAuthProvider of(BuildContext context, {bool listen = true}) {
+    final result = listen //
+        ? context.dependOnInheritedWidgetOfExactType<_ClerkAuthData>()
+        : context.findAncestorWidgetOfExactType<_ClerkAuthData>();
     assert(result != null, 'No `ClerkAuthProvider` found in context');
     return result!.auth;
   }
@@ -69,6 +71,7 @@ class ClerkAuth extends StatefulWidget {
 
   /// Get the [context]'s nearest [ClerkAuthProvider]
   /// without rebuild on change
+  @Deprecated('Use .of() instead with listen = false')
   static ClerkAuthProvider above(BuildContext context) {
     final result = context.findAncestorWidgetOfExactType<_ClerkAuthData>();
     assert(result != null, 'No `ClerkAuthProvider` found in context');

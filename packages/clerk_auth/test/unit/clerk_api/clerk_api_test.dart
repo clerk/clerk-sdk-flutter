@@ -15,7 +15,7 @@ void main() {
 
     test('will fail unless encoded part follows underscore', () {
       expect(
-        () => Api(publishableKey: 'NOT A PUBLIC KEY'),
+        () => Api(publishableKey: 'NOT A PUBLISHABLE KEY'),
         throwsA(const TypeMatcher<FormatException>()),
       );
     });

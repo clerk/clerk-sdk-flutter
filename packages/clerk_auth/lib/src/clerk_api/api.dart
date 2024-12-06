@@ -23,7 +23,7 @@ enum SessionTokenPollMode {
 class Api with Logging {
   Api._(this._tokenCache, this._domain, this._client, this._pollMode);
 
-  /// Create an [Api] object for a given public key, or return the existing one
+  /// Create an [Api] object for a given Publishable Key, or return the existing one
   /// if such already exists for that key. Requires a [publishableKey]
   /// found in the Clerk dashboard for you account. Additional arguments:
   ///
@@ -43,7 +43,10 @@ class Api with Logging {
     HttpClient? client,
   }) =>
       Api._(
-        TokenCache(persistor, publishableKey),
+        TokenCache(
+          persistor: persistor,
+          cacheId: publishableKey.hashCode,
+        ),
         _deriveDomainFrom(publishableKey),
         client ?? const DefaultHttpClient(),
         pollMode,
@@ -606,7 +609,7 @@ class Api with Logging {
   static String _deriveDomainFrom(String key) {
     final domainStartPosition = key.lastIndexOf('_') + 1;
     if (domainStartPosition < 1) {
-      throw const FormatException('Public key not in correct format');
+      throw const FormatException('Publishable Key not in correct format');
     }
 
     // base64 requires quad-byte aligned strings, but the string that comes from Clerk

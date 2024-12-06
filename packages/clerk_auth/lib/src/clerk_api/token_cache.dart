@@ -13,8 +13,11 @@ import 'package:logging/logging.dart';
 class TokenCache {
   /// Create a [TokenCache] instance
   ///
-  TokenCache(this._persistor, String publishableKey)
-      : _cacheId = publishableKey.hashCode;
+  TokenCache({
+    required Persistor persistor,
+    required int cacheId,
+  })  : _persistor = persistor,
+        _cacheId = cacheId;
 
   final Persistor _persistor;
   final int _cacheId;

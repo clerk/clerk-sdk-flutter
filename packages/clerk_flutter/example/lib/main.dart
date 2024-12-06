@@ -38,7 +38,7 @@ class ExampleApp extends StatefulWidget {
     required this.publishableKey,
   });
 
-  /// Publishable KEy
+  /// Publishable Key
   final String publishableKey;
 
   @override

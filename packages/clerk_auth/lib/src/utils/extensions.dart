@@ -10,7 +10,9 @@ extension MapExtension on Map {
 /// Extensions to the [String] class
 extension StringExtension on String {
   bool _isUpper(int c) => c >= 0x41 && c <= 0x5a;
+
   bool _isNumeric(int c) => c >= 0x30 && c <= 0x39;
+
   bool _isAlphaNumeric(int c) => _isUpper(c) || _isNumeric(c);
 
   /// Return a version of this string with the first
@@ -53,9 +55,7 @@ extension ListExtension on List {
 
 /// Extension class to create extra statics for [DateTime] use
 ///
-class DateTimeExt {
-  const DateTimeExt._();
-
+extension DateTimeExt on DateTime {
   /// The epoch as a [DateTime]
   static final zero = DateTimeExt.utcEpochSeconds(0);
 

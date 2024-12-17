@@ -10,10 +10,12 @@ class ClerkTextFormField extends StatelessWidget {
     this.label,
     this.optional = false,
     this.obscureText = false,
+    this.autofocus = false,
     this.onChanged,
     this.onSubmit,
     this.initial,
     this.onObscure,
+    this.validator,
   });
 
   /// Report changes back to calling widget
@@ -31,8 +33,15 @@ class ClerkTextFormField extends StatelessWidget {
   /// can we see the text or not?
   final bool obscureText;
 
+  /// Should the input box immediately take focus?
+  final bool autofocus;
+
   /// function to change obscurity
   final VoidCallback? onObscure;
+
+  /// Is the string valid yet?
+  /// NB: NOT a [FormFieldValidator], just returns a boolean
+  final bool Function(String?)? validator;
 
   /// initial value
   final String? initial;
@@ -50,7 +59,7 @@ class ClerkTextFormField extends StatelessWidget {
             if (label case String label) //
               Expanded(
                 child: Text(
-                  translator.translate(label),
+                  label,
                   textAlign: TextAlign.start,
                   maxLines: 2,
                   style: ClerkTextStyle.inputLabel,
@@ -78,18 +87,16 @@ class ClerkTextFormField extends StatelessWidget {
             borderRadius: borderRadius8,
             child: DecoratedBox(
               decoration: insetBoxShadowDecoration,
-              child: TextFormField(
-                initialValue: initial,
-                onChanged: onChanged,
-                onFieldSubmitted: onSubmit,
+              child: _TextField(
+                label: label,
+                optional: optional,
                 obscureText: obscureText,
-                decoration: InputDecoration(
-                  border: outlineInputBorder,
-                  enabledBorder: outlineInputBorder,
-                  focusedBorder: outlineInputBorder,
-                  contentPadding: horizontalPadding8,
-                  suffixIcon: _obscureTextIcon(),
-                ),
+                onChanged: onChanged,
+                onSubmit: onSubmit,
+                initial: initial,
+                onObscure: onObscure,
+                validator: validator,
+                autofocus: autofocus,
               ),
             ),
           ),
@@ -97,14 +104,78 @@ class ClerkTextFormField extends StatelessWidget {
       ],
     );
   }
+}
+
+class _TextField extends StatefulWidget {
+  const _TextField({
+    required this.label,
+    required this.optional,
+    required this.obscureText,
+    required this.onChanged,
+    required this.onSubmit,
+    required this.initial,
+    required this.onObscure,
+    required this.validator,
+    required this.autofocus,
+  });
+
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmit;
+  final String? label;
+  final bool optional;
+  final bool obscureText;
+  final bool autofocus;
+  final VoidCallback? onObscure;
+  final bool Function(String?)? validator;
+  final String? initial;
+
+  @override
+  State<_TextField> createState() => _TextFieldState();
+}
+
+class _TextFieldState extends State<_TextField> {
+  bool _isValid = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      initialValue: widget.initial,
+      autofocus: widget.autofocus,
+      style: ClerkTextStyle.inputLabel.copyWith(
+        color: _isValid ? ClerkColors.charcoalGrey : ClerkColors.incarnadine,
+      ),
+      onChanged: widget.onChanged,
+      onFieldSubmitted: widget.onSubmit,
+      obscureText: widget.obscureText,
+      validator: (text) {
+        if (widget.validator?.call(text) case bool valid) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => setState(() => _isValid = valid),
+          );
+        }
+        return null;
+      },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      decoration: InputDecoration(
+        border: outlineInputBorder,
+        enabledBorder: outlineInputBorder,
+        focusedBorder: outlineInputBorder,
+        contentPadding: horizontalPadding8,
+        errorStyle: const TextStyle(fontSize: 0),
+        suffixIcon: _obscureTextIcon(),
+      ),
+    );
+  }
 
   Widget? _obscureTextIcon() {
-    if (onObscure case VoidCallback onObscure) {
+    if (widget.onObscure case VoidCallback onObscure) {
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onObscure,
-        child: Icon(obscureText ? Icons.visibility : Icons.visibility_off,
-            size: 16),
+        child: Icon(
+          widget.obscureText ? Icons.visibility : Icons.visibility_off,
+          size: 16,
+        ),
       );
     }
     return null;

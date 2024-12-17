@@ -3,9 +3,14 @@
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:phone_input/phone_input_package.dart';
 
 extension NullExtension on String {
   String? get orNullIfEmpty => isEmpty ? null : this;
+}
+
+extension PhoneNumberExtension on PhoneNumber {
+  String get intlFormattedNsn => '(+$countryCode) ${getFormattedNsn()}';
 }
 
 const defaultLoadingWidget = SizedBox(
@@ -92,7 +97,7 @@ const sliverVerticalMargin48 =
 const emptyPadding = EdgeInsets.zero;
 
 const hor8ver4 = EdgeInsets.symmetric(horizontal: 8, vertical: 4);
-const hor32ver20 = EdgeInsets.symmetric(horizontal: 32, vertical: 20);
+const hor32top20 = EdgeInsets.fromLTRB(32, 20, 32, 0);
 
 const horizontalPadding4 = EdgeInsets.symmetric(horizontal: 4.0);
 const horizontalPadding8 = EdgeInsets.symmetric(horizontal: 8.0);

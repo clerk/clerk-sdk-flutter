@@ -11,6 +11,8 @@ extension MapExtension on Map {
 
 /// Extensions to the [String] class
 extension StringExtension on String {
+  static final _phoneRE = RegExp(r'[^0-9+]');
+
   bool _isUpper(int c) => c >= 0x41 && c <= 0x5a;
 
   bool _isNumeric(int c) => c >= 0x30 && c <= 0x39;
@@ -44,6 +46,10 @@ extension StringExtension on String {
   /// Decode a [String] that has been base64 encoded
   ///
   String get b64decoded => utf8.decode(base64.decode(this));
+
+  /// Delete non-phone characters from [this]
+  ///
+  String toPhoneNumberString() => replaceAll(_phoneRE, '');
 }
 
 /// Extensions to the [List] class
@@ -54,10 +60,14 @@ extension ListExtension<T> on List<T> {
   /// Existing items are deemed replaceable if they and the new item
   /// return equal values from the [by] function
   ///
-  void addOrReplaceAll<ID>(Iterable<T> list, {required ID Function(T) by}) {
+  void addOrReplaceAll<S>(
+    Iterable<T> list, {
+    required S Function(T) by,
+  }) {
+    final ids = map(by).toList();
     for (final item in list) {
       final identifier = by(item);
-      switch (indexWhere((i) => by(i) == identifier)) {
+      switch (ids.indexOf(identifier)) {
         case int idx when idx > -1:
           this[idx] = item;
         default:

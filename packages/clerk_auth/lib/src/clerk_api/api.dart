@@ -452,49 +452,57 @@ class Api with Logging {
     }
   }
 
-  // Email
+  // Identifying Data
 
-  /// Add an [EmailAddress] to the current [User]
+  /// Add some [UserIdentifyingData] to the current [User]
   ///
-  Future<ApiResponse> addEmailAddressToCurrentUser(String emailAddress) async {
+  Future<ApiResponse> addIdentifyingDataToCurrentUser(
+    String identifier,
+    IdentifierType type,
+  ) async {
     return _fetchApiResponse(
-      '/me/email_addresses',
+      '/me/${type.urlSegment}',
       withSession: true,
       params: {
-        'email_address': emailAddress,
+        type.name: identifier.toPhoneNumberString(),
       },
     );
   }
 
-  /// Delete an [EmailAddress] from the current [User]
+  /// Prepare some [UserIdentifyingData] for verification
   ///
-  Future<ApiResponse> deleteEmailAddress(Email email) async {
+  Future<ApiResponse> prepareIdentifyingDataVerification(
+    UserIdentifyingData ident,
+  ) async {
     return _fetchApiResponse(
-      '/me/email_addresses/${email.id}',
-      withSession: true,
-      method: HttpMethod.delete,
-    );
-  }
-
-  // Phone Number
-
-  /// Add a [PhoneNumber] to the current [User]
-  ///
-  Future<ApiResponse> addPhoneNumberToCurrentUser(String phoneNumber) async {
-    return _fetchApiResponse(
-      '/me/phone_numbers',
+      '/me/${ident.type.urlSegment}/${ident.id}/prepare_verification',
       withSession: true,
       params: {
-        'phone_number': phoneNumber,
+        'strategy': ident.type.verificationStrategy,
       },
     );
   }
 
-  /// Delete a [PhoneNumber] from the current [User]
+  /// Attempt to verify some [UserIdentifyingData] with a [code]
   ///
-  Future<ApiResponse> deletePhoneNumber(PhoneNumber number) async {
+  Future<ApiResponse> verifyIdentifyingData(
+    UserIdentifyingData ident,
+    String code,
+  ) async {
     return _fetchApiResponse(
-      '/me/phone_numbers/${number.id}',
+      '/me/${ident.type.urlSegment}/${ident.id}/attempt_verification',
+      withSession: true,
+      params: {
+        'code': code,
+      },
+    );
+  }
+
+  /// Delete some [UserIdentifyingData] from the current [User]
+  ///
+  Future<ApiResponse> deleteIdentifyingData(UserIdentifyingData ident) async {
+    return _fetchApiResponse(
+      '/me/${ident.type.urlSegment}/${ident.id}',
       withSession: true,
       method: HttpMethod.delete,
     );
@@ -631,10 +639,10 @@ class Api with Logging {
     Map<String, dynamic>? params,
   }) =>
       {
-        kIsNative: true,
-        kClerkJsVersion: Auth.jsVersion,
+        _kIsNative: true,
+        _kClerkJsVersion: Auth.jsVersion,
         if (withSession) //
-          kClerkSessionId: _tokenCache.sessionId,
+          _kClerkSessionId: _tokenCache.sessionId,
         if (method.isGet) //
           ...?params,
       };

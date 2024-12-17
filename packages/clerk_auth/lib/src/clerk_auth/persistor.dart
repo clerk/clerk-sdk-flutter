@@ -86,7 +86,8 @@ class DefaultPersistor implements Persistor {
 
   @override
   FutureOr<void> delete(String key) {
-    if (_cache.remove(key) != null) {
+    if (_cache.containsKey(key)) {
+      _cache.remove(key);
       _save();
     }
   }

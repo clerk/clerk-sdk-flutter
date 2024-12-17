@@ -29,7 +29,7 @@ Future<void> main() async {
 }
 
 /// Example App
-class ExampleApp extends StatefulWidget {
+class ExampleApp extends StatelessWidget {
   /// Constructs an instance of Example App
   const ExampleApp({
     super.key,
@@ -40,16 +40,11 @@ class ExampleApp extends StatefulWidget {
   final String publishableKey;
 
   @override
-  State<ExampleApp> createState() => _ExampleAppState();
-}
-
-class _ExampleAppState extends State<ExampleApp> {
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: ClerkAuth(
-        publishableKey: widget.publishableKey,
+        publishableKey: publishableKey,
         child: Scaffold(
           backgroundColor: ClerkColors.whiteSmoke,
           body: SafeArea(
@@ -57,31 +52,7 @@ class _ExampleAppState extends State<ExampleApp> {
               padding: horizontalPadding32,
               child: Center(
                 child: ClerkAuthBuilder(
-                  signedInBuilder: (context, auth) {
-                    final translator = auth.translator;
-                    return ClerkUserButton(
-                      sessionActions: [
-                        ClerkUserAction(
-                          icon: Icons.settings,
-                          label: translator.translate('Manage account'),
-                          callback: _manageAccount,
-                        ),
-                        ClerkUserAction(
-                          icon: Icons.logout,
-                          label: translator.translate('Sign out'),
-                          callback: _signOut,
-                        ),
-                      ],
-                      additionalActions: [
-                        if (auth.env.config.singleSessionMode == false)
-                          ClerkUserAction(
-                            icon: Icons.add,
-                            label: translator.translate('Add account'),
-                            callback: _addAccount,
-                          ),
-                      ],
-                    );
-                  },
+                  signedInBuilder: (context, auth) => const ClerkUserButton(),
                   signedOutBuilder: (context, auth) {
                     return const ClerkAuthenticationWidget();
                   },
@@ -92,24 +63,6 @@ class _ExampleAppState extends State<ExampleApp> {
         ),
       ),
     );
-  }
-
-  Future<void> _addAccount(BuildContext context, ClerkAuthProvider auth) async {
-    AddAccountPage.show(context);
-  }
-
-  Future<T?> _manageAccount<T>(BuildContext context, ClerkAuthProvider auth) =>
-      _navigateTo<T>(context, (_) => const ManageAccountPage());
-
-  Future<T?> _navigateTo<T>(BuildContext context, WidgetBuilder builder) =>
-      Navigator.of(context).push<T>(MaterialPageRoute(builder: builder));
-
-  Future<void> _signOut<T>(BuildContext context, ClerkAuthProvider auth) async {
-    if (auth.client.sessions.length == 1) {
-      auth.call(context, () => auth.signOut());
-    } else {
-      auth.call(context, () => auth.signOutOf(auth.client.activeSession!));
-    }
   }
 }
 

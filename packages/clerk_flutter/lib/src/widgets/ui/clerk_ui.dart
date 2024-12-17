@@ -1,10 +1,10 @@
 library;
 
 export 'clerk_avatar.dart';
-export 'clerk_circle_icon.dart';
 export 'clerk_code_input.dart';
 export 'clerk_error_message.dart';
 export 'clerk_icon.dart';
+export 'clerk_input_dialog.dart';
 export 'clerk_material_button.dart';
 export 'clerk_panel.dart';
 export 'clerk_phone_number_form_field.dart';

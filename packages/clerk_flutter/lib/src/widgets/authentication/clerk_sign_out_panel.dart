@@ -15,7 +15,7 @@ class ClerkSignOutPanel extends StatelessWidget {
       padding: horizontalPadding16,
       child: ClerkMaterialButton(
         onPressed: () => auth.signOut(),
-        label: const Text('Sign Out'),
+        label: Text(auth.translator.translate('Sign Out')),
       ),
     );
   }

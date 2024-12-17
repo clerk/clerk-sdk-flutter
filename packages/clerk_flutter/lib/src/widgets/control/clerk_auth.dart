@@ -73,15 +73,15 @@ class ClerkAuth extends StatefulWidget {
 
   /// Get the [ClerkTranslator]
   static ClerkTranslator translatorOf(BuildContext context) =>
-      above(context).translator;
+      of(context, listen: false).translator;
 
   /// Get the [clerk.DisplayConfig]
   static clerk.DisplayConfig displayConfigOf(BuildContext context) =>
-      above(context).env.display;
+      of(context, listen: false).env.display;
 
   /// get the stream of [clerk.AuthError]
   static Stream<clerk.AuthError> errorStreamOf(BuildContext context) =>
-      above(context).errorStream;
+      of(context, listen: false).errorStream;
 }
 
 class _ClerkAuthState extends State<ClerkAuth> {

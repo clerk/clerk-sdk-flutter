@@ -145,7 +145,7 @@ void main() {
         user = response.client?.activeSession?.user;
         expect(user is User, true);
 
-        response = await api.addEmailAddressToCurrentUser(emailAddress);
+        response = await api.addIdentifyingDataToCurrentUser(emailAddress);
         expect(response.isOkay, true);
 
         response = await api.getUser();
@@ -155,7 +155,7 @@ void main() {
             .first;
         expect(email is Email, true);
 
-        response = await api.deleteEmailAddress(email!);
+        response = await api.deleteIdentifyingData(email!);
         expect(response.isOkay, true);
       });
     });

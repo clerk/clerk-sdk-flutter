@@ -2,69 +2,199 @@ import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:phone_input/phone_input_package.dart';
+
+final _emailRE = RegExp(
+  '^(?:[a-z0-9!#\$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#\$%&\'*+/=?^_`{|}~-]+)*|'
+  '"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|'
+  '\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*")@'
+  '(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?'
+  '|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}'
+  '(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:'
+  '(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|'
+  '\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])\$',
+);
 
 /// [ClerkUserProfile] displays user details
 /// and allows their editing
 ///
-
 class ClerkUserProfile extends StatelessWidget {
   /// Construct a [ClerkUserProfile]
   const ClerkUserProfile({super.key});
 
-  static const _paddedDivider = Padding(padding: hor32ver20, child: divider);
+  static const _paddedDivider = Padding(padding: topPadding16, child: divider);
+
+  bool _validate(String? identifier, clerk.IdentifierType type) {
+    if (identifier?.trim() case String identifier when identifier.isNotEmpty) {
+      switch (type) {
+        case clerk.IdentifierType.emailAddress:
+          return _emailRE.hasMatch(identifier);
+        case clerk.IdentifierType.phoneNumber:
+          return PhoneNumber.parse(identifier).isValid();
+        default:
+          throw clerk.AuthError(
+            message: "Type '###' invalid",
+            substitution: type.name,
+          );
+      }
+    }
+    return false;
+  }
+
+  Future<void> _verifyIdentifyingData(
+    BuildContext context,
+    ClerkAuthProvider auth,
+    String identifier,
+  ) async {
+    final translator = auth.translator;
+
+    final uid = auth.user?.identifierFrom(identifier.toPhoneNumberString());
+    if (uid case clerk.UserIdentifyingData uid when uid.isUnverified) {
+      final title = uid.type.name.replaceAll('_', ' ').capitalized;
+      await ClerkInputDialog.show(
+        context,
+        showOk: false,
+        child: ClerkCodeInput(
+          title: translator.translate('$title verification'),
+          subtitle: translator.translate(
+            'Enter the code sent to ###',
+            substitution: identifier,
+          ),
+          onSubmit: (code) async {
+            await auth.verifyIdentifyingData(uid, code);
+            final newUid = auth.user!.identifierFrom(uid.identifier);
+            if (context.mounted) Navigator.of(context).pop(true);
+            return newUid?.isVerified == true;
+          },
+        ),
+      );
+    }
+  }
+
+  Future<void> _addIdentifyingData(
+    BuildContext context,
+    ClerkAuthProvider auth,
+    clerk.IdentifierType type,
+  ) async {
+    final auth = ClerkAuth.of(context, listen: false);
+    final translator = auth.translator;
+    final title = type.name.replaceAll('_', ' ').capitalized;
+
+    String identifier = '';
+
+    final submitted = await ClerkInputDialog.show(
+      context,
+      child: switch (type) {
+        clerk.IdentifierType.emailAddress => ClerkTextFormField(
+            label: translator.translate(title),
+            autofocus: true,
+            onChanged: (text) => identifier = text,
+            onSubmit: (_) => Navigator.of(context).pop(true),
+            validator: (text) => _validate(text, type),
+          ),
+        clerk.IdentifierType.phoneNumber => ClerkPhoneNumberFormField(
+            label: translator.translate(title),
+            onChanged: (text) => identifier = text,
+            onSubmit: (_) => Navigator.of(context).pop(true),
+          ),
+        _ => throw clerk.AuthError(
+            message: "Type '###' invalid",
+            substitution: type.name,
+          ),
+      },
+    );
+
+    identifier = identifier.trim();
+
+    if (submitted) {
+      if (_validate(identifier, type)) {
+        await auth.addIdentifyingData(identifier, type);
+        if (context.mounted) _verifyIdentifyingData(context, auth, identifier);
+      } else {
+        throw clerk.AuthError(
+          message: "$title '###' is invalid",
+          substitution: identifier,
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final translator = ClerkAuth.translatorOf(context);
 
     return ClerkPanel(
+      padding: horizontalPadding24,
       child: ClerkAuthBuilder(
-          builder: (_, __) => emptyWidget,
-          signedInBuilder: (context, auth) {
-            final user = auth.user!;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                verticalMargin32,
-                Padding(
-                  padding: horizontalPadding32,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      translator.translate('Profile details'),
-                      maxLines: 1,
-                      style: ClerkTextStyle.title,
+        builder: (_, __) => emptyWidget,
+        signedInBuilder: (context, auth) {
+          final user = auth.user!;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              verticalMargin32,
+              Text(
+                translator.translate('Profile details'),
+                maxLines: 1,
+                style: ClerkTextStyle.title,
+              ),
+              _paddedDivider,
+              Expanded(
+                child: ListView(
+                  children: [
+                    _ProfileRow(
+                      title: translator.translate('Profile'),
+                      child: _EditableUserData(user: user),
                     ),
-                  ),
+                    _paddedDivider,
+                    _ProfileRow(
+                      title: translator.translate('Email address'),
+                      child: _IdentifierData(
+                        user: user,
+                        identifiers: user.emailAddresses,
+                        addLine: translator.translate('Add email address'),
+                        onAddNew: () => _addIdentifyingData(
+                          context,
+                          auth,
+                          clerk.IdentifierType.emailAddress,
+                        ),
+                        onIdentifierUnverified: (emailAddress) {
+                          _verifyIdentifyingData(context, auth, emailAddress);
+                        },
+                      ),
+                    ),
+                    _paddedDivider,
+                    _ProfileRow(
+                      title: translator.translate('Phone numbers'),
+                      child: _IdentifierData(
+                        user: user,
+                        identifiers: user.phoneNumbers,
+                        format: (number) {
+                          return PhoneNumber.parse(number).intlFormattedNsn;
+                        },
+                        addLine: translator.translate('Add phone number'),
+                        onAddNew: () => _addIdentifyingData(
+                          context,
+                          auth,
+                          clerk.IdentifierType.phoneNumber,
+                        ),
+                        onIdentifierUnverified: (phoneNumber) {
+                          _verifyIdentifyingData(context, auth, phoneNumber);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                _paddedDivider,
-                _ProfileRow(
-                  title: translator.translate('Profile'),
-                  child: _EditableUserData(user: user),
-                ),
-                _paddedDivider,
-                _ProfileRow(
-                  title: translator.translate('Email address'),
-                  child: _IdentifierData(
-                    user: user,
-                    identifiers: user.emailAddresses,
-                    addLine: translator.translate('Add email address'),
-                  ),
-                ),
-                _paddedDivider,
-                _ProfileRow(
-                  title: translator.translate('Phone numbers'),
-                  child: _IdentifierData(
-                    user: user,
-                    identifiers: user.phoneNumbers,
-                    addLine: translator.translate('Add phone number'),
-                  ),
-                ),
-              ],
-            );
-          }),
+              ),
+              verticalMargin20,
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -73,50 +203,101 @@ class _IdentifierData extends StatelessWidget {
   const _IdentifierData({
     required this.user,
     required this.addLine,
+    required this.onAddNew,
+    required this.onIdentifierUnverified,
     this.identifiers,
+    this.format,
   });
 
   final clerk.User user;
   final List<clerk.UserIdentifyingData>? identifiers;
   final String addLine;
+  final VoidCallback onAddNew;
+  final ValueChanged<String> onIdentifierUnverified;
+  final String Function(String)? format;
 
   @override
   Widget build(BuildContext context) {
+    final translator = ClerkAuth.translatorOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (identifiers case List<clerk.UserIdentifyingData> identifiers)
-          for (final identifier in identifiers) ...[
+          for (final ident in identifiers) ...[
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Text(
-                    identifier.identifier,
+                    format?.call(ident.identifier) ?? ident.identifier,
                     maxLines: 2,
                   ),
                 ),
-                if (user.isPrimary(identifier))
-                  const Padding(
-                    padding: leftPadding4,
-                    child: Icon(Icons.check, size: 16),
+                if (ident.isUnverified) //
+                  _RowLabel(
+                    label: translator.translate('UNVERIFIED'),
+                    color: ClerkColors.incarnadine,
+                    onTap: () => onIdentifierUnverified.call(ident.identifier),
                   ),
+                if (user.isPrimary(ident)) //
+                  _RowLabel(label: translator.translate('PRIMARY')),
               ],
             ),
             verticalMargin20,
           ],
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const ClerkIcon(ClerkAssets.addIconSimpleLight, size: 10),
-            horizontalMargin12,
-            Text(
-              addLine,
-              maxLines: 2,
-            ),
-          ],
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onAddNew,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const ClerkIcon(ClerkAssets.addIconSimpleLight, size: 10),
+              horizontalMargin12,
+              Expanded(child: Text(addLine)),
+            ],
+          ),
         ),
       ],
+    );
+  }
+}
+
+class _RowLabel extends StatelessWidget {
+  const _RowLabel({
+    super.key,
+    this.color = ClerkColors.charcoalGrey,
+    required this.label,
+    this.onTap,
+  });
+
+  final Color color;
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: topPadding2,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: DecoratedBox(
+          decoration:
+              BoxDecoration(border: Border.all(color: color, width: 0.5)),
+          child: SizedBox(
+            height: 9,
+            child: Center(
+              child: Padding(
+                padding: horizontalPadding4,
+                child: Text(
+                  label,
+                  style: ClerkTextStyle.rowLabel.copyWith(color: color),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -133,12 +314,13 @@ class _ProfileRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: horizontalPadding32,
+      padding: topPadding16,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(flex: 2, child: Text(title, maxLines: 2)),
-          Expanded(flex: 3, child: child),
+          Expanded(child: Text(title, maxLines: 2)),
+          horizontalMargin8,
+          Expanded(flex: 2, child: child),
         ],
       ),
     );
@@ -182,7 +364,7 @@ class _EditableUserDataState extends State<_EditableUserData> {
 
   Future<void> _update([_]) async {
     if (isEditing) {
-      final auth = ClerkAuth.above(context);
+      final auth = ClerkAuth.of(context, listen: false);
       if (_controller.text != widget.user.name) {
         await auth.updateUserName(_controller.text);
       }
@@ -212,19 +394,29 @@ class _EditableUserDataState extends State<_EditableUserData> {
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => _chooseImage(context),
-                    child: const ClerkCircleIcon(
-                      diameter: 16,
-                      icon: Icons.camera_alt,
-                      color: ClerkColors.charcoalGrey,
-                      backgroundColor: ClerkColors.white,
-                      borderColor: Colors.transparent,
+                    child: const DecoratedBox(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: ClerkColors.dawnPink,
+                      ),
+                      child: SizedBox.square(
+                        dimension: 15,
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 12,
+                          color: ClerkColors.charcoalGrey,
+                        ),
+                      ),
                     ),
                   ),
                 ),
             ],
           ),
         ),
-        if (isEditing) horizontalMargin4 else horizontalMargin12,
+        if (isEditing) //
+          horizontalMargin4
+        else //
+          horizontalMargin12,
         Expanded(
           child: isEditing
               ? TextFormField(

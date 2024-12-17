@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/assets.dart';
 import 'package:flutter/material.dart';
 
 /// Class to hold details of user actions available
@@ -10,13 +11,13 @@ import 'package:flutter/material.dart';
 class ClerkUserAction {
   /// Construct a [ClerkUserAction]
   ClerkUserAction({
-    required this.icon,
+    required this.asset,
     required this.label,
     required this.callback,
   });
 
   /// The icon for this action
-  final IconData icon;
+  final String asset;
 
   /// The label for this action
   final String label;
@@ -34,18 +35,18 @@ class ClerkUserButton extends StatefulWidget {
   const ClerkUserButton({
     super.key,
     this.showName = true,
-    this.sessionActions = const [],
-    this.additionalActions = const [],
+    this.sessionActions,
+    this.additionalActions,
   });
 
   /// Whether to show the user's name or not
   final bool showName;
 
   /// Actions to be added as buttons to the session row
-  final List<ClerkUserAction> sessionActions;
+  final List<ClerkUserAction>? sessionActions;
 
   /// Actions to be added as rows to the user panel
-  final List<ClerkUserAction> additionalActions;
+  final List<ClerkUserAction>? additionalActions;
 
   @override
   State<ClerkUserButton> createState() => _ClerkUserButtonState();
@@ -53,6 +54,48 @@ class ClerkUserButton extends StatefulWidget {
 
 class _ClerkUserButtonState extends State<ClerkUserButton> {
   final _sessions = <clerk.Session>[];
+
+  List<ClerkUserAction> _defaultSessionActions(ClerkAuthProvider auth) {
+    final translator = auth.translator;
+    return [
+      ClerkUserAction(
+        asset: ClerkAssets.gearIcon,
+        label: translator.translate('Manage account'),
+        callback: _manageAccount,
+      ),
+      ClerkUserAction(
+        asset: ClerkAssets.signOutIcon,
+        label: translator.translate('Sign out'),
+        callback: _signOut,
+      ),
+    ];
+  }
+
+  List<ClerkUserAction> _defaultAdditionalActions(ClerkAuthProvider auth) {
+    final translator = auth.translator;
+    return [
+      if (auth.env.config.singleSessionMode == false)
+        ClerkUserAction(
+          asset: ClerkAssets.addIcon,
+          label: translator.translate('Add account'),
+          callback: _addAccount,
+        ),
+    ];
+  }
+
+  Future<void> _addAccount(BuildContext context, ClerkAuthProvider auth) =>
+      AddAccountScreen.show(context);
+
+  Future<void> _manageAccount(BuildContext context, ClerkAuthProvider auth) =>
+      ManageAccountScreen.show(context);
+
+  Future<void> _signOut<T>(BuildContext context, ClerkAuthProvider auth) async {
+    if (auth.client.sessions.length == 1) {
+      auth(context, () => auth.signOut());
+    } else {
+      auth(context, () => auth.signOutOf(auth.client.activeSession!));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +113,11 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
           _sessions.addOrReplaceAll(sessions, by: (s) => s.id);
           final displaySessions = List<clerk.Session>.from(_sessions);
 
+          final sessionActions =
+              widget.sessionActions ?? _defaultSessionActions(auth);
+          final additionalActions =
+              widget.additionalActions ?? _defaultAdditionalActions(auth);
+
           return ClerkVerticalCard(
             topPortion: Column(
               mainAxisSize: MainAxisSize.min,
@@ -81,28 +129,23 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
                     closed: sessions.contains(session) == false,
                     selected: session == auth.client.activeSession,
                     showName: widget.showName,
-                    actions: widget.sessionActions,
+                    actions: sessionActions,
                     onTap: () => auth(context, () => auth.activate(session)),
                     onEnd: (closed) {
                       if (closed) _sessions.remove(session);
                     },
                   ),
-                for (final action in widget.additionalActions)
+                for (final action in additionalActions)
                   Padding(
-                    padding: allPadding16 + leftPadding4,
+                    padding: allPadding16,
                     child: GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () => action.callback(context, auth),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          ClerkCircleIcon(
-                            icon: action.icon,
-                            backgroundColor: ClerkColors.dawnPink,
-                            borderColor: ClerkColors.nobel,
-                            dashLength: 2,
-                          ),
-                          horizontalMargin24,
+                          ClerkIcon(action.asset, size: 16),
+                          horizontalMargin32,
                           Text(
                             action.label,
                             style: ClerkTextStyle.buttonTitle.copyWith(
@@ -121,7 +164,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
                 padding: horizontalPadding16 + verticalPadding12,
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () => auth.call(context, () => auth.signOut()),
+                  onTap: () => auth(context, () => auth.signOut()),
                   child: Row(
                     children: [
                       const Icon(
@@ -222,11 +265,7 @@ class _SessionRow extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Icon(
-                                  action.icon,
-                                  color: ClerkColors.charcoalGrey,
-                                  size: 11,
-                                ),
+                                ClerkIcon(action.asset, size: 10),
                                 horizontalMargin8,
                                 Text(
                                   action.label,

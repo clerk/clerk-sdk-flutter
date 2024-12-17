@@ -39,12 +39,12 @@ class ClerkAuthBuilder extends StatelessWidget {
 
     if (signedInBuilder case AuthWidgetBuilder signedInBuilder
         when user is clerk.User) {
-      return signedInBuilder.call(context, auth);
+      return signedInBuilder(context, auth);
     } else if (signedOutBuilder case AuthWidgetBuilder signedOutBuilder
         when user is! clerk.User) {
-      return signedOutBuilder.call(context, auth);
+      return signedOutBuilder(context, auth);
     } else if (builder case AuthWidgetBuilder builder) {
-      return builder.call(context, auth);
+      return builder(context, auth);
     }
 
     return emptyWidget;

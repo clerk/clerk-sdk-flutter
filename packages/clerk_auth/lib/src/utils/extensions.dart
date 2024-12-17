@@ -11,8 +11,6 @@ extension MapExtension on Map {
 
 /// Extensions to the [String] class
 extension StringExtension on String {
-  static final _phoneRE = RegExp(r'[^0-9+]');
-
   bool _isUpper(int c) => c >= 0x41 && c <= 0x5a;
 
   bool _isNumeric(int c) => c >= 0x30 && c <= 0x39;
@@ -46,10 +44,6 @@ extension StringExtension on String {
   /// Decode a [String] that has been base64 encoded
   ///
   String get b64decoded => utf8.decode(base64.decode(this));
-
-  /// Delete non-phone characters from [this]
-  ///
-  String toPhoneNumberString() => replaceAll(_phoneRE, '');
 }
 
 /// Extensions to the [List] class

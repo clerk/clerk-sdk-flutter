@@ -1,5 +1,4 @@
 import 'package:clerk_auth/src/clerk_api/api.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'models.dart';
@@ -155,10 +154,9 @@ class User {
 
   /// Return an [UserIdentifyingData] for a given [identifier] if such exists
   UserIdentifyingData? identifierFrom(String identifier) {
-    final sanitized = identifier.toPhoneNumberString();
     final identifiers = [...?emailAddresses, ...?phoneNumbers];
     for (final ident in identifiers) {
-      if (ident.identifier == sanitized) return ident;
+      if (ident.identifier == ident.type.sanitize(identifier)) return ident;
     }
     return null;
   }

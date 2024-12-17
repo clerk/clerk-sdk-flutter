@@ -38,11 +38,11 @@ class ClerkAvatar extends StatelessWidget {
       );
     }
 
-    if (user.imageUrl is String) {
+    if (user.imageUrl case String imageUrl) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(diameter / 2),
         child: Image.network(
-          user.imageUrl!,
+          imageUrl,
           width: diameter,
           height: diameter,
           fit: BoxFit.cover,

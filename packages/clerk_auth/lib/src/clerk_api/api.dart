@@ -119,7 +119,7 @@ class Api with Logging {
       if (client.isEmpty == false) return client;
     }
 
-    return _fetchClient(method: HttpMethod.post);
+    return await _fetchClient(method: HttpMethod.post);
   }
 
   /// Gets a refreshed [Client] object from the back end
@@ -190,8 +190,8 @@ class Api with Logging {
     String? code,
     String? token,
     Map<String, dynamic>? metadata,
-  }) {
-    return _fetchApiResponse(
+  }) async {
+    return await _fetchApiResponse(
       '/client/sign_ups',
       params: {
         'strategy': strategy,
@@ -225,8 +225,8 @@ class Api with Logging {
     String? code,
     String? token,
     Map<String, dynamic>? metadata,
-  }) {
-    return _fetchApiResponse(
+  }) async {
+    return await _fetchApiResponse(
       '/client/sign_ups/${signUp.id}',
       method: HttpMethod.patch,
       params: {
@@ -252,7 +252,7 @@ class Api with Logging {
     SignUp signUp, {
     required Strategy strategy,
   }) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ups/${signUp.id}/prepare_verification',
       params: {
         'strategy': strategy,
@@ -277,7 +277,7 @@ class Api with Logging {
       '`code` required for strategy $strategy',
     );
 
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ups/${signUp.id}/attempt_verification',
       params: {
         'strategy': strategy,
@@ -300,7 +300,7 @@ class Api with Logging {
     String? password,
     String? redirectUrl,
   }) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ins',
       params: {
         'strategy': strategy,
@@ -329,7 +329,7 @@ class Api with Logging {
     );
 
     final factor = signIn.factorFor(strategy, stage);
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ins/${signIn.id}/prepare_${stage}_factor',
       params: {
         'strategy': strategy,
@@ -368,7 +368,7 @@ class Api with Logging {
       '`code` required for strategy $strategy',
     );
 
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ins/${signIn.id}/attempt_${stage}_factor',
       params: {
         'strategy': strategy,
@@ -393,7 +393,7 @@ class Api with Logging {
     required Strategy strategy,
     required String token,
   }) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ins/${signIn.id}',
       method: HttpMethod.get,
       params: {
@@ -408,7 +408,7 @@ class Api with Logging {
   /// Refresh the details of the current [User]
   ///
   Future<ApiResponse> getUser() async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/me',
       method: HttpMethod.get,
       withSession: true,
@@ -418,7 +418,7 @@ class Api with Logging {
   /// Update details pertaining to the current [User]
   ///
   Future<ApiResponse> updateUser(User user) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/me',
       method: HttpMethod.patch,
       withSession: true,
@@ -460,11 +460,11 @@ class Api with Logging {
     String identifier,
     IdentifierType type,
   ) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/me/${type.urlSegment}',
       withSession: true,
       params: {
-        type.name: identifier.toPhoneNumberString(),
+        type.name: type.sanitize(identifier),
       },
     );
   }
@@ -474,7 +474,7 @@ class Api with Logging {
   Future<ApiResponse> prepareIdentifyingDataVerification(
     UserIdentifyingData ident,
   ) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/me/${ident.type.urlSegment}/${ident.id}/prepare_verification',
       withSession: true,
       params: {
@@ -489,7 +489,7 @@ class Api with Logging {
     UserIdentifyingData ident,
     String code,
   ) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/me/${ident.type.urlSegment}/${ident.id}/attempt_verification',
       withSession: true,
       params: {
@@ -501,7 +501,7 @@ class Api with Logging {
   /// Delete some [UserIdentifyingData] from the current [User]
   ///
   Future<ApiResponse> deleteIdentifyingData(UserIdentifyingData ident) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/me/${ident.type.urlSegment}/${ident.id}',
       withSession: true,
       method: HttpMethod.delete,
@@ -621,7 +621,7 @@ class Api with Logging {
       final delay = int.tryParse(resp.headers['retry-after'] ?? '') ?? 5;
       logSevere('Delaying ${delay}secs');
       await Future.delayed(Duration(seconds: delay));
-      return _fetch(
+      return await _fetch(
         path: path,
         method: method,
         headers: headers,

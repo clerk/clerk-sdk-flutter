@@ -228,4 +228,15 @@ enum IdentifierType {
     }
     return '${name}s';
   }
+
+  static final _phoneRE = RegExp(r'[^0-9+]');
+
+  /// Sanitize an [identifier] according to this type's rules
+  ///
+  String sanitize(String identifier) {
+    return switch (this) {
+      phoneNumber => identifier.replaceAll(_phoneRE, ''),
+      _ => identifier,
+    };
+  }
 }

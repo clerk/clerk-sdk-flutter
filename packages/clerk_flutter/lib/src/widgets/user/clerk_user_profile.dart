@@ -51,7 +51,7 @@ class ClerkUserProfile extends StatelessWidget {
   ) async {
     final translator = auth.translator;
 
-    final uid = auth.user?.identifierFrom(identifier.toPhoneNumberString());
+    final uid = auth.user?.identifierFrom(identifier);
     if (uid case clerk.UserIdentifyingData uid when uid.isUnverified) {
       final title = uid.type.name.replaceAll('_', ' ').capitalized;
       await ClerkInputDialog.show(

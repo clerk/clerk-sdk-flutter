@@ -377,8 +377,7 @@ class Auth {
     await _api
         .addIdentifyingDataToCurrentUser(identifier, type)
         .then(_housekeeping);
-    if (user?.identifierFrom(identifier.toPhoneNumberString())
-        case UserIdentifyingData ident) {
+    if (user?.identifierFrom(identifier) case UserIdentifyingData ident) {
       await _api.prepareIdentifyingDataVerification(ident).then(_housekeeping);
     }
     update();

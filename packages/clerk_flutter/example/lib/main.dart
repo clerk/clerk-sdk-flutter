@@ -29,7 +29,7 @@ Future<void> main() async {
 }
 
 /// Example App
-class ExampleApp extends StatefulWidget {
+class ExampleApp extends StatelessWidget {
   /// Constructs an instance of Example App
   const ExampleApp({
     super.key,
@@ -40,25 +40,23 @@ class ExampleApp extends StatefulWidget {
   final String publishableKey;
 
   @override
-  State<ExampleApp> createState() => _ExampleAppState();
-}
-
-class _ExampleAppState extends State<ExampleApp> {
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: ClerkAuth(
-        publishableKey: widget.publishableKey,
+        publishableKey: publishableKey,
         child: Scaffold(
           backgroundColor: ClerkColors.whiteSmoke,
-          body: Padding(
-            padding: horizontalPadding32,
-            child: Center(
-              child: ClerkAuthBuilder(
-                signedInBuilder: (context, auth) => const ClerkUserButton(),
-                signedOutBuilder: (context, auth) =>
-                    const ClerkAuthenticationWidget(),
+          body: SafeArea(
+            child: Padding(
+              padding: horizontalPadding32,
+              child: Center(
+                child: ClerkAuthBuilder(
+                  signedInBuilder: (context, auth) => const ClerkUserButton(),
+                  signedOutBuilder: (context, auth) {
+                    return const ClerkAuthenticationWidget();
+                  },
+                ),
               ),
             ),
           ),

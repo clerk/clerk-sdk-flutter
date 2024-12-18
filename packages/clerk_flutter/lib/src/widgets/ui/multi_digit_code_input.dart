@@ -146,10 +146,6 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
     const color = ClerkColors.midGrey;
 
     bool isSmall = widget.isSmall;
-    if (isSmall == false) {
-      final viewQuery = MediaQueryData.fromView(View.of(context));
-      viewQuery.size.height - viewQuery.viewInsets.bottom < 400.0;
-    }
 
     final boxSize = isSmall ? 18.0 : 38.0;
     final cursorHeight = isSmall ? 1.0 : 2.0;

@@ -43,25 +43,37 @@ class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
       constraints: const BoxConstraints(minHeight: 530.0),
       child: ClerkVerticalCard(
         topPortion: _TopPortion(state: _state),
-        middlePortion: Column(
-          children: [
-            ClerkAuthBuilder(
-              builder: (context, auth) {
-                return Closeable(
-                  closed: auth.isSigningIn || auth.isSigningUp,
-                  child: const ClerkSSOPanel(),
-                );
-              },
-            ),
-            Closeable(
-              closed: _state.isSigningIn == false,
-              child: const ClerkSignInPanel(),
-            ),
-            Closeable(
-              closed: _state.isSigningUp == false,
-              child: const ClerkSignUpPanel(),
-            ),
-          ],
+        middlePortion: ClerkAuthBuilder(
+          builder: (context, auth) {
+            final env = auth.env;
+            return Padding(
+              padding: horizontalPadding32,
+              child: Column(
+                children: [
+                  if (env.hasOauthStrategies) //
+                    Closeable(
+                      closed: auth.isSigningIn || auth.isSigningUp,
+                      child: const ClerkSSOPanel(),
+                    ),
+                  if (env.hasIdentificationStrategies) ...[
+                    if (env.hasOauthStrategies) //
+                      const Padding(
+                        padding: verticalPadding24,
+                        child: OrDivider(),
+                      ),
+                    Closeable(
+                      closed: _state.isSigningIn == false,
+                      child: const ClerkSignInPanel(),
+                    ),
+                    Closeable(
+                      closed: _state.isSigningUp == false,
+                      child: const ClerkSignUpPanel(),
+                    ),
+                  ],
+                ],
+              ),
+            );
+          },
         ),
         bottomPortion: _BottomPortion(
           state: _state,

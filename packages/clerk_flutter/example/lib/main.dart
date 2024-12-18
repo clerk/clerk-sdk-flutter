@@ -48,16 +48,24 @@ class ExampleApp extends StatelessWidget {
         child: Scaffold(
           backgroundColor: ClerkColors.whiteSmoke,
           body: SafeArea(
-            child: Padding(
-              padding: horizontalPadding32,
-              child: Center(
-                child: ClerkAuthBuilder(
-                  signedInBuilder: (context, auth) => const ClerkUserButton(),
-                  signedOutBuilder: (context, auth) {
-                    return const ClerkAuthenticationWidget();
-                  },
+            child: Column(
+              children: [
+                const ClerkErrorMessage(),
+                Expanded(
+                  child: Padding(
+                    padding: horizontalPadding32,
+                    child: Center(
+                      child: ClerkAuthBuilder(
+                        signedInBuilder: (context, auth) =>
+                            const ClerkUserButton(),
+                        signedOutBuilder: (context, auth) {
+                          return const ClerkAuthenticationWidget();
+                        },
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),

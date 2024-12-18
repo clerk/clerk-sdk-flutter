@@ -165,13 +165,15 @@ class Api with Logging {
 
   /// For a given [Session], activates the identified [Session]
   ///
-  Future<ApiResponse> activate(Session session) =>
-      _fetchApiResponse('/client/sessions/${session.id}/touch');
+  Future<ApiResponse> activate(Session session) async {
+    return await _fetchApiResponse('/client/sessions/${session.id}/touch');
+  }
 
   /// Signs out of a given [Session] (and removes it from the current [Client])
   ///
-  Future<ApiResponse> signOutOf(Session session) =>
-      _fetchApiResponse('/client/sessions/${session.id}/remove');
+  Future<ApiResponse> signOutOf(Session session) async {
+    return await _fetchApiResponse('/client/sessions/${session.id}/remove');
+  }
 
   // Sign Up API
 
@@ -383,8 +385,12 @@ class Api with Logging {
 
   /// After signing in via oauth, transfer the [SignUp] into an authenticated [User]
   ///
-  Future<ApiResponse> transfer() =>
-      _fetchApiResponse('/client/sign_ups', params: {'transfer': true});
+  Future<ApiResponse> transfer() async {
+    return await _fetchApiResponse(
+      '/client/sign_ups',
+      params: {'transfer': true},
+    );
+  }
 
   /// Send a token received from an oAuth provider to the back end
   ///

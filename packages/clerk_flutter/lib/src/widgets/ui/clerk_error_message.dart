@@ -1,64 +1,51 @@
-import 'dart:async';
-
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
 /// Widget to display error messages as errors are received
-/// from the [ClerkAuthProvider]
+/// from the [ClerkAuthProvider].
+///
+/// [ClerkErrorMessage] must be placed in the widget tree below both a
+/// [ClerkAuth] widget and a [Scaffold]
 ///
 class ClerkErrorMessage extends StatelessWidget {
   /// Construct a [ClerkErrorMessage] widget
   const ClerkErrorMessage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<clerk.AuthError>(
-      stream: ClerkAuth.errorStreamOf(context),
-      builder: (context, snapshot) => _ErrorMessage(error: snapshot.data),
-    );
-  }
-}
-
-class _ErrorMessage extends StatefulWidget {
-  const _ErrorMessage({required this.error});
-
-  final clerk.AuthError? error;
-
-  @override
-  State<_ErrorMessage> createState() => _ErrorMessageState();
-}
-
-class _ErrorMessageState extends State<_ErrorMessage> {
-  static const _errorDisplayDuration = Duration(seconds: 3);
-
-  String _error = '';
-  Timer? _timer;
-
-  @override
-  void didUpdateWidget(covariant _ErrorMessage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final error = widget.error?.toString() ?? '';
-    if (mounted && error != _error) {
-      _error = error;
-      _timer?.cancel();
-      _timer = Timer(
-        _errorDisplayDuration,
-        () => setState(() => _timer = null),
+  Future<void> _showError(BuildContext context, clerk.AuthError error) async {
+    await null;
+    if (context.mounted) {
+      final translator = ClerkAuth.translatorOf(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+            ),
+          ),
+          content: Text(
+            translator.translate(
+              error.message,
+              substitution: error.substitution,
+            ),
+            style: ClerkTextStyle.subtitle.copyWith(color: ClerkColors.white),
+          ),
+        ),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final translator = ClerkAuth.translatorOf(context);
-    return Closeable(
-      closed: _timer is! Timer || _error.isEmpty,
-      child: Padding(
-        padding: horizontalPadding32 + bottomPadding8,
-        child: Text(translator.translate(_error),
-            maxLines: 2, style: ClerkTextStyle.error),
-      ),
+    return StreamBuilder<clerk.AuthError>(
+      stream: ClerkAuth.errorStreamOf(context),
+      builder: (context, snapshot) {
+        if (snapshot.data case clerk.AuthError error) {
+          _showError(context, error);
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }

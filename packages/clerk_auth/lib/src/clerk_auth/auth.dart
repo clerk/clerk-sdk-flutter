@@ -69,6 +69,12 @@ class Auth {
   /// The current [User] object, or null
   User? get user => session?.user;
 
+  /// Are we currently signing in?
+  bool get isSigningIn => signIn?.status.isActive == true;
+
+  /// Are we currently signing up?
+  bool get isSigningUp => signUp?.status.isActive == true;
+
   /// A method to be overridden by extension classes to cope with
   /// updating their systems when things change (e.g. the clerk_flutter
   /// [ClerkAuthProvider] class)
@@ -190,12 +196,14 @@ class Auth {
 
         final signInCompleter = Completer<Client>();
 
-        _pollForCompletion().then(
-          (client) {
-            this.client = client;
-            signInCompleter.complete(client);
-            update();
-          },
+        unawaited(
+          _pollForCompletion().then(
+            (client) {
+              this.client = client;
+              signInCompleter.complete(client);
+              update();
+            },
+          ),
         );
 
         update();

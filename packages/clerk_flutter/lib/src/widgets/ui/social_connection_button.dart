@@ -20,9 +20,8 @@ class SocialConnectionButton extends StatelessWidget {
     return SizedBox(
       height: 30.0,
       child: MaterialButton(
-        onPressed: () {
-          ClerkAuth.above(context).sso(context, connection.strategy);
-        },
+        onPressed: () => ClerkAuth.of(context, listen: false)
+            .sso(context, connection.strategy),
         elevation: 2.0,
         shape: RoundedRectangleBorder(
           borderRadius: borderRadius4,

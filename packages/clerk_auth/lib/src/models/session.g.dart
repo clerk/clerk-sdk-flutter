@@ -53,4 +53,5 @@ const _$StatusEnumMap = {
   Status.unverified: 'unverified',
   Status.verified: 'verified',
   Status.complete: 'complete',
+  Status.expired: 'expired',
 };

@@ -3,9 +3,14 @@
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:phone_input/phone_input_package.dart';
 
 extension NullExtension on String {
   String? get orNullIfEmpty => isEmpty ? null : this;
+}
+
+extension PhoneNumberExtension on PhoneNumber {
+  String get intlFormattedNsn => '(+$countryCode) ${getFormattedNsn()}';
 }
 
 const defaultLoadingWidget = SizedBox(
@@ -26,28 +31,28 @@ const outlineInputBorder = OutlineInputBorder(
   borderSide: BorderSide.none,
 );
 
-const insetBoxShadowDecoration = BoxDecoration(
-  boxShadow: [
-    BoxShadow(
-      color: ClerkColors.seashell,
-      blurRadius: 5.0,
-      offset: Offset(1.0, 1.0),
-      inset: true,
-    ),
-    BoxShadow(
-      color: ClerkColors.seashell,
-      blurRadius: 5.0,
-      offset: Offset(-1.0, -1.0),
-      inset: true,
-    ),
-  ],
-);
+const insetBoxShadow = [
+  BoxShadow(
+    color: ClerkColors.seashell,
+    blurRadius: 5.0,
+    offset: Offset(1.0, 1.0),
+    inset: true,
+  ),
+  BoxShadow(
+    color: ClerkColors.seashell,
+    blurRadius: 5.0,
+    offset: Offset(-1.0, -1.0),
+    inset: true,
+  ),
+];
+
+const insetBoxShadowDecoration = BoxDecoration(boxShadow: insetBoxShadow);
 
 const firstColumnWidth = 215.0;
 const secondColumnWidth = 280.0;
 
 const divider =
-    Divider(color: ClerkColors.seashell, thickness: 2.0, height: 2.0);
+    Divider(color: ClerkColors.dawnPink, thickness: 2.0, height: 2.0);
 
 // Margins
 
@@ -90,6 +95,9 @@ const sliverVerticalMargin48 =
 // Paddings
 
 const emptyPadding = EdgeInsets.zero;
+
+const hor8ver4 = EdgeInsets.symmetric(horizontal: 8, vertical: 4);
+const hor32top20 = EdgeInsets.fromLTRB(32, 20, 32, 0);
 
 const horizontalPadding4 = EdgeInsets.symmetric(horizontal: 4.0);
 const horizontalPadding8 = EdgeInsets.symmetric(horizontal: 8.0);
@@ -174,13 +182,13 @@ const endPadding24 = EdgeInsetsDirectional.only(end: 24.0);
 const endPadding32 = EdgeInsetsDirectional.only(end: 32.0);
 const endPadding48 = EdgeInsetsDirectional.only(end: 48.0);
 
-final borderRadius4 = BorderRadius.circular(4.0);
-final borderRadius8 = BorderRadius.circular(8.0);
-final borderRadius12 = BorderRadius.circular(12.0);
-final borderRadius16 = BorderRadius.circular(16.0);
-final borderRadius18 = BorderRadius.circular(18.0);
-final borderRadius24 = BorderRadius.circular(24.0);
-final borderRadius28 = BorderRadius.circular(28.0);
-final borderRadius32 = BorderRadius.circular(32.0);
-final borderRadius36 = BorderRadius.circular(36.0);
-final borderRadius48 = BorderRadius.circular(48.0);
+const borderRadius4 = BorderRadius.all(Radius.circular(4.0));
+const borderRadius8 = BorderRadius.all(Radius.circular(8.0));
+const borderRadius12 = BorderRadius.all(Radius.circular(12.0));
+const borderRadius16 = BorderRadius.all(Radius.circular(16.0));
+const borderRadius18 = BorderRadius.all(Radius.circular(18.0));
+const borderRadius24 = BorderRadius.all(Radius.circular(24.0));
+const borderRadius28 = BorderRadius.all(Radius.circular(28.0));
+const borderRadius32 = BorderRadius.all(Radius.circular(32.0));
+const borderRadius36 = BorderRadius.all(Radius.circular(36.0));
+const borderRadius48 = BorderRadius.all(Radius.circular(48.0));

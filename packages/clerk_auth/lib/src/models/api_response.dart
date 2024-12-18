@@ -11,6 +11,13 @@ class ApiResponse {
     this.client,
   });
 
+  /// Constructs an [ApiResponse] for situations in which the backend
+  /// failed to respond
+  ApiResponse.fatal({required ApiError error})
+      : status = 0,
+        errors = [error],
+        client = null;
+
   /// http status
   final int status;
 

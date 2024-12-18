@@ -451,9 +451,8 @@ class Api with Logging {
       return _processResponse(resp);
     } catch (error, stacktrace) {
       logSevere('Error during fetch', error, stacktrace);
-      return ApiResponse(
-        status: HttpStatus.internalServerError,
-        errors: [ApiError(message: error.toString())],
+      return ApiResponse.fatal(
+        error: ApiError(message: error.toString()),
       );
     }
   }
@@ -572,9 +571,8 @@ class Api with Logging {
       return _processResponse(resp);
     } catch (error, stacktrace) {
       logSevere('Error during fetch', error, stacktrace);
-      return ApiResponse(
-        status: HttpStatus.internalServerError,
-        errors: [ApiError(message: error.toString())],
+      return ApiResponse.fatal(
+        error: ApiError(message: error.toString()),
       );
     }
   }

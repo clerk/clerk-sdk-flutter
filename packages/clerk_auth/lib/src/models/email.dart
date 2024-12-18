@@ -10,21 +10,18 @@ class Email extends UserIdentifyingData {
   /// Constructor
   const Email({
     required super.id,
+    required super.verification,
     required this.emailAddress,
     required this.reserved,
-    required this.verification,
     required this.updatedAt,
     required this.createdAt,
-  });
+  }) : super(type: IdentifierType.emailAddress);
 
   /// email address
   final String emailAddress;
 
   /// reserved?
   final bool reserved;
-
-  /// verification
-  final Verification? verification;
 
   /// updated at
   @JsonKey(fromJson: intToDateTime)

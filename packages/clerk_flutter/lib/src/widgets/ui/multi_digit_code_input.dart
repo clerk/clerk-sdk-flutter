@@ -146,10 +146,6 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
     const color = ClerkColors.midGrey;
 
     bool isSmall = widget.isSmall;
-    if (isSmall == false) {
-      final viewQuery = MediaQueryData.fromView(View.of(context));
-      viewQuery.size.height - viewQuery.viewInsets.bottom < 400.0;
-    }
 
     final boxSize = isSmall ? 18.0 : 38.0;
     final cursorHeight = isSmall ? 1.0 : 2.0;
@@ -224,7 +220,7 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
   Future<void> updateEditingValue(TextEditingValue value) async {
     if (value.text.length == widget.length) {
       setState(() => loading = true);
-      final succeeded = await widget.onSubmit.call(value.text);
+      final succeeded = await widget.onSubmit(value.text);
       if (succeeded == false) {
         _editingValue = const TextEditingValue(
           text: '',

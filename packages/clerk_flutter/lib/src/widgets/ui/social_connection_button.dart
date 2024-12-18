@@ -20,13 +20,12 @@ class SocialConnectionButton extends StatelessWidget {
     return SizedBox(
       height: 30.0,
       child: MaterialButton(
-        onPressed: () {
-          ClerkAuth.above(context).sso(context, connection.strategy);
-        },
+        onPressed: () => ClerkAuth.of(context, listen: false)
+            .sso(context, connection.strategy),
         elevation: 2.0,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: borderRadius4,
-          side: const BorderSide(color: ClerkColors.dawnPink),
+          side: BorderSide(color: ClerkColors.dawnPink),
         ),
         textColor: ClerkColors.brightGrey,
         child: Padding(

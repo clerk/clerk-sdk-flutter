@@ -28,7 +28,7 @@ class Closeable extends StatelessWidget {
   const Closeable({
     super.key,
     required this.closed,
-    required this.child,
+    this.child,
     this.duration = _defaultDuration,
     this.axis = ClosingAxis.vertical,
     this.alignment = Alignment.topLeft,
@@ -39,7 +39,7 @@ class Closeable extends StatelessWidget {
   final Duration duration;
 
   /// Child [Widget] to be displayed in the panel
-  final Widget child;
+  final Widget? child;
 
   /// Axis of animation
   final ClosingAxis axis;

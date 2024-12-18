@@ -9,13 +9,18 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
   const ClerkPhoneNumberFormField({
     super.key,
     required this.onChanged,
+    this.onSubmit,
     this.label,
     this.optional = false,
     this.initial,
+    this.defaultCountry = IsoCode.US,
   });
 
   /// Report changes back to calling widget
   final ValueChanged<String> onChanged;
+
+  /// Report submission back to calling widget
+  final ValueChanged<String>? onSubmit;
 
   /// Show label?
   final String? label;
@@ -25,6 +30,9 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
 
   /// initial value
   final String? initial;
+
+  /// default country
+  final IsoCode defaultCountry;
 
   @override
   Widget build(BuildContext context) {
@@ -61,29 +69,11 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
         verticalMargin4,
         DecoratedBox(
           decoration: insetBoxShadowDecoration,
-          child: PhoneInput(
-            initialValue:
-                initial is String ? PhoneNumber.parse(initial!) : null,
-            showFlagInInput: true,
-            flagSize: 16,
-            onChanged: (phoneNumber) {
-              if (phoneNumber case PhoneNumber phoneNumber) {
-                onChanged(phoneNumber.intlFormattedNsn);
-              }
-            },
-            decoration: const InputDecoration(
-              errorStyle: TextStyle(
-                  color: Colors.transparent,
-                  height: 0.01), // weird hack because 0 doesn't work
-              isDense: true,
-              border: InputBorder.none,
-              constraints: BoxConstraints(maxHeight: 32, minHeight: 32),
-            ),
-            countrySelectorNavigator: const CountrySelectorNavigator.dialog(
-              addFavoriteSeparator: true,
-              favorites: [IsoCode.US, IsoCode.GB],
-            ),
-            validator: PhoneValidator.valid(),
+          child: _PhoneInput(
+            initial: initial,
+            defaultCountry: defaultCountry,
+            onChanged: onChanged,
+            onSubmit: onSubmit,
           ),
         ),
       ],
@@ -91,6 +81,58 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
   }
 }
 
-extension on PhoneNumber {
-  String get intlFormattedNsn => '(+$countryCode) ${getFormattedNsn()}';
+class _PhoneInput extends StatefulWidget {
+  const _PhoneInput({
+    super.key,
+    required this.initial,
+    required this.defaultCountry,
+    required this.onChanged,
+    required this.onSubmit,
+  });
+
+  final String? initial;
+  final IsoCode defaultCountry;
+  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onSubmit;
+
+  @override
+  State<_PhoneInput> createState() => _PhoneInputState();
+}
+
+class _PhoneInputState extends State<_PhoneInput> {
+  bool _isValid = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return PhoneInput(
+      initialValue:
+          widget.initial is String ? PhoneNumber.parse(widget.initial!) : null,
+      defaultCountry: widget.defaultCountry,
+      showFlagInInput: true,
+      flagSize: 16,
+      onChanged: (phoneNumber) {
+        if (phoneNumber case PhoneNumber phoneNumber) {
+          final valid = phoneNumber.isValid();
+          if (valid != _isValid) setState(() => _isValid = valid);
+          widget.onChanged(phoneNumber.intlFormattedNsn);
+        }
+      },
+      onSubmitted: widget.onSubmit,
+      style: ClerkTextStyle.inputLabel.copyWith(
+        color: _isValid ? ClerkColors.charcoalGrey : ClerkColors.incarnadine,
+      ),
+      decoration: const InputDecoration(
+        errorStyle: TextStyle(
+            color: Colors.transparent,
+            height: 0.01), // weird hack because 0 doesn't work
+        isDense: true,
+        border: InputBorder.none,
+        constraints: BoxConstraints(maxHeight: 32, minHeight: 32),
+      ),
+      countrySelectorNavigator: const CountrySelectorNavigator.dialog(
+        addFavoriteSeparator: true,
+        favorites: [IsoCode.US, IsoCode.GB],
+      ),
+    );
+  }
 }

@@ -43,6 +43,8 @@ class ClerkTextStyle {
   static const inputLabel = TextStyle(
     fontSize: 14.0,
     color: ClerkColors.darkJungleGreen,
+    letterSpacing: 0.1,
+    height: 0.95,
   );
 
   /// The Clerk-branded text style for user button titles.
@@ -61,5 +63,11 @@ class ClerkTextStyle {
   static const error = TextStyle(
     fontSize: 14.0,
     color: ClerkColors.incarnadine,
+  );
+
+  /// The Clerk-branded text style for row labels.
+  static const rowLabel = TextStyle(
+    fontSize: 5.0,
+    height: 1.3,
   );
 }

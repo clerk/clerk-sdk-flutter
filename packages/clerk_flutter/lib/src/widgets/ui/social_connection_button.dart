@@ -23,9 +23,9 @@ class SocialConnectionButton extends StatelessWidget {
         onPressed: () => ClerkAuth.of(context, listen: false)
             .sso(context, connection.strategy),
         elevation: 2.0,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: borderRadius4,
-          side: const BorderSide(color: ClerkColors.dawnPink),
+          side: BorderSide(color: ClerkColors.dawnPink),
         ),
         textColor: ClerkColors.brightGrey,
         child: Padding(

@@ -78,7 +78,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const ClerkErrorMessage(),
         Padding(
           padding: horizontalPadding32 + bottomPadding8,
           child: ClerkTextFormField(
@@ -178,7 +177,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
             ],
           ),
         ),
-        const ClerkErrorMessage(),
         verticalMargin32,
       ],
     );

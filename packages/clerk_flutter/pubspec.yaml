@@ -9,7 +9,7 @@ topics:
 
 environment:
   sdk: '>=3.5.0 <4.0.0'
-  flutter: '>=3.24.0'
+  flutter: '>=3.7.0'
 
 dependencies:
   clerk_auth: ^0.0.3-dev

@@ -1,9 +1,5 @@
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import 'auth_config.dart';
-import 'display_config.dart';
-import 'organization_settings.dart';
-import 'user_settings.dart';
 
 part 'environment.g.dart';
 
@@ -43,6 +39,32 @@ class Environment {
 
   /// empty [Environment]
   static const empty = Environment();
+
+  /// Do we have [Strategy.password] configured?
+  bool get hasPasswordStrategy =>
+      config.firstFactors.contains(Strategy.password);
+
+  /// [Iterable] of identification strategies
+  Iterable<Strategy> get identificationStrategies =>
+      config.identificationStrategies.where((i) => i.isOauth == false);
+
+  /// Do we have identification strategies?
+  bool get hasIdentificationStrategies => identificationStrategies.isNotEmpty;
+
+  /// [Iterable] of oauth strategies
+  Iterable<Strategy> get oauthStrategies =>
+      config.identificationStrategies.where((i) => i.isOauth);
+
+  /// Do we have oauth strategies?
+  bool get hasOauthStrategies => oauthStrategies.isNotEmpty;
+
+  /// [Iterable] of other strategies
+  /// i.e. strategies that are neither oauth nor password-based
+  Iterable<Strategy> get otherStrategies =>
+      config.firstFactors.where((f) => f.isOtherStrategy);
+
+  /// Do we have other strategies?
+  bool get hasOtherStrategies => otherStrategies.isNotEmpty;
 
   /// fromJson
   static Environment fromJson(Map<String, dynamic> json) =>

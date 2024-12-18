@@ -35,7 +35,9 @@ class ClerkCodeInput extends StatelessWidget {
               title,
               textAlign: TextAlign.start,
               maxLines: 2,
-              style: ClerkTextStyle.title,
+              style: subtitle is String
+                  ? ClerkTextStyle.title
+                  : ClerkTextStyle.subtitleDark,
             ),
           ),
         if (subtitle case String subtitle)

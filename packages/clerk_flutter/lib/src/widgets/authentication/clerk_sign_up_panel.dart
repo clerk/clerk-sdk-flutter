@@ -69,7 +69,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
         Closeable(
           closed: auth.signUp?.unverified(clerk.Field.phoneNumber) != true,
           child: Padding(
-            padding: horizontalPadding32 + verticalPadding8,
+            padding: verticalPadding8,
             child: ClerkCodeInput(
               key: const Key('phone_code'),
               title: translator.translate('Verify your phone number'),
@@ -91,7 +91,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
         Closeable(
           closed: auth.signUp?.unverified(clerk.Field.emailAddress) != true,
           child: Padding(
-            padding: horizontalPadding32 + verticalPadding8,
+            padding: verticalPadding8,
             child: ClerkCodeInput(
               key: const Key('email_code'),
               title: translator.translate('Verify your email address'),
@@ -113,7 +113,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
             children: [
               for (final attribute in attributes)
                 Padding(
-                  padding: horizontalPadding32 + bottomPadding24,
+                  padding: bottomPadding24,
                   child: attribute.isPhoneNumber
                       ? ClerkPhoneNumberFormField(
                           initial: _values[attribute.attr],
@@ -138,19 +138,16 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
             ],
           ),
         ),
-        Padding(
-          padding: horizontalPadding32,
-          child: ClerkMaterialButton(
-            onPressed: () => _continue(auth),
-            label: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Center(child: Text(translator.translate('Continue'))),
-                horizontalMargin4,
-                const Icon(Icons.arrow_right_sharp),
-              ],
-            ),
+        ClerkMaterialButton(
+          onPressed: () => _continue(auth),
+          label: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(child: Text(translator.translate('Continue'))),
+              horizontalMargin4,
+              const Icon(Icons.arrow_right_sharp),
+            ],
           ),
         ),
         verticalMargin32,

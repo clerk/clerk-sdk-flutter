@@ -31,19 +31,9 @@ extension StringExtension on String {
       .map((t) => t[0])
       .join();
 
-  /// Adds [padChar] to a string until its length is a
-  /// multiple of [boundary]
-  ///
-  String padRightToMultipleOf(int boundary, [String padChar = ' ']) {
-    return switch (length % boundary) {
-      0 => this,
-      int overBy => padRight(length + boundary - overBy, padChar),
-    };
-  }
-
   /// Decode a [String] that has been base64 encoded
   ///
-  String get b64decoded => utf8.decode(base64.decode(this));
+  String get b64decoded => utf8.decode(base64.decode(base64.normalize(this)));
 }
 
 /// Extensions to the [List] class

@@ -122,8 +122,7 @@ class TokenCache {
 
     try {
       final body = token.split('.')[1];
-      final data = body.padRightToMultipleOf(4, '=');
-      final payload = json.decode(data.b64decoded);
+      final payload = json.decode(body.b64decoded);
       final expirySeconds = payload[_kJwtExpiryKey];
       if (expirySeconds is int) {
         final expiry = expirySeconds - _tokenExpiryBuffer.inSeconds;

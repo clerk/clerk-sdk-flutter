@@ -129,7 +129,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
                               attribute.needsObscuring && _obscurePassword,
                           onObscure: attribute.needsObscuring
                               ? () => setState(
-                                  () => _obscurePassword = !_obscurePassword)
+                                    () => _obscurePassword = !_obscurePassword,
+                                  )
                               : null,
                           onChanged: (value) => _values[attribute.attr] = value,
                         ),

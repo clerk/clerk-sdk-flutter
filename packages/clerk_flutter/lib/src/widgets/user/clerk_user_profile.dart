@@ -3,20 +3,10 @@ import 'dart:io';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phone_input/phone_input_package.dart';
-
-final _emailRE = RegExp(
-  '^(?:[a-z0-9!#\$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#\$%&\'*+/=?^_`{|}~-]+)*|'
-  '"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|'
-  '\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*")@'
-  '(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?'
-  '|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}'
-  '(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:'
-  '(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|'
-  '\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])\$',
-);
 
 /// [ClerkUserProfile] displays user details
 /// and allows their editing
@@ -31,7 +21,7 @@ class ClerkUserProfile extends StatelessWidget {
     if (identifier?.trim() case String identifier when identifier.isNotEmpty) {
       switch (type) {
         case clerk.IdentifierType.emailAddress:
-          return _emailRE.hasMatch(identifier);
+          return EmailValidator.validate(identifier);
         case clerk.IdentifierType.phoneNumber:
           return PhoneNumber.parse(identifier).isValid();
         default:
@@ -264,7 +254,6 @@ class _IdentifierData extends StatelessWidget {
 
 class _RowLabel extends StatelessWidget {
   const _RowLabel({
-    super.key,
     this.color = ClerkColors.charcoalGrey,
     required this.label,
     this.onTap,
@@ -284,15 +273,12 @@ class _RowLabel extends StatelessWidget {
         child: DecoratedBox(
           decoration:
               BoxDecoration(border: Border.all(color: color, width: 0.5)),
-          child: SizedBox(
-            height: 9,
-            child: Center(
-              child: Padding(
-                padding: horizontalPadding4,
-                child: Text(
-                  label,
-                  style: ClerkTextStyle.rowLabel.copyWith(color: color),
-                ),
+          child: Center(
+            child: Padding(
+              padding: horizontalPadding4 + verticalPadding2,
+              child: Text(
+                label,
+                style: ClerkTextStyle.rowLabel.copyWith(color: color),
               ),
             ),
           ),
@@ -318,7 +304,9 @@ class _ProfileRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Text(title, maxLines: 2)),
+          Expanded(
+            child: Text(title, maxLines: 2),
+          ),
           horizontalMargin8,
           Expanded(flex: 2, child: child),
         ],
@@ -357,7 +345,7 @@ class _EditableUserDataState extends State<_EditableUserData> {
   Future<void> _chooseImage(BuildContext context) async {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.camera);
-    if (image case XFile image) {
+    if (image case XFile image when context.mounted) {
       setState(() => this.image = File(image.path));
     }
   }
@@ -372,7 +360,9 @@ class _EditableUserDataState extends State<_EditableUserData> {
         await auth.updateUserImage(image);
       }
     }
-    setState(() => isEditing = !isEditing);
+    if (context.mounted) {
+      setState(() => isEditing = !isEditing);
+    }
   }
 
   @override

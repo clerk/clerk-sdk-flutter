@@ -678,7 +678,7 @@ class Api with Logging {
     }
 
     final domainPart = key.substring(domainStartPosition);
-    final domain = domainPart.padRightToMultipleOf(4, '=').b64decoded;
+    final domain = domainPart.b64decoded;
     return domain.split('\$').first;
   }
 }

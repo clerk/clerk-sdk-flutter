@@ -14,6 +14,7 @@ environment:
 dependencies:
   clerk_auth: ^0.0.3-dev
   collection: ^1.18.0
+  email_validator: ^3.0.0
   flutter:
     sdk: flutter
   flutter_inset_box_shadow: ^1.0.8

@@ -99,13 +99,6 @@ class Auth {
     _api.terminate();
   }
 
-  /// Create a new [Client]
-  ///
-  Future<void> createClient() async {
-    client = await _api.createClient();
-    update();
-  }
-
   /// Refresh the current [Client]
   ///
   Future<void> refreshClient() async {

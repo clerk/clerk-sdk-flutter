@@ -37,9 +37,11 @@ class TokenCache {
   String _clientToken = '';
   String _sessionToken = '';
 
+  /// Wether or not we have a [clientToken]
+  bool get hasClientToken => clientToken.isNotEmpty;
+
   /// Whether or not the [sessionToken] can be refreshed
-  bool get canRefreshSessionToken =>
-      clientToken.isNotEmpty && sessionId.isNotEmpty;
+  bool get canRefreshSessionToken => hasClientToken && sessionId.isNotEmpty;
 
   bool get _sessionTokenHasExpired =>
       DateTime.timestamp().isAfter(sessionTokenExpiry);
@@ -90,8 +92,7 @@ class TokenCache {
   /// Get the [sessionId]
   String get sessionId => _sessionId;
 
-  /// Set the [sessionId]
-  set sessionId(String id) {
+  void _setSessionId(String id) {
     _sessionId = id;
     _persistor.write(_sessionIdKey, id);
   }
@@ -99,8 +100,7 @@ class TokenCache {
   /// Get the [clientToken]
   String get clientToken => _clientToken;
 
-  /// Set the [clientToken]
-  set clientToken(String token) {
+  void _setClientToken(String token) {
     if (token == _clientToken) return;
 
     try {
@@ -117,18 +117,12 @@ class TokenCache {
     return _sessionToken;
   }
 
-  /// Set the [sessionToken]
   set sessionToken(String token) {
     if (token == _sessionToken) return;
 
     try {
       final body = token.split('.')[1];
-      final data = switch (body.length) {
-        int len when len == 3 => body.padRight(len + 1, '='),
-        int len when len == 2 => body.padRight(len + 2, '='),
-        _ => body,
-      };
-      final payload = json.decode(utf8.decode(base64Url.decode(data)));
+      final payload = json.decode(body.b64decoded);
       final expirySeconds = payload[_kJwtExpiryKey];
       if (expirySeconds is int) {
         final expiry = expirySeconds - _tokenExpiryBuffer.inSeconds;
@@ -149,11 +143,11 @@ class TokenCache {
   ///
   void updateFrom(http.Response resp, Session? session) {
     final newClientToken = resp.headers[HttpHeaders.authorizationHeader];
-    if (newClientToken?.isNotEmpty == true) clientToken = newClientToken!;
+    if (newClientToken?.isNotEmpty == true) _setClientToken(newClientToken!);
 
     if (session is Session) {
       final newSessionId = session.id;
-      if (newSessionId.isNotEmpty) sessionId = newSessionId;
+      if (newSessionId.isNotEmpty) _setSessionId(newSessionId);
 
       final newSessionToken = session.lastActiveToken?.jwt;
       if (newSessionToken?.isNotEmpty == true) sessionToken = newSessionToken!;

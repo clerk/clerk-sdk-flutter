@@ -27,7 +27,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
 
   Future<void> _continue(ClerkAuthProvider auth,
       {String? code, clerk.Strategy? strategy}) async {
-    await auth.call(context, () async {
+    await auth(context, () async {
       final password = _values[clerk.UserAttribute.password];
       final passwordConfirmation =
           _values[clerk.UserAttribute.passwordConfirmation];
@@ -66,33 +66,46 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        ClerkCodeInput(
-          key: const Key('phone_code'),
-          open: auth.signUp?.unverified(clerk.Field.phoneNumber) == true,
-          title: translator.translate('Verify your phone number'),
-          subtitle: translator.translate(
-            'Enter code sent to ###',
-            substitution: _values[clerk.UserAttribute.phoneNumber],
+        Closeable(
+          closed: auth.signUp?.unverified(clerk.Field.phoneNumber) != true,
+          child: Padding(
+            padding: horizontalPadding32 + verticalPadding8,
+            child: ClerkCodeInput(
+              key: const Key('phone_code'),
+              title: translator.translate('Verify your phone number'),
+              subtitle: translator.translate(
+                'Enter code sent to ###',
+                substitution: _values[clerk.UserAttribute.phoneNumber],
+              ),
+              onSubmit: (code) async {
+                await _continue(
+                  auth,
+                  strategy: clerk.Strategy.phoneCode,
+                  code: code,
+                );
+                return false;
+              },
+            ),
           ),
-          onSubmit: (code) async {
-            await _continue(auth,
-                strategy: clerk.Strategy.phoneCode, code: code);
-            return false;
-          },
         ),
-        ClerkCodeInput(
-          key: const Key('email_code'),
-          open: auth.signUp?.unverified(clerk.Field.emailAddress) == true,
-          title: translator.translate('Verify your email address'),
-          subtitle: translator.translate(
-            'Enter code sent to ###',
-            substitution: _values[clerk.UserAttribute.emailAddress],
+        Closeable(
+          closed: auth.signUp?.unverified(clerk.Field.emailAddress) != true,
+          child: Padding(
+            padding: horizontalPadding32 + verticalPadding8,
+            child: ClerkCodeInput(
+              key: const Key('email_code'),
+              title: translator.translate('Verify your email address'),
+              subtitle: translator.translate(
+                'Enter code sent to ###',
+                substitution: _values[clerk.UserAttribute.emailAddress],
+              ),
+              onSubmit: (code) async {
+                await _continue(auth,
+                    strategy: clerk.Strategy.emailCode, code: code);
+                return false;
+              },
+            ),
           ),
-          onSubmit: (code) async {
-            await _continue(auth,
-                strategy: clerk.Strategy.emailCode, code: code);
-            return false;
-          },
         ),
         Closeable(
           closed: auth.signUp?.unverifiedFields.isNotEmpty == true,
@@ -116,7 +129,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
                               attribute.needsObscuring && _obscurePassword,
                           onObscure: attribute.needsObscuring
                               ? () => setState(
-                                  () => _obscurePassword = !_obscurePassword)
+                                    () => _obscurePassword = !_obscurePassword,
+                                  )
                               : null,
                           onChanged: (value) => _values[attribute.attr] = value,
                         ),

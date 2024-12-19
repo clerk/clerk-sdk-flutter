@@ -224,20 +224,24 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
   Future<void> updateEditingValue(TextEditingValue value) async {
     if (value.text.length == widget.length) {
       setState(() => loading = true);
-      final succeeded = await widget.onSubmit.call(value.text);
-      if (succeeded == false) {
-        _editingValue = const TextEditingValue(
-          text: '',
-          selection: TextSelection.collapsed(offset: 0),
-        );
-        requestKeyboard();
+      final succeeded = await widget.onSubmit(value.text);
+      if (context.mounted) {
+        if (succeeded == false) {
+          _editingValue = const TextEditingValue(
+            text: '',
+            selection: TextSelection.collapsed(offset: 0),
+          );
+          requestKeyboard();
+        }
+        setState(() => loading = false);
       }
-      setState(() => loading = false);
     } else {
       _editingValue = value;
     }
-    _openInputConnection();
-    setState(() => _connection!.setEditingState(_editingValue));
+    if (context.mounted) {
+      _openInputConnection();
+      setState(() => _connection!.setEditingState(_editingValue));
+    }
   }
 
   @override
@@ -306,7 +310,9 @@ class _PulsingCursorState extends State<_PulsingCursor>
   static const _cycleDuration = Duration(milliseconds: 1200);
 
   void _update() {
-    if (mounted) setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   late final _controller =

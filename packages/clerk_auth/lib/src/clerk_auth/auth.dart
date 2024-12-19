@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
 
@@ -345,6 +346,53 @@ class Auth {
     update();
   }
 
+  /// Update the [name] of the current [User]
+  ///
+  Future<void> updateUserName(String name) async {
+    if (user case User user when name.isNotEmpty) {
+      final names = name.split(' ').where((s) => s.isNotEmpty).toList();
+      final lastName = names.length == 1 ? '' : names.removeLast();
+      final newUser = user.copyWith(
+        lastName: lastName,
+        firstName: names.join(' '),
+      );
+      await _api.updateUser(newUser).then(_housekeeping);
+      update();
+    }
+  }
+
+  /// Add an [identifier] address to the current [User]
+  ///
+  Future<void> addIdentifyingData(
+    String identifier,
+    IdentifierType type,
+  ) async {
+    await _api
+        .addIdentifyingDataToCurrentUser(identifier, type)
+        .then(_housekeeping);
+    if (user?.identifierFrom(identifier) case UserIdentifyingData ident) {
+      await _api.prepareIdentifyingDataVerification(ident).then(_housekeeping);
+    }
+    update();
+  }
+
+  /// Attempt to verify some [UserIdentifyingData]
+  ///
+  Future<void> verifyIdentifyingData(
+    UserIdentifyingData ident,
+    String code,
+  ) async {
+    await _api.verifyIdentifyingData(ident, code).then(_housekeeping);
+    update();
+  }
+
+  /// Update the [avatar] of the current [User]
+  ///
+  Future<void> updateUserImage(File file) async {
+    await _api.updateAvatar(file).then(_housekeeping);
+    update();
+  }
+
   Future<Client> _pollForCompletion() async {
     while (true) {
       final client = await _api.currentClient();
@@ -353,7 +401,8 @@ class Auth {
       final expiry = client.signIn?.firstFactorVerification?.expireAt;
       if (expiry?.isAfter(DateTime.timestamp()) != true) {
         throw AuthError(
-            message: 'Awaited user action not completed in required timeframe');
+          message: 'Awaited user action not completed in required timeframe',
+        );
       }
 
       await Future.delayed(const Duration(seconds: 1));

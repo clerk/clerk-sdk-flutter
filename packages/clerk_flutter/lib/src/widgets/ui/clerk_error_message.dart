@@ -42,8 +42,10 @@ class _ErrorMessageState extends State<_ErrorMessage> {
     if (mounted && error != _error) {
       _error = error;
       _timer?.cancel();
-      _timer =
-          Timer(_errorDisplayDuration, () => setState(() => _timer = null));
+      _timer = Timer(
+        _errorDisplayDuration,
+        () => setState(() => _timer = null),
+      );
     }
   }
 

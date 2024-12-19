@@ -122,7 +122,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
       if (context.mounted) {
         Overlay.of(context).insert(_loadingOverlay);
       }
-      result = await fn.call();
+      result = await fn();
     } on clerk.AuthError catch (error) {
       _errors.add(error);
       onError?.call(error);

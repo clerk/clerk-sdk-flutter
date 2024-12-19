@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show HttpStatus, HttpHeaders;
+import 'dart:io' show File, HttpHeaders, HttpStatus;
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/clerk_api/token_cache.dart';
@@ -67,6 +67,8 @@ class Api with Logging {
   static const _kClientKey = 'client';
   static const _kResponseKey = 'response';
 
+  static const _defaultPollDelay = Duration(seconds: 55);
+
   /// Initialise the API
   Future<void> initialize() async {
     await _tokenCache.initialize();
@@ -111,7 +113,14 @@ class Api with Logging {
   }
 
   /// Creates a new [Client] object to manage sessions
-  Future<Client> createClient() => _fetchClient(method: HttpMethod.post);
+  Future<Client> createClient() async {
+    if (_tokenCache.hasClientToken) {
+      final client = await currentClient();
+      if (client.isEmpty == false) return client;
+    }
+
+    return await _fetchClient(method: HttpMethod.post);
+  }
 
   /// Gets a refreshed [Client] object from the back end
   Future<Client> currentClient() => _fetchClient(method: HttpMethod.get);
@@ -137,7 +146,7 @@ class Api with Logging {
         method: HttpMethod.delete,
         path: path,
         headers: headers,
-        requiresSessionId: requiresSessionId,
+        withSession: requiresSessionId,
       );
       if (resp.statusCode == 200) {
         _tokenCache.clear();
@@ -181,8 +190,8 @@ class Api with Logging {
     String? code,
     String? token,
     Map<String, dynamic>? metadata,
-  }) {
-    return _fetchApiResponse(
+  }) async {
+    return await _fetchApiResponse(
       '/client/sign_ups',
       params: {
         'strategy': strategy,
@@ -216,8 +225,8 @@ class Api with Logging {
     String? code,
     String? token,
     Map<String, dynamic>? metadata,
-  }) {
-    return _fetchApiResponse(
+  }) async {
+    return await _fetchApiResponse(
       '/client/sign_ups/${signUp.id}',
       method: HttpMethod.patch,
       params: {
@@ -243,7 +252,7 @@ class Api with Logging {
     SignUp signUp, {
     required Strategy strategy,
   }) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ups/${signUp.id}/prepare_verification',
       params: {
         'strategy': strategy,
@@ -268,7 +277,7 @@ class Api with Logging {
       '`code` required for strategy $strategy',
     );
 
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ups/${signUp.id}/attempt_verification',
       params: {
         'strategy': strategy,
@@ -291,7 +300,7 @@ class Api with Logging {
     String? password,
     String? redirectUrl,
   }) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ins',
       params: {
         'strategy': strategy,
@@ -320,7 +329,7 @@ class Api with Logging {
     );
 
     final factor = signIn.factorFor(strategy, stage);
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ins/${signIn.id}/prepare_${stage}_factor',
       params: {
         'strategy': strategy,
@@ -359,7 +368,7 @@ class Api with Logging {
       '`code` required for strategy $strategy',
     );
 
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ins/${signIn.id}/attempt_${stage}_factor',
       params: {
         'strategy': strategy,
@@ -384,7 +393,7 @@ class Api with Logging {
     required Strategy strategy,
     required String token,
   }) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ins/${signIn.id}',
       method: HttpMethod.get,
       params: {
@@ -399,20 +408,20 @@ class Api with Logging {
   /// Refresh the details of the current [User]
   ///
   Future<ApiResponse> getUser() async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/me',
       method: HttpMethod.get,
-      requiresSessionId: true,
+      withSession: true,
     );
   }
 
   /// Update details pertaining to the current [User]
   ///
   Future<ApiResponse> updateUser(User user) async {
-    return _fetchApiResponse(
+    return await _fetchApiResponse(
       '/me',
       method: HttpMethod.patch,
-      requiresSessionId: true,
+      withSession: true,
       params: {
         'first_name': user.firstName,
         'last_name': user.lastName,
@@ -423,50 +432,78 @@ class Api with Logging {
     );
   }
 
-  // Email
-
-  /// Add an [EmailAddress] to the current [User]
+  /// Update the current [User]'s avatar
   ///
-  Future<ApiResponse> addEmailAddressToCurrentUser(String emailAddress) async {
-    return _fetchApiResponse(
-      '/me/email_addresses',
-      requiresSessionId: true,
+  Future<ApiResponse> updateAvatar(File file) async {
+    try {
+      final queryParams = _queryParams(HttpMethod.post, withSession: true);
+      final uri = _uri('/me/profile_image', queryParams);
+
+      final headers = _headers(HttpMethod.post);
+
+      final resp = await _client.sendFile(HttpMethod.post, uri, file, headers);
+      return _processResponse(resp);
+    } catch (error, stacktrace) {
+      logSevere('Error during fetch', error, stacktrace);
+      return ApiResponse(
+        status: HttpStatus.internalServerError,
+        errors: [ApiError(message: error.toString())],
+      );
+    }
+  }
+
+  // Identifying Data
+
+  /// Add some [UserIdentifyingData] to the current [User]
+  ///
+  Future<ApiResponse> addIdentifyingDataToCurrentUser(
+    String identifier,
+    IdentifierType type,
+  ) async {
+    return await _fetchApiResponse(
+      '/me/${type.urlSegment}',
+      withSession: true,
       params: {
-        'email_address': emailAddress,
+        type.name: type.sanitize(identifier),
       },
     );
   }
 
-  /// Delete an [EmailAddress] from the current [User]
+  /// Prepare some [UserIdentifyingData] for verification
   ///
-  Future<ApiResponse> deleteEmailAddress(Email email) async {
-    return _fetchApiResponse(
-      '/me/email_addresses/${email.id}',
-      requiresSessionId: true,
-      method: HttpMethod.delete,
-    );
-  }
-
-  // Phone Number
-
-  /// Add a [PhoneNumber] to the current [User]
-  ///
-  Future<ApiResponse> addPhoneNumberToCurrentUser(String phoneNumber) async {
-    return _fetchApiResponse(
-      '/me/phone_numbers',
-      requiresSessionId: true,
+  Future<ApiResponse> prepareIdentifyingDataVerification(
+    UserIdentifyingData ident,
+  ) async {
+    return await _fetchApiResponse(
+      '/me/${ident.type.urlSegment}/${ident.id}/prepare_verification',
+      withSession: true,
       params: {
-        'phone_number': phoneNumber,
+        'strategy': ident.type.verificationStrategy,
       },
     );
   }
 
-  /// Delete a [PhoneNumber] from the current [User]
+  /// Attempt to verify some [UserIdentifyingData] with a [code]
   ///
-  Future<ApiResponse> deletePhoneNumber(PhoneNumber number) async {
-    return _fetchApiResponse(
-      '/me/phone_numbers/${number.id}',
-      requiresSessionId: true,
+  Future<ApiResponse> verifyIdentifyingData(
+    UserIdentifyingData ident,
+    String code,
+  ) async {
+    return await _fetchApiResponse(
+      '/me/${ident.type.urlSegment}/${ident.id}/attempt_verification',
+      withSession: true,
+      params: {
+        'code': code,
+      },
+    );
+  }
+
+  /// Delete some [UserIdentifyingData] from the current [User]
+  ///
+  Future<ApiResponse> deleteIdentifyingData(UserIdentifyingData ident) async {
+    return await _fetchApiResponse(
+      '/me/${ident.type.urlSegment}/${ident.id}',
+      withSession: true,
       method: HttpMethod.delete,
     );
   }
@@ -477,26 +514,30 @@ class Api with Logging {
   /// if required
   ///
   Future<String> sessionToken() async {
-    if (_tokenCache.sessionToken.isEmpty &&
-        _tokenCache.canRefreshSessionToken) {
+    if (_tokenCache.sessionToken.isEmpty) await _updateSessionToken();
+    return _tokenCache.sessionToken;
+  }
+
+  Future<void> _updateSessionToken() async {
+    if (_tokenCache.canRefreshSessionToken) {
       final resp = await _fetch(
-          path: '/client/sessions/${_tokenCache.sessionId}/tokens');
+        path: '/client/sessions/${_tokenCache.sessionId}/tokens',
+      );
       if (resp.statusCode == HttpStatus.ok) {
         final body = jsonDecode(resp.body) as Map<String, dynamic>;
         _tokenCache.sessionToken = body[_kJwtKey] as String;
       }
     }
-    return _tokenCache.sessionToken;
   }
 
   Future<void> _pollForSessionToken() async {
     _pollTimer?.cancel();
 
-    await sessionToken(); // make sure updated
+    await _updateSessionToken(); // make sure updated
 
     final diff =
         _tokenCache.sessionTokenExpiry.difference(DateTime.timestamp());
-    final delay = diff.isNegative ? const Duration(seconds: 55) : diff;
+    final delay = diff.isNegative ? _defaultPollDelay : diff;
     _pollTimer = Timer(delay, _pollForSessionToken);
   }
 
@@ -510,37 +551,19 @@ class Api with Logging {
 
     /// for requests that require a `_client_session_id` query parameter,
     /// set this to true. see: https://clerk.com/docs/reference/frontend-api/tag/Email-Addresses#operation/createEmailAddresses
-    bool requiresSessionId = false,
+    bool withSession = false,
   }) async {
     try {
-      final fullHeaders = _headers(method, headers);
+      final fullHeaders = _headers(method, headers: headers);
       final resp = await _fetch(
         method: method,
         path: url,
         params: params,
         headers: fullHeaders,
-        requiresSessionId: requiresSessionId,
+        withSession: withSession,
       );
 
-      final body = json.decode(resp.body) as Map<String, dynamic>;
-      final errors = body[_kErrorsKey] != null
-          ? List<Map<String, dynamic>>.from(body[_kErrorsKey])
-              .map(ApiError.fromJson)
-              .toList()
-          : null;
-      final clientData = switch (body[_kClientKey]) {
-        Map<String, dynamic> client when client.isNotEmpty => client,
-        _ => body[_kResponseKey],
-      };
-      if (clientData case Map<String, dynamic> clientJson) {
-        final client = Client.fromJson(clientJson);
-        _tokenCache.updateFrom(resp, client.activeSession);
-        return ApiResponse(
-            client: client, status: resp.statusCode, errors: errors);
-      } else {
-        logSevere(body);
-        return ApiResponse(status: resp.statusCode, errors: errors);
-      }
+      return _processResponse(resp);
     } catch (error, stacktrace) {
       logSevere('Error during fetch', error, stacktrace);
       return ApiResponse(
@@ -550,51 +573,93 @@ class Api with Logging {
     }
   }
 
+  ApiResponse _processResponse(http.Response resp) {
+    final body = json.decode(resp.body) as Map<String, dynamic>;
+    final errors = body[_kErrorsKey] != null
+        ? List<Map<String, dynamic>>.from(body[_kErrorsKey])
+            .map(ApiError.fromJson)
+            .toList()
+        : null;
+    final clientData = switch (body[_kClientKey]) {
+      Map<String, dynamic> client when client.isNotEmpty => client,
+      _ => body[_kResponseKey],
+    };
+    if (clientData case Map<String, dynamic> clientJson) {
+      final client = Client.fromJson(clientJson);
+      _tokenCache.updateFrom(resp, client.activeSession);
+      return ApiResponse(
+        client: client,
+        status: resp.statusCode,
+        errors: errors,
+      );
+    } else {
+      logSevere(body);
+      return ApiResponse(status: resp.statusCode, errors: errors);
+    }
+  }
+
   Future<http.Response> _fetch({
     required String path,
     HttpMethod method = HttpMethod.post,
     Map<String, String>? headers,
     Map<String, dynamic>? params,
-    bool requiresSessionId = false,
+    bool withSession = false,
   }) async {
     params?.removeWhere((key, value) => value == null);
-    final queryParams = {
-      _kIsNative: true,
-      _kClerkJsVersion: Auth.jsVersion,
-      if (requiresSessionId) //
-        _kClerkSessionId: _tokenCache.sessionId,
-      if (method.isGet) //
-        ...?params,
-    };
-    final body = method.isNotGet ? params : null;
+    final queryParams =
+        _queryParams(method, withSession: withSession, params: params);
     final uri = _uri(path, queryParams);
 
-    final resp = await _client.send(method, uri, headers, body);
+    final resp = await _client.send(
+      method,
+      uri,
+      headers: headers,
+      params: method.isNotGet ? params : null,
+    );
 
     if (resp.statusCode == HttpStatus.tooManyRequests) {
       final delay = int.tryParse(resp.headers['retry-after'] ?? '') ?? 5;
       logSevere('Delaying ${delay}secs');
       await Future.delayed(Duration(seconds: delay));
-      return _fetch(
+      return await _fetch(
         path: path,
         method: method,
         headers: headers,
         params: params,
-        requiresSessionId: requiresSessionId,
+        withSession: withSession,
       );
     }
 
     return resp;
   }
 
-  Uri _uri(String path, Map<String, dynamic> params) => Uri(
+  Map<String, dynamic> _queryParams(
+    HttpMethod method, {
+    bool withSession = false,
+    Map<String, dynamic>? params,
+  }) =>
+      {
+        _kIsNative: true,
+        _kClerkJsVersion: Auth.jsVersion,
+        if (withSession) //
+          _kClerkSessionId: _tokenCache.sessionId,
+        if (method.isGet) //
+          ...?params,
+      };
+
+  Uri _uri(String path, Map<String, dynamic> params) {
+    return Uri(
       scheme: _scheme,
       host: _domain,
       path: 'v1$path',
-      queryParameters: params.toStringMap());
+      queryParameters: params.toStringMap(),
+    );
+  }
 
-  Map<String, String> _headers(HttpMethod method,
-      [Map<String, String>? headers]) {
+  Map<String, String> _headers(
+    HttpMethod method, {
+    Map<String, String>? headers,
+  }) {
     return {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.contentTypeHeader: method.isGet
@@ -612,14 +677,8 @@ class Api with Logging {
       throw const FormatException('Publishable Key not in correct format');
     }
 
-    // base64 requires quad-byte aligned strings, but the string that comes from Clerk
-    // isn't. This removes Clerk's padding, adds our own to the correct length,
-    // decodes the string and then removes unnecessary trailing characters.
-    // It's messy, and should be improved. I've probably missed something obvious.
     final domainPart = key.substring(domainStartPosition);
-    final encodedPart =
-        domainPart.padRight(((domainPart.length - 1) ~/ 4) * 4 + 4, '=');
-    final encodedDomain = utf8.decode(base64.decode(encodedPart));
-    return encodedDomain.split('\$').first;
+    final domain = domainPart.b64decoded;
+    return domain.split('\$').first;
   }
 }

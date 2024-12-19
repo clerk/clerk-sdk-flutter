@@ -14,10 +14,12 @@ environment:
 dependencies:
   clerk_auth: ^0.0.3-dev
   collection: ^1.18.0
+  email_validator: ^3.0.0
   flutter:
     sdk: flutter
   flutter_inset_box_shadow: ^1.0.8
   flutter_svg: ^2.0.10+1
+  image_picker: ^1.1.2
   path_provider: ^2.1.5
   phone_input: ^1.0.0
   webview_flutter: ^4.8.0

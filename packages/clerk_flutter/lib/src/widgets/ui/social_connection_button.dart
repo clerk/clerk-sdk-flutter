@@ -17,50 +17,49 @@ class SocialConnectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 30.0,
-      child: MaterialButton(
-        onPressed: () {
-          ClerkAuth.above(context).sso(context, connection.strategy);
-        },
-        elevation: 2.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: borderRadius4,
-          side: const BorderSide(color: ClerkColors.dawnPink),
-        ),
-        textColor: ClerkColors.brightGrey,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              final logo = SizedBox.square(
-                dimension: 16.0,
-                child: connection.logoUrl.isNotEmpty
-                    ? Image.network(connection.logoUrl)
-                    : Text(
-                        connection.name.initials,
-                        textAlign: TextAlign.center,
-                        style: ClerkTextStyle.title.copyWith(height: .95),
+    return MaterialButton(
+      onPressed: () => ClerkAuth.of(context, listen: false)
+          .sso(context, connection.strategy),
+      elevation: 2.0,
+      shape: const RoundedRectangleBorder(
+        borderRadius: borderRadius4,
+        side: BorderSide(color: ClerkColors.dawnPink),
+      ),
+      padding: allPadding12,
+      textColor: ClerkColors.brightGrey,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final logo = SizedBox.square(
+            dimension: 12,
+            child: Center(
+              child: connection.logoUrl.isNotEmpty
+                  ? Image.network(connection.logoUrl)
+                  : Text(
+                      connection.name.initials,
+                      textAlign: TextAlign.center,
+                      style: ClerkTextStyle.title.copyWith(
+                        height: .1,
+                        fontSize: 16,
                       ),
-              );
-              if (constraints.maxWidth < 100.0) {
-                return logo;
-              }
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  logo,
-                  horizontalMargin8,
-                  Text(
-                    connection.name,
-                    maxLines: 1,
-                    style: ClerkTextStyle.buttonTitle,
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
+                    ),
+            ),
+          );
+          if (constraints.maxWidth < 100.0) {
+            return logo;
+          }
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              logo,
+              horizontalMargin8,
+              Text(
+                connection.name,
+                maxLines: 1,
+                style: ClerkTextStyle.buttonTitle,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

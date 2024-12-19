@@ -196,7 +196,10 @@ class Strategy {
     return switch (field) {
       Field.phoneNumber => Strategy.phoneCode,
       Field.emailAddress => Strategy.emailCode,
-      _ => throw AuthError(message: 'No way to verify ${field.name}'),
+      _ => throw AuthError(
+          message: 'No way to verify ###',
+          substitution: field.name,
+        ),
     };
   }
 

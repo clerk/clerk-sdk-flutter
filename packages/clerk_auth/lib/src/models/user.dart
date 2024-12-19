@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'models.dart';
@@ -141,6 +142,25 @@ class User {
   /// toJson
   Map<String, dynamic> toJson() => _$UserToJson(this);
 
+  /// name
+  String get name => '$firstName $lastName';
+
+  /// test the [UserIdentifyingData] to see if it is
+  /// one of the [User]'s primary identifiers
+  bool isPrimary(UserIdentifyingData item) =>
+      item.id == primaryEmailAddressId ||
+      item.id == primaryPhoneNumberId ||
+      item.id == primaryWeb3WalletId;
+
+  /// Return an [UserIdentifyingData] for a given [identifier] if such exists
+  UserIdentifyingData? identifierFrom(String identifier) {
+    final identifiers = [...?emailAddresses, ...?phoneNumbers];
+    for (final ident in identifiers) {
+      if (ident.identifier == ident.type.sanitize(identifier)) return ident;
+    }
+    return null;
+  }
+
   String? _persisted(String? id, List<UserIdentifyingData>? items) {
     if (id is String && items is List<UserIdentifyingData>) {
       for (final item in items) {
@@ -149,9 +169,6 @@ class User {
     }
     return null;
   }
-
-  /// name
-  String get name => '$firstName $lastName';
 
   /// email
   String? get email => _persisted(primaryEmailAddressId, emailAddresses);

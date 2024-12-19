@@ -45,7 +45,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
         });
       }
 
-      await auth.call(
+      await auth(
         context,
         () => auth.attemptSignIn(
           strategy: newStrategy,
@@ -63,24 +63,22 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
     final auth = ClerkAuth.of(context);
     final translator = auth.translator;
     final env = auth.env;
-    final otherStrategies =
-        env.config.firstFactors.where((f) => f.isOtherStrategy);
-    final hasPasswordStrategy =
-        env.config.firstFactors.contains(clerk.Strategy.password);
-    final identifiers = env.config.identificationStrategies
-        .where((i) => i.isOauth == false)
+    final identifiers = env.identificationStrategies
         .map((i) => i.toString().replaceAll('_', ' '));
     final factor = auth.client.signIn?.supportedFirstFactors
         .firstWhereOrNull((f) => f.strategy == _strategy);
     final safeIdentifier = factor?.safeIdentifier;
 
+    if (identifiers.isEmpty) {
+      return emptyWidget;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const ClerkErrorMessage(),
         Padding(
-          padding: horizontalPadding32 + bottomPadding8,
+          padding: bottomPadding8,
           child: ClerkTextFormField(
             key: const Key('identifier'),
             label: translator.alternatives(identifiers.toList()).capitalized,
@@ -98,34 +96,40 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
         Closeable(
           key: const Key('emailLinkMessage'),
           closed: _strategy != clerk.Strategy.emailLink,
-          child: Padding(
-            padding: horizontalPadding32,
-            child: Text(
-              translator.translate(
-                'Click on the link that‘s been sent to ### and then check back here',
-                substitution: _identifier,
-              ),
-              maxLines: 2,
-              style: ClerkTextStyle.inputLabel,
+          child: Text(
+            translator.translate(
+              'Click on the link that‘s been sent to ### and then check back here',
+              substitution: _identifier,
             ),
+            maxLines: 2,
+            style: ClerkTextStyle.inputLabel,
           ),
         ),
-        ClerkCodeInput(
-          key: const Key('code'),
-          open: _strategy.requiresCode,
-          title: translator.translate('Enter code sent to ###',
-              substitution: safeIdentifier),
-          onSubmit: (code) async {
-            await _continue(auth, code: code, strategy: _strategy);
-            return false;
-          },
+        Closeable(
+          closed: _strategy.requiresCode == false,
+          child: Padding(
+            padding: verticalPadding8,
+            child: ClerkCodeInput(
+              key: const Key('code'),
+              title: safeIdentifier is String
+                  ? translator.translate(
+                      'Enter the code sent to ###',
+                      substitution: safeIdentifier,
+                    )
+                  : translator.translate('Enter the code sent to you'),
+              onSubmit: (code) async {
+                await _continue(auth, code: code, strategy: _strategy);
+                return false;
+              },
+            ),
+          ),
         ),
         Closeable(
           closed: _strategy != clerk.Strategy.password || _hasIdent == false,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (hasPasswordStrategy)
+              if (env.hasPasswordStrategy)
                 Padding(
                   padding: horizontalPadding32 + verticalPadding8,
                   child: ClerkTextFormField(
@@ -136,13 +140,13 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
                         _continue(auth, strategy: clerk.Strategy.password),
                   ),
                 ),
-              if (otherStrategies.isNotEmpty) ...[
-                if (hasPasswordStrategy)
+              if (env.hasOtherStrategies) ...[
+                if (env.hasPasswordStrategy)
                   const Padding(
                     padding: horizontalPadding32,
                     child: OrDivider(),
                   ),
-                for (final strategy in otherStrategies)
+                for (final strategy in env.otherStrategies)
                   if (StrategyButton.supports(strategy))
                     Padding(
                       padding: topPadding4 + horizontalPadding32,
@@ -171,7 +175,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
             ],
           ),
         ),
-        const ClerkErrorMessage(),
         verticalMargin32,
       ],
     );

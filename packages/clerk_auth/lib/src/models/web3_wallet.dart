@@ -10,17 +10,14 @@ class Web3Wallet extends UserIdentifyingData {
   /// Constructor
   const Web3Wallet({
     required super.id,
+    required super.verification,
     required this.web3Wallet,
-    required this.verification,
     required this.updatedAt,
     required this.createdAt,
-  });
+  }) : super(type: IdentifierType.web3wallet);
 
   /// web3 wallet
   final String web3Wallet;
-
-  /// verification
-  final Verification verification;
 
   /// updated at
   @JsonKey(fromJson: intToDateTime)

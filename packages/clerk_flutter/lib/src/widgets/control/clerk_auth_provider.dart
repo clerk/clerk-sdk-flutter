@@ -71,7 +71,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
     clerk.Strategy strategy, {
     void Function(clerk.AuthError)? onError,
   }) async {
-    final auth = ClerkAuth.of(context);
+    final auth = ClerkAuth.of(context, listen: false);
     final client = await call(
       context,
       () => auth.oauthSignIn(strategy: strategy),
@@ -122,7 +122,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
       if (context.mounted) {
         Overlay.of(context).insert(_loadingOverlay);
       }
-      result = await fn.call();
+      result = await fn();
     } on clerk.AuthError catch (error) {
       _errors.add(error);
       onError?.call(error);

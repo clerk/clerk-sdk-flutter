@@ -45,7 +45,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
         });
       }
 
-      await auth.call(
+      await auth(
         context,
         () => auth.attemptSignIn(
           strategy: newStrategy,
@@ -78,7 +78,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const ClerkErrorMessage(),
         Padding(
           padding: horizontalPadding32 + bottomPadding8,
           child: ClerkTextFormField(
@@ -110,15 +109,22 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
             ),
           ),
         ),
-        ClerkCodeInput(
-          key: const Key('code'),
-          open: _strategy.requiresCode,
-          title: translator.translate('Enter code sent to ###',
-              substitution: safeIdentifier),
-          onSubmit: (code) async {
-            await _continue(auth, code: code, strategy: _strategy);
-            return false;
-          },
+        Closeable(
+          closed: _strategy.requiresCode == false,
+          child: Padding(
+            padding: horizontalPadding32 + verticalPadding8,
+            child: ClerkCodeInput(
+              key: const Key('code'),
+              title: translator.translate(
+                'Enter code sent to ###',
+                substitution: safeIdentifier,
+              ),
+              onSubmit: (code) async {
+                await _continue(auth, code: code, strategy: _strategy);
+                return false;
+              },
+            ),
+          ),
         ),
         Closeable(
           closed: _strategy != clerk.Strategy.password || _hasIdent == false,
@@ -171,7 +177,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
             ],
           ),
         ),
-        const ClerkErrorMessage(),
         verticalMargin32,
       ],
     );

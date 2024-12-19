@@ -224,7 +224,7 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
   Future<void> updateEditingValue(TextEditingValue value) async {
     if (value.text.length == widget.length) {
       setState(() => loading = true);
-      final succeeded = await widget.onSubmit.call(value.text);
+      final succeeded = await widget.onSubmit(value.text);
       if (succeeded == false) {
         _editingValue = const TextEditingValue(
           text: '',

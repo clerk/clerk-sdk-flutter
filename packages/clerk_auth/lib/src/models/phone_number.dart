@@ -10,14 +10,14 @@ class PhoneNumber extends UserIdentifyingData {
   /// Constructor
   const PhoneNumber({
     required super.id,
+    required super.verification,
     required this.phoneNumber,
     required this.reserved,
     required this.reservedForSecondFactor,
     required this.defaultSecondFactor,
-    required this.verification,
     required this.updatedAt,
     required this.createdAt,
-  });
+  }) : super(type: IdentifierType.phoneNumber);
 
   /// phone number
   final String phoneNumber;
@@ -30,9 +30,6 @@ class PhoneNumber extends UserIdentifyingData {
 
   /// default second factor
   final bool defaultSecondFactor;
-
-  /// verification
-  final Verification? verification;
 
   /// updated at
   @JsonKey(fromJson: intToDateTime)

@@ -44,7 +44,10 @@ enum Status {
   verified,
 
   /// complete
-  complete;
+  complete,
+
+  /// expired
+  expired;
 
   /// is active?
   bool get isActive => this == active;
@@ -138,7 +141,10 @@ enum Stage {
     return switch (status) {
       Status.needsFirstFactor => first,
       Status.needsSecondFactor => second,
-      _ => throw AuthError(message: 'No Stage for $status'),
+      _ => throw AuthError(
+          message: 'No Stage for ###',
+          substitution: status.toString(),
+        ),
     };
   }
 
@@ -193,4 +199,44 @@ enum Field {
 
   @override
   String toString() => _$FieldEnumMap[this]!;
+}
+
+/// [IdentifierType] object
+enum IdentifierType {
+  /// phone number
+  phoneNumber('phone_number', Strategy.phoneCode),
+
+  /// email address
+  emailAddress('email_address', Strategy.emailCode),
+
+  /// web3 wallet
+  web3wallet('web3_wallet', Strategy.phoneCode),
+  ;
+
+  const IdentifierType(this.name, this.verificationStrategy);
+
+  /// the [name] of the identifier type
+  final String name;
+
+  /// The [Strategy] used to verify the identifier
+  final Strategy verificationStrategy;
+
+  /// String to use building urls
+  String get urlSegment {
+    if (name.endsWith('s')) {
+      return '${name}es';
+    }
+    return '${name}s';
+  }
+
+  static final _phoneRE = RegExp(r'[^0-9+]');
+
+  /// Sanitize an [identifier] according to this type's rules
+  ///
+  String sanitize(String identifier) {
+    return switch (this) {
+      phoneNumber => identifier.replaceAll(_phoneRE, ''),
+      _ => identifier,
+    };
+  }
 }

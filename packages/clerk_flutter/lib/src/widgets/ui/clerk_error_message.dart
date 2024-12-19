@@ -13,9 +13,12 @@ class ClerkErrorMessage extends StatelessWidget {
   const ClerkErrorMessage({super.key});
 
   Future<void> _showError(BuildContext context, clerk.AuthError error) async {
-    await null;
+    final translator = ClerkAuth.translatorOf(context);
+    final message = await translator.translateAsync(
+      error.message,
+      substitutions: error.messageSubstitutions,
+    );
     if (context.mounted) {
-      final translator = ClerkAuth.translatorOf(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           shape: const RoundedRectangleBorder(
@@ -25,10 +28,7 @@ class ClerkErrorMessage extends StatelessWidget {
             ),
           ),
           content: Text(
-            translator.translate(
-              error.message,
-              substitution: error.substitution,
-            ),
+            message,
             style: ClerkTextStyle.subtitle.copyWith(color: ClerkColors.white),
           ),
         ),

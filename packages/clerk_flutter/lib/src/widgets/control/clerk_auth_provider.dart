@@ -149,8 +149,9 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   /// but may still not be acceptable to the back end
   String? checkPassword(String? password, String? confirmation) {
     if (password != confirmation) {
-      return translator
-          .translate('Password and password confirmation must match');
+      return translator.translate(
+        'Password and password confirmation must match',
+      );
     }
 
     if (password case String password when password.isNotEmpty) {

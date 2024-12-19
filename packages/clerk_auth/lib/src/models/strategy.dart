@@ -198,7 +198,7 @@ class Strategy {
       Field.emailAddress => Strategy.emailCode,
       _ => throw AuthError(
           message: 'No way to verify ###',
-          substitution: field.name,
+          messageSubstitutions: [field.name],
         ),
     };
   }

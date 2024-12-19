@@ -74,7 +74,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
               key: const Key('phone_code'),
               title: translator.translate('Verify your phone number'),
               subtitle: translator.translate(
-                'Enter code sent to ###',
+                'Enter the code sent to ###',
                 substitution: _values[clerk.UserAttribute.phoneNumber],
               ),
               onSubmit: (code) async {
@@ -96,7 +96,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
               key: const Key('email_code'),
               title: translator.translate('Verify your email address'),
               subtitle: translator.translate(
-                'Enter code sent to ###',
+                'Enter the code sent to ###',
                 substitution: _values[clerk.UserAttribute.emailAddress],
               ),
               onSubmit: (code) async {

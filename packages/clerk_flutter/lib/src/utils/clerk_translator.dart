@@ -5,31 +5,43 @@ abstract class ClerkTranslator {
   const ClerkTranslator();
 
   /// the character sequence to replace with [substitution] during
-  /// a call to [translate]
-  final substitutionKey = '###';
+  /// a call to [translate]. By default this is `###` for the first item
+  /// (index 0) and `#<index + 1>#` for subsequent indices (index 1 or more)
+  ///
+  String substitutionKey([int idx = 0]) => idx < 1 ? '###' : '#${idx + 1}#';
 
   /// Translate a [phrase]] into a different language. Identity function by default
   /// for English
   ///
   /// A [substitution] or multiple [substitutions] for keys inside the [phrase]:
   ///
-  /// if a single [substitution] is present, replace the first instance of
-  /// [substitutionKey] (default `###`) with it
+  /// If a single [substitution] is present, replace the first instance of
+  /// `substitutionKey()` with it
   ///
-  /// if multiple [substitutions] are present, replace the first found character sequences `#<n>#`
-  /// with each substitution where [n] is the 1-based index into the array.
+  /// If multiple [substitutions] are present, use each substitution to
+  /// replace the first found appropriate character sequence:
+  /// `substitutionKey(index)`
   ///
-  /// This allows word order to vary across different languages without having to manipulate the
-  /// [substitutions] array, viz:
+  /// This allows word order to vary across different languages without having
+  /// to manipulate the [substitutions] array, viz:
   ///
-  /// `translate('#1# bites #2#', substitutions: ['man', 'dog'])`
+  /// `translate('### bites #2#', substitutions: ['man', 'dog'])`
   /// vs
-  /// `translate('#2# is bitten by #1#', substitutions: ['man', 'dog'])`
+  /// `translate('#2# is bitten by ###', substitutions: ['man', 'dog'])`
   ///
   String translate(
     String phrase, {
     String? substitution,
     List<String> substitutions = const [],
+  });
+
+  /// An asynchronous version of [translate], for situations in which the
+  /// translation might not immediately be to hand. Parameters as above.
+  ///
+  Future<String> translateAsync(
+    String phrase, {
+    String? substitution,
+    List<String>? substitutions,
   });
 
   /// A method that takes a list of [items] e.g. \['first', 'second', 'third'\]
@@ -55,17 +67,35 @@ class DefaultClerkTranslator extends ClerkTranslator {
   const DefaultClerkTranslator();
 
   @override
-  String translate(String phrase,
-      {String? substitution, List<String> substitutions = const []}) {
+  String translate(
+    String phrase, {
+    String? substitution,
+    List<String>? substitutions,
+  }) {
     if (substitution case String sub) {
-      return phrase.replaceFirst(substitutionKey, sub);
+      return phrase.replaceFirst(substitutionKey(), sub);
     }
 
-    for (int i = 0; i < substitutions.length; ++i) {
-      phrase = phrase.replaceFirst('#${i + 1}#', substitutions[i]);
+    if (substitutions case List<String> substitutions) {
+      for (int i = 0; i < substitutions.length; ++i) {
+        phrase = phrase.replaceFirst(substitutionKey(i), substitutions[i]);
+      }
     }
 
     return phrase;
+  }
+
+  @override
+  Future<String> translateAsync(
+    String phrase, {
+    String? substitution,
+    List<String>? substitutions,
+  }) async {
+    return translate(
+      phrase,
+      substitution: substitution,
+      substitutions: substitutions,
+    );
   }
 
   @override

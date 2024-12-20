@@ -66,6 +66,9 @@ class Api with Logging {
   static const _kErrorsKey = 'errors';
   static const _kClientKey = 'client';
   static const _kResponseKey = 'response';
+  static const _kClerkAPIVersion = 'clerk-api-version';
+  static const _kXFlutterSDKVersion = 'x-flutter-sdk-version';
+  static const _kXMobile = 'x-mobile';
 
   static const _defaultPollDelay = Duration(seconds: 55);
 
@@ -674,6 +677,9 @@ class Api with Logging {
           : 'application/x-www-form-urlencoded',
       if (_tokenCache.clientToken.isNotEmpty) //
         HttpHeaders.authorizationHeader: _tokenCache.clientToken,
+      _kClerkAPIVersion: ClerkConstants.clerkApiVersion,
+      _kXFlutterSDKVersion: ClerkConstants.flutterSdkVersion,
+      _kXMobile: '1',
       ...?headers,
     };
   }

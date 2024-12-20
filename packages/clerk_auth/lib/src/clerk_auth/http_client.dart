@@ -74,9 +74,13 @@ class DefaultHttpClient implements HttpClient {
   }) async {
     final request = Request(method.toString(), uri);
 
-    if (headers != null) request.headers.addAll(headers);
+    if (headers case Map<String, String> headers) {
+      request.headers.addAll(headers);
+    }
 
-    if (params != null) request.bodyFields = params.toStringMap();
+    if (params case Map<String, dynamic> params) {
+      request.bodyFields = params.toStringMap();
+    }
 
     final streamedResponse = await request.send();
     return Response.fromStream(streamedResponse);

@@ -86,8 +86,8 @@ class ClerkMaterialButton extends StatelessWidget {
         ),
         child: dark
             ? Ink(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
                     colors: [ClerkColors.charcoalGrey, ClerkColors.gunmetal],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,

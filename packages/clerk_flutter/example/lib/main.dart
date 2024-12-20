@@ -41,31 +41,26 @@ class ExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ClerkAuth(
-        publishableKey: publishableKey,
-        child: Scaffold(
+    return ClerkAuth(
+      publishableKey: publishableKey,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        builder: (BuildContext context, Widget? child) {
+          return ClerkErrorListener(child: child!);
+        },
+        home: Scaffold(
           backgroundColor: ClerkColors.whiteSmoke,
           body: SafeArea(
-            child: Column(
-              children: [
-                const ClerkErrorMessage(),
-                Expanded(
-                  child: Padding(
-                    padding: horizontalPadding32,
-                    child: Center(
-                      child: ClerkAuthBuilder(
-                        signedInBuilder: (context, auth) =>
-                            const ClerkUserButton(),
-                        signedOutBuilder: (context, auth) {
-                          return const ClerkAuthenticationWidget();
-                        },
-                      ),
-                    ),
-                  ),
+            child: Padding(
+              padding: horizontalPadding32,
+              child: Center(
+                child: ClerkAuthBuilder(
+                  signedInBuilder: (context, auth) => const ClerkUserButton(),
+                  signedOutBuilder: (context, auth) {
+                    return const ClerkAuthenticationWidget();
+                  },
                 ),
-              ],
+              ),
             ),
           ),
         ),

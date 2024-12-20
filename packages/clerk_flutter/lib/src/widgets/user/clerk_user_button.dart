@@ -91,9 +91,9 @@ class _ClerkUserButtonState extends State<ClerkUserButton> {
 
   Future<void> _signOut<T>(BuildContext context, ClerkAuthProvider auth) async {
     if (auth.client.sessions.length == 1) {
-      auth(context, () => auth.signOut());
+      await auth(context, () => auth.signOut());
     } else {
-      auth(context, () => auth.signOutOf(auth.client.activeSession!));
+      await auth(context, () => auth.signOutOf(auth.client.activeSession!));
     }
   }
 

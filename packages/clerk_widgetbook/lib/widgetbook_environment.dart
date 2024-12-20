@@ -2,10 +2,6 @@ import 'dart:io';
 
 /// Environment variables for the Widgetbook.
 class WidgetbookEnvironment {
-  const WidgetbookEnvironment._(this.pexelsApiKey);
-
-  static const _kPexelsApiKey = 'PEXELS_API_KEY';
-
   /// Creates a new [WidgetbookEnvironment].
   factory WidgetbookEnvironment() {
     final pexelsApiKey = Platform.environment[_kPexelsApiKey];
@@ -14,6 +10,10 @@ class WidgetbookEnvironment {
     }
     return WidgetbookEnvironment._(pexelsApiKey);
   }
+
+  const WidgetbookEnvironment._(this.pexelsApiKey);
+
+  static const _kPexelsApiKey = 'PEXELS_API_KEY';
 
   /// The Pexels API key.
   final String pexelsApiKey;

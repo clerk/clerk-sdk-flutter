@@ -47,9 +47,9 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   final ClerkTranslator translator;
 
   /// The [clerk.AuthError] stream
-  late final errorStream = _errors.stream.asBroadcastStream();
+  late final errorStream = _errors.stream;
 
-  final _errors = StreamController<clerk.AuthError>();
+  final _errors = StreamController<clerk.AuthError>.broadcast();
   final OverlayEntry _loadingOverlay;
 
   static const _kRotatingTokenNonce = 'rotating_token_nonce';

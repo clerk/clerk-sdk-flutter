@@ -83,7 +83,6 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
 
 class _PhoneInput extends StatefulWidget {
   const _PhoneInput({
-    super.key,
     required this.initial,
     required this.defaultCountry,
     required this.onChanged,

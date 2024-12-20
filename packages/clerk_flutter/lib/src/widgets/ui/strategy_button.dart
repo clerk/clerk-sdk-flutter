@@ -54,9 +54,9 @@ class StrategyButton extends StatelessWidget {
           child: MaterialButton(
             onPressed: onClick,
             elevation: 2.0,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: borderRadius4,
-              side: const BorderSide(color: ClerkColors.dawnPink),
+              side: BorderSide(color: ClerkColors.dawnPink),
             ),
             child: Padding(
               padding: verticalPadding4,

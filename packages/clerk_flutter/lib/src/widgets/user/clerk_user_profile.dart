@@ -102,7 +102,9 @@ class ClerkUserProfile extends StatelessWidget {
     if (submitted) {
       if (_validate(identifier, type)) {
         await auth.addIdentifyingData(identifier, type);
-        if (context.mounted) _verifyIdentifyingData(context, auth, identifier);
+        if (context.mounted) {
+          await _verifyIdentifyingData(context, auth, identifier);
+        }
       } else {
         throw clerk.AuthError(
           message: "$title '###' is invalid",

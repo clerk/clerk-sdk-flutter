@@ -598,7 +598,10 @@ class Api with Logging {
       );
     } else {
       logSevere(body);
-      return ApiResponse(status: resp.statusCode, errors: errors);
+      return ApiResponse(
+        status: resp.statusCode,
+        errors: errors,
+      );
     }
   }
 

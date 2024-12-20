@@ -20,23 +20,16 @@ class ClerkSSOPanel extends StatefulWidget {
   State<ClerkSSOPanel> createState() => _ClerkSSOPanelState();
 }
 
-Widget _buttonFor(clerk.SocialConnection connection) {
-  return SocialConnectionButton(
-    key: ValueKey<clerk.SocialConnection>(connection),
-    connection: connection,
-  );
-}
-
 class _ClerkSSOPanelState extends State<ClerkSSOPanel> {
   @override
   Widget build(BuildContext context) {
     final auth = ClerkAuth.of(context);
-    final env = auth.env;
-    final oauthStrategies =
-        env.config.identificationStrategies.where((i) => i.isOauth);
-    final socialConnections = env.user.socialSettings.values.where(
-      (s) => oauthStrategies.contains(s.strategy),
-    );
+    final oauthStrategies = auth.env.config.identificationStrategies //
+        .where((i) => i.isOauth)
+        .toList();
+    final socialConnections = auth.env.user.socialSettings.values //
+        .where((s) => oauthStrategies.contains(s.strategy))
+        .toList();
 
     if (socialConnections.isEmpty) {
       return emptyWidget;
@@ -44,14 +37,16 @@ class _ClerkSSOPanelState extends State<ClerkSSOPanel> {
 
     return Row(
       children: [
-        Expanded(child: _buttonFor(socialConnections.first)),
-        for (final connection in socialConnections.skip(1)) //
+        for (final (index, connection) in socialConnections.indexed) ...[
           Expanded(
-            child: Padding(
-              padding: leftPadding8,
-              child: _buttonFor(connection),
+            child: SocialConnectionButton(
+              key: ValueKey<clerk.SocialConnection>(connection),
+              connection: connection,
             ),
           ),
+          if (index < socialConnections.length - 1) //
+            horizontalMargin8,
+        ],
       ],
     );
   }

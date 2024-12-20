@@ -30,8 +30,8 @@ class ClerkOrganizationSwitcherWidget extends StatelessWidget {
       child: MenuAnchor(
         alignmentOffset: const Offset(0.0, 8.0),
         style: MenuStyle(
-          backgroundColor: WidgetStateProperty.all(Colors.transparent),
-          shadowColor: WidgetStateProperty.all(Colors.transparent),
+          backgroundColor: MaterialStateProperty.all(Colors.transparent),
+          shadowColor: MaterialStateProperty.all(Colors.transparent),
         ),
         menuChildren: [
           SizedBox(

@@ -7,7 +7,7 @@ import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
-/// The <OrganizationProfile /> component is used to render a beautiful, full-featured
+/// The [OrganizationProfile] component is used to render a beautiful, full-featured
 /// organization management UI that allows users to manage their organization profile and
 /// security settings.
 ///

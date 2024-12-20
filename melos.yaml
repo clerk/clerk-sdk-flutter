@@ -13,29 +13,29 @@ scripts:
   clean:
     name: Clean all
     description: Run flutter clean in all packages
-    run: melos exec -- flutter clean
+    run: melos exec -- fvm flutter clean
 
   # Pub get all packages
   get:
     name: Get all
     description: Run pub get in all packages
-    run: melos exec -o -- dart pub get
+    run: melos exec -o -- fvm flutter pub get
 
   # Pub upgrade all packages
   upgrade:
     name: Upgrade all
     description: Run pub upgrade in all packages
-    run: melos exec -o -- dart pub upgrade
+    run: melos exec -o -- fvm flutter pub upgrade
 
   # Build runner (code generation)
   brunner:
-    run: melos exec -o -- dart run build_runner build --delete-conflicting-outputs
+    run: melos exec -o -- fvm dart run build_runner build --delete-conflicting-outputs
     packageFilters:
       scope: "clerk_auth"
 
   # Format code
   format:
-    run: melos exec -- dart format --line-length=80 MELOS_PACKAGE_PATH
+    run: melos exec -- fvm dart format --line-length=80 MELOS_PACKAGE_PATH
 
   # Run build and format code
   brunner_format:

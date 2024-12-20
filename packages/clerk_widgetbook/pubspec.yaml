@@ -4,24 +4,23 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
-  flutter: '>=3.7.0'
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
 
 dependencies:
+  clerk_flutter: any
+  flutter_svg: ^2.0.10+1
+  widgetbook: ^3.8.1
+  widgetbook_annotation: ^3.2.0
   flutter:
     sdk: flutter
-  widgetbook: ^3.8.1
-  widgetbook_annotation: ^3.1.0
-  clerk_flutter: any
-  faker: ^2.2.0
-  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
+  build_runner: any
+  flutter_lints: ^3.0.1
+  widgetbook_generator: ^3.9.1
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
-  widgetbook_generator: ^3.8.0
-  build_runner: ^2.4.6
 
 flutter:
   uses-material-design: true

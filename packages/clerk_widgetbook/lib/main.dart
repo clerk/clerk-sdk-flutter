@@ -22,10 +22,7 @@ class WidgetbookApp extends StatelessWidget {
         InspectorAddon(),
         TimeDilationAddon(),
         ZoomAddon(),
-        TextScaleAddon(
-          min: 1.0,
-          max: 2.0,
-        ),
+        TextScaleAddon(scales: [1.0, 1.25, 1.5, 2.0, 3.0]),
         LocalizationAddon(
           locales: [const Locale('en', 'US')],
           localizationsDelegates: [

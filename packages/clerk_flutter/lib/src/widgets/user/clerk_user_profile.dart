@@ -347,7 +347,7 @@ class _EditableUserDataState extends State<_EditableUserData> {
   Future<void> _chooseImage(BuildContext context) async {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.camera);
-    if (image case XFile image when context.mounted) {
+    if (context.mounted && image != null) {
       setState(() => this.image = File(image.path));
     }
   }

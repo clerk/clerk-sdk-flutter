@@ -1,0 +1,56 @@
+name: Push/PR Checks
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  pr_check:
+    name: PR Check Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo (self)
+        uses: actions/checkout@v4
+
+      - name: Install flutter
+        uses: flutter-actions/setup-flutter@v4
+        with:
+          version: '3.10.0'
+
+      - name: 'Install tools: melos and fvm'
+        run: dart pub global activate melos && dart pub global activate fvm
+
+      - name: Install top-level dependencies
+        run: dart pub get
+
+      - name: Run melos
+        run: melos bs && melos run get
+
+      - name: Verify formatting of clerk_auth
+        run: dart format --output=none --set-exit-if-changed .
+        working-directory: packages/clerk_auth
+
+      - name: Verify formatting of clerk_flutter
+        run: dart format --output=none --set-exit-if-changed .
+        working-directory: packages/clerk_flutter
+
+      - name: Analyze clerk_auth
+        run: dart analyze
+        working-directory: packages/clerk_auth
+
+      - name: Analyze clerk_flutter
+        run: flutter analyze
+        working-directory: packages/clerk_flutter
+
+      - name: Prepare test environment
+        env:
+          TEST_ENV_BASE64: ${{ secrets.TEST_ENV_BASE64 }}
+        run: |
+          echo $TEST_ENV_BASE64 | base64 --decode > packages/clerk_auth/.env.test
+
+      - name: Run tests in clerk_auth
+        run: dart test
+        working-directory: packages/clerk_auth

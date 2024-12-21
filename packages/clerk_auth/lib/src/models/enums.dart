@@ -143,7 +143,7 @@ enum Stage {
       Status.needsSecondFactor => second,
       _ => throw AuthError(
           message: 'No Stage for ###',
-          substitution: status.toString(),
+          messageSubstitutions: [status.toString()],
         ),
     };
   }

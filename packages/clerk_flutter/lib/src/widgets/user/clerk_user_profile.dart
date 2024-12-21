@@ -27,7 +27,7 @@ class ClerkUserProfile extends StatelessWidget {
         default:
           throw clerk.AuthError(
             message: "Type '###' invalid",
-            substitution: type.name,
+            messageSubstitutions: [type.name],
           );
       }
     }
@@ -92,7 +92,7 @@ class ClerkUserProfile extends StatelessWidget {
           ),
         _ => throw clerk.AuthError(
             message: "Type '###' invalid",
-            substitution: type.name,
+            messageSubstitutions: [type.name],
           ),
       },
     );
@@ -108,7 +108,7 @@ class ClerkUserProfile extends StatelessWidget {
       } else {
         throw clerk.AuthError(
           message: "$title '###' is invalid",
-          substitution: identifier,
+          messageSubstitutions: [identifier],
         );
       }
     }

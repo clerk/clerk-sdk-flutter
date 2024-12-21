@@ -113,7 +113,7 @@ class DefaultHttpClient implements HttpClient {
       String ext when _imageExts.contains(ext) => MediaType('image', ext),
       String ext => throw AuthError(
           message: 'Unknown media type for upload: ###',
-          substitution: ext,
+          messageSubstitutions: [ext],
         ),
     };
   }

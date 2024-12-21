@@ -32,25 +32,28 @@ class ClerkErrorListener extends StatefulWidget {
   static Future<void> defaultErrorHandler(
       BuildContext context, AuthError error) async {
     final translator = ClerkAuth.translatorOf(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12.0),
-            topRight: Radius.circular(12.0),
-          ),
-        ),
-        content: Text(
-          translator.translate(
-            error.message,
-            substitution: error.substitution,
-          ),
-          style: ClerkTextStyle.subtitle.copyWith(
-            color: ClerkColors.white,
-          ),
-        ),
-      ),
+    final message = await translator.translateAsync(
+      error.message,
+      substitutions: error.messageSubstitutions,
     );
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12.0),
+              topRight: Radius.circular(12.0),
+            ),
+          ),
+          content: Text(
+            message,
+            style: ClerkTextStyle.subtitle.copyWith(
+              color: ClerkColors.white,
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   @override

@@ -71,6 +71,69 @@ class _ExampleAppState extends State<ExampleApp> {
 }
 ```
 
+## Translation
+
+The default language in use for alert and UI messaging within the Clerk Flutter SDK is English. For other languages, 
+you will need to override the `ClerkTranslator`  passed in to the `ClerkAuth` or `ClerkAuthProvider` widgets via the 
+optional `translator` parameter. Translations will need to be provided for the following (hopefully self-explanatory) 
+words and phrases:
+```text
+Add account
+Add email address
+Add phone number
+Already have an account?
+Authenticator app
+Backup code
+Cancel
+Click on the link that‘s been sent to ### and then check back here
+Continue
+Don’t have an account?
+Email address
+Email address '###' is invalid
+Email address verification
+Enter the code sent to ###
+Enter the code sent to you
+First name
+Last name
+Manage account
+OK
+Optional
+or
+Passkey
+Password
+Password and password confirmation must match
+Password confirmation
+Phone number
+Phone number '###' is invalid
+Phone number verification
+Phone numbers
+PRIMARY
+Profile
+Profile details
+Sign in
+Sign in by entering a code sent to you by email
+Sign in by entering a code sent to you by text message
+Sign in to ###
+Sign out
+Sign out of all accounts
+Sign up
+Sign up to ###
+Type '###' invalid
+UNVERIFIED
+Username
+Verify your email address
+Verify your phone number
+Web3 wallet
+Welcome back! Please sign in to continue
+Welcome! Please fill in the details to get started
+```
+
+
+### Asynchronous translation
+Some translations cannot be known ahead of time e.g. arbitrary error messages from the Clerk server. An 
+asynchronous translation method `translateAsync` is provided to allow for translation generation on the fly in this 
+instance.
+
 ## License
 
 This SDK is licensed under the MIT license found in the [LICENSE](./LICENSE) file.

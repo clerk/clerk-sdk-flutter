@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:clerk_auth/src/clerk_auth/http_client.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:dart_dotenv/dart_dotenv.dart';
-import 'package:http/http.dart' show Response;
+import 'package:http/http.dart' show ByteStream, Response;
 
 class TestEnv {
   TestEnv._(this._map);
@@ -99,10 +99,11 @@ class TestHttpClient implements HttpClient {
       map.entries.map((me) => '${me.key}=${me.value}').join('&');
 
   @override
-  Future<Response> sendFile(
+  Future<Response> sendByteStream(
     HttpMethod method,
     Uri uri,
-    File file,
+    ByteStream stream,
+    int length,
     Map<String, String> headers,
   ) {
     // TODO: add tests for sendFile

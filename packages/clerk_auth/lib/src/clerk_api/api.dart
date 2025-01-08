@@ -447,10 +447,16 @@ class Api with Logging {
     try {
       final queryParams = _queryParams(HttpMethod.post, withSession: true);
       final uri = _uri('/me/profile_image', queryParams);
-
+      final length = await file.length();
       final headers = _headers(HttpMethod.post);
-
-      final resp = await _client.sendFile(HttpMethod.post, uri, file, headers);
+      final stream = http.ByteStream(file.openRead());
+      final resp = await _client.sendByteStream(
+        HttpMethod.post,
+        uri,
+        stream,
+        length,
+        headers,
+      );
       return _processResponse(resp);
     } catch (error, stacktrace) {
       logSevere('Error during fetch', error, stacktrace);

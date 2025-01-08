@@ -131,7 +131,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
             children: [
               if (env.hasPasswordStrategy)
                 Padding(
-                  padding: horizontalPadding32 + verticalPadding8,
+                  padding: verticalPadding8,
                   child: ClerkTextFormField(
                     label: translator.translate('Password'),
                     obscureText: true,
@@ -141,15 +141,12 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
                   ),
                 ),
               if (env.hasOtherStrategies) ...[
-                if (env.hasPasswordStrategy)
-                  const Padding(
-                    padding: horizontalPadding32,
-                    child: OrDivider(),
-                  ),
+                if (env.hasPasswordStrategy) //
+                  const OrDivider(),
                 for (final strategy in env.otherStrategies)
                   if (StrategyButton.supports(strategy))
                     Padding(
-                      padding: topPadding4 + horizontalPadding32,
+                      padding: topPadding4,
                       child: StrategyButton(
                           key: ValueKey<clerk.Strategy>(strategy),
                           strategy: strategy,

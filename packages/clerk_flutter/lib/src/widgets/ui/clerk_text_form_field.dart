@@ -82,22 +82,18 @@ class ClerkTextFormField extends StatelessWidget {
         verticalMargin4,
         SizedBox(
           height: 32.0,
-          child: ClipRRect(
-            clipBehavior: Clip.antiAlias,
-            borderRadius: borderRadius8,
-            child: DecoratedBox(
-              decoration: insetBoxShadowDecoration,
-              child: _TextField(
-                label: label,
-                optional: optional,
-                obscureText: obscureText,
-                onChanged: onChanged,
-                onSubmit: onSubmit,
-                initial: initial,
-                onObscure: onObscure,
-                validator: validator,
-                autofocus: autofocus,
-              ),
+          child: DecoratedBox(
+            decoration: inputBoxBorderDecoration,
+            child: _TextField(
+              label: label,
+              optional: optional,
+              obscureText: obscureText,
+              onChanged: onChanged,
+              onSubmit: onSubmit,
+              initial: initial,
+              onObscure: onObscure,
+              validator: validator,
+              autofocus: autofocus,
             ),
           ),
         ),

@@ -68,7 +68,7 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
         ),
         verticalMargin4,
         DecoratedBox(
-          decoration: insetBoxShadowDecoration,
+          decoration: inputBoxBorderDecoration,
           child: _PhoneInput(
             initial: initial,
             defaultCountry: defaultCountry,

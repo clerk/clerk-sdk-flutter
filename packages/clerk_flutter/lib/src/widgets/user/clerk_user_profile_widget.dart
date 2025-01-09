@@ -102,10 +102,7 @@ class _SecondChild extends StatelessWidget {
       ],
     );
     final primaryTag = DecoratedBox(
-      decoration: insetBoxShadowDecoration.copyWith(
-        color: ClerkColors.desertStorm,
-        borderRadius: borderRadius4,
-      ),
+      decoration: inputBoxBorderDecoration,
       child: Padding(
         padding: verticalPadding4 + horizontalPadding8,
         child: const Text(

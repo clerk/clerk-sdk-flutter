@@ -24,8 +24,9 @@ export 'persistor.dart';
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
   Auth({
-    required String publishableKey,
+    required this.publishableKey,
     required Persistor persistor,
+    this.telemetry = true,
     HttpClient? client,
     SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
   }) : _api = Api(
@@ -35,15 +36,25 @@ class Auth {
           pollMode: pollMode,
         );
 
+  /// The injected Clerk publishable key
+  final String publishableKey;
+
+  /// Whether or not to send telemetry data (default true)
+  final bool telemetry;
+
   final Api _api;
 
   static const _codeLength = 6;
 
-  /// JsVersion of API
-  static const jsVersion = '4.70.0';
-
   /// default redirect URL for use with oAuth
   static const oauthRedirect = 'https://www.clerk.com/oauth-redirect';
+
+  /// Are we in development mode?
+  bool get isDevMode => env.display.instanceEnvironmentType.isDevelopment;
+
+  static const _telemetryPeriod = Duration(seconds: 27);
+  static final _telemetricEvents = <TelemetricEvent>[];
+  static Timer? _telemetryTimer;
 
   /// The [Environment] object
   ///
@@ -119,6 +130,32 @@ class Auth {
       throw AuthError(code: resp.status, message: resp.errorMessage);
     }
     return resp;
+  }
+
+  /// Send a telemetry event to the backend.
+  ///
+  Future<void> sendTelemetry(
+    String event, {
+    required Map<String, dynamic> payload,
+  }) async {
+    if (isDevMode && telemetry) {
+      _telemetricEvents.add(
+        TelemetricEvent(
+          event: event,
+          it: env.display.instanceEnvironmentType.toString(),
+          pk: publishableKey,
+          payload: payload,
+        ),
+      );
+      _telemetryTimer ??= Timer(_telemetryPeriod, _sendTelemetry);
+    }
+  }
+
+  Future<void> _sendTelemetry() async {
+    final events = [..._telemetricEvents];
+    _telemetricEvents.clear();
+    _telemetryTimer = null;
+    await _api.sendTelemetry(events);
   }
 
   /// Sign out of all [Session]s and delete the current [Client]

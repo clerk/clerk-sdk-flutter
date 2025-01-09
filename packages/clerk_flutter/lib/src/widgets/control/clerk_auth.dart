@@ -82,9 +82,15 @@ class ClerkAuth extends StatefulWidget {
   /// get the stream of [clerk.AuthError]
   static Stream<clerk.AuthError> errorStreamOf(BuildContext context) =>
       of(context, listen: false).errorStream;
+
+  Map<String, dynamic> _toJson() => {
+        'component': toString(),
+        'poll_mode': pollMode.toString(),
+        'primary_instance': auth == null,
+      };
 }
 
-class _ClerkAuthState extends State<ClerkAuth> {
+class _ClerkAuthState extends State<ClerkAuth> with TelemetryExtensions {
   final _completer = Completer<ClerkAuthProvider>();
 
   @override
@@ -103,13 +109,36 @@ class _ClerkAuthState extends State<ClerkAuth> {
     }
   }
 
+  void _report(void Function(clerk.Auth) callback) {
+    if (widget.auth case clerk.Auth auth) {
+      callback(auth);
+    } else {
+      _completer.future.then(callback);
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _report((auth) => reportComponentMounted(auth, widget._toJson()));
+  }
+
   @override
   void dispose() {
+    _report((auth) => reportComponentDismounted(auth, widget._toJson()));
     if (widget.auth == null) {
       _completer.future.then((auth) => auth.terminate());
     }
-
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant ClerkAuth oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final json = widget._toJson();
+    if (json.deepEqual(oldWidget._toJson()) == false) {
+      _report((auth) => reportComponentUpdated(auth, json));
+    }
   }
 
   @override

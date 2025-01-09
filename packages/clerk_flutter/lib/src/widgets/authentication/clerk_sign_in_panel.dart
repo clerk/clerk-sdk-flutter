@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 /// connections. You can further customize you [ClerkSignInPanel] by passing additional
 /// properties.
 ///
-class ClerkSignInPanel extends StatefulWidget {
+class ClerkSignInPanel extends TelemetricStatefulWidget {
   /// Constructs a new [ClerkSignInPanel].
   const ClerkSignInPanel({super.key});
 
@@ -18,7 +18,7 @@ class ClerkSignInPanel extends StatefulWidget {
   State<ClerkSignInPanel> createState() => _ClerkSignInPanelState();
 }
 
-class _ClerkSignInPanelState extends State<ClerkSignInPanel> {
+class _ClerkSignInPanelState extends TelemetricState<ClerkSignInPanel> {
   clerk.Strategy _strategy = clerk.Strategy.password;
   String _identifier = '';
   String _password = '';

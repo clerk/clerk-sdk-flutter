@@ -44,6 +44,7 @@ abstract class HttpClient {
     Uri uri, {
     Map<String, String>? headers,
     Map<String, dynamic>? params,
+    String? body,
   });
 
   /// Upload a [File] to the back end, and receive a [Response]
@@ -69,6 +70,7 @@ class DefaultHttpClient implements HttpClient {
     Uri uri, {
     Map<String, String>? headers,
     Map<String, dynamic>? params,
+    String? body,
   }) async {
     final request = Request(method.toString(), uri);
 
@@ -78,6 +80,10 @@ class DefaultHttpClient implements HttpClient {
 
     if (params case Map<String, dynamic> params) {
       request.bodyFields = params.toStringMap();
+    }
+
+    if (body case String body) {
+      request.body = body;
     }
 
     final streamedResponse = await request.send();

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 /// https://clerk.com/docs/components/authentication/sign-up
 ///
 @immutable
-class ClerkSignUpPanel extends StatefulWidget {
+class ClerkSignUpPanel extends TelemetricStatefulWidget {
   /// Construct a new [ClerkSignUpPanel]
   const ClerkSignUpPanel({super.key});
 
@@ -19,7 +19,7 @@ class ClerkSignUpPanel extends StatefulWidget {
   State<ClerkSignUpPanel> createState() => _ClerkSignUpPanelState();
 }
 
-class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> {
+class _ClerkSignUpPanelState extends TelemetricState<ClerkSignUpPanel> {
   static final _phoneNumberRE = RegExp(r'[^0-9+]');
 
   final _values = <clerk.UserAttribute, String>{};

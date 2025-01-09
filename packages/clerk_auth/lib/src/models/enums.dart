@@ -201,6 +201,25 @@ enum Field {
   String toString() => _$FieldEnumMap[this]!;
 }
 
+/// [InstanceType] Clerk object
+@JsonEnum(alwaysCreate: true)
+enum InstanceType {
+  /// unknown
+  unknown,
+
+  /// development
+  development,
+
+  /// production
+  production;
+
+  /// Is this a development instance?
+  bool get isDevelopment => this == development;
+
+  @override
+  String toString() => _$InstanceTypeEnumMap[this]!;
+}
+
 /// [IdentifierType] object
 enum IdentifierType {
   /// phone number

@@ -35,8 +35,9 @@ DisplayConfig _$DisplayConfigFromJson(Map<String, dynamic> json) =>
       googleOneTapClientId: json['google_one_tap_client_id'] as String? ?? '',
       helpUrl: json['help_url'] as String? ?? '',
       homeUrl: json['home_url'] as String? ?? '',
-      instanceEnvironmentType:
-          json['instance_environment_type'] as String? ?? '',
+      instanceEnvironmentType: $enumDecodeNullable(
+              _$InstanceTypeEnumMap, json['instance_environment_type']) ??
+          InstanceType.unknown,
       logoImageUrl: json['logo_image_url'] as String? ?? '',
       logoLinkUrl: json['logo_link_url'] as String? ?? '',
       logoUrl: json['logo_url'] as String? ?? '',
@@ -87,8 +88,8 @@ Map<String, dynamic> _$DisplayConfigToJson(DisplayConfig instance) =>
         'google_one_tap_client_id': value,
       if (instance.helpUrl case final value?) 'help_url': value,
       if (instance.homeUrl case final value?) 'home_url': value,
-      if (instance.instanceEnvironmentType case final value?)
-        'instance_environment_type': value,
+      'instance_environment_type':
+          _$InstanceTypeEnumMap[instance.instanceEnvironmentType]!,
       if (instance.logoImageUrl case final value?) 'logo_image_url': value,
       if (instance.logoLinkUrl case final value?) 'logo_link_url': value,
       if (instance.logoUrl case final value?) 'logo_url': value,
@@ -104,3 +105,9 @@ Map<String, dynamic> _$DisplayConfigToJson(DisplayConfig instance) =>
       if (instance.termsUrl case final value?) 'terms_url': value,
       if (instance.userProfileUrl case final value?) 'user_profile_url': value,
     };
+
+const _$InstanceTypeEnumMap = {
+  InstanceType.unknown: 'unknown',
+  InstanceType.development: 'development',
+  InstanceType.production: 'production',
+};

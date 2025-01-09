@@ -72,6 +72,9 @@ class Api with Logging {
 
   static const _defaultPollDelay = Duration(seconds: 55);
 
+  static final _telemetryEndpoint =
+      Uri.parse('https://clerk-telemetry.com/v1/event');
+
   /// Initialise the API
   Future<void> initialize() async {
     await _tokenCache.initialize();
@@ -90,6 +93,21 @@ class Api with Logging {
   /// the domain of the Clerk front-end API server
   ///
   String get domain => _domain;
+
+  /// Sends a map of data to the telemtry endpoint
+  ///
+  Future<void> sendTelemetry(List<TelemetricEvent> events) async {
+    await _client.send(
+      HttpMethod.post,
+      _telemetryEndpoint,
+      body: json.encode({
+        'events': [...events.map((e) => e.toJson())],
+      }),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+  }
 
   /// Returns the latest [Environment] from Clerk.
   ///
@@ -210,7 +228,7 @@ class Api with Logging {
         'code': code,
         'token': token,
         if (metadata is Map) //
-          'unsafe_metadata': jsonEncode(metadata!),
+          'unsafe_metadata': json.encode(metadata!),
       },
     );
   }
@@ -246,7 +264,7 @@ class Api with Logging {
         'code': code,
         'token': token,
         if (metadata is Map) //
-          'unsafe_metadata': jsonEncode(metadata!),
+          'unsafe_metadata': json.encode(metadata!),
       },
     );
   }
@@ -656,7 +674,7 @@ class Api with Logging {
   }) =>
       {
         _kIsNative: true,
-        _kClerkJsVersion: Auth.jsVersion,
+        _kClerkJsVersion: ClerkConstants.jsVersion,
         if (withSession) //
           _kClerkSessionId: _tokenCache.sessionId,
         if (method.isGet) //

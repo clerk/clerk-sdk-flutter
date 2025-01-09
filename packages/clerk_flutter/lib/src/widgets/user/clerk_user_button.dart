@@ -30,7 +30,7 @@ class ClerkUserAction {
 /// [clerk.Session]s currently signed in, plus controls to sign
 /// out of all sessions
 ///
-class ClerkUserButton extends StatefulWidget {
+class ClerkUserButton extends TelemetricStatefulWidget {
   /// Construct a [ClerkUserButton]
   const ClerkUserButton({
     super.key,
@@ -49,10 +49,18 @@ class ClerkUserButton extends StatefulWidget {
   final List<ClerkUserAction>? additionalActions;
 
   @override
+  Map<String, dynamic> toJson() => {
+        'show_name': showName,
+        'session_actions': sessionActions?.map((a) => a.label).join(';') ?? '',
+        'additional_actions':
+            additionalActions?.map((a) => a.label).join(';') ?? '',
+      };
+
+  @override
   State<ClerkUserButton> createState() => _ClerkUserButtonState();
 }
 
-class _ClerkUserButtonState extends State<ClerkUserButton> {
+class _ClerkUserButtonState extends TelemetricState<ClerkUserButton> {
   final _sessions = <clerk.Session>[];
 
   List<ClerkUserAction> _defaultSessionActions(ClerkAuthProvider auth) {

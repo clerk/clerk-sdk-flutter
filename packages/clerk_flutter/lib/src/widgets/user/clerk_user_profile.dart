@@ -11,7 +11,7 @@ import 'package:phone_input/phone_input_package.dart';
 /// [ClerkUserProfile] displays user details
 /// and allows their editing
 ///
-class ClerkUserProfile extends StatelessWidget {
+class ClerkUserProfile extends TelemetricStatelessWidget {
   /// Construct a [ClerkUserProfile]
   const ClerkUserProfile({super.key});
 

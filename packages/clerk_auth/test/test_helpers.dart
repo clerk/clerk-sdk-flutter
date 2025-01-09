@@ -43,6 +43,7 @@ class TestHttpClient implements HttpClient {
     Uri uri, {
     Map<String, String>? headers,
     Map<String, dynamic>? params,
+    String? body,
   }) async {
     final key = _key(method, uri, headers, params);
 

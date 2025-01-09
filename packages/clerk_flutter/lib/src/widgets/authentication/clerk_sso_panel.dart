@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 /// https://clerk.com/docs/components/authentication/sign-up
 ///
 ///
-class ClerkSSOPanel extends StatefulWidget {
+class ClerkSSOPanel extends TelemetricStatefulWidget {
   /// Construct a new [ClerkSSOPanel]
   const ClerkSSOPanel({super.key});
 
@@ -20,7 +20,7 @@ class ClerkSSOPanel extends StatefulWidget {
   State<ClerkSSOPanel> createState() => _ClerkSSOPanelState();
 }
 
-class _ClerkSSOPanelState extends State<ClerkSSOPanel> {
+class _ClerkSSOPanelState extends TelemetricState<ClerkSSOPanel> {
   @override
   Widget build(BuildContext context) {
     final auth = ClerkAuth.of(context);

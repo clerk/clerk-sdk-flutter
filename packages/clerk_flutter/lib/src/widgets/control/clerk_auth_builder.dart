@@ -14,7 +14,7 @@ typedef AuthWidgetBuilder = Widget Function(
 /// the [signedOutBuilder] will be invoked when a [clerk.User] is not available
 /// the [builder] will be invoked if neither of the other two are present
 ///
-class ClerkAuthBuilder extends StatelessWidget {
+class ClerkAuthBuilder extends TelemetricStatelessWidget {
   /// Construct a [ClerkAuthBuilder]
   const ClerkAuthBuilder({
     super.key,
@@ -33,20 +33,25 @@ class ClerkAuthBuilder extends StatelessWidget {
   final AuthWidgetBuilder? builder;
 
   @override
+  Map<String, dynamic> toJson() => {
+        'signed_in_builder': signedInBuilder is AuthWidgetBuilder,
+        'signed_out_builder': signedOutBuilder is AuthWidgetBuilder,
+        'builder': builder is AuthWidgetBuilder,
+      };
+
+  @override
   Widget build(BuildContext context) {
     final auth = ClerkAuth.of(context);
     final user = auth.client.user;
 
-    if (signedInBuilder case AuthWidgetBuilder signedInBuilder
-        when user is clerk.User) {
+    if (signedInBuilder case var signedInBuilder? when user is clerk.User) {
       return signedInBuilder(context, auth);
-    } else if (signedOutBuilder case AuthWidgetBuilder signedOutBuilder
-        when user is! clerk.User) {
-      return signedOutBuilder(context, auth);
-    } else if (builder case AuthWidgetBuilder builder) {
-      return builder(context, auth);
     }
 
-    return emptyWidget;
+    if (signedOutBuilder case var signedOutBuilder? when user is! clerk.User) {
+      return signedOutBuilder(context, auth);
+    }
+
+    return builder?.call(context, auth) ?? emptyWidget;
   }
 }

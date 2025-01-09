@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// The [ClerkSignOutPanel] renders a UI for signing out users.
 ///
 @immutable
-class ClerkSignOutPanel extends StatelessWidget {
+class ClerkSignOutPanel extends TelemetricStatelessWidget {
   /// Constructs a new [ClerkSignOutPanel].
   const ClerkSignOutPanel({super.key});
 

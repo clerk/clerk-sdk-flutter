@@ -207,7 +207,7 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
   void initState() {
     super.initState();
     controller = WebViewController()
-      ..setUserAgent('Clerk Flutter SDK v${clerk.Auth.jsVersion}')
+      ..setUserAgent('Clerk Flutter SDK v${clerk.ClerkConstants.jsVersion}')
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.white)
       ..setNavigationDelegate(

@@ -23,11 +23,7 @@ class ClerkPanel extends StatelessWidget {
     return DefaultTextStyle(
       style: ClerkTextStyle.subtitleDark.copyWith(height: 1.0),
       child: DecoratedBox(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          color: ClerkColors.white,
-          boxShadow: insetBoxShadow,
-        ),
+        decoration: inputBoxBorderDecoration,
         child: Padding(padding: padding, child: child),
       ),
     );

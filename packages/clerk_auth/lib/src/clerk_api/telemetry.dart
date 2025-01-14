@@ -88,7 +88,7 @@ class Telemetry with Logging {
       'sdkv': ClerkConstants.flutterSdkVersion,
       'payload': {
         ...event.payload,
-        'timestamp': event.timestamp,
+        'timestamp': event.timestamp.toIso8601String(),
       },
     };
   }

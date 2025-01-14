@@ -11,6 +11,7 @@ abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
 
   bool _hasReportedMounted = false;
   Map<String, dynamic> _telemetryData = {};
+  ClerkAuthProvider? _telemetryAuth;
 
   /// The payload of widget metadata that will be sent to telemetry
   Map<String, dynamic> telemetryPayload(ClerkAuthProvider auth, T widget) => {};
@@ -24,8 +25,8 @@ abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
 
   /// Make the telemetry report to the back end
   void reportTelemetry(void Function(ClerkAuthProvider) callback) {
-    final auth = ClerkAuth.of(context, listen: false);
-    callback(auth);
+    _telemetryAuth ??= ClerkAuth.of(context, listen: false);
+    callback(_telemetryAuth!);
   }
 
   @override

@@ -40,8 +40,10 @@ class Telemetry with Logging {
     if (_sendTelemetryData) {
       final data = await _persistor.read<String>(_kTelemetricEventQueueKey);
       if (data case String data) {
-        final jsonList = json.decode(data);
-        final eventList = jsonList.map(TelemetricEvent.fromJson);
+        final jsonList = json.decode(data) as List<dynamic>;
+        final eventList = jsonList.map(
+          (data) => TelemetricEvent.fromJson(data as Map<String, dynamic>),
+        );
         _telemetricEventsQueue.addAll(eventList);
       }
       _timer = Timer.periodic(_telemetryPeriod, _sendTelemetry);

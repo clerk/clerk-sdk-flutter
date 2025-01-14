@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 /// https://clerk.com/docs/components/authentication/sign-up
 ///
 ///
-class ClerkSSOPanel extends TelemetricStatefulWidget {
+class ClerkSSOPanel extends StatefulWidget {
   /// Construct a new [ClerkSSOPanel]
   const ClerkSSOPanel({super.key});
 

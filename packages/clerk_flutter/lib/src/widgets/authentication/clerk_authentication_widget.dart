@@ -23,7 +23,7 @@ enum _AuthState {
 /// properties.
 ///
 @immutable
-class ClerkAuthenticationWidget extends TelemetricStatefulWidget {
+class ClerkAuthenticationWidget extends StatefulWidget {
   /// Constructs a new [ClerkAuthenticationWidget].
   const ClerkAuthenticationWidget({super.key});
 

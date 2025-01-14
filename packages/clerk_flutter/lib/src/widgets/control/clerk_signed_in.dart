@@ -1,9 +1,10 @@
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
 /// A widget that builds its child only if we are signed in
 /// i.e. a user is present on the client
-class ClerkSignedIn extends TelemetricStatelessWidget {
+class ClerkSignedIn extends StatefulWidget {
   /// Construct a [ClerkSignedIn] widget
   const ClerkSignedIn({super.key, required this.child});
 
@@ -11,11 +12,26 @@ class ClerkSignedIn extends TelemetricStatelessWidget {
   final Widget child;
 
   @override
+  State<ClerkSignedIn> createState() => _ClerkSignedInState();
+}
+
+class _ClerkSignedInState extends TelemetricState<ClerkSignedIn> {
+  @override
+  Map<String, dynamic> telemetryPayload(
+    clerk.Auth auth,
+    ClerkSignedIn widget,
+  ) {
+    return {
+      'user_is_signed_in': auth.user is clerk.User,
+    };
+  }
+
+  @override
   Widget build(BuildContext context) {
     final client = ClerkAuth.of(context).client;
 
-    if (client.user != null) {
-      return child;
+    if (client.user is clerk.User) {
+      return widget.child;
     }
 
     return emptyWidget;

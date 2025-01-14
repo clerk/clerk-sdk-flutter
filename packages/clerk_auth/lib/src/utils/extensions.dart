@@ -7,55 +7,6 @@ extension MapExtension<T, S> on Map<T, S> {
   ///
   Map<String, String> toStringMap() =>
       map((k, v) => MapEntry(k.toString(), v.toString()));
-
-  /// Return [true] if [this] and [other] are equal at a deep level,
-  /// else [false]
-  ///
-  bool deepEqual(Object other) => _deepEqual(this, other);
-
-  bool _deepEqual(Object a, Object b) {
-    if (a == b) {
-      return true;
-    }
-
-    if (a.runtimeType != b.runtimeType) {
-      return false;
-    }
-
-    switch ((a, b)) {
-      case (Map a, Map b):
-        if (a.keys.length != b.keys.length) {
-          return false;
-        }
-        if (a.keys.toSet().difference(b.keys.toSet()).isNotEmpty) {
-          return false;
-        }
-
-        for (final key in a.keys) {
-          if (_deepEqual(a[key], b[key]) == false) {
-            return false;
-          }
-        }
-
-        return true;
-
-      case (Iterable a, Iterable b):
-        if (a.length != b.length) {
-          return false;
-        }
-
-        for (int i = 0; i < a.length; ++i) {
-          if (_deepEqual(a.elementAt(i), b.elementAt(i)) == false) {
-            return false;
-          }
-        }
-
-        return true;
-
-      default:
-        return false;
-    }
-  }
 }
 
 /// Extensions to the [String] class

@@ -15,19 +15,9 @@ ApiError _$ApiErrorFromJson(Map<String, dynamic> json) => ApiError(
       longMessage: json['long_message'] as String?,
     );
 
-Map<String, dynamic> _$ApiErrorToJson(ApiError instance) {
-  final val = <String, dynamic>{
-    'message': instance.message,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('code', instance.code);
-  writeNotNull('meta', instance.meta);
-  writeNotNull('long_message', instance.longMessage);
-  return val;
-}
+Map<String, dynamic> _$ApiErrorToJson(ApiError instance) => <String, dynamic>{
+      'message': instance.message,
+      if (instance.code case final value?) 'code': value,
+      if (instance.meta case final value?) 'meta': value,
+      if (instance.longMessage case final value?) 'long_message': value,
+    };

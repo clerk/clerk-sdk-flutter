@@ -6,10 +6,16 @@ import 'package:flutter/material.dart';
 /// account management UI that allows users to manage their profile and security settings.
 ///
 @immutable
-class ClerkUserProfileWidget extends TelemetricStatelessWidget {
+class ClerkUserProfileWidget extends StatefulWidget {
   /// Constructs a const [ClerkUserProfileWidget].
   const ClerkUserProfileWidget({super.key});
 
+  @override
+  State<ClerkUserProfileWidget> createState() => _ClerkUserProfileWidgetState();
+}
+
+class _ClerkUserProfileWidgetState
+    extends TelemetricState<ClerkUserProfileWidget> {
   @override
   Widget build(BuildContext context) {
     return const ClerkTwoPanelView(

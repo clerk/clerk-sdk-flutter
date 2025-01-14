@@ -13,18 +13,9 @@ Actions _$ActionsFromJson(Map<String, dynamic> json) => Actions(
           (json['create_organizations_limit'] as num?)?.toInt() ?? 0,
     );
 
-Map<String, dynamic> _$ActionsToJson(Actions instance) {
-  final val = <String, dynamic>{
-    'delete_self': instance.deleteSelf,
-    'create_organization': instance.createOrganization,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('create_organizations_limit', instance.createOrganizationsLimit);
-  return val;
-}
+Map<String, dynamic> _$ActionsToJson(Actions instance) => <String, dynamic>{
+      'delete_self': instance.deleteSelf,
+      'create_organization': instance.createOrganization,
+      if (instance.createOrganizationsLimit case final value?)
+        'create_organizations_limit': value,
+    };

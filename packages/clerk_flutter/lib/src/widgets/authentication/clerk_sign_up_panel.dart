@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 /// https://clerk.com/docs/components/authentication/sign-up
 ///
 @immutable
-class ClerkSignUpPanel extends TelemetricStatefulWidget {
+class ClerkSignUpPanel extends StatefulWidget {
   /// Construct a new [ClerkSignUpPanel]
   const ClerkSignUpPanel({super.key});
 

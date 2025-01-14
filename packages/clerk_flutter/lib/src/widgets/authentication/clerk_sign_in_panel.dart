@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 /// connections. You can further customize you [ClerkSignInPanel] by passing additional
 /// properties.
 ///
-class ClerkSignInPanel extends TelemetricStatefulWidget {
+class ClerkSignInPanel extends StatefulWidget {
   /// Constructs a new [ClerkSignInPanel].
   const ClerkSignInPanel({super.key});
 

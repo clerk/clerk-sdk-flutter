@@ -79,19 +79,31 @@ class ClerkAuth extends StatefulWidget {
   static clerk.DisplayConfig displayConfigOf(BuildContext context) =>
       of(context, listen: false).env.display;
 
-  /// get the stream of [clerk.AuthError]
+  /// get the stream of [ClerkAuthProviderError]
   static Stream<clerk.AuthError> errorStreamOf(BuildContext context) =>
       of(context, listen: false).errorStream;
-
-  Map<String, dynamic> _toJson() => {
-        'component': toString(),
-        'poll_mode': pollMode.toString(),
-        'primary_instance': auth == null,
-      };
 }
 
-class _ClerkAuthState extends State<ClerkAuth> with TelemetryExtensions {
-  final _completer = Completer<ClerkAuthProvider>();
+class _ClerkAuthState extends TelemetricState<ClerkAuth> {
+  ClerkAuthProvider? _telemetryAuth;
+
+  @override
+  Map<String, dynamic> telemetryPayload(
+    ClerkAuthProvider auth,
+    ClerkAuth widget,
+  ) {
+    return {
+      'poll_mode': widget.pollMode.toString(),
+      'primary_instance': widget.auth == null,
+    };
+  }
+
+  @override
+  void reportTelemetry(void Function(ClerkAuthProvider) callback) {
+    if (widget.auth ?? _telemetryAuth case ClerkAuthProvider auth) {
+      callback(auth);
+    }
+  }
 
   @override
   void initState() {
@@ -103,64 +115,33 @@ class _ClerkAuthState extends State<ClerkAuth> with TelemetryExtensions {
         translator: widget.translator,
         loading: widget.loading,
         pollMode: widget.pollMode,
-      ) //
-          .then(_completer.complete)
-          .catchError(_completer.completeError);
+      ).then(
+        (auth) => setState(() => _telemetryAuth = auth),
+      );
     }
-  }
-
-  void _report(void Function(clerk.Auth) callback) {
-    if (widget.auth case clerk.Auth auth) {
-      callback(auth);
-    } else {
-      _completer.future.then(callback);
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _report((auth) => reportComponentMounted(auth, widget._toJson()));
   }
 
   @override
   void dispose() {
-    _report((auth) => reportComponentDismounted(auth, widget._toJson()));
-    if (widget.auth == null) {
-      _completer.future.then((auth) => auth.terminate());
-    }
     super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant ClerkAuth oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final json = widget._toJson();
-    if (json.deepEqual(oldWidget._toJson()) == false) {
-      _report((auth) => reportComponentUpdated(auth, json));
-    }
+    _telemetryAuth?.terminate();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ClerkAuthProvider>(
-      initialData: widget.auth,
-      future: _completer.future,
-      builder: (context, snapshot) {
-        if (snapshot.data case ClerkAuthProvider auth) {
-          return ListenableBuilder(
-            listenable: auth,
-            builder: (BuildContext context, Widget? child) {
-              return _ClerkAuthData(
-                auth: auth,
-                child: widget.child,
-              );
-            },
+    if (widget.auth ?? _telemetryAuth case ClerkAuthProvider auth) {
+      return ListenableBuilder(
+        listenable: auth,
+        builder: (BuildContext context, Widget? child) {
+          return _ClerkAuthData(
+            auth: auth,
+            child: widget.child,
           );
-        }
-        return widget.loading ?? emptyWidget;
-      },
-    );
+        },
+      );
+    }
+
+    return widget.loading ?? emptyWidget;
   }
 }
 

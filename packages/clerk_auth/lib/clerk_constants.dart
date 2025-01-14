@@ -7,7 +7,7 @@ sealed class ClerkConstants {
   static const flutterSdkVersion = '0.0.4-dev';
 
   /// Name of the SDK
-  static const sdkName = '@clerk/flutter';
+  static const sdkName = '@clerk/clerk-sdk-flutter';
 
   /// JsVersion of API
   static const jsVersion = '4.70.0';

@@ -21,7 +21,7 @@ enum SessionTokenPollMode {
 /// [Api] manages communication with the Clerk frontend API
 ///
 class Api with Logging {
-  Api._(this._tokenCache, this._domain, this._client, this._pollMode);
+  Api._(this._tokenCache, this._domain, this._httpService, this._pollMode);
 
   /// Create an [Api] object for a given Publishable Key, or return the existing one
   /// if such already exists for that key. Requires a [publishableKey]
@@ -30,7 +30,7 @@ class Api with Logging {
   /// [persistor]: an optional instance of a [Persistor] which will keep track of
   /// tokens and expiry between app activations
   ///
-  /// [client]: an optional instance of [HttpClient] to manage low-level communications
+  /// [client]: an optional instance of [HttpService] to manage low-level communications
   /// with the back end. Injected for e.g. test mocking
   ///
   /// [pollMode]: session token poll mode, default on-demand,
@@ -38,9 +38,9 @@ class Api with Logging {
   ///
   factory Api({
     required String publishableKey,
-    Persistor persistor = Persistor.none,
+    required Persistor persistor,
+    required HttpService httpService,
     SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
-    HttpClient? client,
   }) =>
       Api._(
         TokenCache(
@@ -48,13 +48,13 @@ class Api with Logging {
           cacheId: publishableKey.hashCode,
         ),
         _deriveDomainFrom(publishableKey),
-        client ?? const DefaultHttpClient(),
+        httpService,
         pollMode,
       );
 
   final TokenCache _tokenCache;
   final String _domain;
-  final HttpClient _client;
+  final HttpService _httpService;
   final SessionTokenPollMode _pollMode;
   Timer? _pollTimer;
 
@@ -71,9 +71,6 @@ class Api with Logging {
   static const _kXMobile = 'x-mobile';
 
   static const _defaultPollDelay = Duration(seconds: 55);
-
-  static final _telemetryEndpoint =
-      Uri.parse('https://clerk-telemetry.com/v1/event');
 
   /// Initialise the API
   Future<void> initialize() async {
@@ -93,21 +90,6 @@ class Api with Logging {
   /// the domain of the Clerk front-end API server
   ///
   String get domain => _domain;
-
-  /// Sends a map of data to the telemtry endpoint
-  ///
-  Future<void> sendTelemetry(List<TelemetricEvent> events) async {
-    await _client.send(
-      HttpMethod.post,
-      _telemetryEndpoint,
-      body: json.encode({
-        'events': [...events.map((e) => e.toJson())],
-      }),
-      headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
-    );
-  }
 
   /// Returns the latest [Environment] from Clerk.
   ///
@@ -644,7 +626,7 @@ class Api with Logging {
         _queryParams(method, withSession: withSession, params: params);
     final uri = _uri(path, queryParams);
 
-    final resp = await _client.send(
+    final resp = await _httpService.send(
       method,
       uri,
       headers: headers,

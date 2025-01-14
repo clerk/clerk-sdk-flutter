@@ -4,10 +4,15 @@ import 'package:flutter/material.dart';
 /// The [ClerkSignOutPanel] renders a UI for signing out users.
 ///
 @immutable
-class ClerkSignOutPanel extends TelemetricStatelessWidget {
+class ClerkSignOutPanel extends StatefulWidget {
   /// Constructs a new [ClerkSignOutPanel].
   const ClerkSignOutPanel({super.key});
 
+  @override
+  State<ClerkSignOutPanel> createState() => _ClerkSignOutPanelState();
+}
+
+class _ClerkSignOutPanelState extends TelemetricState<ClerkSignOutPanel> {
   @override
   Widget build(BuildContext context) {
     final auth = ClerkAuth.of(context);

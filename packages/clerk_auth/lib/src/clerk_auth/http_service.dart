@@ -33,9 +33,11 @@ enum HttpMethod {
 /// Abstract class defining the interface to call the
 /// Clerk back-end over http
 ///
-abstract class HttpClient {
+abstract class HttpService {
   /// Constructor
-  const HttpClient();
+  const HttpService();
+
+  static final none = _NoneHttpService();
 
   /// [send] data to the back end, and receive a [Response]
   ///
@@ -58,11 +60,34 @@ abstract class HttpClient {
   );
 }
 
-/// Default implementation of [HttpClient]
+class _NoneHttpService implements HttpService {
+  @override
+  Future<Response> send(
+    HttpMethod method,
+    Uri uri, {
+    Map<String, String>? headers,
+    Map<String, dynamic>? params,
+    String? body,
+  }) {
+    return Future.value(Response('', 200));
+  }
+
+  @override
+  Future<Response> sendFile(
+    HttpMethod method,
+    Uri uri,
+    File file,
+    Map<String, String> headers,
+  ) {
+    return Future.value(Response('', 200));
+  }
+}
+
+/// Default implementation of [HttpService]
 ///
-class DefaultHttpClient implements HttpClient {
+class DefaultHttpService implements HttpService {
   /// Constructor
-  const DefaultHttpClient();
+  const DefaultHttpService();
 
   @override
   Future<Response> send(

@@ -1,44 +1,34 @@
 import 'package:clerk_auth/clerk_auth.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'telemetric_event.g.dart';
 
 /// A [TelemetricEvent] to be sent to the backend
 ///
+@JsonSerializable()
 class TelemetricEvent {
   /// Create a [TelemetricEvent]
   TelemetricEvent({
     required this.event,
-    required this.it,
-    required this.pk,
     required this.payload,
-  }) : timestamp = DateTime.timestamp();
+    DateTime? timestamp,
+  }) : timestamp = timestamp ?? DateTime.timestamp();
 
   /// The event identifier
+  @JsonKey(name: 'ev')
   final String event;
 
-  /// instance type
-  final String it;
-
-  /// publishable key
-  final String pk;
+  /// timestamp
+  @JsonKey(name: 'ts')
+  final DateTime timestamp;
 
   /// payload
   final Map<String, dynamic> payload;
 
-  /// timestamp
-  final DateTime timestamp;
+  /// fromJson
+  static TelemetricEvent fromJson(Map<String, dynamic> json) =>
+      _$TelemetricEventFromJson(json);
 
-  /// Convert the event to a usable form
-  Map<String, dynamic> toJson() {
-    return {
-      'event': event,
-      'cv': ClerkConstants.clerkApiVersion,
-      'it': it,
-      'sdk': ClerkConstants.sdkName,
-      'sdkv': ClerkConstants.flutterSdkVersion,
-      'pk': pk,
-      'payload': {
-        ...payload,
-        'timestamp': timestamp.toIso8601String(),
-      },
-    };
-  }
+  /// toJson
+  Map<String, dynamic> toJson() => _$TelemetricEventToJson(this);
 }

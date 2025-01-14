@@ -13,7 +13,8 @@ void main() {
     env = TestEnv('.env.test');
     api = Api(
       publishableKey: env.publishableKey,
-      client: httpClient,
+      persistor: Persistor.none,
+      httpService: httpClient,
     );
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });

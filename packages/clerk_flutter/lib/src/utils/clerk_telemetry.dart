@@ -9,12 +9,12 @@ import 'package:flutter/material.dart';
 abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
   static const _equalityChecker = DeepCollectionEquality();
 
-  bool _hasReportedMounted = false;
-  Map<String, dynamic> _telemetryData = {};
+  Map<String, dynamic>? _telemetryData;
   ClerkAuthProvider? _telemetryAuth;
 
   /// The payload of widget metadata that will be sent to telemetry
-  Map<String, dynamic> telemetryPayload(ClerkAuthProvider auth, T widget) => {};
+  Map<String, dynamic> telemetryPayload(ClerkAuthProvider auth, T widget) =>
+      const {};
 
   Map<String, dynamic> _telemetryPayload(ClerkAuthProvider auth, T widget) {
     return {
@@ -37,7 +37,7 @@ abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_hasReportedMounted) {
+    if (_telemetryData is Map<String, dynamic>) {
       // this is an update or a rebuild
       _reportTelemetry((auth) async {
         final data = _telemetryPayload(auth, widget);
@@ -47,11 +47,10 @@ abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
         }
       });
     } else {
-      _hasReportedMounted = true;
       // this is the first widget build
       _reportTelemetry((auth) async {
         _telemetryData = _telemetryPayload(auth, widget);
-        await auth.telemetry.sendComponentMounted(payload: _telemetryData);
+        await auth.telemetry.sendComponentMounted(payload: _telemetryData!);
       });
     }
   }
@@ -60,7 +59,7 @@ abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
   void dispose() {
     _reportTelemetry((auth) async {
       _telemetryData = _telemetryPayload(auth, widget);
-      await auth.telemetry.sendComponentDismounted(payload: _telemetryData);
+      await auth.telemetry.sendComponentDismounted(payload: _telemetryData!);
     });
     super.dispose();
   }

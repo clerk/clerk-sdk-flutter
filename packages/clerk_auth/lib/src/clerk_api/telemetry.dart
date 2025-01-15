@@ -64,6 +64,7 @@ class Telemetry with Logging {
         event: event,
         payload: payload,
       );
+      logInfo(telemetricEvent.toJson());
       _telemetricEventsQueue.add(telemetricEvent);
       _persist();
     }

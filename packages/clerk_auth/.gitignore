@@ -22,3 +22,4 @@ pubspec.lock
 # Flutter auto-generated files
 .flutter-plugins
 .flutter-plugins-dependencies
+/lib/src/version.dart

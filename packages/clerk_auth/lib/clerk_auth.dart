@@ -10,3 +10,4 @@ export 'src/models/models.dart';
 export 'src/models/telemetry/telemetric_event.dart';
 export 'src/utils/extensions.dart';
 export 'src/utils/logging.dart';
+export 'src/version.dart';

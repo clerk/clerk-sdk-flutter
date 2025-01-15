@@ -30,7 +30,7 @@ void main() {
     auth = Auth(
       publishableKey: env.publishableKey,
       persistor: Persistor.none,
-      client: httpClient,
+      httpService: httpClient,
     );
 
     httpClient.expect(

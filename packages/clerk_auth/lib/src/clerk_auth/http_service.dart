@@ -33,9 +33,12 @@ enum HttpMethod {
 /// Abstract class defining the interface to call the
 /// Clerk back-end over http
 ///
-abstract class HttpClient {
+abstract class HttpService {
   /// Constructor
-  const HttpClient();
+  const HttpService();
+
+  /// An empty implementation
+  static final none = _NoneHttpService();
 
   /// [send] data to the back end, and receive a [Response]
   ///
@@ -44,6 +47,7 @@ abstract class HttpClient {
     Uri uri, {
     Map<String, String>? headers,
     Map<String, dynamic>? params,
+    String? body,
   });
 
   /// Upload a [File] to the back end, and receive a [Response]
@@ -57,11 +61,35 @@ abstract class HttpClient {
   );
 }
 
-/// Default implementation of [HttpClient]
+class _NoneHttpService implements HttpService {
+  @override
+  Future<Response> send(
+    HttpMethod method,
+    Uri uri, {
+    Map<String, String>? headers,
+    Map<String, dynamic>? params,
+    String? body,
+  }) {
+    return Future.value(Response('', 200));
+  }
+
+  @override
+  Future<Response> sendByteStream(
+    HttpMethod method,
+    Uri uri,
+    ByteStream byteStream,
+    int length,
+    Map<String, String> headers,
+  ) {
+    return Future.value(Response('', 200));
+  }
+}
+
+/// Default implementation of [HttpService]
 ///
-class DefaultHttpClient implements HttpClient {
+class DefaultHttpService implements HttpService {
   /// Constructor
-  const DefaultHttpClient();
+  const DefaultHttpService();
 
   @override
   Future<Response> send(
@@ -69,6 +97,7 @@ class DefaultHttpClient implements HttpClient {
     Uri uri, {
     Map<String, String>? headers,
     Map<String, dynamic>? params,
+    String? body,
   }) async {
     final request = Request(method.toString(), uri);
 
@@ -78,6 +107,10 @@ class DefaultHttpClient implements HttpClient {
 
     if (params case Map<String, dynamic> params) {
       request.bodyFields = params.toStringMap();
+    }
+
+    if (body case String body) {
+      request.body = body;
     }
 
     final streamedResponse = await request.send();

@@ -68,3 +68,9 @@ const _$FieldEnumMap = {
   Field.token: 'token',
   Field.signature: 'signature',
 };
+
+const _$InstanceTypeEnumMap = {
+  InstanceType.unknown: 'unknown',
+  InstanceType.development: 'development',
+  InstanceType.production: 'production',
+};

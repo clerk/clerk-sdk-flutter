@@ -15,21 +15,13 @@ UserPublic _$UserPublicFromJson(Map<String, dynamic> json) => UserPublic(
       hasImage: json['has_image'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$UserPublicToJson(UserPublic instance) {
-  final val = <String, dynamic>{
-    'identifier': instance.identifier,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('first_name', instance.firstName);
-  writeNotNull('last_name', instance.lastName);
-  writeNotNull('profile_image_url', instance.profileImageUrl);
-  writeNotNull('image_url', instance.imageUrl);
-  val['has_image'] = instance.hasImage;
-  return val;
-}
+Map<String, dynamic> _$UserPublicToJson(UserPublic instance) =>
+    <String, dynamic>{
+      'identifier': instance.identifier,
+      if (instance.firstName case final value?) 'first_name': value,
+      if (instance.lastName case final value?) 'last_name': value,
+      if (instance.profileImageUrl case final value?)
+        'profile_image_url': value,
+      if (instance.imageUrl case final value?) 'image_url': value,
+      'has_image': instance.hasImage,
+    };

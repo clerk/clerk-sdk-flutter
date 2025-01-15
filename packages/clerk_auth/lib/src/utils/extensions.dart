@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 /// Extensions to the [Map] class
-extension MapExtension on Map {
+extension MapExtension<T, S> on Map<T, S> {
   /// Return a version of this map where all keys
   /// and values are converted to [String]s
   ///

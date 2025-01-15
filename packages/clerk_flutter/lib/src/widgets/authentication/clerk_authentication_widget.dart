@@ -32,7 +32,8 @@ class ClerkAuthenticationWidget extends StatefulWidget {
       _ClerkAuthenticationWidgetState();
 }
 
-class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget> {
+class _ClerkAuthenticationWidgetState
+    extends TelemetricState<ClerkAuthenticationWidget> {
   _AuthState _state = _AuthState.signingIn;
 
   void _toggle() => setState(() => _state = _state.nextState);

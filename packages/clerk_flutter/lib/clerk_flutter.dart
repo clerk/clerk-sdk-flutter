@@ -1,6 +1,8 @@
 /// Package that will allow you to authenticate and use Clerk from Flutter code.
 library;
 
+export 'src/clerk_auth_provider.dart';
+export 'src/utils/clerk_telemetry.dart';
 export 'src/utils/clerk_translator.dart';
 export 'src/widgets/authentication/clerk_authentication_widget.dart';
 export 'src/widgets/authentication/clerk_sign_in_panel.dart';
@@ -10,7 +12,6 @@ export 'src/widgets/authentication/clerk_sso_panel.dart';
 export 'src/widgets/common.dart';
 export 'src/widgets/control/clerk_auth.dart';
 export 'src/widgets/control/clerk_auth_builder.dart';
-export 'src/widgets/control/clerk_auth_provider.dart';
 export 'src/widgets/control/clerk_signed_in.dart';
 export 'src/widgets/control/clerk_signed_out.dart';
 export 'src/widgets/organization/clerk_create_organization_widget.dart';

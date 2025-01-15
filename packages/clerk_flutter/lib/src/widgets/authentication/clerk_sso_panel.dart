@@ -20,7 +20,7 @@ class ClerkSSOPanel extends StatefulWidget {
   State<ClerkSSOPanel> createState() => _ClerkSSOPanelState();
 }
 
-class _ClerkSSOPanelState extends State<ClerkSSOPanel> {
+class _ClerkSSOPanelState extends TelemetricState<ClerkSSOPanel> {
   @override
   Widget build(BuildContext context) {
     final auth = ClerkAuth.of(context);

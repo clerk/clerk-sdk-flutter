@@ -1,3 +1,4 @@
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'display_config.g.dart';
@@ -31,7 +32,7 @@ class DisplayConfig {
     this.googleOneTapClientId = '',
     this.helpUrl = '',
     this.homeUrl = '',
-    this.instanceEnvironmentType = '',
+    this.instanceEnvironmentType = InstanceType.unknown,
     this.logoImageUrl = '',
     this.logoLinkUrl = '',
     this.logoUrl = '',
@@ -115,7 +116,7 @@ class DisplayConfig {
   final String? homeUrl;
 
   /// instance environment type
-  final String? instanceEnvironmentType;
+  final InstanceType instanceEnvironmentType;
 
   /// logo image url
   final String? logoImageUrl;

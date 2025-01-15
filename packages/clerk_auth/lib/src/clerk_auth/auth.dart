@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:clerk_auth/clerk_auth.dart';
 
 export 'auth_error.dart';
-export 'http_client.dart';
+export 'http_service.dart';
 export 'persistor.dart';
 
 /// [Auth] provides more abstracted access to the Clerk API
@@ -15,7 +15,7 @@ export 'persistor.dart';
 /// [persistor]: an optional instance of a [Persistor] which will keep track of
 /// tokens and expiry between app activations
 ///
-/// [client]: an optional instance of [HttpClient] to manage low-level communications
+/// [client]: an optional instance of [HttpService] to manage low-level communications
 /// with the back end. Injected for e.g. test mocking
 ///
 /// [pollMode]: session token poll mode, default on-demand,
@@ -23,24 +23,42 @@ export 'persistor.dart';
 ///
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
+  ///
+  /// [Auth] takes the following parameters:
+  ///
+  /// [publishableKey]: unique string from the Clerk dashboard
+  /// [persistor]: a [Persistor] with which to persist required data across
+  /// app sessions
+  /// [sendTelemetryData]; a [bool], default [true], with which to manage the sending
+  /// of telemetric data to the Clerk back end
+  /// [httpService]: the service through which http requests are made
+  /// [pollMode]: the mode by which session tokens are polled from the back
+  /// end: [regular] or (default) [onDemand]
   Auth({
     required String publishableKey,
     required Persistor persistor,
-    HttpClient? client,
+    bool sendTelemetryData = true,
+    HttpService httpService = const DefaultHttpService(),
     SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
-  }) : _api = Api(
+  })  : telemetry = Telemetry(
+          publishableKey,
+          persistor,
+          httpService,
+          sendTelemetryData,
+        ),
+        _api = Api(
           publishableKey: publishableKey,
           persistor: persistor,
-          client: client,
+          httpService: httpService,
           pollMode: pollMode,
         );
+
+  /// The service to send telemetry to the back end
+  final Telemetry telemetry;
 
   final Api _api;
 
   static const _codeLength = 6;
-
-  /// JsVersion of API
-  static const jsVersion = '4.70.0';
 
   /// default redirect URL for use with oAuth
   static const oauthRedirect = 'https://www.clerk.com/oauth-redirect';
@@ -94,6 +112,9 @@ class Auth {
     ]);
     this.client = client as Client;
     this.env = env as Environment;
+    await telemetry.initialize(
+      instanceType: this.env.display.instanceEnvironmentType,
+    );
   }
 
   /// Disposal of the [Auth] object
@@ -102,6 +123,7 @@ class Auth {
   /// method, if that is mixed in e.g. in clerk_flutter
   ///
   void terminate() {
+    telemetry.terminate();
     _api.terminate();
   }
 

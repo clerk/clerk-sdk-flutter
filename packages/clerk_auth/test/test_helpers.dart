@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:clerk_auth/src/clerk_auth/http_client.dart';
+import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:http/http.dart' show ByteStream, Response;
@@ -34,7 +34,7 @@ class TestLogPrinter extends Printer {
   }
 }
 
-class TestHttpClient implements HttpClient {
+class TestHttpClient implements HttpService {
   final _expectations = <String, List<Response>>{};
 
   @override
@@ -43,6 +43,7 @@ class TestHttpClient implements HttpClient {
     Uri uri, {
     Map<String, String>? headers,
     Map<String, dynamic>? params,
+    String? body,
   }) async {
     final key = _key(method, uri, headers, params);
 

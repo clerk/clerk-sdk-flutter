@@ -21,7 +21,7 @@ enum SessionTokenPollMode {
 /// [Api] manages communication with the Clerk frontend API
 ///
 class Api with Logging {
-  Api._(this._tokenCache, this._domain, this._client, this._pollMode);
+  Api._(this._tokenCache, this._domain, this._httpService, this._pollMode);
 
   /// Create an [Api] object for a given Publishable Key, or return the existing one
   /// if such already exists for that key. Requires a [publishableKey]
@@ -30,7 +30,7 @@ class Api with Logging {
   /// [persistor]: an optional instance of a [Persistor] which will keep track of
   /// tokens and expiry between app activations
   ///
-  /// [client]: an optional instance of [HttpClient] to manage low-level communications
+  /// [client]: an optional instance of [HttpService] to manage low-level communications
   /// with the back end. Injected for e.g. test mocking
   ///
   /// [pollMode]: session token poll mode, default on-demand,
@@ -38,9 +38,9 @@ class Api with Logging {
   ///
   factory Api({
     required String publishableKey,
-    Persistor persistor = Persistor.none,
+    required Persistor persistor,
+    required HttpService httpService,
     SessionTokenPollMode pollMode = SessionTokenPollMode.onDemand,
-    HttpClient? client,
   }) =>
       Api._(
         TokenCache(
@@ -48,13 +48,13 @@ class Api with Logging {
           cacheId: publishableKey.hashCode,
         ),
         _deriveDomainFrom(publishableKey),
-        client ?? const DefaultHttpClient(),
+        httpService,
         pollMode,
       );
 
   final TokenCache _tokenCache;
   final String _domain;
-  final HttpClient _client;
+  final HttpService _httpService;
   final SessionTokenPollMode _pollMode;
   Timer? _pollTimer;
 
@@ -210,7 +210,7 @@ class Api with Logging {
         'code': code,
         'token': token,
         if (metadata is Map) //
-          'unsafe_metadata': jsonEncode(metadata!),
+          'unsafe_metadata': json.encode(metadata!),
       },
     );
   }
@@ -246,7 +246,7 @@ class Api with Logging {
         'code': code,
         'token': token,
         if (metadata is Map) //
-          'unsafe_metadata': jsonEncode(metadata!),
+          'unsafe_metadata': json.encode(metadata!),
       },
     );
   }
@@ -450,7 +450,7 @@ class Api with Logging {
       final length = await file.length();
       final headers = _headers(HttpMethod.post);
       final stream = http.ByteStream(file.openRead());
-      final resp = await _client.sendByteStream(
+      final resp = await _httpService.sendByteStream(
         HttpMethod.post,
         uri,
         stream,
@@ -486,13 +486,13 @@ class Api with Logging {
   /// Prepare some [UserIdentifyingData] for verification
   ///
   Future<ApiResponse> prepareIdentifyingDataVerification(
-    UserIdentifyingData ident,
+    UserIdentifyingData identifier,
   ) async {
     return await _fetchApiResponse(
-      '/me/${ident.type.urlSegment}/${ident.id}/prepare_verification',
+      '/me/${identifier.type.urlSegment}/${identifier.id}/prepare_verification',
       withSession: true,
       params: {
-        'strategy': ident.type.verificationStrategy,
+        'strategy': identifier.type.verificationStrategy,
       },
     );
   }
@@ -500,11 +500,11 @@ class Api with Logging {
   /// Attempt to verify some [UserIdentifyingData] with a [code]
   ///
   Future<ApiResponse> verifyIdentifyingData(
-    UserIdentifyingData ident,
+    UserIdentifyingData identifier,
     String code,
   ) async {
     return await _fetchApiResponse(
-      '/me/${ident.type.urlSegment}/${ident.id}/attempt_verification',
+      '/me/${identifier.type.urlSegment}/${identifier.id}/attempt_verification',
       withSession: true,
       params: {
         'code': code,
@@ -514,9 +514,11 @@ class Api with Logging {
 
   /// Delete some [UserIdentifyingData] from the current [User]
   ///
-  Future<ApiResponse> deleteIdentifyingData(UserIdentifyingData ident) async {
+  Future<ApiResponse> deleteIdentifyingData(
+    UserIdentifyingData identifier,
+  ) async {
     return await _fetchApiResponse(
-      '/me/${ident.type.urlSegment}/${ident.id}',
+      '/me/${identifier.type.urlSegment}/${identifier.id}',
       withSession: true,
       method: HttpMethod.delete,
     );
@@ -626,7 +628,7 @@ class Api with Logging {
         _queryParams(method, withSession: withSession, params: params);
     final uri = _uri(path, queryParams);
 
-    final resp = await _client.send(
+    final resp = await _httpService.send(
       method,
       uri,
       headers: headers,
@@ -656,7 +658,7 @@ class Api with Logging {
   }) =>
       {
         _kIsNative: true,
-        _kClerkJsVersion: Auth.jsVersion,
+        _kClerkJsVersion: ClerkConstants.jsVersion,
         if (withSession) //
           _kClerkSessionId: _tokenCache.sessionId,
         if (method.isGet) //

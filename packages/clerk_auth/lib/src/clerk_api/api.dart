@@ -450,7 +450,7 @@ class Api with Logging {
       final length = await file.length();
       final headers = _headers(HttpMethod.post);
       final stream = http.ByteStream(file.openRead());
-      final resp = await _client.sendByteStream(
+      final resp = await _httpService.sendByteStream(
         HttpMethod.post,
         uri,
         stream,
@@ -486,13 +486,13 @@ class Api with Logging {
   /// Prepare some [UserIdentifyingData] for verification
   ///
   Future<ApiResponse> prepareIdentifyingDataVerification(
-    UserIdentifyingData ident,
+    UserIdentifyingData identifier,
   ) async {
     return await _fetchApiResponse(
-      '/me/${ident.type.urlSegment}/${ident.id}/prepare_verification',
+      '/me/${identifier.type.urlSegment}/${identifier.id}/prepare_verification',
       withSession: true,
       params: {
-        'strategy': ident.type.verificationStrategy,
+        'strategy': identifier.type.verificationStrategy,
       },
     );
   }
@@ -500,11 +500,11 @@ class Api with Logging {
   /// Attempt to verify some [UserIdentifyingData] with a [code]
   ///
   Future<ApiResponse> verifyIdentifyingData(
-    UserIdentifyingData ident,
+    UserIdentifyingData identifier,
     String code,
   ) async {
     return await _fetchApiResponse(
-      '/me/${ident.type.urlSegment}/${ident.id}/attempt_verification',
+      '/me/${identifier.type.urlSegment}/${identifier.id}/attempt_verification',
       withSession: true,
       params: {
         'code': code,
@@ -514,9 +514,11 @@ class Api with Logging {
 
   /// Delete some [UserIdentifyingData] from the current [User]
   ///
-  Future<ApiResponse> deleteIdentifyingData(UserIdentifyingData ident) async {
+  Future<ApiResponse> deleteIdentifyingData(
+    UserIdentifyingData identifier,
+  ) async {
     return await _fetchApiResponse(
-      '/me/${ident.type.urlSegment}/${ident.id}',
+      '/me/${identifier.type.urlSegment}/${identifier.id}',
       withSession: true,
       method: HttpMethod.delete,
     );

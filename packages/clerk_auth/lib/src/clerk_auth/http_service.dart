@@ -37,6 +37,7 @@ abstract class HttpService {
   /// Constructor
   const HttpService();
 
+  /// An empty implementation
   static final none = _NoneHttpService();
 
   /// [send] data to the back end, and receive a [Response]
@@ -73,10 +74,11 @@ class _NoneHttpService implements HttpService {
   }
 
   @override
-  Future<Response> sendFile(
+  Future<Response> sendByteStream(
     HttpMethod method,
     Uri uri,
-    File file,
+    ByteStream byteStream,
+    int length,
     Map<String, String> headers,
   ) {
     return Future.value(Response('', 200));

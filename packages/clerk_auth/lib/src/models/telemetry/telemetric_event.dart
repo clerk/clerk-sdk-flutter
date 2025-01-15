@@ -1,4 +1,3 @@
-import 'package:clerk_auth/clerk_auth.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'telemetric_event.g.dart';

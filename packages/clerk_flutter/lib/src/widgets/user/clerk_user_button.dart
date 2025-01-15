@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 ///
 class ClerkUserAction {
   /// Construct a [ClerkUserAction]
-  ClerkUserAction({
+  const ClerkUserAction({
     required this.asset,
     required this.label,
     required this.callback,
@@ -49,19 +49,27 @@ class ClerkUserButton extends StatefulWidget {
   final List<ClerkUserAction>? additionalActions;
 
   @override
-  Map<String, dynamic> telemetryPayload() => {
-        'show_name': showName,
-        'session_actions': sessionActions?.map((a) => a.label).join(';') ?? '',
-        'additional_actions':
-            additionalActions?.map((a) => a.label).join(';') ?? '',
-      };
-
-  @override
   State<ClerkUserButton> createState() => _ClerkUserButtonState();
 }
 
 class _ClerkUserButtonState extends TelemetricState<ClerkUserButton> {
   final _sessions = <clerk.Session>[];
+
+  @override
+  Map<String, dynamic> telemetryPayload(
+    ClerkAuthProvider auth,
+    ClerkUserButton widget,
+  ) {
+    final sessionActions =
+        widget.sessionActions ?? _defaultSessionActions(auth);
+    final additionalActions =
+        widget.additionalActions ?? _defaultAdditionalActions(auth);
+    return {
+      'show_name': widget.showName,
+      'session_actions': sessionActions.map((a) => a.label).join(';'),
+      'additional_actions': additionalActions.map((a) => a.label).join(';'),
+    };
+  }
 
   List<ClerkUserAction> _defaultSessionActions(ClerkAuthProvider auth) {
     final translator = auth.translator;

@@ -99,11 +99,7 @@ class _ClerkAuthState extends TelemetricState<ClerkAuth> {
   }
 
   @override
-  void reportTelemetry(void Function(ClerkAuthProvider) callback) {
-    if (widget.auth ?? _telemetryAuth case ClerkAuthProvider auth) {
-      callback(auth);
-    }
-  }
+  ClerkAuthProvider? get telemetryAuth => widget.auth ?? _telemetryAuth;
 
   @override
   void initState() {
@@ -129,7 +125,7 @@ class _ClerkAuthState extends TelemetricState<ClerkAuth> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.auth ?? _telemetryAuth case ClerkAuthProvider auth) {
+    if (telemetryAuth case ClerkAuthProvider auth) {
       return ListenableBuilder(
         listenable: auth,
         builder: (BuildContext context, Widget? child) {

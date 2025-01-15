@@ -34,10 +34,13 @@ class Telemetry with Logging {
     _timer?.cancel();
   }
 
+  /// Are we telemetricising?
+  bool get isEnabled => _sendTelemetryData && _instanceType.isDevelopment;
+
   /// Initialise telemetry
   Future<void> initialize({required InstanceType instanceType}) async {
     _instanceType = instanceType;
-    if (_sendTelemetryData) {
+    if (isEnabled) {
       final data = await _persistor.read<String>(_kTelemetricEventQueueKey);
       if (data case String data) {
         final jsonList = json.decode(data) as List<dynamic>;
@@ -56,7 +59,7 @@ class Telemetry with Logging {
     String event, {
     required Map<String, dynamic> payload,
   }) async {
-    if (_sendTelemetryData && _instanceType.isDevelopment) {
+    if (isEnabled) {
       final telemetricEvent = TelemetricEvent(
         event: event,
         payload: payload,

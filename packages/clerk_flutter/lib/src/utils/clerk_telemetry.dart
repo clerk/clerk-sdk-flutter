@@ -23,10 +23,15 @@ abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
     };
   }
 
-  /// Make the telemetry report to the back end
-  void reportTelemetry(void Function(ClerkAuthProvider) callback) {
-    _telemetryAuth ??= ClerkAuth.of(context, listen: false);
-    callback(_telemetryAuth!);
+  /// Get the [ClerkAuthProvider] with which to make the telemetry report
+  /// to the back end
+  ClerkAuthProvider? get telemetryAuth =>
+      _telemetryAuth ??= ClerkAuth.of(context, listen: false);
+
+  void _reportTelemetry(void Function(ClerkAuthProvider) callback) {
+    if (telemetryAuth case final auth? when auth.telemetry.isEnabled) {
+      callback(auth);
+    }
   }
 
   @override
@@ -34,7 +39,7 @@ abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
     super.didChangeDependencies();
     if (_hasReportedMounted) {
       // this is an update or a rebuild
-      reportTelemetry((auth) async {
+      _reportTelemetry((auth) async {
         final data = _telemetryPayload(auth, widget);
         if (_equalityChecker.equals(data, _telemetryData) == false) {
           _telemetryData = data;
@@ -44,7 +49,7 @@ abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
     } else {
       _hasReportedMounted = true;
       // this is the first widget build
-      reportTelemetry((auth) async {
+      _reportTelemetry((auth) async {
         _telemetryData = _telemetryPayload(auth, widget);
         await auth.telemetry.sendComponentMounted(payload: _telemetryData);
       });
@@ -53,7 +58,7 @@ abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
 
   @override
   void dispose() {
-    reportTelemetry((auth) async {
+    _reportTelemetry((auth) async {
       _telemetryData = _telemetryPayload(auth, widget);
       await auth.telemetry.sendComponentDismounted(payload: _telemetryData);
     });

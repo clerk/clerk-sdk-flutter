@@ -14,8 +14,8 @@ class ClerkUserProfileWidget extends StatefulWidget {
   State<ClerkUserProfileWidget> createState() => _ClerkUserProfileWidgetState();
 }
 
-class _ClerkUserProfileWidgetState
-    extends TelemetricState<ClerkUserProfileWidget> {
+class _ClerkUserProfileWidgetState extends State<ClerkUserProfileWidget>
+    with ClerkTelemetryStateMixin {
   @override
   Widget build(BuildContext context) {
     return const ClerkTwoPanelView(

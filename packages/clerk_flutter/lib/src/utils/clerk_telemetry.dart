@@ -6,61 +6,53 @@ import 'package:flutter/material.dart';
 /// An abstract class overriding state which allows telemetry
 /// events to be generated as widgets are mounted and disposed
 ///
-abstract class TelemetricState<T extends StatefulWidget> extends State<T> {
+mixin ClerkTelemetryStateMixin<T extends StatefulWidget> on State<T> {
   static const _equalityChecker = DeepCollectionEquality();
 
   Map<String, dynamic>? _telemetryData;
-  ClerkAuthProvider? _telemetryAuth;
+  clerk.Telemetry? _telemetry;
 
-  /// The payload of widget metadata that will be sent to telemetry
-  Map<String, dynamic> telemetryPayload(ClerkAuthProvider auth, T widget) =>
-      const {};
-
-  Map<String, dynamic> _telemetryPayload(ClerkAuthProvider auth, T widget) {
-    return {
-      'component': widget.toString(),
-      ...telemetryPayload(auth, widget),
-    };
+  /// Get the [ClerkAuthState] with which to make the telemetry report
+  /// to the back end
+  clerk.Telemetry get telemetry {
+    return _telemetry ??= ClerkAuth.of(context, listen: false).telemetry;
   }
 
-  /// Get the [ClerkAuthProvider] with which to make the telemetry report
-  /// to the back end
-  ClerkAuthProvider? get telemetryAuth =>
-      _telemetryAuth ??= ClerkAuth.of(context, listen: false);
+  /// The payload of widget metadata that will be sent to telemetry
+  Map<String, dynamic> get telemetryPayload => const {};
 
-  void _reportTelemetry(void Function(ClerkAuthProvider) callback) {
-    if (telemetryAuth case final auth? when auth.telemetry.isEnabled) {
-      callback(auth);
-    }
+  Map<String, dynamic> _generateTelemetryPayload() {
+    return {
+      'component': widget.toString(),
+      ...telemetryPayload,
+    };
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_telemetryData is Map<String, dynamic>) {
+    if (telemetry.isEnabled) {
       // this is an update or a rebuild
-      _reportTelemetry((auth) async {
-        final data = _telemetryPayload(auth, widget);
+      if (_telemetryData is Map<String, dynamic>) {
+        final data = _generateTelemetryPayload();
         if (_equalityChecker.equals(data, _telemetryData) == false) {
           _telemetryData = data;
-          await auth.telemetry.sendComponentUpdated(payload: data);
+          telemetry.sendComponentUpdated(data);
         }
-      });
-    } else {
+      }
       // this is the first widget build
-      _reportTelemetry((auth) async {
-        _telemetryData = _telemetryPayload(auth, widget);
-        await auth.telemetry.sendComponentMounted(payload: _telemetryData!);
-      });
+      else {
+        final data = _telemetryData = _generateTelemetryPayload();
+        telemetry.sendComponentMounted(data);
+      }
     }
   }
 
   @override
   void dispose() {
-    _reportTelemetry((auth) async {
-      _telemetryData = _telemetryPayload(auth, widget);
-      await auth.telemetry.sendComponentDismounted(payload: _telemetryData!);
-    });
+    if (telemetry.isEnabled) {
+      telemetry.sendComponentDismounted(_generateTelemetryPayload());
+    }
     super.dispose();
   }
 }
@@ -70,21 +62,21 @@ extension on clerk.Telemetry {
   static const _componentUpdated = 'COMPONENT UPDATED';
   static const _componentDismounted = 'COMPONENT DISMOUNTED';
 
-  Future<void> sendComponentMounted({
-    required Map<String, dynamic> payload,
-  }) async {
+  Future<void> sendComponentMounted(
+    Map<String, dynamic> payload,
+  ) async {
     await send(_componentMounted, payload: payload);
   }
 
-  Future<void> sendComponentUpdated({
-    required Map<String, dynamic> payload,
-  }) async {
+  Future<void> sendComponentUpdated(
+    Map<String, dynamic> payload,
+  ) async {
     await send(_componentUpdated, payload: payload);
   }
 
-  Future<void> sendComponentDismounted({
-    required Map<String, dynamic> payload,
-  }) async {
+  Future<void> sendComponentDismounted(
+    Map<String, dynamic> payload,
+  ) async {
     await send(_componentDismounted, payload: payload);
   }
 }

@@ -29,11 +29,6 @@ class Telemetry with Logging {
       Uri.parse('https://clerk-telemetry.com/v1/event');
   static const _telemetryPeriod = Duration(seconds: 27);
 
-  /// [terminate] the telemetry object
-  void terminate() {
-    _timer?.cancel();
-  }
-
   /// Are we telemetricising?
   bool get isEnabled => _sendTelemetryData && _instanceType.isDevelopment;
 
@@ -51,6 +46,11 @@ class Telemetry with Logging {
       }
       _timer = Timer.periodic(_telemetryPeriod, _sendTelemetry);
     }
+  }
+
+  /// [terminate] the telemetry object
+  void terminate() {
+    _timer?.cancel();
   }
 
   /// Send a telemetry event to the backend.
@@ -92,7 +92,7 @@ class Telemetry with Logging {
       'sdkv': ClerkConstants.flutterSdkVersion,
       'payload': {
         ...event.payload,
-        'timestamp': event.timestamp.toIso8601String(),
+        'ts': event.timestamp.toIso8601String(),
       },
     };
   }

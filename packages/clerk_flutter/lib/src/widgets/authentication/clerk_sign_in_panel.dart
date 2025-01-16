@@ -18,7 +18,8 @@ class ClerkSignInPanel extends StatefulWidget {
   State<ClerkSignInPanel> createState() => _ClerkSignInPanelState();
 }
 
-class _ClerkSignInPanelState extends TelemetricState<ClerkSignInPanel> {
+class _ClerkSignInPanelState extends State<ClerkSignInPanel>
+    with ClerkTelemetryStateMixin {
   clerk.Strategy _strategy = clerk.Strategy.password;
   String _identifier = '';
   String _password = '';

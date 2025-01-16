@@ -12,7 +12,8 @@ class ClerkSignOutPanel extends StatefulWidget {
   State<ClerkSignOutPanel> createState() => _ClerkSignOutPanelState();
 }
 
-class _ClerkSignOutPanelState extends TelemetricState<ClerkSignOutPanel> {
+class _ClerkSignOutPanelState extends State<ClerkSignOutPanel>
+    with ClerkTelemetryStateMixin {
   @override
   Widget build(BuildContext context) {
     final auth = ClerkAuth.of(context);

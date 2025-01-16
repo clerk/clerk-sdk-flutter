@@ -19,7 +19,8 @@ class ClerkSignUpPanel extends StatefulWidget {
   State<ClerkSignUpPanel> createState() => _ClerkSignUpPanelState();
 }
 
-class _ClerkSignUpPanelState extends TelemetricState<ClerkSignUpPanel> {
+class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
+    with ClerkTelemetryStateMixin {
   static final _phoneNumberRE = RegExp(r'[^0-9+]');
 
   final _values = <clerk.UserAttribute, String>{};

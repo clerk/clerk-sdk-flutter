@@ -84,22 +84,18 @@ class ClerkAuth extends StatefulWidget {
       of(context, listen: false).errorStream;
 }
 
-class _ClerkAuthState extends TelemetricState<ClerkAuth> {
-  ClerkAuthProvider? _telemetryAuth;
+class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
+  ClerkAuthProvider? _clerkAuth;
+
+  ClerkAuthProvider? get effectiveAuth => widget.auth ?? _clerkAuth;
 
   @override
-  Map<String, dynamic> telemetryPayload(
-    ClerkAuthProvider auth,
-    ClerkAuth widget,
-  ) {
+  Map<String, dynamic> get telemetryPayload {
     return {
       'poll_mode': widget.pollMode.toString(),
       'primary_instance': widget.auth == null,
     };
   }
-
-  @override
-  ClerkAuthProvider? get telemetryAuth => widget.auth ?? _telemetryAuth;
 
   @override
   void initState() {
@@ -111,21 +107,23 @@ class _ClerkAuthState extends TelemetricState<ClerkAuth> {
         translator: widget.translator,
         loading: widget.loading,
         pollMode: widget.pollMode,
-      ).then(
-        (auth) => setState(() => _telemetryAuth = auth),
-      );
+      ).then((auth) {
+        if (mounted) {
+          setState(() => _clerkAuth = auth);
+        }
+      });
     }
   }
 
   @override
   void dispose() {
     super.dispose();
-    _telemetryAuth?.terminate();
+    _clerkAuth?.terminate();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (telemetryAuth case ClerkAuthProvider auth) {
+    if (effectiveAuth case ClerkAuthProvider auth) {
       return ListenableBuilder(
         listenable: auth,
         builder: (BuildContext context, Widget? child) {

@@ -36,14 +36,12 @@ class ClerkAuthBuilder extends StatefulWidget {
   State<ClerkAuthBuilder> createState() => _ClerkAuthBuilderState();
 }
 
-class _ClerkAuthBuilderState extends TelemetricState<ClerkAuthBuilder> {
+class _ClerkAuthBuilderState extends State<ClerkAuthBuilder>
+    with ClerkTelemetryStateMixin {
   @override
-  Map<String, dynamic> telemetryPayload(
-    clerk.Auth auth,
-    ClerkAuthBuilder widget,
-  ) {
+  Map<String, dynamic> get telemetryPayload {
     return {
-      'user_is_signed_in': auth.user is clerk.User,
+      'user_is_signed_in': ClerkAuth.of(context).user is clerk.User,
       'signed_in_builder': widget.signedInBuilder is AuthWidgetBuilder,
       'signed_out_builder': widget.signedOutBuilder is AuthWidgetBuilder,
       'builder': widget.builder is AuthWidgetBuilder,

@@ -21,7 +21,8 @@ class ClerkUserProfile extends StatefulWidget {
   State<ClerkUserProfile> createState() => _ClerkUserProfileState();
 }
 
-class _ClerkUserProfileState extends TelemetricState<ClerkUserProfile> {
+class _ClerkUserProfileState extends State<ClerkUserProfile>
+    with ClerkTelemetryStateMixin {
   bool _validate(String? identifier, clerk.IdentifierType type) {
     if (identifier?.trim() case String identifier when identifier.isNotEmpty) {
       switch (type) {

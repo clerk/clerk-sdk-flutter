@@ -52,18 +52,15 @@ class ClerkUserButton extends StatefulWidget {
   State<ClerkUserButton> createState() => _ClerkUserButtonState();
 }
 
-class _ClerkUserButtonState extends TelemetricState<ClerkUserButton> {
+class _ClerkUserButtonState extends State<ClerkUserButton>
+    with ClerkTelemetryStateMixin {
   final _sessions = <clerk.Session>[];
 
   @override
-  Map<String, dynamic> telemetryPayload(
-    ClerkAuthProvider auth,
-    ClerkUserButton widget,
-  ) {
-    final sessionActions =
-        widget.sessionActions ?? _defaultSessionActions(auth);
+  Map<String, dynamic> get telemetryPayload {
+    final sessionActions = widget.sessionActions ?? _defaultSessionActions();
     final additionalActions =
-        widget.additionalActions ?? _defaultAdditionalActions(auth);
+        widget.additionalActions ?? _defaultAdditionalActions();
     return {
       'show_name': widget.showName,
       'session_actions': sessionActions.map((a) => a.label).join(';'),
@@ -71,8 +68,8 @@ class _ClerkUserButtonState extends TelemetricState<ClerkUserButton> {
     };
   }
 
-  List<ClerkUserAction> _defaultSessionActions(ClerkAuthProvider auth) {
-    final translator = auth.translator;
+  List<ClerkUserAction> _defaultSessionActions() {
+    final translator = ClerkAuth.translatorOf(context);
     return [
       ClerkUserAction(
         asset: ClerkAssets.gearIcon,
@@ -87,13 +84,13 @@ class _ClerkUserButtonState extends TelemetricState<ClerkUserButton> {
     ];
   }
 
-  List<ClerkUserAction> _defaultAdditionalActions(ClerkAuthProvider auth) {
-    final translator = auth.translator;
+  List<ClerkUserAction> _defaultAdditionalActions() {
+    final auth = ClerkAuth.of(context);
     return [
       if (auth.env.config.singleSessionMode == false)
         ClerkUserAction(
           asset: ClerkAssets.addIcon,
-          label: translator.translate('Add account'),
+          label: auth.translator.translate('Add account'),
           callback: _addAccount,
         ),
     ];
@@ -130,9 +127,9 @@ class _ClerkUserButtonState extends TelemetricState<ClerkUserButton> {
           final displaySessions = List<clerk.Session>.from(_sessions);
 
           final sessionActions =
-              widget.sessionActions ?? _defaultSessionActions(auth);
+              widget.sessionActions ?? _defaultSessionActions();
           final additionalActions =
-              widget.additionalActions ?? _defaultAdditionalActions(auth);
+              widget.additionalActions ?? _defaultAdditionalActions();
 
           return ClerkVerticalCard(
             topPortion: Column(

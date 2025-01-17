@@ -10,3 +10,6 @@ targets:
           explicit_to_json: true
           field_rename: snake
           include_if_null: false
+      build_version:
+        options:
+          output: lib/src/version.dart

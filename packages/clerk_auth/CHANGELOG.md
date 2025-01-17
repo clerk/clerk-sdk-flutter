@@ -1,3 +1,13 @@
+## 0.0.5-dev
+
+- Lower flutter version to 3.10.0 #41
+- Remove usage of public_key #45
+- Add data/state persistor #46
+- Disable bot protection #66
+- Remove favicon_image from display_config #88
+- Upload images using byte arrays #79
+- Add telemetry support #81
+
 ## 0.0.4-dev
 
 - Updated token expiration to use UTC #47

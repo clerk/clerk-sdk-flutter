@@ -2,7 +2,8 @@ include: package:lints/recommended.yaml
 
 analyzer:
   exclude:
-    - '*.g.dart'
+    - '**/*.g.dart'
+    - 'lib/src/version.dart'
 
 formatter:
   page_width: 80

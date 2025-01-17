@@ -6,24 +6,24 @@ import 'package:flutter/material.dart';
 ///
 class AddAccountScreen extends StatefulWidget {
   const AddAccountScreen._({
-    required this.auth,
+    required this.authState,
   });
 
-  /// An injected [ClerkAuthProvider]
-  final ClerkAuthProvider auth;
+  /// An injected [ClerkAuthState]
+  final ClerkAuthState authState;
 
   /// The name of the route to this screen
   static const routeName = 'clerk_add_account';
 
   /// static method to show an [AddAccountScreen]
   static Future<void> show(BuildContext context) async {
-    final auth = ClerkAuth.of(context, listen: false);
+    final authState = ClerkAuth.of(context, listen: false);
     await Navigator.of(context).push(
       MaterialPageRoute(
         settings: const RouteSettings(name: routeName),
         fullscreenDialog: true,
         builder: (BuildContext context) {
-          return AddAccountScreen._(auth: auth);
+          return AddAccountScreen._(authState: authState);
         },
       ),
     );
@@ -39,13 +39,13 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
   @override
   void initState() {
     super.initState();
-    userIds = widget.auth.client.userIds.toSet();
-    widget.auth.addListener(_onAuthStateChanged);
+    userIds = widget.authState.client.userIds.toSet();
+    widget.authState.addListener(_onAuthStateChanged);
   }
 
   void _onAuthStateChanged() {
     // if we successfully logged in and got a new session, pop the screen
-    final newUserIds = widget.auth.client.userIds.toSet();
+    final newUserIds = widget.authState.client.userIds.toSet();
     if (newUserIds.difference(userIds).isNotEmpty) {
       Navigator.of(context).pop();
     }
@@ -53,14 +53,14 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
 
   @override
   void dispose() {
-    widget.auth.removeListener(_onAuthStateChanged);
+    widget.authState.removeListener(_onAuthStateChanged);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ClerkAuth(
-      auth: widget.auth,
+      authState: widget.authState,
       child: Scaffold(
         backgroundColor: ClerkColors.whiteSmoke,
         appBar: AppBar(

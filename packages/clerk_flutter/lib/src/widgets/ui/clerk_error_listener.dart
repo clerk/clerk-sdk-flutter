@@ -9,7 +9,7 @@ typedef ClerkErrorHandler = FutureOr<void> Function(
     BuildContext context, AuthError error);
 
 /// Widget to display error messages as errors are received
-/// from the [ClerkAuthProvider].
+/// from the [ClerkAuthState].
 ///
 /// [ClerkErrorListener] must be placed in the widget tree below both a
 /// [ClerkAuth] widget and a [Scaffold]

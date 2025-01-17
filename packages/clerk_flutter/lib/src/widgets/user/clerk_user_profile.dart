@@ -42,7 +42,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
 
   Future<void> _verifyIdentifyingData(
     BuildContext context,
-    ClerkAuthProvider auth,
+    ClerkAuthState auth,
     String identifier,
   ) async {
     final translator = auth.translator;
@@ -72,11 +72,11 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
 
   Future<void> _addIdentifyingData(
     BuildContext context,
-    ClerkAuthProvider auth,
+    ClerkAuthState auth,
     clerk.IdentifierType type,
   ) async {
-    final auth = ClerkAuth.of(context, listen: false);
-    final translator = auth.translator;
+    final authState = ClerkAuth.of(context, listen: false);
+    final translator = authState.translator;
     final title = type.name.replaceAll('_', ' ').capitalized;
 
     String identifier = '';
@@ -107,9 +107,9 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
 
     if (submitted) {
       if (_validate(identifier, type)) {
-        await auth.addIdentifyingData(identifier, type);
+        await authState.addIdentifyingData(identifier, type);
         if (context.mounted) {
-          await _verifyIdentifyingData(context, auth, identifier);
+          await _verifyIdentifyingData(context, authState, identifier);
         }
       } else {
         throw clerk.AuthError(
@@ -360,12 +360,12 @@ class _EditableUserDataState extends State<_EditableUserData> {
 
   Future<void> _update([_]) async {
     if (isEditing) {
-      final auth = ClerkAuth.of(context, listen: false);
+      final authState = ClerkAuth.of(context, listen: false);
       if (_controller.text != widget.user.name) {
-        await auth.updateUserName(_controller.text);
+        await authState.updateUserName(_controller.text);
       }
       if (image case File image) {
-        await auth.updateUserImage(image);
+        await authState.updateUserImage(image);
       }
     }
     if (context.mounted) {

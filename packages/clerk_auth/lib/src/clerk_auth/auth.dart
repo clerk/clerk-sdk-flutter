@@ -95,7 +95,7 @@ class Auth {
 
   /// A method to be overridden by extension classes to cope with
   /// updating their systems when things change (e.g. the clerk_flutter
-  /// [ClerkAuthProvider] class)
+  /// ClerkAuth class)
   ///
   void update() {}
 

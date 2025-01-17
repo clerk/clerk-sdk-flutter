@@ -23,7 +23,7 @@ class ClerkUserAction {
   final String label;
 
   /// The callback to be invoked when tapped
-  final FutureOr<void> Function(BuildContext, ClerkAuthProvider) callback;
+  final FutureOr<void> Function(BuildContext, ClerkAuthState) callback;
 }
 
 /// The [ClerkUserButton] renders a list of all users from
@@ -85,24 +85,24 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
   }
 
   List<ClerkUserAction> _defaultAdditionalActions() {
-    final auth = ClerkAuth.of(context);
+    final authState = ClerkAuth.of(context);
     return [
-      if (auth.env.config.singleSessionMode == false)
+      if (authState.env.config.singleSessionMode == false)
         ClerkUserAction(
           asset: ClerkAssets.addIcon,
-          label: auth.translator.translate('Add account'),
+          label: authState.translator.translate('Add account'),
           callback: _addAccount,
         ),
     ];
   }
 
-  Future<void> _addAccount(BuildContext context, ClerkAuthProvider auth) =>
+  Future<void> _addAccount(BuildContext context, ClerkAuthState auth) =>
       AddAccountScreen.show(context);
 
-  Future<void> _manageAccount(BuildContext context, ClerkAuthProvider auth) =>
+  Future<void> _manageAccount(BuildContext context, ClerkAuthState auth) =>
       ManageAccountScreen.show(context);
 
-  Future<void> _signOut<T>(BuildContext context, ClerkAuthProvider auth) async {
+  Future<void> _signOut<T>(BuildContext context, ClerkAuthState auth) async {
     if (auth.client.sessions.length == 1) {
       await auth(context, () => auth.signOut());
     } else {
@@ -224,7 +224,7 @@ class _SessionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = ClerkAuth.of(context);
+    final authState = ClerkAuth.of(context);
     final user = session.user;
     return Closeable(
       closed: closed,
@@ -273,7 +273,8 @@ class _SessionRow extends StatelessWidget {
                         child: Padding(
                           padding: horizontalPadding4,
                           child: ClerkMaterialButton(
-                            onPressed: () => action.callback(context, auth),
+                            onPressed: () =>
+                                action.callback(context, authState),
                             label: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,

@@ -34,7 +34,7 @@ class TestLogPrinter extends Printer {
   }
 }
 
-class TestHttpClient implements HttpService {
+class TestHttpService implements HttpService {
   final _expectations = <String, List<Response>>{};
 
   @override
@@ -51,7 +51,7 @@ class TestHttpClient implements HttpService {
       final resp = resps.removeAt(0);
       return Future.value(resp);
     }
-    throw TestHttpClientError(message: 'No response available for $key');
+    throw TestHttpServiceError(message: 'No response available for $key');
   }
 
   void expect(String key, int status, String body) {
@@ -112,11 +112,11 @@ class TestHttpClient implements HttpService {
   }
 }
 
-class TestHttpClientError extends Error {
-  TestHttpClientError({required this.message});
+class TestHttpServiceError extends Error {
+  TestHttpServiceError({required this.message});
 
   final String message;
 
   @override
-  String toString() => 'TestHttpClientError: $message';
+  String toString() => '$runtimeType: $message';
 }

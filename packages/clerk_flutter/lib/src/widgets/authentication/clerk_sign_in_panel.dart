@@ -34,7 +34,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     });
   }
 
-  Future<void> _continue(ClerkAuthProvider auth,
+  Future<void> _continue(ClerkAuthState authState,
       {clerk.Strategy? strategy, String? code}) async {
     if (_hasIdent) {
       final newStrategy = strategy ?? _strategy;
@@ -46,9 +46,9 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         });
       }
 
-      await auth(
+      await authState(
         context,
-        () => auth.attemptSignIn(
+        () => authState.attemptSignIn(
           strategy: newStrategy,
           identifier: _identifier,
           password: _password.orNullIfEmpty,
@@ -61,12 +61,12 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
   @override
   Widget build(BuildContext context) {
-    final auth = ClerkAuth.of(context);
-    final translator = auth.translator;
-    final env = auth.env;
+    final authState = ClerkAuth.of(context);
+    final translator = authState.translator;
+    final env = authState.env;
     final identifiers = env.identificationStrategies
         .map((i) => i.toString().replaceAll('_', ' '));
-    final factor = auth.client.signIn?.supportedFirstFactors
+    final factor = authState.client.signIn?.supportedFirstFactors
         .firstWhereOrNull((f) => f.strategy == _strategy);
     final safeIdentifier = factor?.safeIdentifier;
 
@@ -119,7 +119,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                     )
                   : translator.translate('Enter the code sent to you'),
               onSubmit: (code) async {
-                await _continue(auth, code: code, strategy: _strategy);
+                await _continue(authState, code: code, strategy: _strategy);
                 return false;
               },
             ),
@@ -138,7 +138,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                     obscureText: true,
                     onChanged: (password) => _password = password,
                     onSubmit: (_) =>
-                        _continue(auth, strategy: clerk.Strategy.password),
+                        _continue(authState, strategy: clerk.Strategy.password),
                   ),
                 ),
               if (env.hasOtherStrategies) ...[
@@ -149,19 +149,22 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                     Padding(
                       padding: topPadding4,
                       child: StrategyButton(
-                          key: ValueKey<clerk.Strategy>(strategy),
-                          strategy: strategy,
-                          onClick: () => _continue(auth, strategy: strategy)),
+                        key: ValueKey<clerk.Strategy>(strategy),
+                        strategy: strategy,
+                        onClick: () => _continue(authState, strategy: strategy),
+                      ),
                     ),
                 Padding(
                   padding: horizontalPadding32 + bottomPadding32 + topPadding16,
                   child: ClerkMaterialButton(
-                    onPressed: () => _continue(auth),
+                    onPressed: () => _continue(authState),
                     label: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Center(child: Text(translator.translate('Continue'))),
+                        Center(
+                          child: Text(translator.translate('Continue')),
+                        ),
                         horizontalMargin4,
                         const Icon(Icons.arrow_right_sharp),
                       ],

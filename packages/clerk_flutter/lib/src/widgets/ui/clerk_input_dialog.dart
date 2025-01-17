@@ -8,15 +8,15 @@ class ClerkInputDialog extends StatelessWidget {
   /// Construct a [ClerkInputDialog]
   const ClerkInputDialog._({
     required this.child,
-    required this.auth,
+    required this.authState,
     this.showOk = true,
   });
 
   /// The child [Widget]
   final Widget child;
 
-  /// An injected [ClerkAuthProvider]
-  final ClerkAuthProvider auth;
+  /// An injected [ClerkAuthState]
+  final ClerkAuthState authState;
 
   /// Show the OK button
   final bool showOk;
@@ -27,11 +27,11 @@ class ClerkInputDialog extends StatelessWidget {
     required Widget child,
     bool showOk = true,
   }) async {
-    final auth = ClerkAuth.of(context, listen: false);
+    final authState = ClerkAuth.of(context, listen: false);
     return await showDialog(
       context: context,
       builder: (_) => ClerkInputDialog._(
-        auth: auth,
+        authState: authState,
         showOk: showOk,
         child: child,
       ),
@@ -40,7 +40,7 @@ class ClerkInputDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final translator = auth.translator;
+    final translator = authState.translator;
     return AlertDialog(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -49,7 +49,7 @@ class ClerkInputDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ClerkAuth(auth: auth, child: child),
+            ClerkAuth(authState: authState, child: child),
             verticalMargin8,
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

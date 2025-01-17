@@ -16,12 +16,12 @@ class _ClerkSignOutPanelState extends State<ClerkSignOutPanel>
     with ClerkTelemetryStateMixin {
   @override
   Widget build(BuildContext context) {
-    final auth = ClerkAuth.of(context);
+    final authState = ClerkAuth.of(context);
     return Padding(
       padding: horizontalPadding16,
       child: ClerkMaterialButton(
-        onPressed: () => auth.signOut(),
-        label: Text(auth.translator.translate('Sign Out')),
+        onPressed: () => authState.signOut(),
+        label: Text(authState.translator.translate('Sign Out')),
       ),
     );
   }

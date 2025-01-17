@@ -9,9 +9,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 /// An extension of [clerk.Auth] with [ChangeNotifier] so that
 /// updates to the auth state can be propagated out into the UI
 ///
-class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
-  /// Construct a [ClerkAuthProvider]
-  ClerkAuthProvider._({
+class ClerkAuthState extends clerk.Auth with ChangeNotifier {
+  /// Construct a [ClerkAuthState]
+  ClerkAuthState._({
     required super.publishableKey,
     required super.persistor,
     required this.translator,
@@ -21,15 +21,15 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
           builder: (context) => loading ?? defaultLoadingWidget,
         );
 
-  /// Create an [ClerkAuthProvider] object using appropriate Clerk credentials
-  static Future<ClerkAuthProvider> create({
+  /// Create an [ClerkAuthState] object using appropriate Clerk credentials
+  static Future<ClerkAuthState> create({
     required String publishableKey,
     clerk.Persistor? persistor,
     ClerkTranslator translator = const DefaultClerkTranslator(),
     clerk.SessionTokenPollMode pollMode = clerk.SessionTokenPollMode.onDemand,
     Widget? loading,
   }) async {
-    final provider = ClerkAuthProvider._(
+    final provider = ClerkAuthState._(
       publishableKey: publishableKey,
       persistor: persistor ??
           await clerk.DefaultPersistor.create(
@@ -71,10 +71,10 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
     clerk.Strategy strategy, {
     void Function(clerk.AuthError)? onError,
   }) async {
-    final auth = ClerkAuth.of(context, listen: false);
+    final authState = ClerkAuth.of(context, listen: false);
     final client = await call(
       context,
-      () => auth.oauthSignIn(strategy: strategy),
+      () => authState.oauthSignIn(strategy: strategy),
       onError: onError,
     );
     final url = client?.signIn?.firstFactorVerification?.providerUrl;
@@ -92,13 +92,13 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
         if (token case String token) {
           await call(
             context,
-            () => auth.attemptSignIn(strategy: strategy, token: token),
+            () => authState.attemptSignIn(strategy: strategy, token: token),
             onError: onError,
           );
         } else {
-          await auth.refreshClient();
+          await authState.refreshClient();
           if (context.mounted) {
-            await call(context, () => auth.transfer(), onError: onError);
+            await call(context, () => authState.transfer(), onError: onError);
           }
         }
         if (context.mounted) {
@@ -119,7 +119,7 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
   }) async {
     T? result;
     try {
-      if (context.mounted) {
+      if (context.mounted && !_loadingOverlay.mounted) {
         Overlay.of(context).insert(_loadingOverlay);
       }
       result = await fn();
@@ -127,7 +127,9 @@ class ClerkAuthProvider extends clerk.Auth with ChangeNotifier {
       _errors.add(error);
       onError?.call(error);
     } finally {
-      _loadingOverlay.remove();
+      if (_loadingOverlay.mounted) {
+        _loadingOverlay.remove();
+      }
     }
     return result;
   }

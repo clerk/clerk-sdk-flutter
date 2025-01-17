@@ -5,24 +5,24 @@ import 'package:flutter/material.dart';
 class ManageAccountScreen extends StatelessWidget {
   /// Construct a [ManageAccountScreen]
   const ManageAccountScreen._({
-    required this.auth,
+    required this.authState,
   });
 
-  /// An injected [ClerkAuthProvider]
-  final ClerkAuthProvider auth;
+  /// An injected [ClerkAuthState]
+  final ClerkAuthState authState;
 
   /// The name of the route to this screen
   static const routeName = 'clerk_add_account';
 
   /// static method to show an [AddAccountScreen]
   static Future<void> show(BuildContext context) async {
-    final auth = ClerkAuth.of(context, listen: false);
+    final authState = ClerkAuth.of(context, listen: false);
     await Navigator.of(context).push(
       MaterialPageRoute(
         settings: const RouteSettings(name: routeName),
         fullscreenDialog: true,
         builder: (BuildContext context) {
-          return ManageAccountScreen._(auth: auth);
+          return ManageAccountScreen._(authState: authState);
         },
       ),
     );
@@ -31,7 +31,7 @@ class ManageAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClerkAuth(
-      auth: auth,
+      authState: authState,
       child: Scaffold(
         backgroundColor: ClerkColors.whiteSmoke,
         appBar: AppBar(

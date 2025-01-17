@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 
 /// Typedef for builder invoked by [ClerkAuthBuilder]
 typedef AuthWidgetBuilder = Widget Function(
-  BuildContext context,
-  ClerkAuthProvider auth,
-);
+    BuildContext context, ClerkAuthState authState);
 
-/// A [Widget] which builds its subtree in the context of a [ClerkAuthProvider]
+/// A [Widget] which builds its subtree in the context of a [ClerkAuthState]
 ///
 /// the [signedInBuilder] will be invoked when a [clerk.User] is available
 /// the [signedOutBuilder] will be invoked when a [clerk.User] is not available
@@ -50,19 +48,19 @@ class _ClerkAuthBuilderState extends State<ClerkAuthBuilder>
 
   @override
   Widget build(BuildContext context) {
-    final auth = ClerkAuth.of(context);
-    final user = auth.client.user;
+    final authState = ClerkAuth.of(context);
+    final user = authState.client.user;
 
     if (widget.signedInBuilder case AuthWidgetBuilder signedInBuilder
         when user is clerk.User) {
-      return signedInBuilder(context, auth);
+      return signedInBuilder(context, authState);
     }
 
     if (widget.signedOutBuilder case AuthWidgetBuilder signedOutBuilder
         when user is! clerk.User) {
-      return signedOutBuilder(context, auth);
+      return signedOutBuilder(context, authState);
     }
 
-    return widget.builder?.call(context, auth) ?? emptyWidget;
+    return widget.builder?.call(context, authState) ?? emptyWidget;
   }
 }

@@ -24,11 +24,11 @@ class _ClerkSSOPanelState extends State<ClerkSSOPanel>
     with ClerkTelemetryStateMixin {
   @override
   Widget build(BuildContext context) {
-    final auth = ClerkAuth.of(context);
-    final oauthStrategies = auth.env.config.identificationStrategies //
+    final authState = ClerkAuth.of(context);
+    final oauthStrategies = authState.env.config.identificationStrategies //
         .where((i) => i.isOauth)
         .toList();
-    final socialConnections = auth.env.user.socialSettings.values //
+    final socialConnections = authState.env.user.socialSettings.values //
         .where((s) => oauthStrategies.contains(s.strategy))
         .toList();
 

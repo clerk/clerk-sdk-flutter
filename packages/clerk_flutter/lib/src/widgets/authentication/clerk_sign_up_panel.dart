@@ -26,7 +26,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   final _values = <clerk.UserAttribute, String>{};
   bool _obscurePassword = true;
 
-  Future<void> _continue(ClerkAuthProvider auth,
+  Future<void> _continue(ClerkAuthState auth,
       {String? code, clerk.Strategy? strategy}) async {
     await auth(context, () async {
       final password = _values[clerk.UserAttribute.password];
@@ -54,9 +54,9 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
   @override
   Widget build(BuildContext context) {
-    final auth = ClerkAuth.of(context);
-    final translator = auth.translator;
-    final env = auth.env;
+    final authState = ClerkAuth.of(context);
+    final translator = authState.translator;
+    final env = authState.env;
     final attributes = [
       ...env.user.attributes.entries
           .where((a) => a.value.isEnabled)
@@ -68,7 +68,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       mainAxisSize: MainAxisSize.min,
       children: [
         Closeable(
-          closed: auth.signUp?.unverified(clerk.Field.phoneNumber) != true,
+          closed: authState.signUp?.unverified(clerk.Field.phoneNumber) != true,
           child: Padding(
             padding: verticalPadding8,
             child: ClerkCodeInput(
@@ -80,7 +80,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
               ),
               onSubmit: (code) async {
                 await _continue(
-                  auth,
+                  authState,
                   strategy: clerk.Strategy.phoneCode,
                   code: code,
                 );
@@ -90,7 +90,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           ),
         ),
         Closeable(
-          closed: auth.signUp?.unverified(clerk.Field.emailAddress) != true,
+          closed:
+              authState.signUp?.unverified(clerk.Field.emailAddress) != true,
           child: Padding(
             padding: verticalPadding8,
             child: ClerkCodeInput(
@@ -101,7 +102,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                 substitution: _values[clerk.UserAttribute.emailAddress],
               ),
               onSubmit: (code) async {
-                await _continue(auth,
+                await _continue(authState,
                     strategy: clerk.Strategy.emailCode, code: code);
                 return false;
               },
@@ -109,7 +110,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           ),
         ),
         Closeable(
-          closed: auth.signUp?.unverifiedFields.isNotEmpty == true,
+          closed: authState.signUp?.unverifiedFields.isNotEmpty == true,
           child: Column(
             children: [
               for (final attribute in attributes)
@@ -140,7 +141,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           ),
         ),
         ClerkMaterialButton(
-          onPressed: () => _continue(auth),
+          onPressed: () => _continue(authState),
           label: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,

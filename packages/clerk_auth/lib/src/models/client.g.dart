@@ -23,15 +23,21 @@ Client _$ClientFromJson(Map<String, dynamic> json) => Client(
       createdAt: intToDateTime(json['created_at']),
     );
 
-Map<String, dynamic> _$ClientToJson(Client instance) => <String, dynamic>{
-      if (instance.id case final value?) 'id': value,
-      if (instance.signIn?.toJson() case final value?) 'sign_in': value,
-      if (instance.signUp?.toJson() case final value?) 'sign_up': value,
-      if (instance.lastActiveSessionId case final value?)
-        'last_active_session_id': value,
-      'sessions': instance.sessions.map((e) => e.toJson()).toList(),
-      if (instance.updatedAt?.toIso8601String() case final value?)
-        'updated_at': value,
-      if (instance.createdAt?.toIso8601String() case final value?)
-        'created_at': value,
-    };
+Map<String, dynamic> _$ClientToJson(Client instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('sign_in', instance.signIn?.toJson());
+  writeNotNull('sign_up', instance.signUp?.toJson());
+  writeNotNull('last_active_session_id', instance.lastActiveSessionId);
+  val['sessions'] = instance.sessions.map((e) => e.toJson()).toList();
+  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
+  writeNotNull('created_at', instance.createdAt?.toIso8601String());
+  return val;
+}

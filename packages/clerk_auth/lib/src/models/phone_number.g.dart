@@ -19,17 +19,23 @@ PhoneNumber _$PhoneNumberFromJson(Map<String, dynamic> json) => PhoneNumber(
       createdAt: intToDateTime(json['created_at']),
     );
 
-Map<String, dynamic> _$PhoneNumberToJson(PhoneNumber instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      if (instance.verification?.toJson() case final value?)
-        'verification': value,
-      'phone_number': instance.phoneNumber,
-      'reserved': instance.reserved,
-      'reserved_for_second_factor': instance.reservedForSecondFactor,
-      'default_second_factor': instance.defaultSecondFactor,
-      if (instance.updatedAt?.toIso8601String() case final value?)
-        'updated_at': value,
-      if (instance.createdAt?.toIso8601String() case final value?)
-        'created_at': value,
-    };
+Map<String, dynamic> _$PhoneNumberToJson(PhoneNumber instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('verification', instance.verification?.toJson());
+  val['phone_number'] = instance.phoneNumber;
+  val['reserved'] = instance.reserved;
+  val['reserved_for_second_factor'] = instance.reservedForSecondFactor;
+  val['default_second_factor'] = instance.defaultSecondFactor;
+  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
+  writeNotNull('created_at', instance.createdAt?.toIso8601String());
+  return val;
+}

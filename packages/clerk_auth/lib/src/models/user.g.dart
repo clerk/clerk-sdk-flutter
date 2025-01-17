@@ -53,57 +53,50 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       deleteSelfEnabled: json['delete_self_enabled'] as bool?,
     );
 
-Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-      'id': instance.id,
-      if (instance.firstName case final value?) 'first_name': value,
-      if (instance.lastName case final value?) 'last_name': value,
-      if (instance.profileImageUrl case final value?)
-        'profile_image_url': value,
-      if (instance.imageUrl case final value?) 'image_url': value,
-      if (instance.hasImage case final value?) 'has_image': value,
-      if (instance.primaryEmailAddressId case final value?)
-        'primary_email_address_id': value,
-      if (instance.primaryPhoneNumberId case final value?)
-        'primary_phone_number_id': value,
-      if (instance.primaryWeb3WalletId case final value?)
-        'primary_web3_wallet_id': value,
-      if (instance.publicMetadata case final value?) 'public_metadata': value,
-      if (instance.privateMetadata case final value?) 'private_metadata': value,
-      if (instance.unsafeMetadata case final value?) 'unsafe_metadata': value,
-      if (instance.emailAddresses?.map((e) => e.toJson()).toList()
-          case final value?)
-        'email_addresses': value,
-      if (instance.phoneNumbers?.map((e) => e.toJson()).toList()
-          case final value?)
-        'phone_numbers': value,
-      if (instance.web3Wallets?.map((e) => e.toJson()).toList()
-          case final value?)
-        'web3_wallets': value,
-      if (instance.passkeys?.map((e) => e.toJson()).toList() case final value?)
-        'passkeys': value,
-      if (instance.organizationMemberships?.map((e) => e.toJson()).toList()
-          case final value?)
-        'organization_memberships': value,
-      if (instance.passwordEnabled case final value?) 'password_enabled': value,
-      if (instance.twoFactorEnabled case final value?)
-        'two_factor_enabled': value,
-      if (instance.totpEnabled case final value?) 'totp_enabled': value,
-      if (instance.backupCodeEnabled case final value?)
-        'backup_code_enabled': value,
-      if (instance.banned case final value?) 'banned': value,
-      if (instance.locked case final value?) 'locked': value,
-      if (instance.lockoutExpiresInSeconds case final value?)
-        'lockout_expires_in_seconds': value,
-      if (instance.verificationAttemptsRemaining case final value?)
-        'verification_attempts_remaining': value,
-      if (instance.deleteSelfEnabled case final value?)
-        'delete_self_enabled': value,
-      if (instance.lastSignInAt?.toIso8601String() case final value?)
-        'last_sign_in_at': value,
-      if (instance.updatedAt?.toIso8601String() case final value?)
-        'updated_at': value,
-      if (instance.createdAt?.toIso8601String() case final value?)
-        'created_at': value,
-      if (instance.lastActiveAt?.toIso8601String() case final value?)
-        'last_active_at': value,
-    };
+Map<String, dynamic> _$UserToJson(User instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('first_name', instance.firstName);
+  writeNotNull('last_name', instance.lastName);
+  writeNotNull('profile_image_url', instance.profileImageUrl);
+  writeNotNull('image_url', instance.imageUrl);
+  writeNotNull('has_image', instance.hasImage);
+  writeNotNull('primary_email_address_id', instance.primaryEmailAddressId);
+  writeNotNull('primary_phone_number_id', instance.primaryPhoneNumberId);
+  writeNotNull('primary_web3_wallet_id', instance.primaryWeb3WalletId);
+  writeNotNull('public_metadata', instance.publicMetadata);
+  writeNotNull('private_metadata', instance.privateMetadata);
+  writeNotNull('unsafe_metadata', instance.unsafeMetadata);
+  writeNotNull('email_addresses',
+      instance.emailAddresses?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'phone_numbers', instance.phoneNumbers?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'web3_wallets', instance.web3Wallets?.map((e) => e.toJson()).toList());
+  writeNotNull('passkeys', instance.passkeys?.map((e) => e.toJson()).toList());
+  writeNotNull('organization_memberships',
+      instance.organizationMemberships?.map((e) => e.toJson()).toList());
+  writeNotNull('password_enabled', instance.passwordEnabled);
+  writeNotNull('two_factor_enabled', instance.twoFactorEnabled);
+  writeNotNull('totp_enabled', instance.totpEnabled);
+  writeNotNull('backup_code_enabled', instance.backupCodeEnabled);
+  writeNotNull('banned', instance.banned);
+  writeNotNull('locked', instance.locked);
+  writeNotNull('lockout_expires_in_seconds', instance.lockoutExpiresInSeconds);
+  writeNotNull('verification_attempts_remaining',
+      instance.verificationAttemptsRemaining);
+  writeNotNull('delete_self_enabled', instance.deleteSelfEnabled);
+  writeNotNull('last_sign_in_at', instance.lastSignInAt?.toIso8601String());
+  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
+  writeNotNull('created_at', instance.createdAt?.toIso8601String());
+  writeNotNull('last_active_at', instance.lastActiveAt?.toIso8601String());
+  return val;
+}

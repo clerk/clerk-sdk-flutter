@@ -37,34 +37,42 @@ SignUp _$SignUpFromJson(Map<String, dynamic> json) => SignUp(
       abandonAt: intToDateTime(json['abandon_at']),
     );
 
-Map<String, dynamic> _$SignUpToJson(SignUp instance) => <String, dynamic>{
-      'id': instance.id,
-      'status': _$StatusEnumMap[instance.status]!,
-      'required_fields':
-          instance.requiredFields.map((e) => _$FieldEnumMap[e]!).toList(),
-      'optional_fields':
-          instance.optionalFields.map((e) => _$FieldEnumMap[e]!).toList(),
-      'missing_fields':
-          instance.missingFields.map((e) => _$FieldEnumMap[e]!).toList(),
-      'unverified_fields':
-          instance.unverifiedFields.map((e) => _$FieldEnumMap[e]!).toList(),
-      if (instance.username case final value?) 'username': value,
-      if (instance.emailAddress case final value?) 'email_address': value,
-      if (instance.phoneNumber case final value?) 'phone_number': value,
-      if (instance.web3Wallet case final value?) 'web3_wallet': value,
-      'password_enabled': instance.passwordEnabled,
-      if (instance.firstName case final value?) 'first_name': value,
-      if (instance.lastName case final value?) 'last_name': value,
-      'unsafe_metadata': instance.unsafeMetadata,
-      'public_metadata': instance.publicMetadata,
-      'custom_action': instance.customAction,
-      if (instance.externalId case final value?) 'external_id': value,
-      if (instance.createdSessionId case final value?)
-        'created_session_id': value,
-      if (instance.createdUserId case final value?) 'created_user_id': value,
-      if (instance.abandonAt?.toIso8601String() case final value?)
-        'abandon_at': value,
-    };
+Map<String, dynamic> _$SignUpToJson(SignUp instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'status': _$StatusEnumMap[instance.status]!,
+    'required_fields':
+        instance.requiredFields.map((e) => _$FieldEnumMap[e]!).toList(),
+    'optional_fields':
+        instance.optionalFields.map((e) => _$FieldEnumMap[e]!).toList(),
+    'missing_fields':
+        instance.missingFields.map((e) => _$FieldEnumMap[e]!).toList(),
+    'unverified_fields':
+        instance.unverifiedFields.map((e) => _$FieldEnumMap[e]!).toList(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('username', instance.username);
+  writeNotNull('email_address', instance.emailAddress);
+  writeNotNull('phone_number', instance.phoneNumber);
+  writeNotNull('web3_wallet', instance.web3Wallet);
+  val['password_enabled'] = instance.passwordEnabled;
+  writeNotNull('first_name', instance.firstName);
+  writeNotNull('last_name', instance.lastName);
+  val['unsafe_metadata'] = instance.unsafeMetadata;
+  val['public_metadata'] = instance.publicMetadata;
+  val['custom_action'] = instance.customAction;
+  writeNotNull('external_id', instance.externalId);
+  writeNotNull('created_session_id', instance.createdSessionId);
+  writeNotNull('created_user_id', instance.createdUserId);
+  writeNotNull('abandon_at', instance.abandonAt?.toIso8601String());
+  return val;
+}
 
 const _$StatusEnumMap = {
   Status.abandoned: 'abandoned',

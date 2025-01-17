@@ -17,13 +17,23 @@ Factor _$FactorFromJson(Map<String, dynamic> json) => Factor(
       isDefault: json['default'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$FactorToJson(Factor instance) => <String, dynamic>{
-      'strategy': instance.strategy.toJson(),
-      if (instance.safeIdentifier case final value?) 'safe_identifier': value,
-      if (instance.emailAddressId case final value?) 'email_address_id': value,
-      if (instance.phoneNumberId case final value?) 'phone_number_id': value,
-      if (instance.web3WalletId case final value?) 'web3_wallet_id': value,
-      if (instance.passkeyId case final value?) 'passkey_id': value,
-      'primary': instance.isPrimary,
-      'default': instance.isDefault,
-    };
+Map<String, dynamic> _$FactorToJson(Factor instance) {
+  final val = <String, dynamic>{
+    'strategy': instance.strategy.toJson(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('safe_identifier', instance.safeIdentifier);
+  writeNotNull('email_address_id', instance.emailAddressId);
+  writeNotNull('phone_number_id', instance.phoneNumberId);
+  writeNotNull('web3_wallet_id', instance.web3WalletId);
+  writeNotNull('passkey_id', instance.passkeyId);
+  val['primary'] = instance.isPrimary;
+  val['default'] = instance.isDefault;
+  return val;
+}

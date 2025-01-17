@@ -21,20 +21,26 @@ Session _$SessionFromJson(Map<String, dynamic> json) => Session(
               json['last_active_token'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
-      'id': instance.id,
-      'status': _$StatusEnumMap[instance.status]!,
-      'public_user_data': instance.publicUserData.toJson(),
-      if (instance.lastActiveToken?.toJson() case final value?)
-        'last_active_token': value,
-      'user': instance.user.toJson(),
-      if (instance.lastActiveAt?.toIso8601String() case final value?)
-        'last_active_at': value,
-      if (instance.expireAt?.toIso8601String() case final value?)
-        'expire_at': value,
-      if (instance.abandonAt?.toIso8601String() case final value?)
-        'abandon_at': value,
-    };
+Map<String, dynamic> _$SessionToJson(Session instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'status': _$StatusEnumMap[instance.status]!,
+    'public_user_data': instance.publicUserData.toJson(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('last_active_token', instance.lastActiveToken?.toJson());
+  val['user'] = instance.user.toJson();
+  writeNotNull('last_active_at', instance.lastActiveAt?.toIso8601String());
+  writeNotNull('expire_at', instance.expireAt?.toIso8601String());
+  writeNotNull('abandon_at', instance.abandonAt?.toIso8601String());
+  return val;
+}
 
 const _$StatusEnumMap = {
   Status.abandoned: 'abandoned',

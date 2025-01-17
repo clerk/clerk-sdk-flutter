@@ -17,14 +17,21 @@ Email _$EmailFromJson(Map<String, dynamic> json) => Email(
       createdAt: intToDateTime(json['created_at']),
     );
 
-Map<String, dynamic> _$EmailToJson(Email instance) => <String, dynamic>{
-      'id': instance.id,
-      if (instance.verification?.toJson() case final value?)
-        'verification': value,
-      'email_address': instance.emailAddress,
-      'reserved': instance.reserved,
-      if (instance.updatedAt?.toIso8601String() case final value?)
-        'updated_at': value,
-      if (instance.createdAt?.toIso8601String() case final value?)
-        'created_at': value,
-    };
+Map<String, dynamic> _$EmailToJson(Email instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('verification', instance.verification?.toJson());
+  val['email_address'] = instance.emailAddress;
+  val['reserved'] = instance.reserved;
+  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
+  writeNotNull('created_at', instance.createdAt?.toIso8601String());
+  return val;
+}

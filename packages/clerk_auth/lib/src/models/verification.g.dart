@@ -15,17 +15,24 @@ Verification _$VerificationFromJson(Map<String, dynamic> json) => Verification(
       nonce: json['nonce'] as String?,
     );
 
-Map<String, dynamic> _$VerificationToJson(Verification instance) =>
-    <String, dynamic>{
-      'status': _$StatusEnumMap[instance.status]!,
-      'strategy': instance.strategy.toJson(),
-      if (instance.attempts case final value?) 'attempts': value,
-      if (instance.nonce case final value?) 'nonce': value,
-      if (instance.providerUrl case final value?)
-        'external_verification_redirect_url': value,
-      if (instance.expireAt?.toIso8601String() case final value?)
-        'expire_at': value,
-    };
+Map<String, dynamic> _$VerificationToJson(Verification instance) {
+  final val = <String, dynamic>{
+    'status': _$StatusEnumMap[instance.status]!,
+    'strategy': instance.strategy.toJson(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('attempts', instance.attempts);
+  writeNotNull('nonce', instance.nonce);
+  writeNotNull('external_verification_redirect_url', instance.providerUrl);
+  writeNotNull('expire_at', instance.expireAt?.toIso8601String());
+  return val;
+}
 
 const _$StatusEnumMap = {
   Status.abandoned: 'abandoned',

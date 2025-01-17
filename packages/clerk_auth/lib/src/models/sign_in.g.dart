@@ -37,25 +37,33 @@ SignIn _$SignInFromJson(Map<String, dynamic> json) => SignIn(
       abandonAt: intToDateTime(json['abandon_at']),
     );
 
-Map<String, dynamic> _$SignInToJson(SignIn instance) => <String, dynamic>{
-      'id': instance.id,
-      'status': _$StatusEnumMap[instance.status]!,
-      'supported_identifiers': instance.supportedIdentifiers,
-      if (instance.identifier case final value?) 'identifier': value,
-      if (instance.userData?.toJson() case final value?) 'user_data': value,
-      if (instance.firstFactorVerification?.toJson() case final value?)
-        'first_factor_verification': value,
-      if (instance.secondFactorVerification?.toJson() case final value?)
-        'second_factor_verification': value,
-      if (instance.createdSessionId case final value?)
-        'created_session_id': value,
-      if (instance.abandonAt?.toIso8601String() case final value?)
-        'abandon_at': value,
-      'supported_first_factors':
-          instance.supportedFirstFactors.map((e) => e.toJson()).toList(),
-      'supported_second_factors':
-          instance.supportedSecondFactors.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$SignInToJson(SignIn instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'status': _$StatusEnumMap[instance.status]!,
+    'supported_identifiers': instance.supportedIdentifiers,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('identifier', instance.identifier);
+  writeNotNull('user_data', instance.userData?.toJson());
+  writeNotNull(
+      'first_factor_verification', instance.firstFactorVerification?.toJson());
+  writeNotNull('second_factor_verification',
+      instance.secondFactorVerification?.toJson());
+  writeNotNull('created_session_id', instance.createdSessionId);
+  writeNotNull('abandon_at', instance.abandonAt?.toIso8601String());
+  val['supported_first_factors'] =
+      instance.supportedFirstFactors.map((e) => e.toJson()).toList();
+  val['supported_second_factors'] =
+      instance.supportedSecondFactors.map((e) => e.toJson()).toList();
+  return val;
+}
 
 const _$StatusEnumMap = {
   Status.abandoned: 'abandoned',

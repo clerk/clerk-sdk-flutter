@@ -16,14 +16,20 @@ Web3Wallet _$Web3WalletFromJson(Map<String, dynamic> json) => Web3Wallet(
       createdAt: intToDateTime(json['created_at']),
     );
 
-Map<String, dynamic> _$Web3WalletToJson(Web3Wallet instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      if (instance.verification?.toJson() case final value?)
-        'verification': value,
-      'web3_wallet': instance.web3Wallet,
-      if (instance.updatedAt?.toIso8601String() case final value?)
-        'updated_at': value,
-      if (instance.createdAt?.toIso8601String() case final value?)
-        'created_at': value,
-    };
+Map<String, dynamic> _$Web3WalletToJson(Web3Wallet instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('verification', instance.verification?.toJson());
+  val['web3_wallet'] = instance.web3Wallet;
+  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
+  writeNotNull('created_at', instance.createdAt?.toIso8601String());
+  return val;
+}

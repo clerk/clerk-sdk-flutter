@@ -23,21 +23,28 @@ Organization _$OrganizationFromJson(Map<String, dynamic> json) => Organization(
       createdAt: intToDateTime(json['created_at']),
     );
 
-Map<String, dynamic> _$OrganizationToJson(Organization instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'max_allowed_memberships': instance.maxAllowedMemberships,
-      'admin_delete_enabled': instance.adminDeleteEnabled,
-      'slug': instance.slug,
-      'logo_url': instance.logoUrl,
-      'image_url': instance.imageUrl,
-      'has_image': instance.hasImage,
-      'members_count': instance.membersCount,
-      'pending_invitations_count': instance.pendingInvitationsCount,
-      'public_metadata': instance.publicMetadata,
-      if (instance.updatedAt?.toIso8601String() case final value?)
-        'updated_at': value,
-      if (instance.createdAt?.toIso8601String() case final value?)
-        'created_at': value,
-    };
+Map<String, dynamic> _$OrganizationToJson(Organization instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'name': instance.name,
+    'max_allowed_memberships': instance.maxAllowedMemberships,
+    'admin_delete_enabled': instance.adminDeleteEnabled,
+    'slug': instance.slug,
+    'logo_url': instance.logoUrl,
+    'image_url': instance.imageUrl,
+    'has_image': instance.hasImage,
+    'members_count': instance.membersCount,
+    'pending_invitations_count': instance.pendingInvitationsCount,
+    'public_metadata': instance.publicMetadata,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
+  writeNotNull('created_at', instance.createdAt?.toIso8601String());
+  return val;
+}

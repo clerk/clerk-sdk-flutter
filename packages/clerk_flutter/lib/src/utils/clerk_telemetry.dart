@@ -14,9 +14,8 @@ mixin ClerkTelemetryStateMixin<T extends StatefulWidget> on State<T> {
 
   /// Get the [ClerkAuthState] with which to make the telemetry report
   /// to the back end
-  clerk.Telemetry get telemetry {
-    return _telemetry ??= ClerkAuth.of(context, listen: false).telemetry;
-  }
+  clerk.Telemetry? get telemetry =>
+      _telemetry ??= ClerkAuth.of(context, listen: false).telemetry;
 
   /// The payload of widget metadata that will be sent to telemetry
   Map<String, dynamic> get telemetryPayload => const {};
@@ -31,7 +30,7 @@ mixin ClerkTelemetryStateMixin<T extends StatefulWidget> on State<T> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (telemetry.isEnabled) {
+    if (telemetry case final telemetry? when telemetry.isEnabled) {
       // this is an update or a rebuild
       if (_telemetryData is Map<String, dynamic>) {
         final data = _generateTelemetryPayload();
@@ -50,7 +49,7 @@ mixin ClerkTelemetryStateMixin<T extends StatefulWidget> on State<T> {
 
   @override
   void dispose() {
-    if (telemetry.isEnabled) {
+    if (telemetry case final telemetry? when telemetry.isEnabled) {
       telemetry.sendComponentDismounted(_generateTelemetryPayload());
     }
     super.dispose();

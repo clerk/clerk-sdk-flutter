@@ -90,6 +90,9 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
   ClerkAuthState? get effectiveAuthState => widget.authState ?? _clerkAuthState;
 
   @override
+  clerk.Telemetry? get telemetry => effectiveAuthState?.telemetry;
+
+  @override
   Map<String, dynamic> get telemetryPayload {
     return {
       'poll_mode': widget.pollMode.toString(),

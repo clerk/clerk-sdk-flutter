@@ -378,15 +378,20 @@ class Auth {
 
   /// Update the [name] of the current [User]
   ///
-  Future<void> updateUserName(String name) async {
-    if (user case User user when name.isNotEmpty) {
-      final names = name.split(' ').where((s) => s.isNotEmpty).toList();
-      final lastName = names.length == 1 ? '' : names.removeLast();
+  Future<void> updateUser({
+    String? username,
+    String? firstName,
+    String? lastName,
+    Map<String, dynamic>? metadata,
+  }) async {
+    if (user case User user) {
       final newUser = user.copyWith(
+        username: username,
+        firstName: firstName,
         lastName: lastName,
-        firstName: names.join(' '),
+        userMetadata: metadata,
       );
-      await _api.updateUser(newUser).then(_housekeeping);
+      await _api.updateUser(newUser, env.config).then(_housekeeping);
       update();
     }
   }

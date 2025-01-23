@@ -21,12 +21,12 @@ class AuthConfig {
     this.firstFactors = const [],
     this.secondFactors = const [],
     this.emailAddressVerificationStrategies = const [],
-    this.usesFirstName = false,
-    this.usesLastName = false,
-    this.usesEmailAddress = false,
-    this.usesPhoneNumber = false,
-    this.usesUsername = false,
-    this.usesPassword = false,
+    this.allowsFirstName = false,
+    this.allowsLastName = false,
+    this.allowsEmailAddress = false,
+    this.allowsPhoneNumber = false,
+    this.allowsUsername = false,
+    this.allowsPassword = false,
   });
 
   /// id
@@ -66,29 +66,29 @@ class AuthConfig {
   @JsonKey(fromJson: toStrategyList)
   final List<Strategy> emailAddressVerificationStrategies;
 
-  /// uses first name?
+  /// allows first name?
   @JsonKey(name: 'first_name', fromJson: isOn)
-  final bool usesFirstName;
+  final bool allowsFirstName;
 
-  /// uses last name?
+  /// allows last name?
   @JsonKey(name: 'last_name', fromJson: isOn)
-  final bool usesLastName;
+  final bool allowsLastName;
 
-  /// uses email address?
+  /// allows email address?
   @JsonKey(name: 'email_address', fromJson: isOn)
-  final bool usesEmailAddress;
+  final bool allowsEmailAddress;
 
-  /// uses phone number?
+  /// allows phone number?
   @JsonKey(name: 'phone_number', fromJson: isOn)
-  final bool usesPhoneNumber;
+  final bool allowsPhoneNumber;
 
-  /// uses username?
+  /// allows username?
   @JsonKey(name: 'username', fromJson: isOn)
-  final bool usesUsername;
+  final bool allowsUsername;
 
-  /// uses password?
+  /// allows password?
   @JsonKey(name: 'password', fromJson: isOn)
-  final bool usesPassword;
+  final bool allowsPassword;
 
   /// empty [AuthConfig]
   static const empty = AuthConfig();

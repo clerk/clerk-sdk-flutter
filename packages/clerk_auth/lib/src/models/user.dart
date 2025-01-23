@@ -11,6 +11,7 @@ class User {
   /// Constructor
   const User({
     required this.id,
+    required this.username,
     required this.firstName,
     required this.lastName,
     required this.profileImageUrl,
@@ -21,7 +22,7 @@ class User {
     required this.primaryWeb3WalletId,
     required this.publicMetadata,
     required this.privateMetadata,
-    required this.unsafeMetadata,
+    required this.userMetadata,
     required this.emailAddresses,
     required this.phoneNumbers,
     required this.web3Wallets,
@@ -44,6 +45,9 @@ class User {
 
   /// id
   final String id;
+
+  /// username
+  final String? username;
 
   /// first name
   final String? firstName;
@@ -76,7 +80,8 @@ class User {
   final Map<String, dynamic>? privateMetadata;
 
   /// unsafe metadata
-  final Map<String, dynamic>? unsafeMetadata;
+  @JsonKey(name: 'unsafe_metadata')
+  final Map<String, dynamic>? userMetadata;
 
   /// email addresses
   final List<Email>? emailAddresses;
@@ -135,6 +140,9 @@ class User {
   /// last active at
   @JsonKey(fromJson: intToDateTime)
   final DateTime? lastActiveAt;
+
+  /// Does this user have metadata?
+  bool get hasMetadata => userMetadata?.isNotEmpty == true;
 
   /// fromJson
   static User fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -196,6 +204,7 @@ class User {
 
   /// copy this user with changed fields
   User copyWith({
+    String? username,
     String? firstName,
     String? lastName,
     String? profileImageUrl,
@@ -206,7 +215,7 @@ class User {
     String? primaryWeb3WalletId,
     Map<String, dynamic>? publicMetadata,
     Map<String, dynamic>? privateMetadata,
-    Map<String, dynamic>? unsafeMetadata,
+    Map<String, dynamic>? userMetadata,
     List<Email>? emailAddresses,
     List<PhoneNumber>? phoneNumbers,
     List<Web3Wallet>? web3Wallets,
@@ -228,6 +237,7 @@ class User {
   }) =>
       User(
         id: id,
+        username: username ?? this.username,
         firstName: firstName ?? this.firstName,
         lastName: lastName ?? this.lastName,
         profileImageUrl: profileImageUrl ?? this.profileImageUrl,
@@ -239,7 +249,7 @@ class User {
         primaryWeb3WalletId: primaryWeb3WalletId ?? this.primaryWeb3WalletId,
         publicMetadata: publicMetadata ?? this.publicMetadata,
         privateMetadata: privateMetadata ?? this.privateMetadata,
-        unsafeMetadata: unsafeMetadata ?? this.unsafeMetadata,
+        userMetadata: userMetadata ?? this.userMetadata,
         emailAddresses: emailAddresses ?? this.emailAddresses,
         phoneNumbers: phoneNumbers ?? this.phoneNumbers,
         web3Wallets: web3Wallets ?? this.web3Wallets,

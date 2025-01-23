@@ -29,15 +29,16 @@ AuthConfig _$AuthConfigFromJson(Map<String, dynamic> json) => AuthConfig(
           json['email_address_verification_strategies'] == null
               ? const []
               : toStrategyList(json['email_address_verification_strategies']),
-      usesFirstName:
+      allowsFirstName:
           json['first_name'] == null ? false : isOn(json['first_name']),
-      usesLastName: json['last_name'] == null ? false : isOn(json['last_name']),
-      usesEmailAddress:
+      allowsLastName:
+          json['last_name'] == null ? false : isOn(json['last_name']),
+      allowsEmailAddress:
           json['email_address'] == null ? false : isOn(json['email_address']),
-      usesPhoneNumber:
+      allowsPhoneNumber:
           json['phone_number'] == null ? false : isOn(json['phone_number']),
-      usesUsername: json['username'] == null ? false : isOn(json['username']),
-      usesPassword: json['password'] == null ? false : isOn(json['password']),
+      allowsUsername: json['username'] == null ? false : isOn(json['username']),
+      allowsPassword: json['password'] == null ? false : isOn(json['password']),
     );
 
 Map<String, dynamic> _$AuthConfigToJson(AuthConfig instance) =>
@@ -57,10 +58,10 @@ Map<String, dynamic> _$AuthConfigToJson(AuthConfig instance) =>
           .emailAddressVerificationStrategies
           .map((e) => e.toJson())
           .toList(),
-      'first_name': instance.usesFirstName,
-      'last_name': instance.usesLastName,
-      'email_address': instance.usesEmailAddress,
-      'phone_number': instance.usesPhoneNumber,
-      'username': instance.usesUsername,
-      'password': instance.usesPassword,
+      'first_name': instance.allowsFirstName,
+      'last_name': instance.allowsLastName,
+      'email_address': instance.allowsEmailAddress,
+      'phone_number': instance.allowsPhoneNumber,
+      'username': instance.allowsUsername,
+      'password': instance.allowsPassword,
     };

@@ -8,6 +8,7 @@ part of 'user.dart';
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
       id: json['id'] as String,
+      username: json['username'] as String?,
       firstName: json['first_name'] as String?,
       lastName: json['last_name'] as String?,
       profileImageUrl: json['profile_image_url'] as String?,
@@ -18,7 +19,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       primaryWeb3WalletId: json['primary_web3_wallet_id'] as String?,
       publicMetadata: json['public_metadata'] as Map<String, dynamic>?,
       privateMetadata: json['private_metadata'] as Map<String, dynamic>?,
-      unsafeMetadata: json['unsafe_metadata'] as Map<String, dynamic>?,
+      userMetadata: json['unsafe_metadata'] as Map<String, dynamic>?,
       emailAddresses: (json['email_addresses'] as List<dynamic>?)
           ?.map((e) => Email.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -64,6 +65,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
     }
   }
 
+  writeNotNull('username', instance.username);
   writeNotNull('first_name', instance.firstName);
   writeNotNull('last_name', instance.lastName);
   writeNotNull('profile_image_url', instance.profileImageUrl);
@@ -74,7 +76,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('primary_web3_wallet_id', instance.primaryWeb3WalletId);
   writeNotNull('public_metadata', instance.publicMetadata);
   writeNotNull('private_metadata', instance.privateMetadata);
-  writeNotNull('unsafe_metadata', instance.unsafeMetadata);
+  writeNotNull('unsafe_metadata', instance.userMetadata);
   writeNotNull('email_addresses',
       instance.emailAddresses?.map((e) => e.toJson()).toList());
   writeNotNull(

@@ -361,8 +361,12 @@ class _EditableUserDataState extends State<_EditableUserData> {
   Future<void> _update([_]) async {
     if (isEditing) {
       final authState = ClerkAuth.of(context, listen: false);
-      if (_controller.text != widget.user.name) {
-        await authState.updateUserName(_controller.text);
+      final name = _controller.text;
+      if (name != widget.user.name && name.isNotEmpty) {
+        final names = name.split(' ').where((s) => s.isNotEmpty).toList();
+        final lastName = names.length > 1 ? names.removeLast() : '';
+        final firstName = names.join(' ');
+        await authState.updateUser(firstName: firstName, lastName: lastName);
       }
       if (image case File image) {
         await authState.updateUserImage(image);

@@ -426,17 +426,23 @@ class Api with Logging {
 
   /// Update details pertaining to the current [User]
   ///
-  Future<ApiResponse> updateUser(User user) async {
+  Future<ApiResponse> updateUser(User user, AuthConfig config) async {
     return await _fetchApiResponse(
       '/me',
       method: HttpMethod.patch,
       withSession: true,
       params: {
-        'first_name': user.firstName,
-        'last_name': user.lastName,
+        if (config.allowsUsername) //
+          'username': user.username,
+        if (config.allowsFirstName) //
+          'first_name': user.firstName,
+        if (config.allowsLastName) //
+          'last_name': user.lastName,
         'primary_email_address_id': user.primaryEmailAddressId,
         'primary_phone_number_id': user.primaryPhoneNumberId,
         'primary_web3_wallet_id': user.primaryWeb3WalletId,
+        'unsafe_metadata':
+            user.hasMetadata ? json.encode(user.userMetadata) : null,
       },
     );
   }

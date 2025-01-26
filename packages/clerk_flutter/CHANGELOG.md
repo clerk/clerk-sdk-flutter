@@ -1,3 +1,8 @@
+## 0.0.6-dev
+
+- Improve updateUser to utilise environment config #98
+- Fix ClerkAuthState missing after telemetry addition #102
+
 ## 0.0.5-dev
 
 - Lower flutter version to 3.10.0 #41

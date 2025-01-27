@@ -24,42 +24,27 @@ class TokenCache {
   final Persistor _persistor;
   final int _cacheId;
 
-  late DateTime _sessionTokenExpiry = DateTimeExt.zero;
-
-  /// the date at which, if in the future, the current [sessionToken]
-  /// is due to expire
-  DateTime get sessionTokenExpiry => _sessionTokenExpiry;
-
-  static const _tokenExpiryBuffer = Duration(seconds: 10);
-  static const _kJwtExpiryKey = 'exp';
-
   final _logger = Logger('TokenCache');
+  final _sessionTokens = <String, SessionToken>{};
 
   String _sessionId = '';
   String _clientToken = '';
-  String _sessionToken = '';
 
-  /// Wether or not we have a [clientToken]
+  /// Whether or not we have a [clientToken]
   bool get hasClientToken => clientToken.isNotEmpty;
 
-  /// Whether or not the [sessionToken] can be refreshed
+  /// Whether or not the [sessionTokenFor] can be refreshed
   bool get canRefreshSessionToken => hasClientToken && sessionId.isNotEmpty;
-
-  bool get _sessionTokenHasExpired =>
-      DateTime.timestamp().isAfter(sessionTokenExpiry);
 
   String get _sessionIdKey => '_clerkSession_Id_$_cacheId';
 
-  String get _sessionTokenKey => '_clerkSession_TokenValue_$_cacheId';
-
-  String get _sessionTokenExpiryKey => '_clerkSession_TokenExpiry_$_cacheId';
+  String get _sessionTokenKey => '_clerkSession_Tokens_$_cacheId';
 
   String get _clientTokenKey => '_clerkClient_TokenValue_$_cacheId';
 
   List<String> get _persistorKeys => [
         _sessionIdKey,
         _sessionTokenKey,
-        _sessionTokenExpiryKey,
         _clientTokenKey,
       ];
 
@@ -67,16 +52,23 @@ class TokenCache {
   Future<void> initialize() async {
     // Read all stored variables first before assignment
     final sessionId = await _persistor.read(_sessionIdKey) ?? '';
-    final sessionToken = await _persistor.read(_sessionTokenKey) ?? '';
-    final clientToken = await _persistor.read(_clientTokenKey) ?? '';
-    final seconds = await _persistor.read(_sessionTokenExpiryKey) ?? '';
-    final sessionTokenExpiry =
-        DateTimeExt.utcEpochSeconds(int.tryParse(seconds) ?? 0);
-
     _sessionId = sessionId;
-    _sessionToken = sessionToken;
+
+    final sessionTokens = await _persistor.read(_sessionTokenKey);
+    if (sessionTokens case String sessionTokens) {
+      final sessionTokenData =
+          json.decode(sessionTokens) as Map<String, dynamic>;
+      for (final entry in sessionTokenData.entries) {
+        final sessionToken =
+            SessionToken.fromJson(entry.value as Map<String, dynamic>);
+        if (sessionToken.isNotExpired) {
+          _sessionTokens[entry.key] = sessionToken;
+        }
+      }
+    }
+
+    final clientToken = await _persistor.read(_clientTokenKey) ?? '';
     _clientToken = clientToken;
-    _sessionTokenExpiry = sessionTokenExpiry;
   }
 
   /// Reset the [TokenCache]
@@ -84,8 +76,7 @@ class TokenCache {
   void clear() {
     _sessionId = '';
     _clientToken = '';
-    _sessionToken = '';
-    _sessionTokenExpiry = DateTimeExt.zero;
+    _sessionTokens.clear();
     for (final key in _persistorKeys) {
       _persistor.delete(key);
     }
@@ -113,31 +104,24 @@ class TokenCache {
     }
   }
 
-  /// Get the [sessionToken]
-  String get sessionToken {
-    if (_sessionTokenHasExpired) _sessionToken = '';
-    return _sessionToken;
+  /// Get the [sessionTokenFor] for a [orgId]
+  String sessionTokenFor(Organization org) {
+    return switch (_sessionTokens[org.id]) {
+      SessionToken token when token.isNotExpired => token.jwt,
+      _ => '',
+    };
   }
 
-  set sessionToken(String token) {
-    if (token == _sessionToken) return;
-
-    try {
-      final body = token.split('.')[1];
-      final payload = json.decode(body.b64decoded);
-      final expirySeconds = payload[_kJwtExpiryKey];
-      if (expirySeconds is int) {
-        final expiry = expirySeconds - _tokenExpiryBuffer.inSeconds;
-        _sessionTokenExpiry = DateTimeExt.utcEpochSeconds(expiry);
-        if (_sessionTokenExpiry.isAfter(DateTime.now())) {
-          _sessionToken = token;
-          _persistor.write(_sessionTokenKey, token);
-          _persistor.write(_sessionTokenExpiryKey, expiry.toString());
-        }
-      }
-    } catch (error, _) {
-      _logger.info('ERROR SETTING SESSION TOKEN: $error', error);
+  /// Set a [sessionToken] for an organization
+  SessionToken makeAndCacheSessionToken(String token) {
+    final sessionToken = SessionToken(jwt: token);
+    final orgId = sessionToken.orgId;
+    if (token != _sessionTokens[orgId]?.jwt) {
+      _sessionTokens[orgId] = sessionToken;
+      _persistor.write(_sessionTokenKey, json.encode(_sessionTokens));
     }
+
+    return _sessionTokens[orgId]!;
   }
 
   /// Update the tokens and IDs from a newly arrived [http.Response]
@@ -152,7 +136,9 @@ class TokenCache {
       if (newSessionId.isNotEmpty) _setSessionId(newSessionId);
 
       final newSessionToken = session.lastActiveToken?.jwt;
-      if (newSessionToken?.isNotEmpty == true) sessionToken = newSessionToken!;
+      if (newSessionToken?.isNotEmpty == true) {
+        makeAndCacheSessionToken(newSessionToken!);
+      }
     }
   }
 }

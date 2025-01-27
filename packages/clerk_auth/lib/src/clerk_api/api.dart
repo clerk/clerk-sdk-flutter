@@ -530,31 +530,44 @@ class Api with Logging {
   /// Return the [sessionToken] for the current active [Session], refreshing it
   /// if required
   ///
-  Future<String> sessionToken() async {
-    if (_tokenCache.sessionToken.isEmpty) await _updateSessionToken();
-    return _tokenCache.sessionToken;
+  Future<String?> sessionToken([Organization? org]) async {
+    org ??= Organization.personal;
+    final token = _tokenCache.sessionTokenFor(org);
+    if (token.isNotEmpty) {
+      return token;
+    }
+
+    final sessionToken = await _updateSessionToken(org);
+    return sessionToken?.jwt;
   }
 
-  Future<void> _updateSessionToken() async {
+  Future<SessionToken?> _updateSessionToken([Organization? org]) async {
     if (_tokenCache.canRefreshSessionToken) {
       final resp = await _fetch(
         path: '/client/sessions/${_tokenCache.sessionId}/tokens',
+        params: {
+          if (org case Organization org) //
+            'organization_id': org.externalId,
+        },
       );
       if (resp.statusCode == HttpStatus.ok) {
         final body = jsonDecode(resp.body) as Map<String, dynamic>;
-        _tokenCache.sessionToken = body[_kJwtKey] as String;
+        final token = body[_kJwtKey] as String;
+        return _tokenCache.makeAndCacheSessionToken(token);
       }
     }
+    return null;
   }
 
   Future<void> _pollForSessionToken() async {
     _pollTimer?.cancel();
 
-    await _updateSessionToken(); // make sure updated
-
-    final diff =
-        _tokenCache.sessionTokenExpiry.difference(DateTime.timestamp());
-    final delay = diff.isNegative ? _defaultPollDelay : diff;
+    final sessionToken = await _updateSessionToken();
+    final delay = switch (sessionToken) {
+      SessionToken sessionToken when sessionToken.isNotExpired =>
+        sessionToken.expiry.difference(DateTime.timestamp()),
+      _ => _defaultPollDelay,
+    };
     _pollTimer = Timer(delay, _pollForSessionToken);
   }
 

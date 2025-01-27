@@ -18,9 +18,10 @@ void main() {
     test('will fail unless encoded part follows underscore', () {
       expect(
         () => Api(
-          publishableKey: 'NOT A PUBLISHABLE KEY',
-          persistor: Persistor.none,
-          httpService: HttpService.none,
+          'NOT A PUBLISHABLE KEY',
+          Persistor.none,
+          HttpService.none,
+          SessionTokenPollMode.onDemand,
         ),
         throwsA(const TypeMatcher<FormatException>()),
       );
@@ -28,18 +29,20 @@ void main() {
 
     test('will pass when encoded part follows underscore', () {
       final result = Api(
-        publishableKey: publishableKey,
-        persistor: Persistor.none,
-        httpService: HttpService.none,
+        publishableKey,
+        Persistor.none,
+        HttpService.none,
+        SessionTokenPollMode.onDemand,
       );
       expect(result.domain, isA<String>());
     });
 
     test('will return correct domain from decoded key', () {
       final result = Api(
-        publishableKey: publishableKey,
-        persistor: Persistor.none,
-        httpService: HttpService.none,
+        publishableKey,
+        Persistor.none,
+        HttpService.none,
+        SessionTokenPollMode.onDemand,
       );
       expect(result.domain, domain);
     });

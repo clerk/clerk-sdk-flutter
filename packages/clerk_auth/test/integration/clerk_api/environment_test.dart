@@ -14,9 +14,10 @@ void main() {
   setUpAll(() async {
     env = TestEnv('.env.test');
     api = Api(
-      publishableKey: env.publishableKey,
-      persistor: Persistor.none,
-      httpService: httpService,
+      env.publishableKey,
+      Persistor.none,
+      httpService,
+      SessionTokenPollMode.onDemand,
     );
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });

@@ -25,7 +25,7 @@ export 'persistor.dart';
 /// with the back end. Injected for e.g. test mocking
 ///
 /// [pollMode]: session token poll mode, default on-demand,
-/// manages how to refresh the [sessionToken].
+/// manages how to refresh the [sessionTokenFor].
 ///
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
@@ -53,10 +53,10 @@ class Auth {
           sendTelemetryData: sendTelemetryData,
         ),
         _api = Api(
-          publishableKey: publishableKey,
-          persistor: persistor,
-          httpService: httpService,
-          pollMode: pollMode,
+          publishableKey,
+          persistor,
+          httpService ?? const DefaultHttpService(),
+          pollMode,
         );
 
   /// The service to send telemetry to the back end

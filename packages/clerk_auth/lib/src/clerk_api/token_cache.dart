@@ -105,10 +105,11 @@ class TokenCache {
   }
 
   /// Get the [sessionTokenFor] for a [orgId]
-  String sessionTokenFor(Organization org) {
+  SessionToken? sessionTokenFor(Organization? org) {
+    org ??= Organization.personal;
     return switch (_sessionTokens[org.id]) {
-      SessionToken token when token.isNotExpired => token.jwt,
-      _ => '',
+      SessionToken token when token.isNotExpired => token,
+      _ => null,
     };
   }
 

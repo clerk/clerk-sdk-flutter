@@ -31,7 +31,7 @@ class SessionToken {
 
   /// When this token expires
   late final expiry = DateTimeExt.utcEpochSeconds(
-    body[_kJwtExpiryKey] - _tokenExpiryBuffer.inSeconds,
+    (body[_kJwtExpiryKey] as int) - _tokenExpiryBuffer.inSeconds,
   );
 
   /// The organization id associated with this token

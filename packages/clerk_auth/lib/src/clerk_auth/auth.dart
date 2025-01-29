@@ -163,6 +163,20 @@ class Auth {
     update();
   }
 
+  /// Get the current [sessionToken] for an [Organization] , or the
+  /// last organization used if empty
+  ///
+  Future<SessionToken> sessionToken({Organization? organization}) async {
+    final org = env.organization.isEnabled
+        ? organization ?? Organization.personal
+        : null;
+    final token = await _api.sessionToken(org);
+    if (token is! SessionToken) {
+      throw AuthError(message: 'No session token retrieved');
+    }
+    return token;
+  }
+
   /// Prepare for sign in via an oAuth provider
   ///
   Future<Client> oauthSignIn({required Strategy strategy}) async {

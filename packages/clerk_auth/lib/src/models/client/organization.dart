@@ -1,6 +1,5 @@
+import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import 'helpers.dart';
 
 part 'organization.g.dart';
 

@@ -10,7 +10,7 @@ class ClerkAuth extends StatefulWidget {
   const ClerkAuth({
     super.key,
     this.publishableKey,
-    this.pollMode = clerk.SessionTokenPollMode.onDemand,
+    this.pollMode = clerk.SessionTokenPollMode.lazy,
     this.authState,
     this.translator = const DefaultClerkTranslator(),
     this.persistor,

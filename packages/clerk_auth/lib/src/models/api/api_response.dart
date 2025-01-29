@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'models.dart';
+import 'package:clerk_auth/src/models/api/api.dart';
+import 'package:clerk_auth/src/models/client/client.dart';
 
 /// [ApiResponse] holds parsed Clerk data from a back-end http response
 class ApiResponse {

@@ -1,7 +1,7 @@
-import 'package:clerk_auth/src/clerk_api/api.dart';
+import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'models.dart';
+import '../models.dart';
 
 part 'user.g.dart';
 

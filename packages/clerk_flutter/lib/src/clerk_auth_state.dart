@@ -26,7 +26,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     required String publishableKey,
     clerk.Persistor? persistor,
     ClerkTranslator translator = const DefaultClerkTranslator(),
-    clerk.SessionTokenPollMode pollMode = clerk.SessionTokenPollMode.onDemand,
+    clerk.SessionTokenPollMode pollMode = clerk.SessionTokenPollMode.lazy,
     Widget? loading,
   }) async {
     final provider = ClerkAuthState._(

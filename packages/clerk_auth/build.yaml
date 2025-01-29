@@ -12,4 +12,4 @@ targets:
           include_if_null: false
       build_version:
         options:
-          output: lib/src/version.dart
+          output: lib/src/_version.dart

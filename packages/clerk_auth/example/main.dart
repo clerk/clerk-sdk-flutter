@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/src/clerk_api/api.dart';
 
 Future<void> main() async {
   final api = Api(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/src/models/telemetry/telemetry.dart';
 
 /// Telemetry
 ///

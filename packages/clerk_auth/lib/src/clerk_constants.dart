@@ -1,4 +1,4 @@
-import 'package:clerk_auth/clerk_auth.dart';
+import '_version.dart';
 
 /// constant values
 sealed class ClerkConstants {

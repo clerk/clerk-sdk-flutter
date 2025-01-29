@@ -8,20 +8,20 @@
 // AppGenerator
 // **************************************************************************
 
-import 'package:clerk_widgetbook/widgets/authentication/clerk_sign_in_widget.dart'
-    as _i3;
-import 'package:clerk_widgetbook/widgets/authentication/clerk_sign_up_widget.dart'
-    as _i4;
-import 'package:clerk_widgetbook/widgets/organization/clerk_create_organization_widget.dart'
-    as _i5;
-import 'package:clerk_widgetbook/widgets/organization/clerk_organization_profile_widget.dart'
-    as _i6;
-import 'package:clerk_widgetbook/widgets/organization/clerk_organization_switcher_widget.dart'
-    as _i7;
-import 'package:clerk_widgetbook/widgets/user/clerk_user_button.dart' as _i8;
-import 'package:clerk_widgetbook/widgets/user/clerk_user_profile_widget.dart'
-    as _i9;
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:clerk_widgetbook/widgets/authentication/clerk_sign_in_widget.dart'
+    as _i2;
+import 'package:clerk_widgetbook/widgets/authentication/clerk_sign_up_widget.dart'
+    as _i3;
+import 'package:clerk_widgetbook/widgets/organization/clerk_create_organization_widget.dart'
+    as _i4;
+import 'package:clerk_widgetbook/widgets/organization/clerk_organization_profile_widget.dart'
+    as _i5;
+import 'package:clerk_widgetbook/widgets/organization/clerk_organization_switcher_widget.dart'
+    as _i6;
+import 'package:clerk_widgetbook/widgets/user/clerk_user_button.dart' as _i7;
+import 'package:clerk_widgetbook/widgets/user/clerk_user_profile_widget.dart'
+    as _i8;
 import 'package:widgetbook/widgetbook.dart' as _i1;
 
 final directories = <_i1.WidgetbookNode>[
@@ -32,17 +32,17 @@ final directories = <_i1.WidgetbookNode>[
         name: 'authentication',
         children: [
           _i1.WidgetbookLeafComponent(
-            name: 'ClerkSignInWidget',
+            name: 'ClerkSignInPanel',
             useCase: _i1.WidgetbookUseCase(
               name: 'Authentication',
-              builder: _i3.buildClerkSignInWidgetUseCase,
+              builder: _i2.buildClerkSignInWidgetUseCase,
             ),
           ),
           _i1.WidgetbookLeafComponent(
-            name: 'ClerkSignUpWidget',
+            name: 'ClerkSignUpPanel',
             useCase: _i1.WidgetbookUseCase(
               name: 'Authentication',
-              builder: _i4.buildClerkSignUpWidgetUseCase,
+              builder: _i3.buildClerkSignUpWidgetUseCase,
             ),
           ),
         ],
@@ -54,21 +54,21 @@ final directories = <_i1.WidgetbookNode>[
             name: 'ClerkCreateOrganizationWidget',
             useCase: _i1.WidgetbookUseCase(
               name: 'Organization',
-              builder: _i5.buildClerkCreateOrganizationWidgetUseCase,
+              builder: _i4.buildClerkCreateOrganizationWidgetUseCase,
             ),
           ),
           _i1.WidgetbookLeafComponent(
             name: 'ClerkOrganizationProfileWidget',
             useCase: _i1.WidgetbookUseCase(
               name: 'Organization',
-              builder: _i6.buildClerkOrganizationProfileWidgetUseCase,
+              builder: _i5.buildClerkOrganizationProfileWidgetUseCase,
             ),
           ),
           _i1.WidgetbookLeafComponent(
             name: 'ClerkOrganizationSwitcherWidget',
             useCase: _i1.WidgetbookUseCase(
               name: 'Organization',
-              builder: _i7.buildClerkOrganizationSwitcherWidgetUseCase,
+              builder: _i6.buildClerkOrganizationSwitcherWidgetUseCase,
             ),
           ),
         ],
@@ -80,18 +80,18 @@ final directories = <_i1.WidgetbookNode>[
             name: 'ClerkUserButton',
             useCase: _i1.WidgetbookUseCase(
               name: 'User',
-              builder: _i8.buildClerkUserButtonUseCase,
+              builder: _i7.buildClerkUserButtonUseCase,
             ),
           ),
           _i1.WidgetbookLeafComponent(
             name: 'ClerkUserProfileWidget',
             useCase: _i1.WidgetbookUseCase(
               name: 'User',
-              builder: _i9.buildClerkUserProfileWidgetUseCase,
+              builder: _i8.buildClerkUserProfileWidgetUseCase,
             ),
           ),
         ],
       ),
     ],
-  ),
+  )
 ];

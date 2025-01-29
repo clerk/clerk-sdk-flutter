@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../helpers.dart';
+import '../../utils/json_serialization_helpers.dart';
 
 part 'sign_in_settings.g.dart';
 

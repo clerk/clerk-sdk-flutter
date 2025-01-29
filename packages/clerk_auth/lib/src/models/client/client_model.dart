@@ -1,8 +1,9 @@
+import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'models.dart';
+import '../models.dart';
 
-part 'client.g.dart';
+part 'client_model.g.dart';
 
 /// [Client] Clerk object
 @JsonSerializable()

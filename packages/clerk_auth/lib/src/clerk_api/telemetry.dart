@@ -44,12 +44,19 @@ class Telemetry with Logging {
 
   static const _kTelemetricEventQueueKey = 'telemetricEventQueue';
   static const _telemetricEventsQueueMaxLength = 2000;
-  static final _telemetryEndpoint =
-      Uri.parse('https://clerk-telemetry.com/v1/event');
+  static final _telemetryEndpoint = Uri.parse(
+    const String.fromEnvironment(
+      'telemetry_endpoint',
+      defaultValue: 'https://clerk-telemetry.com/v1/event',
+    ),
+  );
   static const _telemetryPeriod = Duration(seconds: 27);
 
   /// Are we telemetricising?
-  bool get isEnabled => _sendTelemetryData && _instanceType.isDevelopment;
+  bool get isEnabled =>
+      _sendTelemetryData &&
+      _instanceType.isDevelopment &&
+      const bool.fromEnvironment('telemetry', defaultValue: true);
 
   /// Initialise telemetry
   Future<void> initialize({required InstanceType instanceType}) async {

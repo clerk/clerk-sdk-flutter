@@ -18,7 +18,10 @@ class SessionToken {
   static const _kJwtExpiryKey = 'exp';
   static const _kJwtOrgIdKey = 'org_id';
 
-  late final _parts = jwt.split('.');
+  late final _parts = switch (jwt.split('.')) {
+    List<String> parts when parts.length == 3 => parts,
+    _ => throw AuthError(message: "JWT poorly formated: $jwt"),
+  };
 
   /// The [header] of the token
   late final header = json.decode(_parts[0].b64decoded) as Map<String, dynamic>;

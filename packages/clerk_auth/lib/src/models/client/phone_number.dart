@@ -1,4 +1,5 @@
-import 'package:clerk_auth/src/models/client/client.dart';
+import 'package:clerk_auth/src/models/client/user_identifying_data.dart';
+import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 

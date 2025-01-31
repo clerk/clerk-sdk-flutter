@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'environment.dart';
+import '../environment.dart';
 
 part 'organization_settings.g.dart';
 

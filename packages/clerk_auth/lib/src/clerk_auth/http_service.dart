@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:http/http.dart';
 
 /// Enum detailing [HttpMethod]s used by the Clerk API

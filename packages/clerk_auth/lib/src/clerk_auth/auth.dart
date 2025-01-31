@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/clerk_api/api.dart';
-import 'package:clerk_auth/src/models/api/api.dart';
+import 'package:clerk_auth/src/clerk_api/telemetry.dart';
+import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/clerk_auth/http_service.dart';
+import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+import 'package:clerk_auth/src/models/api/api_response.dart';
+import 'package:clerk_auth/src/models/models.dart';
 
 export 'auth_error.dart';
 export 'http_service.dart';
@@ -43,10 +47,10 @@ class Auth {
     HttpService httpService = const DefaultHttpService(),
     SessionTokenPollMode pollMode = SessionTokenPollMode.lazy,
   })  : telemetry = Telemetry(
-          publishableKey,
-          persistor,
-          httpService,
-          sendTelemetryData,
+          publishableKey: publishableKey,
+          persistor: persistor,
+          httpService: httpService,
+          sendTelemetryData: sendTelemetryData,
         ),
         _api = Api(
           publishableKey: publishableKey,

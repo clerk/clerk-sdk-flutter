@@ -1,20 +1,75 @@
-library;
+import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-export '../enums.dart';
-export 'client_model.dart';
-export 'email.dart';
-export 'factor.dart';
-export 'organization.dart';
-export 'organization_membership.dart';
-export 'passkey.dart';
-export 'phone_number.dart';
-export 'session.dart';
-export 'session_token.dart';
-export 'sign_in.dart';
-export 'sign_up.dart';
-export 'strategy.dart';
-export 'user.dart';
-export 'user_identifying_data.dart';
-export 'user_public.dart';
-export 'verification.dart';
-export 'web3_wallet.dart';
+import '../models.dart';
+
+part 'client.g.dart';
+
+/// [Client] Clerk object
+@JsonSerializable()
+class Client {
+  /// Constructor
+  const Client({
+    this.id,
+    this.signIn,
+    this.signUp,
+    this.sessions = const [],
+    this.lastActiveSessionId,
+    this.updatedAt,
+    this.createdAt,
+  });
+
+  /// client id
+  final String? id;
+
+  /// [SignIn] object
+  final SignIn? signIn;
+
+  /// [SignUp] object
+  final SignUp? signUp;
+
+  /// id of last active [Session]
+  final String? lastActiveSessionId;
+
+  /// List of current [Session]s
+  final List<Session> sessions;
+
+  /// when updated
+  @JsonKey(fromJson: intToDateTime)
+  final DateTime? updatedAt;
+
+  /// when created
+  @JsonKey(fromJson: intToDateTime)
+  final DateTime? createdAt;
+
+  /// empty [Client] object
+  static const empty = Client();
+
+  /// is empty?
+  bool get isEmpty => this == empty;
+
+  /// fromJson
+  static Client fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
+
+  /// toJson
+  Map<String, dynamic> toJson() => _$ClientToJson(this);
+
+  /// iterable of current user ids
+  Iterable<String> get userIds => sessions.map((s) => s.user.id);
+
+  /// find the current active session
+  Session? get activeSession {
+    for (final session in sessions) {
+      if (session.id == lastActiveSessionId) return session;
+    }
+
+    for (final session in sessions) {
+      if (session.isActive) return session;
+    }
+
+    return null;
+  }
+
+  /// the current [User] if available
+  User? get user => activeSession?.user;
+}

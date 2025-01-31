@@ -1,7 +1,11 @@
+import 'package:clerk_auth/src/models/client/email.dart';
+import 'package:clerk_auth/src/models/client/organization_membership.dart';
+import 'package:clerk_auth/src/models/client/passkey.dart';
+import 'package:clerk_auth/src/models/client/phone_number.dart';
+import 'package:clerk_auth/src/models/client/user_identifying_data.dart';
+import 'package:clerk_auth/src/models/client/web3_wallet.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import '../models.dart';
 
 part 'user.g.dart';
 

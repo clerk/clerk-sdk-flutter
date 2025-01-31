@@ -1,4 +1,5 @@
-import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/src/models/client/strategy.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 
 /// Convert a value to a [DateTime?]. For JsonSerializable
 DateTime? intToDateTime(dynamic input) {

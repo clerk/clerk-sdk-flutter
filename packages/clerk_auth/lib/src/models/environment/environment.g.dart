@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'environment_model.dart';
+part of 'environment.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

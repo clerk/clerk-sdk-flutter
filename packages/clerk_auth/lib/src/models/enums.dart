@@ -1,4 +1,5 @@
-import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'enums.g.dart';

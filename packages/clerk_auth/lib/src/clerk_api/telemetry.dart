@@ -2,19 +2,37 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:clerk_auth/clerk_auth.dart';
-import 'package:clerk_auth/src/models/telemetry/telemetry.dart';
+import 'package:clerk_auth/src/clerk_auth/http_service.dart';
+import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+import 'package:clerk_auth/src/clerk_constants.dart';
+import 'package:clerk_auth/src/models/enums.dart';
+import 'package:clerk_auth/src/models/telemetry/telemetric_event.dart';
+import 'package:clerk_auth/src/utils/logging.dart';
 
 /// Telemetry
 ///
 class Telemetry with Logging {
-  /// Create a [Telemetry] object
-  Telemetry(
+  Telemetry._(
     this._publishableKey,
     this._persistor,
     this._httpService,
     this._sendTelemetryData,
   );
+
+  /// Create a [Telemetry] object
+  factory Telemetry({
+    required String publishableKey,
+    required Persistor persistor,
+    required HttpService httpService,
+    required bool sendTelemetryData,
+  }) {
+    return Telemetry._(
+      publishableKey,
+      persistor,
+      httpService,
+      sendTelemetryData,
+    );
+  }
 
   final bool _sendTelemetryData;
   final String _publishableKey;

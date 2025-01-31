@@ -1,5 +1,9 @@
-import 'package:clerk_auth/src/clerk_auth/auth.dart';
-import 'package:clerk_auth/src/models/client/client.dart';
+import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/models/client/factor.dart';
+import 'package:clerk_auth/src/models/client/strategy.dart';
+import 'package:clerk_auth/src/models/client/user_public.dart';
+import 'package:clerk_auth/src/models/client/verification.dart';
+import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 

@@ -1,4 +1,5 @@
-import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/src/models/client/verification.dart';
+import 'package:clerk_auth/src/models/enums.dart';
 
 /// Abstract class to be parent to e.g. [PhoneNumber] and [Email]
 /// so that both can be used as an identifier

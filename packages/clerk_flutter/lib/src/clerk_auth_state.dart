@@ -29,7 +29,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     ClerkTranslator translator = const DefaultClerkTranslator(),
     clerk.SessionTokenPollMode pollMode = clerk.SessionTokenPollMode.lazy,
     Widget? loading,
-    clerk.HttpService? httpService,
+    clerk.HttpService httpService = const clerk.DefaultHttpService(),
   }) async {
     final provider = ClerkAuthState._(
       publishableKey: publishableKey,

@@ -13,6 +13,8 @@ import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:http/http.dart' as http;
 
+export 'package:clerk_auth/src/models/enums.dart' show SessionTokenPollMode;
+
 /// [Api] manages communication with the Clerk frontend API
 ///
 class Api with Logging {
@@ -28,7 +30,7 @@ class Api with Logging {
   /// [client]: an optional instance of [HttpService] to manage low-level communications
   /// with the back end. Injected for e.g. test mocking
   ///
-  /// [pollMode]: session token poll mode, default on-demand,
+  /// [pollMode]: session token poll mode, default [SessionTokenPollMode.lazy],
   /// manages how to refresh the [sessionToken].
   ///
   factory Api({

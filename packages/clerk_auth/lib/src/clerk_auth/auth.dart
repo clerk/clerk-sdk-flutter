@@ -39,7 +39,7 @@ class Auth {
   /// of telemetric data to the Clerk back end
   /// [httpService]: the service through which http requests are made
   /// [pollMode]: the mode by which session tokens are polled from the back
-  /// end: [hungry] or (default) [lazy]
+  /// end: [SessionTokenPollMode.hungry] or (default) [SessionTokenPollMode.lazy]
   Auth({
     required String publishableKey,
     required Persistor persistor,
@@ -53,10 +53,10 @@ class Auth {
           sendTelemetryData: sendTelemetryData,
         ),
         _api = Api(
-          publishableKey,
-          persistor,
-          httpService ?? const DefaultHttpService(),
-          pollMode,
+          publishableKey: publishableKey,
+          persistor: persistor,
+          httpService: httpService,
+          pollMode: pollMode,
         );
 
   /// The service to send telemetry to the back end

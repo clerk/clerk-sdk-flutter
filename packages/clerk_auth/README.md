@@ -36,7 +36,6 @@ Future<void> main() async {
     persistor: await DefaultPersistor.create(
       storageDirectory: Directory.current,
     ),
-    httpService: const DefaultHttpService(),
   );
 
   Client client;

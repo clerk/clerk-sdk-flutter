@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+import 'package:clerk_auth/src/models/client/organization.dart';
 import 'package:clerk_auth/src/models/client/session.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/client/session_token.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 

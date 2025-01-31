@@ -22,6 +22,7 @@ const _$StatusEnumMap = {
   Status.verified: 'verified',
   Status.complete: 'complete',
   Status.expired: 'expired',
+  Status.failed: 'failed',
 };
 
 const _$IdentificationStrategyEnumMap = {

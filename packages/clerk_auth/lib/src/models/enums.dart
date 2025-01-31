@@ -60,7 +60,10 @@ enum Status {
   complete,
 
   /// expired
-  expired;
+  expired,
+
+  /// failed
+  failed;
 
   /// is active?
   bool get isActive => this == active;

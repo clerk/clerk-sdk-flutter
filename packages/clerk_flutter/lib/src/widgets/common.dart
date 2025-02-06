@@ -12,6 +12,9 @@ extension PhoneNumberExtension on PhoneNumber {
   String get intlFormattedNsn => '(+$countryCode) ${getFormattedNsn()}';
 }
 
+/// Enum specifying whether we are signing in or connecting an account
+enum OauthMode { signIn, connect }
+
 const defaultLoadingWidget = SizedBox(
   width: double.infinity,
   height: double.infinity,

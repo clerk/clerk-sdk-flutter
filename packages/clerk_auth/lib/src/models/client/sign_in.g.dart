@@ -57,7 +57,7 @@ Map<String, dynamic> _$SignInToJson(SignIn instance) {
   writeNotNull('second_factor_verification',
       instance.secondFactorVerification?.toJson());
   writeNotNull('created_session_id', instance.createdSessionId);
-  writeNotNull('abandon_at', instance.abandonAt?.toIso8601String());
+  val['abandon_at'] = dateTimeToInt(instance.abandonAt);
   val['supported_first_factors'] =
       instance.supportedFirstFactors.map((e) => e.toJson()).toList();
   val['supported_second_factors'] =

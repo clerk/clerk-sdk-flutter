@@ -106,24 +106,30 @@ class TokenCache {
   }
 
   /// Get the [sessionTokenFor] for a [orgId]
-  SessionToken? sessionTokenFor(Organization? org) {
+  SessionToken? sessionTokenFor(Organization? org, String? templateName) {
     org ??= Organization.personal;
-    return switch (_sessionTokens[org.id]) {
+    return switch (_sessionTokens[_sessionTokenId(org.id, templateName)]) {
       SessionToken token when token.isNotExpired => token,
       _ => null,
     };
   }
 
+  String _sessionTokenId(String orgId, String? templateName) =>
+      switch (templateName) {
+        String templateName => '$orgId-$templateName',
+        _ => orgId,
+      };
+
   /// Set a [sessionToken] for an organization
-  SessionToken makeAndCacheSessionToken(String token) {
+  SessionToken makeAndCacheSessionToken(String token, [String? templateName]) {
     final sessionToken = SessionToken(jwt: token);
-    final orgId = sessionToken.orgId;
-    if (token != _sessionTokens[orgId]?.jwt) {
-      _sessionTokens[orgId] = sessionToken;
+    final id = _sessionTokenId(sessionToken.orgId, templateName);
+    if (token != _sessionTokens[id]?.jwt) {
+      _sessionTokens[id] = sessionToken;
       _persistor.write(_sessionTokenKey, json.encode(_sessionTokens));
     }
 
-    return _sessionTokens[orgId]!;
+    return _sessionTokens[id]!;
   }
 
   /// Update the tokens and IDs from a newly arrived [http.Response]

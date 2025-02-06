@@ -29,7 +29,7 @@ Map<String, dynamic> _$Web3WalletToJson(Web3Wallet instance) {
 
   writeNotNull('verification', instance.verification?.toJson());
   val['web3_wallet'] = instance.web3Wallet;
-  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
-  writeNotNull('created_at', instance.createdAt?.toIso8601String());
+  val['updated_at'] = dateTimeToInt(instance.updatedAt);
+  val['created_at'] = dateTimeToInt(instance.createdAt);
   return val;
 }

@@ -261,44 +261,49 @@ class _SessionRow extends StatelessWidget {
                 ),
               ),
             ),
-            Closeable(
-              closed: selected == false,
-              child: Padding(
-                padding: horizontalPadding12 + leftPadding48 + bottomPadding8,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    for (final action in actions)
-                      Expanded(
-                        child: Padding(
-                          padding: horizontalPadding4,
-                          child: ClerkMaterialButton(
-                            onPressed: () =>
-                                action.callback(context, authState),
-                            label: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                ClerkIcon(action.asset, size: 10),
-                                horizontalMargin8,
-                                Text(
-                                  action.label,
-                                  style: ClerkTextStyle.buttonSubtitle.copyWith(
-                                    fontSize: 8,
-                                    color: ClerkColors.charcoalGrey,
-                                  ),
+            if (actions.isNotEmpty) //
+              Closeable(
+                closed: selected == false,
+                child: Padding(
+                  padding: horizontalPadding12 + leftPadding48 + bottomPadding8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      for (final action in actions)
+                        Expanded(
+                          child: Padding(
+                            padding: horizontalPadding4,
+                            child: ClerkMaterialButton(
+                              onPressed: () =>
+                                  action.callback(context, authState),
+                              label: FittedBox(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    ClerkIcon(action.asset, size: 10),
+                                    horizontalMargin8,
+                                    Text(
+                                      action.label,
+                                      style: ClerkTextStyle.buttonSubtitle
+                                          .copyWith(
+                                        fontSize: 7,
+                                        color: ClerkColors.charcoalGrey,
+                                      ),
+                                      maxLines: 1,
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
+                              style: ClerkMaterialButtonStyle.light,
+                              height: 16,
                             ),
-                            style: ClerkMaterialButtonStyle.light,
-                            height: 16,
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
             const Divider(height: 1, color: ClerkColors.dawnPink),
           ],
         ),

@@ -35,8 +35,8 @@ class Verification {
   final String? providerUrl;
 
   /// expire at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? expireAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime expireAt;
 
   /// fromJson
   static Verification fromJson(Map<String, dynamic> json) =>

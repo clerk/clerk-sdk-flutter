@@ -314,6 +314,23 @@ class Api with Logging {
     );
   }
 
+  /// Connect an account via oauth
+  ///
+  Future<ApiResponse> connectAccount({
+    Strategy? strategy,
+    String? redirectUrl,
+  }) async {
+    final resp = await _fetchApiResponse(
+      '/me/external_accounts',
+      withSession: true,
+      params: {
+        'strategy': strategy,
+        'redirect_url': redirectUrl,
+      },
+    );
+    return resp;
+  }
+
   /// Prepare a [SignIn] object for the requirements of signing in via a given
   /// [strategy], be it first or second factor ([stage]=[Stage.first] or
   /// [stage]=[Stage.second])
@@ -448,25 +465,49 @@ class Api with Logging {
   /// Update the current [User]'s avatar
   ///
   Future<ApiResponse> updateAvatar(File file) async {
-    try {
-      final queryParams = _queryParams(HttpMethod.post, withSession: true);
-      final uri = _uri('/me/profile_image', queryParams);
-      final length = await file.length();
-      final stream = http.ByteStream(file.openRead());
-      final resp = await _httpService.sendByteStream(
-        HttpMethod.post,
-        uri,
-        stream,
-        length,
-        _headers(),
-      );
-      return _processResponse(resp);
-    } catch (error, stacktrace) {
-      logSevere('Error during fetch', error, stacktrace);
-      return ApiResponse.fatal(
-        error: ApiError(message: error.toString()),
-      );
-    }
+    final queryParams = _queryParams(HttpMethod.post, withSession: true);
+    final uri = _uri('/me/profile_image', params: queryParams);
+    return await _uploadFile(HttpMethod.post, uri, file);
+  }
+
+  /// Delete the current [User]'s avatar
+  ///
+  Future<ApiResponse> deleteAvatar() async {
+    return await _fetchApiResponse(
+      '/me/profile_image',
+      method: HttpMethod.delete,
+      withSession: true,
+    );
+  }
+
+  /// Update the current [User]'s password
+  ///
+  Future<ApiResponse> updatePassword(
+    String currentPassword,
+    String newPassword,
+    bool signOut,
+  ) async {
+    return await _fetchApiResponse(
+      '/me/change_password',
+      withSession: true,
+      params: {
+        'current_password': currentPassword,
+        'new_password': newPassword,
+        'sign_out_of_other_sessions': signOut,
+      },
+    );
+  }
+
+  /// Delete the current [User]'s password
+  ///
+  Future<ApiResponse> deletePassword(String currentPassword) async {
+    return await _fetchApiResponse(
+      '/me/remove_password',
+      withSession: true,
+      params: {
+        'current_password': currentPassword,
+      },
+    );
   }
 
   // Identifying Data
@@ -527,19 +568,90 @@ class Api with Logging {
     );
   }
 
+  // Organization
+
+  /// Create a new [Organization]
+  ///
+  Future<ApiResponse> createOrganization(String name) async {
+    return await _fetchApiResponse(
+      '/organizations',
+      params: {
+        'name': name,
+      },
+    );
+  }
+
+  /// Update an [Organization]
+  ///
+  Future<ApiResponse> updateOrganization(
+    Organization org, {
+    String? name,
+    String? slug,
+  }) async {
+    return await _fetchApiResponse(
+      '/organizations/${org.id}',
+      method: HttpMethod.patch,
+      params: {
+        'name': name,
+        'slug': slug,
+      },
+    );
+  }
+
+  /// Delete an [Organization]
+  ///
+  Future<ApiResponse> deleteOrganization(Organization org) async {
+    return await _fetchApiResponse(
+      '/organizations/${org.id}',
+      method: HttpMethod.delete,
+    );
+  }
+
+  /// Update the current [User]'s avatar
+  ///
+  Future<ApiResponse> updateOrganizationLogo(
+    Organization org,
+    File file,
+  ) async {
+    final uri = _uri('/organizations/${org.id}/logo');
+    return await _uploadFile(HttpMethod.put, uri, file);
+  }
+
+  /// Delete an [Organization]'s logo
+  ///
+  Future<ApiResponse> deleteOrganizationLogo(Organization org) async {
+    return await _fetchApiResponse(
+      '/organizations/${org.id}/logo',
+      method: HttpMethod.delete,
+    );
+  }
+
   // Session
 
   /// Return the [sessionToken] for the current active [Session], refreshing it
   /// if required
   ///
-  Future<SessionToken?> sessionToken([Organization? org]) async {
-    return _tokenCache.sessionTokenFor(org) ?? await _updateSessionToken(org);
+  Future<SessionToken?> sessionToken([
+    Organization? org,
+    String? templateName,
+  ]) async {
+    return _tokenCache.sessionTokenFor(org, templateName) ??
+        await _updateSessionToken(org, templateName);
   }
 
-  Future<SessionToken?> _updateSessionToken([Organization? org]) async {
+  Future<SessionToken?> _updateSessionToken([
+    Organization? org,
+    String? templateName,
+  ]) async {
     if (_tokenCache.canRefreshSessionToken) {
+      final path = [
+        '/client/sessions',
+        _tokenCache.sessionId,
+        'tokens',
+        templateName,
+      ].nonNulls.join('/');
       final resp = await _fetch(
-        path: '/client/sessions/${_tokenCache.sessionId}/tokens',
+        path: path,
         headers: _headers(),
         params: {
           if (org case Organization org) //
@@ -550,7 +662,7 @@ class Api with Logging {
       if (resp.statusCode == HttpStatus.ok) {
         final body = json.decode(resp.body) as Map<String, dynamic>;
         final token = body[_kJwtKey] as String;
-        return _tokenCache.makeAndCacheSessionToken(token);
+        return _tokenCache.makeAndCacheSessionToken(token, templateName);
       }
     }
     return null;
@@ -569,6 +681,26 @@ class Api with Logging {
   }
 
   // Internal
+
+  Future<ApiResponse> _uploadFile(HttpMethod method, Uri uri, File file) async {
+    try {
+      final length = await file.length();
+      final stream = http.ByteStream(file.openRead());
+      final resp = await _httpService.sendByteStream(
+        method,
+        uri,
+        stream,
+        length,
+        _headers(method: method),
+      );
+      return _processResponse(resp);
+    } catch (error, stacktrace) {
+      logSevere('Error during fetch', error, stacktrace);
+      return ApiResponse.fatal(
+        error: ApiError(message: error.toString()),
+      );
+    }
+  }
 
   Future<ApiResponse> _fetchApiResponse(
     String url, {
@@ -605,9 +737,12 @@ class Api with Logging {
             .map(ApiError.fromJson)
             .toList()
         : null;
-    final clientData = switch (body[_kClientKey]) {
-      Map<String, dynamic> client when client.isNotEmpty => client,
-      _ => body[_kResponseKey],
+    final [clientData, responseData] = switch (body[_kClientKey]) {
+      Map<String, dynamic> client when client.isNotEmpty => [
+          client,
+          body[_kResponseKey],
+        ],
+      _ => [body[_kResponseKey], null],
     };
     if (clientData case Map<String, dynamic> clientJson) {
       final client = Client.fromJson(clientJson);
@@ -616,6 +751,10 @@ class Api with Logging {
         client: client,
         status: resp.statusCode,
         errors: errors,
+        response: switch (responseData) {
+          Map<String, dynamic> response => response,
+          _ => null,
+        },
       );
     } else {
       logSevere(body);
@@ -632,14 +771,14 @@ class Api with Logging {
     Map<String, String>? headers,
     Map<String, dynamic>? params,
     bool withSession = false,
-    List<String> nullableKeys = const [],
+    List<String>? nullableKeys,
   }) async {
     final parsedParams = {...?params}..removeWhere(
-        (key, value) => nullableKeys.contains(key) == false && value == null,
+        (key, value) => nullableKeys?.contains(key) != true && value == null,
       );
     final queryParams =
         _queryParams(method, withSession: withSession, params: parsedParams);
-    final uri = _uri(path, queryParams);
+    final uri = _uri(path, params: queryParams);
 
     final resp = await _httpService.send(
       method,
@@ -678,12 +817,12 @@ class Api with Logging {
           ...?params,
       };
 
-  Uri _uri(String path, Map<String, dynamic> params) {
+  Uri _uri(String path, {Map<String, dynamic>? params}) {
     return Uri(
       scheme: _scheme,
       host: _domain,
       path: 'v1$path',
-      queryParameters: params.toStringMap(),
+      queryParameters: params?.toStringMap(),
     );
   }
 

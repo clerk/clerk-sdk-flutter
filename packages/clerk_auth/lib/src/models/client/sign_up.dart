@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/models/client/field.dart';
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -38,15 +39,19 @@ class SignUp {
   final Status status;
 
   /// required fields
+  @JsonKey(fromJson: toFieldList)
   final List<Field> requiredFields;
 
   /// optional fields
+  @JsonKey(fromJson: toFieldList)
   final List<Field> optionalFields;
 
   /// missing fields
+  @JsonKey(fromJson: toFieldList)
   final List<Field> missingFields;
 
   /// unverified fields
+  @JsonKey(fromJson: toFieldList)
   final List<Field> unverifiedFields;
 
   /// username
@@ -89,8 +94,8 @@ class SignUp {
   final String? createdUserId;
 
   /// abandon at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? abandonAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime abandonAt;
 
   /// fromJson
   static SignUp fromJson(Map<String, dynamic> json) => _$SignUpFromJson(json);

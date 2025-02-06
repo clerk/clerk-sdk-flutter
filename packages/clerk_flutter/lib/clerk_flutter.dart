@@ -18,6 +18,7 @@ export 'src/widgets/organization/clerk_create_organization_widget.dart';
 export 'src/widgets/organization/clerk_organization_profile_widget.dart';
 export 'src/widgets/organization/clerk_organization_switcher_widget.dart';
 export 'src/widgets/screens/add_account_screen.dart';
+export 'src/widgets/screens/connect_account_screen.dart';
 export 'src/widgets/screens/manage_account_screen.dart';
 export 'src/widgets/ui/clerk_ui.dart';
 export 'src/widgets/user/clerk_user_button.dart';

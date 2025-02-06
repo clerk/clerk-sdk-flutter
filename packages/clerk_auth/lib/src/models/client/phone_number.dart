@@ -33,12 +33,12 @@ class PhoneNumber extends UserIdentifyingData {
   final bool defaultSecondFactor;
 
   /// updated at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? updatedAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime updatedAt;
 
   /// created at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? createdAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime createdAt;
 
   @override
   String get identifier => phoneNumber;

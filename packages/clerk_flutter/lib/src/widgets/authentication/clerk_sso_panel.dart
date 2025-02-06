@@ -14,7 +14,10 @@ import 'package:flutter/material.dart';
 ///
 class ClerkSSOPanel extends StatefulWidget {
   /// Construct a new [ClerkSSOPanel]
-  const ClerkSSOPanel({super.key});
+  const ClerkSSOPanel({super.key, required this.onStrategyChosen});
+
+  /// the function to call once a provider has been chosen
+  final ValueChanged<clerk.Strategy> onStrategyChosen;
 
   @override
   State<ClerkSSOPanel> createState() => _ClerkSSOPanelState();
@@ -43,6 +46,7 @@ class _ClerkSSOPanelState extends State<ClerkSSOPanel>
             child: SocialConnectionButton(
               key: ValueKey<clerk.SocialConnection>(connection),
               connection: connection,
+              onPressed: widget.onStrategyChosen,
             ),
           ),
           if (index < socialConnections.length - 1) //

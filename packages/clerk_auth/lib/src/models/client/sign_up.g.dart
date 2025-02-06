@@ -9,18 +9,10 @@ part of 'sign_up.dart';
 SignUp _$SignUpFromJson(Map<String, dynamic> json) => SignUp(
       id: json['id'] as String,
       status: $enumDecode(_$StatusEnumMap, json['status']),
-      requiredFields: (json['required_fields'] as List<dynamic>)
-          .map((e) => $enumDecode(_$FieldEnumMap, e))
-          .toList(),
-      optionalFields: (json['optional_fields'] as List<dynamic>)
-          .map((e) => $enumDecode(_$FieldEnumMap, e))
-          .toList(),
-      missingFields: (json['missing_fields'] as List<dynamic>)
-          .map((e) => $enumDecode(_$FieldEnumMap, e))
-          .toList(),
-      unverifiedFields: (json['unverified_fields'] as List<dynamic>)
-          .map((e) => $enumDecode(_$FieldEnumMap, e))
-          .toList(),
+      requiredFields: toFieldList(json['required_fields']),
+      optionalFields: toFieldList(json['optional_fields']),
+      missingFields: toFieldList(json['missing_fields']),
+      unverifiedFields: toFieldList(json['unverified_fields']),
       username: json['username'] as String?,
       emailAddress: json['email_address'] as String?,
       phoneNumber: json['phone_number'] as String?,
@@ -41,14 +33,11 @@ Map<String, dynamic> _$SignUpToJson(SignUp instance) {
   final val = <String, dynamic>{
     'id': instance.id,
     'status': _$StatusEnumMap[instance.status]!,
-    'required_fields':
-        instance.requiredFields.map((e) => _$FieldEnumMap[e]!).toList(),
-    'optional_fields':
-        instance.optionalFields.map((e) => _$FieldEnumMap[e]!).toList(),
-    'missing_fields':
-        instance.missingFields.map((e) => _$FieldEnumMap[e]!).toList(),
+    'required_fields': instance.requiredFields.map((e) => e.toJson()).toList(),
+    'optional_fields': instance.optionalFields.map((e) => e.toJson()).toList(),
+    'missing_fields': instance.missingFields.map((e) => e.toJson()).toList(),
     'unverified_fields':
-        instance.unverifiedFields.map((e) => _$FieldEnumMap[e]!).toList(),
+        instance.unverifiedFields.map((e) => e.toJson()).toList(),
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -70,7 +59,7 @@ Map<String, dynamic> _$SignUpToJson(SignUp instance) {
   writeNotNull('external_id', instance.externalId);
   writeNotNull('created_session_id', instance.createdSessionId);
   writeNotNull('created_user_id', instance.createdUserId);
-  writeNotNull('abandon_at', instance.abandonAt?.toIso8601String());
+  val['abandon_at'] = dateTimeToInt(instance.abandonAt);
   return val;
 }
 
@@ -86,21 +75,4 @@ const _$StatusEnumMap = {
   Status.verified: 'verified',
   Status.complete: 'complete',
   Status.expired: 'expired',
-};
-
-const _$FieldEnumMap = {
-  Field.emailAddress: 'email_address',
-  Field.externalAccount: 'external_account',
-  Field.firstName: 'first_name',
-  Field.lastName: 'last_name',
-  Field.password: 'password',
-  Field.phoneNumber: 'phone_number',
-  Field.oauthApple: 'oauth_apple',
-  Field.oauthGithub: 'oauth_github',
-  Field.oauthGoogle: 'oauth_google',
-  Field.username: 'username',
-  Field.web3Wallet: 'web3_wallet',
-  Field.code: 'code',
-  Field.token: 'token',
-  Field.signature: 'signature',
 };

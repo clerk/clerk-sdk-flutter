@@ -21,12 +21,12 @@ class Web3Wallet extends UserIdentifyingData {
   final String web3Wallet;
 
   /// updated at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? updatedAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime updatedAt;
 
   /// created at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? createdAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime createdAt;
 
   @override
   String get identifier => web3Wallet;

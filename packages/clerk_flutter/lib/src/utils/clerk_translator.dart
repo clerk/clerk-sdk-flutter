@@ -5,26 +5,29 @@ abstract class ClerkTranslator {
   const ClerkTranslator();
 
   /// the character sequence to replace with [substitution] during
-  /// a call to [translate]
-  final substitutionKey = '###';
+  /// a call to [translate]. By default this is `###` for the first item
+  /// (index 0) and `#<index + 1>#` for subsequent indices (index 1 or more)
+  ///
+  String substitutionKey([int idx = 0]) => idx < 1 ? '###' : '#${idx + 1}#';
 
   /// Translate a [phrase]] into a different language. Identity function by default
   /// for English
   ///
   /// A [substitution] or multiple [substitutions] for keys inside the [phrase]:
   ///
-  /// if a single [substitution] is present, replace the first instance of
-  /// [substitutionKey] (default `###`) with it
+  /// If a single [substitution] is present, replace the first instance of
+  /// `substitutionKey()` with it
   ///
-  /// if multiple [substitutions] are present, replace the first found character sequences `#<n>#`
-  /// with each substitution where [n] is the 1-based index into the array.
+  /// If multiple [substitutions] are present, use each substitution to
+  /// replace the first found appropriate character sequence:
+  /// `substitutionKey(index)`
   ///
-  /// This allows word order to vary across different languages without having to manipulate the
-  /// [substitutions] array, viz:
+  /// This allows word order to vary across different languages without having
+  /// to manipulate the [substitutions] array, viz:
   ///
-  /// `translate('#1# bites #2#', substitutions: ['man', 'dog'])`
+  /// `translate('### bites #2#', substitutions: ['man', 'dog'])`
   /// vs
-  /// `translate('#2# is bitten by #1#', substitutions: ['man', 'dog'])`
+  /// `translate('#2# is bitten by ###', substitutions: ['man', 'dog'])`
   ///
   String translate(
     String phrase, {
@@ -32,18 +35,19 @@ abstract class ClerkTranslator {
     List<String> substitutions = const [],
   });
 
-  /// A method that takes a list of [items] e.g. \['first', 'second', 'third'\]
-  /// and returns a textual representation of its contents as alternatives
-  /// e.g. "first, second or third"
+  /// A method that takes a list of pre-translated [items] e.g.
+  /// \['first', 'second', 'third'\] and returns a textual representation
+  /// of its contents as alternatives e.g. "first, second or third"
   ///
-  /// [connector] can be overridden, and a [prefix] can be prepended
+  /// [connector] can be overridden, and a [prefix] can be prepended. Both
+  /// should already be translated as required.
   ///
-  /// Should be overridden for languages where this does not provide the correct
-  /// representation for alternates
+  /// This method should be overridden for languages where this format does not
+  /// provide the correct representation for alternates
   ///
   String alternatives(
     List<String> items, {
-    String connector = 'or',
+    String? connector,
     String? prefix,
   });
 }
@@ -55,41 +59,51 @@ class DefaultClerkTranslator extends ClerkTranslator {
   const DefaultClerkTranslator();
 
   @override
-  String translate(String phrase,
-      {String? substitution, List<String> substitutions = const []}) {
+  String translate(
+    String phrase, {
+    String? substitution,
+    List<String>? substitutions,
+  }) {
     if (substitution case String sub) {
-      return phrase.replaceFirst(substitutionKey, sub);
+      return phrase.replaceFirst(substitutionKey(), sub);
     }
 
-    for (int i = 0; i < substitutions.length; ++i) {
-      phrase = phrase.replaceFirst('#${i + 1}#', substitutions[i]);
+    if (substitutions case List<String> substitutions) {
+      for (int i = 0; i < substitutions.length; ++i) {
+        phrase = phrase.replaceFirst(substitutionKey(i), substitutions[i]);
+      }
     }
 
     return phrase;
   }
 
   @override
-  String alternatives(List<String> items,
-      {String connector = 'or', String? prefix}) {
-    if (items.isEmpty) return '';
+  String alternatives(
+    List<String> items, {
+    String? connector,
+    String? prefix,
+  }) {
+    if (items.isEmpty) {
+      return '';
+    }
 
     final buf = StringBuffer();
 
     if (prefix case String prefix) {
-      buf.write(translate(prefix));
+      buf.write(prefix);
       buf.writeCharCode(0x20);
     }
 
-    buf.write(translate(items.first));
+    buf.write(items.first);
 
     for (int i = 1; i < items.length - 1; ++i) {
       buf.write(', ');
-      buf.write(translate(items[i]));
+      buf.write(items[i]);
     }
 
     if (items.length > 1) {
-      buf.write(' ${translate(connector)} ');
-      buf.write(translate(items.last));
+      buf.write(' ${connector ?? translate('or')} ');
+      buf.write(items.last);
     }
 
     return buf.toString();

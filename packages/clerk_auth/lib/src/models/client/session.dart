@@ -37,18 +37,18 @@ class Session {
   /// user
   final User user;
 
-  @JsonKey(fromJson: intToDateTime)
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
 
   /// last active at
-  final DateTime? lastActiveAt;
+  final DateTime lastActiveAt;
 
   /// expire at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? expireAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime expireAt;
 
   /// abandon at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? abandonAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime abandonAt;
 
   /// is active?
   bool get isActive => status.isActive;

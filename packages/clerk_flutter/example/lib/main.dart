@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/logging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +43,7 @@ class ExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClerkAuth(
       publishableKey: publishableKey,
+      pollMode: SessionTokenPollMode.hungry,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         builder: (BuildContext context, Widget? child) {

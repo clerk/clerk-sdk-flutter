@@ -30,7 +30,7 @@ Map<String, dynamic> _$VerificationToJson(Verification instance) {
   writeNotNull('attempts', instance.attempts);
   writeNotNull('nonce', instance.nonce);
   writeNotNull('external_verification_redirect_url', instance.providerUrl);
-  writeNotNull('expire_at', instance.expireAt?.toIso8601String());
+  val['expire_at'] = dateTimeToInt(instance.expireAt);
   return val;
 }
 

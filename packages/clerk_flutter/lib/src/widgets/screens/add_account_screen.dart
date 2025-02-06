@@ -34,19 +34,22 @@ class AddAccountScreen extends StatefulWidget {
 }
 
 class _AddAccountScreenState extends State<AddAccountScreen> {
-  late Set<String> userIds;
+  late Set<DateTime> userUpdatedTimes;
 
   @override
   void initState() {
     super.initState();
-    userIds = widget.authState.client.userIds.toSet();
+    userUpdatedTimes = _userUpdatedTimes();
     widget.authState.addListener(_onAuthStateChanged);
   }
 
+  Set<DateTime> _userUpdatedTimes() =>
+      widget.authState.client.sessions.map((s) => s.user.updatedAt).toSet();
+
   void _onAuthStateChanged() {
     // if we successfully logged in and got a new session, pop the screen
-    final newUserIds = widget.authState.client.userIds.toSet();
-    if (newUserIds.difference(userIds).isNotEmpty) {
+    final newUserUpdatedTimes = _userUpdatedTimes();
+    if (newUserUpdatedTimes.difference(userUpdatedTimes).isNotEmpty) {
       Navigator.of(context).pop();
     }
   }

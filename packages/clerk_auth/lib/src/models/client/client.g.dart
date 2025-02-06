@@ -19,8 +19,12 @@ Client _$ClientFromJson(Map<String, dynamic> json) => Client(
               .toList() ??
           const [],
       lastActiveSessionId: json['last_active_session_id'] as String?,
-      updatedAt: intToDateTime(json['updated_at']),
-      createdAt: intToDateTime(json['created_at']),
+      updatedAt: json['updated_at'] == null
+          ? DateTimeExt.epoch
+          : intToDateTime(json['updated_at']),
+      createdAt: json['created_at'] == null
+          ? DateTimeExt.epoch
+          : intToDateTime(json['created_at']),
     );
 
 Map<String, dynamic> _$ClientToJson(Client instance) {
@@ -37,7 +41,7 @@ Map<String, dynamic> _$ClientToJson(Client instance) {
   writeNotNull('sign_up', instance.signUp?.toJson());
   writeNotNull('last_active_session_id', instance.lastActiveSessionId);
   val['sessions'] = instance.sessions.map((e) => e.toJson()).toList();
-  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
-  writeNotNull('created_at', instance.createdAt?.toIso8601String());
+  val['updated_at'] = dateTimeToInt(instance.updatedAt);
+  val['created_at'] = dateTimeToInt(instance.createdAt);
   return val;
 }

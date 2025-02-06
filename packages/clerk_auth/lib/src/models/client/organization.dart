@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -7,7 +8,7 @@ part 'organization.g.dart';
 @JsonSerializable()
 class Organization {
   /// Constructor
-  const Organization({
+  Organization({
     this.id = '',
     this.name = '',
     this.maxAllowedMemberships = 0,
@@ -19,8 +20,8 @@ class Organization {
     this.membersCount = 0,
     this.pendingInvitationsCount = 0,
     this.publicMetadata = const {},
-    this.updatedAt,
-    this.createdAt,
+    this.updatedAt = DateTimeExt.epoch,
+    this.createdAt = DateTimeExt.epoch,
   });
 
   /// id
@@ -57,18 +58,20 @@ class Organization {
   final Map<String, dynamic> publicMetadata;
 
   /// updated at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? updatedAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime updatedAt;
 
   /// created at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? createdAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime createdAt;
 
   /// The [id] for use externally
   String? get externalId => this == personal ? null : id;
 
+  static const _personalOrgId = r'$PERSONAL$';
+
   /// The id used internally for the personal organization
-  static const personal = Organization();
+  static final personal = Organization(id: _personalOrgId);
 
   /// fromJson
   static Organization fromJson(Map<String, dynamic> json) =>

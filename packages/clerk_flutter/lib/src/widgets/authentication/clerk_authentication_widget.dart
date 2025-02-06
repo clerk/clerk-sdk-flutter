@@ -54,7 +54,10 @@ class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget>
                   if (env.hasOauthStrategies) //
                     Closeable(
                       closed: auth.isSigningIn || auth.isSigningUp,
-                      child: const ClerkSSOPanel(),
+                      child: ClerkSSOPanel(
+                        onStrategyChosen: (strategy) =>
+                            auth.ssoSignIn(context, strategy),
+                      ),
                     ),
                   if (env.hasIdentificationStrategies) ...[
                     if (env.hasOauthStrategies) //
@@ -107,8 +110,10 @@ class _TopPortion extends StatelessWidget {
               dimension: 32.0,
               child: display.logoUrl?.isNotEmpty == true
                   ? Image.network(display.logoUrl!)
-                  : SvgPicture.asset(ClerkAssets.defaultOrganizationLogo,
-                      package: 'clerk_flutter'),
+                  : SvgPicture.asset(
+                      ClerkAssets.defaultOrganizationLogo,
+                      package: 'clerk_flutter',
+                    ),
             ),
           ),
         ),

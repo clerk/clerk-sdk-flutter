@@ -63,6 +63,9 @@ enum Status {
   /// is active?
   bool get isActive => this == active;
 
+  /// is verified?
+  bool get isVerified => this == verified;
+
   /// needs factor?
   bool get needsFactor => this == needsFirstFactor || this == needsSecondFactor;
 
@@ -161,55 +164,6 @@ enum Stage {
 
   @override
   String toString() => _$StageEnumMap[this]!;
-}
-
-/// [Field] Clerk object
-@JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
-enum Field {
-  /// email address
-  emailAddress,
-
-  /// external account
-  externalAccount,
-
-  /// first name
-  firstName,
-
-  /// last name
-  lastName,
-
-  /// password
-  password,
-
-  /// phone number
-  phoneNumber,
-
-  /// oauth apple
-  oauthApple,
-
-  /// oauth github
-  oauthGithub,
-
-  /// oauth google
-  oauthGoogle,
-
-  /// username
-  username,
-
-  /// web3 wallet
-  web3Wallet,
-
-  /// code
-  code,
-
-  /// token
-  token,
-
-  /// signature
-  signature;
-
-  @override
-  String toString() => _$FieldEnumMap[this]!;
 }
 
 /// [InstanceType] Clerk object

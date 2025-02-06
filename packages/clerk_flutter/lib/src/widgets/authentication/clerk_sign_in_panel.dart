@@ -82,7 +82,9 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           padding: bottomPadding8,
           child: ClerkTextFormField(
             key: const Key('identifier'),
-            label: translator.alternatives(identifiers.toList()).capitalized,
+            label: translator
+                .alternatives(identifiers.map(translator.translate).toList())
+                .capitalized,
             onChanged: (text) {
               if (text.isEmpty != _identifier.isEmpty) {
                 // only rebuild if we need the password box to animate

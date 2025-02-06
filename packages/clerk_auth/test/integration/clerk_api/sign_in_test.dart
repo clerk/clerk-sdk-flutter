@@ -24,6 +24,7 @@ void main() {
       publishableKey: env.publishableKey,
       persistor: Persistor.none,
       httpService: httpService,
+      pollMode: SessionTokenPollMode.lazy,
     );
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });

@@ -166,11 +166,14 @@ class Auth {
   /// Get the current [sessionToken] for an [Organization] , or the
   /// last organization used if empty
   ///
-  Future<SessionToken> sessionToken({Organization? organization}) async {
+  Future<SessionToken> sessionToken({
+    Organization? organization,
+    String? templateName,
+  }) async {
     final org = env.organization.isEnabled
         ? organization ?? Organization.personal
         : null;
-    final token = await _api.sessionToken(org);
+    final token = await _api.sessionToken(org, templateName);
     if (token is! SessionToken) {
       throw AuthError(message: 'No session token retrieved');
     }
@@ -179,7 +182,7 @@ class Auth {
 
   /// Prepare for sign in via an oAuth provider
   ///
-  Future<Client> oauthSignIn({required Strategy strategy}) async {
+  Future<void> oauthSignIn({required Strategy strategy}) async {
     await _api
         .createSignIn(strategy: strategy, redirectUrl: oauthRedirect)
         .then(_housekeeping);
@@ -193,9 +196,16 @@ class Auth {
           )
           .then(_housekeeping);
     }
-
     update();
-    return client;
+  }
+
+  /// Prepare to connect an account via an oAuth provider
+  ///
+  Future<void> oauthConnect({required Strategy strategy}) async {
+    await _api
+        .connectAccount(strategy: strategy, redirectUrl: oauthRedirect)
+        .then(_housekeeping);
+    update();
   }
 
   /// Progressively attempt sign in
@@ -441,10 +451,35 @@ class Auth {
     update();
   }
 
-  /// Update the [avatar] of the current [User]
+  /// Update the avatar of the current [User]
   ///
   Future<void> updateUserImage(File file) async {
     await _api.updateAvatar(file).then(_housekeeping);
+    update();
+  }
+
+  /// Delete the avatar of the current [User]
+  ///
+  Future<void> deleteUserImage() async {
+    await _api.deleteAvatar();
+    update();
+  }
+
+  /// Update the password of the current [User]
+  ///
+  Future<void> updateUserPassword(
+    String currentPassword,
+    String newPassword, {
+    bool signOut = true,
+  }) async {
+    await _api.updatePassword(currentPassword, newPassword, signOut);
+    update();
+  }
+
+  /// Delete the password of the current [User]
+  ///
+  Future<void> deleteUserPassword(String currentPassword) async {
+    await _api.deletePassword(currentPassword);
     update();
   }
 

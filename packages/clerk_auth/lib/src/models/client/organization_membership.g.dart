@@ -20,21 +20,12 @@ OrganizationMembership _$OrganizationMembershipFromJson(
     );
 
 Map<String, dynamic> _$OrganizationMembershipToJson(
-    OrganizationMembership instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'role': instance.role,
-    'organization': instance.organization.toJson(),
-    'public_user_data': instance.publicUserData.toJson(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
-  writeNotNull('created_at', instance.createdAt?.toIso8601String());
-  return val;
-}
+        OrganizationMembership instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'role': instance.role,
+      'organization': instance.organization.toJson(),
+      'public_user_data': instance.publicUserData.toJson(),
+      'updated_at': dateTimeToInt(instance.updatedAt),
+      'created_at': dateTimeToInt(instance.createdAt),
+    };

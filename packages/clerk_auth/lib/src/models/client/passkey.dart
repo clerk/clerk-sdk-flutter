@@ -27,16 +27,16 @@ class Passkey {
   final Verification verification;
 
   /// updated at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? updatedAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime updatedAt;
 
   /// created at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? createdAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime createdAt;
 
   /// last used at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? lastUsedAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime lastUsedAt;
 
   /// fromJson
   static Passkey fromJson(Map<String, dynamic> json) => _$PasskeyFromJson(json);

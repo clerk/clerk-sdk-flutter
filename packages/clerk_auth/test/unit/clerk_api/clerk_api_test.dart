@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+import 'package:clerk_auth/src/models/enums.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -21,6 +22,7 @@ void main() {
           publishableKey: 'NOT A PUBLISHABLE KEY',
           persistor: Persistor.none,
           httpService: HttpService.none,
+          pollMode: SessionTokenPollMode.lazy,
         ),
         throwsA(const TypeMatcher<FormatException>()),
       );
@@ -31,6 +33,7 @@ void main() {
         publishableKey: publishableKey,
         persistor: Persistor.none,
         httpService: HttpService.none,
+        pollMode: SessionTokenPollMode.lazy,
       );
       expect(result.domain, isA<String>());
     });
@@ -40,6 +43,7 @@ void main() {
         publishableKey: publishableKey,
         persistor: Persistor.none,
         httpService: HttpService.none,
+        pollMode: SessionTokenPollMode.lazy,
       );
       expect(result.domain, domain);
     });

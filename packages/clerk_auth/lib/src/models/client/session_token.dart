@@ -16,11 +16,12 @@ class SessionToken {
 
   static const _tokenExpiryBuffer = Duration(seconds: 10);
   static const _kJwtExpiryKey = 'exp';
+  static const _kJwtNotBeforeKey = 'nbf';
   static const _kJwtOrgIdKey = 'org_id';
 
   late final _parts = switch (jwt.split('.')) {
     List<String> parts when parts.length == 3 => parts,
-    _ => throw AuthError(message: "JWT poorly formated: $jwt"),
+    _ => throw AuthError(message: "JWT poorly formatted: $jwt"),
   };
 
   /// The [header] of the token
@@ -37,11 +38,19 @@ class SessionToken {
     (body[_kJwtExpiryKey] as int) - _tokenExpiryBuffer.inSeconds,
   );
 
+  /// When this token starts
+  late final notBefore = DateTimeExt.utcEpochSeconds(
+    body[_kJwtNotBeforeKey] as int,
+  );
+
   /// The organization id associated with this token
   late final orgId = body[_kJwtOrgIdKey] ?? Organization.personal.id;
 
   /// Has this token expired?
-  bool get isExpired => expiry.isBefore(DateTime.timestamp());
+  bool get isExpired {
+    final now = DateTime.timestamp();
+    return expiry.isBefore(now) || notBefore.isAfter(now);
+  }
 
   /// Is this token still valid?
   bool get isNotExpired => isExpired == false;

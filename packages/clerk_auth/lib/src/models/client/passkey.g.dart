@@ -16,21 +16,11 @@ Passkey _$PasskeyFromJson(Map<String, dynamic> json) => Passkey(
       createdAt: intToDateTime(json['created_at']),
     );
 
-Map<String, dynamic> _$PasskeyToJson(Passkey instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'name': instance.name,
-    'verification': instance.verification.toJson(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
-  writeNotNull('created_at', instance.createdAt?.toIso8601String());
-  writeNotNull('last_used_at', instance.lastUsedAt?.toIso8601String());
-  return val;
-}
+Map<String, dynamic> _$PasskeyToJson(Passkey instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'verification': instance.verification.toJson(),
+      'updated_at': dateTimeToInt(instance.updatedAt),
+      'created_at': dateTimeToInt(instance.createdAt),
+      'last_used_at': dateTimeToInt(instance.lastUsedAt),
+    };

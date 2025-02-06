@@ -52,23 +52,6 @@ const _$StageEnumMap = {
   Stage.second: 'second',
 };
 
-const _$FieldEnumMap = {
-  Field.emailAddress: 'email_address',
-  Field.externalAccount: 'external_account',
-  Field.firstName: 'first_name',
-  Field.lastName: 'last_name',
-  Field.password: 'password',
-  Field.phoneNumber: 'phone_number',
-  Field.oauthApple: 'oauth_apple',
-  Field.oauthGithub: 'oauth_github',
-  Field.oauthGoogle: 'oauth_google',
-  Field.username: 'username',
-  Field.web3Wallet: 'web3_wallet',
-  Field.code: 'code',
-  Field.token: 'token',
-  Field.signature: 'signature',
-};
-
 const _$InstanceTypeEnumMap = {
   InstanceType.unknown: 'unknown',
   InstanceType.development: 'development',

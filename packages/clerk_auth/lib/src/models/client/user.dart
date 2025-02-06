@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/models/client/email.dart';
+import 'package:clerk_auth/src/models/client/external_account.dart';
 import 'package:clerk_auth/src/models/client/organization_membership.dart';
 import 'package:clerk_auth/src/models/client/passkey.dart';
 import 'package:clerk_auth/src/models/client/phone_number.dart';
@@ -41,6 +42,7 @@ class User {
     required this.locked,
     required this.lockoutExpiresInSeconds,
     required this.verificationAttemptsRemaining,
+    required this.externalAccounts,
     required this.updatedAt,
     required this.createdAt,
     required this.lastActiveAt,
@@ -102,6 +104,9 @@ class User {
   /// organization memberships
   final List<OrganizationMembership>? organizationMemberships;
 
+  /// external accounts
+  final List<ExternalAccount>? externalAccounts;
+
   /// password enabled
   final bool? passwordEnabled;
 
@@ -130,20 +135,20 @@ class User {
   final bool? deleteSelfEnabled;
 
   /// last sign in at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? lastSignInAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime lastSignInAt;
 
   /// updated at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? updatedAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime updatedAt;
 
   /// created at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? createdAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime createdAt;
 
   /// last active at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? lastActiveAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime lastActiveAt;
 
   /// Does this user have metadata?
   bool get hasMetadata => userMetadata?.isNotEmpty == true;
@@ -206,6 +211,9 @@ class User {
       web3WalletId is String &&
       web3WalletId == _persisted(primaryWeb3WalletId, web3Wallets);
 
+  /// do we have organizations?
+  bool get hasOrganizations => organizationMemberships?.isNotEmpty == true;
+
   /// copy this user with changed fields
   User copyWith({
     String? username,
@@ -225,6 +233,7 @@ class User {
     List<Web3Wallet>? web3Wallets,
     List<Passkey>? passkeys,
     List<OrganizationMembership>? organizationMemberships,
+    List<ExternalAccount>? externalAccounts,
     bool? passwordEnabled,
     bool? twoFactorEnabled,
     bool? totpEnabled,
@@ -238,42 +247,44 @@ class User {
     DateTime? createdAt,
     DateTime? lastActiveAt,
     bool? deleteSelfEnabled,
-  }) =>
-      User(
-        id: id,
-        username: username ?? this.username,
-        firstName: firstName ?? this.firstName,
-        lastName: lastName ?? this.lastName,
-        profileImageUrl: profileImageUrl ?? this.profileImageUrl,
-        imageUrl: imageUrl ?? this.imageUrl,
-        hasImage: hasImage ?? this.hasImage,
-        primaryEmailAddressId:
-            primaryEmailAddressId ?? this.primaryEmailAddressId,
-        primaryPhoneNumberId: primaryPhoneNumberId ?? this.primaryPhoneNumberId,
-        primaryWeb3WalletId: primaryWeb3WalletId ?? this.primaryWeb3WalletId,
-        publicMetadata: publicMetadata ?? this.publicMetadata,
-        privateMetadata: privateMetadata ?? this.privateMetadata,
-        userMetadata: userMetadata ?? this.userMetadata,
-        emailAddresses: emailAddresses ?? this.emailAddresses,
-        phoneNumbers: phoneNumbers ?? this.phoneNumbers,
-        web3Wallets: web3Wallets ?? this.web3Wallets,
-        passkeys: passkeys ?? this.passkeys,
-        organizationMemberships:
-            organizationMemberships ?? this.organizationMemberships,
-        passwordEnabled: passwordEnabled ?? this.passwordEnabled,
-        twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
-        totpEnabled: totpEnabled ?? this.totpEnabled,
-        backupCodeEnabled: backupCodeEnabled ?? this.backupCodeEnabled,
-        lastSignInAt: lastSignInAt ?? this.lastSignInAt,
-        banned: banned ?? this.banned,
-        locked: locked ?? this.locked,
-        lockoutExpiresInSeconds:
-            lockoutExpiresInSeconds ?? this.lockoutExpiresInSeconds,
-        verificationAttemptsRemaining:
-            verificationAttemptsRemaining ?? this.verificationAttemptsRemaining,
-        updatedAt: updatedAt ?? this.updatedAt,
-        createdAt: createdAt ?? this.createdAt,
-        lastActiveAt: lastActiveAt ?? this.lastActiveAt,
-        deleteSelfEnabled: deleteSelfEnabled ?? this.deleteSelfEnabled,
-      );
+  }) {
+    return User(
+      id: id,
+      username: username ?? this.username,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      imageUrl: imageUrl ?? this.imageUrl,
+      hasImage: hasImage ?? this.hasImage,
+      primaryEmailAddressId:
+          primaryEmailAddressId ?? this.primaryEmailAddressId,
+      primaryPhoneNumberId: primaryPhoneNumberId ?? this.primaryPhoneNumberId,
+      primaryWeb3WalletId: primaryWeb3WalletId ?? this.primaryWeb3WalletId,
+      publicMetadata: publicMetadata ?? this.publicMetadata,
+      privateMetadata: privateMetadata ?? this.privateMetadata,
+      userMetadata: userMetadata ?? this.userMetadata,
+      emailAddresses: emailAddresses ?? this.emailAddresses,
+      phoneNumbers: phoneNumbers ?? this.phoneNumbers,
+      web3Wallets: web3Wallets ?? this.web3Wallets,
+      passkeys: passkeys ?? this.passkeys,
+      organizationMemberships:
+          organizationMemberships ?? this.organizationMemberships,
+      externalAccounts: externalAccounts ?? this.externalAccounts,
+      passwordEnabled: passwordEnabled ?? this.passwordEnabled,
+      twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
+      totpEnabled: totpEnabled ?? this.totpEnabled,
+      backupCodeEnabled: backupCodeEnabled ?? this.backupCodeEnabled,
+      lastSignInAt: lastSignInAt ?? this.lastSignInAt,
+      banned: banned ?? this.banned,
+      locked: locked ?? this.locked,
+      lockoutExpiresInSeconds:
+          lockoutExpiresInSeconds ?? this.lockoutExpiresInSeconds,
+      verificationAttemptsRemaining:
+          verificationAttemptsRemaining ?? this.verificationAttemptsRemaining,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      lastActiveAt: lastActiveAt ?? this.lastActiveAt,
+      deleteSelfEnabled: deleteSelfEnabled ?? this.deleteSelfEnabled,
+    );
+  }
 }

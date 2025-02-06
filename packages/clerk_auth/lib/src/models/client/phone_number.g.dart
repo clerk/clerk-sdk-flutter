@@ -35,7 +35,7 @@ Map<String, dynamic> _$PhoneNumberToJson(PhoneNumber instance) {
   val['reserved'] = instance.reserved;
   val['reserved_for_second_factor'] = instance.reservedForSecondFactor;
   val['default_second_factor'] = instance.defaultSecondFactor;
-  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
-  writeNotNull('created_at', instance.createdAt?.toIso8601String());
+  val['updated_at'] = dateTimeToInt(instance.updatedAt);
+  val['created_at'] = dateTimeToInt(instance.createdAt);
   return val;
 }

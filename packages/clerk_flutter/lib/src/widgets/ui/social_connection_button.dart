@@ -10,7 +10,14 @@ import 'package:flutter/material.dart';
 @immutable
 class SocialConnectionButton extends StatelessWidget {
   /// Constructs a new [SocialConnectionButton].
-  const SocialConnectionButton({super.key, required this.connection});
+  const SocialConnectionButton({
+    super.key,
+    required this.connection,
+    required this.onPressed,
+  });
+
+  /// the function to call when button pressed
+  final ValueChanged<clerk.Strategy> onPressed;
 
   /// The oAuth provider this button represents.
   final clerk.SocialConnection connection;
@@ -18,8 +25,7 @@ class SocialConnectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: () => ClerkAuth.of(context, listen: false)
-          .sso(context, connection.strategy),
+      onPressed: () => onPressed(connection.strategy),
       elevation: 2.0,
       shape: const RoundedRectangleBorder(
         borderRadius: borderRadius4,

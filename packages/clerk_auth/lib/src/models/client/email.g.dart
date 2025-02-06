@@ -31,7 +31,7 @@ Map<String, dynamic> _$EmailToJson(Email instance) {
   writeNotNull('verification', instance.verification?.toJson());
   val['email_address'] = instance.emailAddress;
   val['reserved'] = instance.reserved;
-  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
-  writeNotNull('created_at', instance.createdAt?.toIso8601String());
+  val['updated_at'] = dateTimeToInt(instance.updatedAt);
+  val['created_at'] = dateTimeToInt(instance.createdAt);
   return val;
 }

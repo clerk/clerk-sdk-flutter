@@ -2,7 +2,9 @@ library;
 
 export 'client/client.dart';
 export 'client/email.dart';
+export 'client/external_account.dart';
 export 'client/factor.dart';
+export 'client/field.dart';
 export 'client/organization.dart';
 export 'client/organization_membership.dart';
 export 'client/passkey.dart';

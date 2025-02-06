@@ -36,9 +36,9 @@ Map<String, dynamic> _$SessionToJson(Session instance) {
 
   writeNotNull('last_active_token', instance.lastActiveToken?.toJson());
   val['user'] = instance.user.toJson();
-  writeNotNull('last_active_at', instance.lastActiveAt?.toIso8601String());
-  writeNotNull('expire_at', instance.expireAt?.toIso8601String());
-  writeNotNull('abandon_at', instance.abandonAt?.toIso8601String());
+  val['last_active_at'] = dateTimeToInt(instance.lastActiveAt);
+  val['expire_at'] = dateTimeToInt(instance.expireAt);
+  val['abandon_at'] = dateTimeToInt(instance.abandonAt);
   return val;
 }
 

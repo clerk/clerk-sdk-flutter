@@ -48,6 +48,9 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
           (json['lockout_expires_in_seconds'] as num?)?.toInt(),
       verificationAttemptsRemaining:
           (json['verification_attempts_remaining'] as num?)?.toInt(),
+      externalAccounts: (json['external_accounts'] as List<dynamic>?)
+          ?.map((e) => ExternalAccount.fromJson(e as Map<String, dynamic>))
+          .toList(),
       updatedAt: intToDateTime(json['updated_at']),
       createdAt: intToDateTime(json['created_at']),
       lastActiveAt: intToDateTime(json['last_active_at']),
@@ -86,6 +89,8 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('passkeys', instance.passkeys?.map((e) => e.toJson()).toList());
   writeNotNull('organization_memberships',
       instance.organizationMemberships?.map((e) => e.toJson()).toList());
+  writeNotNull('external_accounts',
+      instance.externalAccounts?.map((e) => e.toJson()).toList());
   writeNotNull('password_enabled', instance.passwordEnabled);
   writeNotNull('two_factor_enabled', instance.twoFactorEnabled);
   writeNotNull('totp_enabled', instance.totpEnabled);
@@ -96,9 +101,9 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('verification_attempts_remaining',
       instance.verificationAttemptsRemaining);
   writeNotNull('delete_self_enabled', instance.deleteSelfEnabled);
-  writeNotNull('last_sign_in_at', instance.lastSignInAt?.toIso8601String());
-  writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
-  writeNotNull('created_at', instance.createdAt?.toIso8601String());
-  writeNotNull('last_active_at', instance.lastActiveAt?.toIso8601String());
+  val['last_sign_in_at'] = dateTimeToInt(instance.lastSignInAt);
+  val['updated_at'] = dateTimeToInt(instance.updatedAt);
+  val['created_at'] = dateTimeToInt(instance.createdAt);
+  val['last_active_at'] = dateTimeToInt(instance.lastActiveAt);
   return val;
 }

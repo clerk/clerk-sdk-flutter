@@ -8,6 +8,8 @@ Future<void> main() async {
     persistor: await DefaultPersistor.create(
       storageDirectory: Directory.current,
     ),
+    httpService: const DefaultHttpService(),
+    pollMode: SessionTokenPollMode.lazy,
   );
 
   Client client;

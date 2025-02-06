@@ -48,16 +48,18 @@ class Environment {
   bool get hasPasswordStrategy =>
       config.firstFactors.contains(Strategy.password);
 
-  /// [Iterable] of identification strategies
+  /// [List] of identification strategies
+  List<Strategy> get strategies => config.identificationStrategies;
+
+  /// [Iterable] of non-oauth identification strategies
   Iterable<Strategy> get identificationStrategies =>
-      config.identificationStrategies.where((i) => i.isOauth == false);
+      strategies.where((i) => i.isOauth == false);
 
   /// Do we have identification strategies?
   bool get hasIdentificationStrategies => identificationStrategies.isNotEmpty;
 
-  /// [Iterable] of oauth strategies
-  Iterable<Strategy> get oauthStrategies =>
-      config.identificationStrategies.where((i) => i.isOauth);
+  /// [Iterable] of oauth identification strategies
+  Iterable<Strategy> get oauthStrategies => strategies.where((i) => i.isOauth);
 
   /// Do we have oauth strategies?
   bool get hasOauthStrategies => oauthStrategies.isNotEmpty;
@@ -65,7 +67,7 @@ class Environment {
   /// [Iterable] of other strategies
   /// i.e. strategies that are neither oauth nor password-based
   Iterable<Strategy> get otherStrategies =>
-      config.firstFactors.where((f) => f.isOtherStrategy);
+      strategies.where((f) => f.isOtherStrategy);
 
   /// Do we have other strategies?
   bool get hasOtherStrategies => otherStrategies.isNotEmpty;

@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -15,8 +16,8 @@ class Client {
     this.signUp,
     this.sessions = const [],
     this.lastActiveSessionId,
-    this.updatedAt,
-    this.createdAt,
+    this.updatedAt = DateTimeExt.epoch,
+    this.createdAt = DateTimeExt.epoch,
   });
 
   /// client id
@@ -35,12 +36,12 @@ class Client {
   final List<Session> sessions;
 
   /// when updated
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? updatedAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime updatedAt;
 
   /// when created
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? createdAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime createdAt;
 
   /// empty [Client] object
   static const empty = Client();

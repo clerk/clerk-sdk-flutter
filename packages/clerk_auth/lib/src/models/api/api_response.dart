@@ -10,6 +10,7 @@ class ApiResponse {
     required this.status,
     this.errors,
     this.client,
+    this.response,
   });
 
   /// Constructs an [ApiResponse] for situations in which the backend
@@ -17,6 +18,7 @@ class ApiResponse {
   ApiResponse.fatal({required ApiError error})
       : status = 0,
         errors = [error],
+        response = null,
         client = null;
 
   /// http status
@@ -27,6 +29,9 @@ class ApiResponse {
 
   /// List of errors returned by the call
   final List<ApiError>? errors;
+
+  /// Specific response data from the API call
+  final Map<String, dynamic>? response;
 
   /// is the response the one that was expected?
   bool get isOkay => status == HttpStatus.ok;

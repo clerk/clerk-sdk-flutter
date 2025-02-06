@@ -65,8 +65,8 @@ extension ListExtension<T> on List<T> {
 /// Extension class to create extra statics for [DateTime] use
 ///
 extension DateTimeExt on DateTime {
-  /// The epoch as a [DateTime]
-  static final zero = utcEpochMillis(0);
+  /// The epoch as a const [DateTime] (YES I KNOW!!!)
+  static const epoch = Epoch();
 
   /// returns a [DateTime] in UTC in seconds since epoch
   static DateTime utcEpochSeconds(int seconds) =>
@@ -75,4 +75,86 @@ extension DateTimeExt on DateTime {
   /// returns a [DateTime] in UTC in milliseconds since epoch
   static DateTime utcEpochMillis(int milliseconds) =>
       DateTime.fromMillisecondsSinceEpoch(milliseconds, isUtc: true);
+}
+
+/// An implementation of [DateTime] that represents the epoch exclusively
+class Epoch implements DateTime {
+  /// Create a const [Epoch]
+  const Epoch();
+
+  @override
+  DateTime add(Duration duration) =>
+      DateTime.fromMicrosecondsSinceEpoch(duration.inMicroseconds, isUtc: true);
+
+  @override
+  int compareTo(DateTime other) => -other.microsecondsSinceEpoch;
+
+  @override
+  int get day => 1;
+
+  @override
+  Duration difference(DateTime other) =>
+      other is Epoch ? Duration.zero : -other.difference(this);
+
+  @override
+  int get hour => 0;
+
+  @override
+  bool isAfter(DateTime other) =>
+      (isAtSameMomentAs(other) || other.isAfter(this)) == false;
+
+  @override
+  bool isAtSameMomentAs(DateTime other) => other.microsecondsSinceEpoch == 0;
+
+  @override
+  bool isBefore(DateTime other) =>
+      (isAtSameMomentAs(other) || other.isBefore(this)) == false;
+
+  @override
+  bool get isUtc => true;
+
+  @override
+  int get microsecond => 0;
+
+  @override
+  int get microsecondsSinceEpoch => 0;
+
+  @override
+  int get millisecond => 0;
+
+  @override
+  int get millisecondsSinceEpoch => 0;
+
+  @override
+  int get minute => 0;
+
+  @override
+  int get month => 1;
+
+  @override
+  int get second => 0;
+
+  @override
+  DateTime subtract(Duration duration) => add(-duration);
+
+  @override
+  String get timeZoneName => 'UTC';
+
+  @override
+  Duration get timeZoneOffset => Duration.zero;
+
+  @override
+  String toIso8601String() => '1970-01-01T00:00:00.000Z';
+
+  @override
+  DateTime toLocal() => DateTime.fromMicrosecondsSinceEpoch(0, isUtc: false);
+
+  @override
+  DateTime toUtc() => this;
+
+  @override
+  int get weekday => 0;
+
+  @override
+  int get year => 1970;
 }

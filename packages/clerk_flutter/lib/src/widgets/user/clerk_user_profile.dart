@@ -15,8 +15,6 @@ class ClerkUserProfile extends StatefulWidget {
   /// Construct a [ClerkUserProfile]
   const ClerkUserProfile({super.key});
 
-  static const _paddedDivider = Padding(padding: topPadding16, child: divider);
-
   @override
   State<ClerkUserProfile> createState() => _ClerkUserProfileState();
 }
@@ -140,7 +138,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                 maxLines: 1,
                 style: ClerkTextStyle.title,
               ),
-              ClerkUserProfile._paddedDivider,
+              const Padding(padding: topPadding16, child: divider),
               Expanded(
                 child: ListView(
                   children: [
@@ -148,41 +146,54 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                       title: translator.translate('Profile'),
                       child: _EditableUserData(user: user),
                     ),
-                    ClerkUserProfile._paddedDivider,
-                    _ProfileRow(
-                      title: translator.translate('Email address'),
-                      child: _IdentifierData(
-                        user: user,
-                        identifiers: user.emailAddresses,
-                        addLine: translator.translate('Add email address'),
-                        onAddNew: () => _addIdentifyingData(
-                          context,
-                          auth,
-                          clerk.IdentifierType.emailAddress,
+                    if (auth.env.config.allowsEmailAddress) ...[
+                      const Padding(padding: topPadding16, child: divider),
+                      _ProfileRow(
+                        title: translator.translate('Email address'),
+                        child: _IdentifierList(
+                          user: user,
+                          identifiers: user.emailAddresses,
+                          addLine: translator.translate('Add email address'),
+                          onAddNew: () => _addIdentifyingData(
+                            context,
+                            auth,
+                            clerk.IdentifierType.emailAddress,
+                          ),
+                          onIdentifierUnverified: (emailAddress) {
+                            _verifyIdentifyingData(context, auth, emailAddress);
+                          },
                         ),
-                        onIdentifierUnverified: (emailAddress) {
-                          _verifyIdentifyingData(context, auth, emailAddress);
-                        },
                       ),
-                    ),
-                    ClerkUserProfile._paddedDivider,
-                    _ProfileRow(
-                      title: translator.translate('Phone numbers'),
-                      child: _IdentifierData(
-                        user: user,
-                        identifiers: user.phoneNumbers,
-                        format: (number) {
-                          return PhoneNumber.parse(number).intlFormattedNsn;
-                        },
-                        addLine: translator.translate('Add phone number'),
-                        onAddNew: () => _addIdentifyingData(
-                          context,
-                          auth,
-                          clerk.IdentifierType.phoneNumber,
+                    ],
+                    if (auth.env.config.allowsPhoneNumber) ...[
+                      const Padding(padding: topPadding16, child: divider),
+                      _ProfileRow(
+                        title: translator.translate('Phone numbers'),
+                        child: _IdentifierList(
+                          user: user,
+                          identifiers: user.phoneNumbers,
+                          format: (number) {
+                            return PhoneNumber.parse(number).intlFormattedNsn;
+                          },
+                          addLine: translator.translate('Add phone number'),
+                          onAddNew: () => _addIdentifyingData(
+                            context,
+                            auth,
+                            clerk.IdentifierType.phoneNumber,
+                          ),
+                          onIdentifierUnverified: (phoneNumber) {
+                            _verifyIdentifyingData(context, auth, phoneNumber);
+                          },
                         ),
-                        onIdentifierUnverified: (phoneNumber) {
-                          _verifyIdentifyingData(context, auth, phoneNumber);
-                        },
+                      ),
+                    ],
+                    const Padding(padding: topPadding16, child: divider),
+                    _ProfileRow(
+                      title: translator.translate('Connected accounts'),
+                      child: _ExternalAccountList(
+                        user: user,
+                        env: auth.env,
+                        onAddNew: () => ConnectAccountScreen.show(context),
                       ),
                     ),
                   ],
@@ -197,8 +208,68 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
   }
 }
 
-class _IdentifierData extends StatelessWidget {
-  const _IdentifierData({
+class _ExternalAccountList extends StatelessWidget {
+  const _ExternalAccountList({
+    required this.user,
+    required this.env,
+    required this.onAddNew,
+  });
+
+  final clerk.User user;
+  final clerk.Environment env;
+  final VoidCallback onAddNew;
+
+  @override
+  Widget build(BuildContext context) {
+    final translator = ClerkAuth.translatorOf(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (user.externalAccounts case List<clerk.ExternalAccount> accounts) //
+          for (final account in accounts.where((a) => a.isVerified)) //
+            Padding(
+              padding: bottomPadding16,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (env.user.socialSettings[account.provider]
+                      case clerk.SocialConnection social) ...[
+                    Image.network(social.logoUrl, width: 14),
+                    horizontalMargin4,
+                    Text(social.name),
+                  ],
+                  horizontalMargin4,
+                  Expanded(
+                    child: Text(
+                      account.emailAddress,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: ClerkTextStyle.subtitle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onAddNew,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const ClerkIcon(ClerkAssets.addIconSimpleLight, size: 10),
+              horizontalMargin12,
+              Expanded(child: Text(translator.translate('Connect account'))),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _IdentifierList extends StatelessWidget {
+  const _IdentifierList({
     required this.user,
     required this.addLine,
     required this.onAddNew,
@@ -220,29 +291,32 @@ class _IdentifierData extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (identifiers case List<clerk.UserIdentifyingData> identifiers)
-          for (final ident in identifiers) ...[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    format?.call(ident.identifier) ?? ident.identifier,
-                    maxLines: 2,
+        if (identifiers case List<clerk.UserIdentifyingData> identifiers) //
+          for (final ident in identifiers) //
+            Padding(
+              padding: bottomPadding16,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      format?.call(ident.identifier) ?? ident.identifier,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-                if (ident.isUnverified) //
-                  _RowLabel(
-                    label: translator.translate('UNVERIFIED'),
-                    color: ClerkColors.incarnadine,
-                    onTap: () => onIdentifierUnverified.call(ident.identifier),
-                  ),
-                if (user.isPrimary(ident)) //
-                  _RowLabel(label: translator.translate('PRIMARY')),
-              ],
+                  if (ident.isUnverified) //
+                    _RowLabel(
+                      label: translator.translate('UNVERIFIED'),
+                      color: ClerkColors.incarnadine,
+                      onTap: () =>
+                          onIdentifierUnverified.call(ident.identifier),
+                    ),
+                  if (user.isPrimary(ident)) //
+                    _RowLabel(label: translator.translate('PRIMARY')),
+                ],
+              ),
             ),
-            verticalMargin20,
-          ],
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: onAddNew,
@@ -313,10 +387,11 @@ class _ProfileRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
+            flex: 2,
             child: Text(title, maxLines: 2),
           ),
           horizontalMargin8,
-          Expanded(flex: 2, child: child),
+          Expanded(flex: 3, child: child),
         ],
       ),
     );
@@ -435,6 +510,7 @@ class _EditableUserDataState extends State<_EditableUserData> {
               : Text(
                   widget.user.name,
                   maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: ClerkTextStyle.inputLabel,
                 ),
         ),

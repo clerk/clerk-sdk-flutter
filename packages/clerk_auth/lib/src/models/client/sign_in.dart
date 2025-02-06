@@ -52,8 +52,8 @@ class SignIn {
   final String? createdSessionId;
 
   /// abandon at
-  @JsonKey(fromJson: intToDateTime)
-  final DateTime? abandonAt;
+  @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
+  final DateTime abandonAt;
 
   /// supported first factors
   @JsonKey(defaultValue: [])

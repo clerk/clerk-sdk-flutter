@@ -52,15 +52,64 @@ class ExampleApp extends StatelessWidget {
         home: Scaffold(
           backgroundColor: ClerkColors.whiteSmoke,
           body: SafeArea(
-            child: Padding(
-              padding: horizontalPadding32,
-              child: Center(
-                child: ClerkAuthBuilder(
-                  signedInBuilder: (context, auth) => const ClerkUserButton(),
-                  signedOutBuilder: (context, auth) {
-                    return const ClerkAuthenticationWidget();
-                  },
-                ),
+            child: Center(
+              child: ClerkAuthBuilder(
+                signedInBuilder: (context, auth) {
+                  if (auth.env.organization.isEnabled == false) {
+                    return const ClerkUserButton();
+                  }
+
+                  return DefaultTabController(
+                    length: 2,
+                    child: Center(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            child: AppBar(
+                              backgroundColor: ClerkColors.whiteSmoke,
+                              bottom: const TabBar(
+                                tabs: [
+                                  SizedBox(
+                                    height: 30,
+                                    child: Text('Users'),
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                    child: Text('Organizations'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Expanded(
+                            child: TabBarView(
+                              children: [
+                                Padding(
+                                  padding: allPadding16,
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: ClerkUserButton(),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: allPadding16,
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: ClerkOrganizationList(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                signedOutBuilder: (context, auth) {
+                  return const ClerkAuthenticationWidget();
+                },
               ),
             ),
           ),

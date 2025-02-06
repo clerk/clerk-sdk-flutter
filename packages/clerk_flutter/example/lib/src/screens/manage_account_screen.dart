@@ -14,7 +14,7 @@ class ManageAccountScreen extends StatelessWidget {
   /// The name of the route to this screen
   static const routeName = 'clerk_add_account';
 
-  /// static method to show an [AddAccountScreen]
+  /// static method to show an [AddAccountPanel]
   static Future<void> show(BuildContext context) async {
     final authState = ClerkAuth.of(context, listen: false);
     await Navigator.of(context).push(

@@ -76,6 +76,9 @@ class ExternalAccount {
   /// is verified?
   bool get isVerified => verification.status.isVerified;
 
+  /// is expired?
+  bool get isExpired => verification.status.isExpired;
+
   /// fromJson
   static ExternalAccount fromJson(Map<String, dynamic> json) =>
       _$ExternalAccountFromJson(json);

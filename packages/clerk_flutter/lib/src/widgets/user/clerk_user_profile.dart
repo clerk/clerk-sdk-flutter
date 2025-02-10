@@ -226,7 +226,7 @@ class _ExternalAccountList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (user.externalAccounts case List<clerk.ExternalAccount> accounts) //
-          for (final account in accounts.where((a) => a.isVerified)) //
+          for (final account in accounts.where((a) => a.isExpired == false)) //
             Padding(
               padding: bottomPadding16,
               child: Row(
@@ -248,6 +248,12 @@ class _ExternalAccountList extends StatelessWidget {
                       style: ClerkTextStyle.subtitle,
                     ),
                   ),
+                  if (account.isVerified == false) //
+                    _RowLabel(
+                      label: translator.translate(
+                        account.verification.status.name.toUpperCase(),
+                      ),
+                    ),
                 ],
               ),
             ),

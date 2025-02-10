@@ -53,26 +53,32 @@ class Api with Logging {
   final String _domain;
   final HttpService _httpService;
   final SessionTokenPollMode _pollMode;
+  late final String _nativeDeviceId;
   Timer? _pollTimer;
+  bool _multiSessionMode = false;
+  bool _debugMode = false;
 
-  static const _scheme = 'https';
-  static const _kJwtKey = 'jwt';
-  static const _kIsNative = '_is_native';
-  static const _kClerkSessionId = '_clerk_session_id';
-  static const _kClerkJsVersion = '_clerk_js_version';
-  static const _kErrorsKey = 'errors';
-  static const _kClientKey = 'client';
-  static const _kResponseKey = 'response';
   static const _kClerkAPIVersion = 'clerk-api-version';
+  static const _kClerkClientId = 'x-clerk-client-id';
+  static const _kClerkJsVersion = '_clerk_js_version';
+  static const _kClerkNativeDeviceId = 'x-native-device-id';
+  static const _kClerkSessionId = '_clerk_session_id';
+  static const _kClientKey = 'client';
+  static const _kErrorsKey = 'errors';
+  static const _kIsNative = '_is_native';
+  static const _kJwtKey = 'jwt';
+  static const _kOrganizationId = 'organization_id';
+  static const _kResponseKey = 'response';
   static const _kXFlutterSDKVersion = 'x-flutter-sdk-version';
   static const _kXMobile = 'x-mobile';
-  static const _kOrganizationId = 'organization_id';
+  static const _scheme = 'https';
 
   static const _defaultPollDelay = Duration(seconds: 55);
 
   /// Initialise the API
   Future<void> initialize() async {
     await _tokenCache.initialize();
+    _nativeDeviceId = 'PENDING'; // TODO get this value
     if (_pollMode == SessionTokenPollMode.hungry) {
       await _pollForSessionToken();
     }
@@ -95,7 +101,12 @@ class Api with Logging {
     final resp = await _fetch(path: '/environment', method: HttpMethod.get);
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body) as Map<String, dynamic>;
-      return Environment.fromJson(body);
+      final env = Environment.fromJson(body);
+
+      _debugMode = env.config.testMode;
+      _multiSessionMode = env.config.singleSessionMode == false;
+
+      return env;
     }
     return Environment.empty;
   }
@@ -746,7 +757,7 @@ class Api with Logging {
     };
     if (clientData case Map<String, dynamic> clientJson) {
       final client = Client.fromJson(clientJson);
-      _tokenCache.updateFrom(resp, client.activeSession);
+      _tokenCache.updateFrom(resp, client);
       return ApiResponse(
         client: client,
         status: resp.statusCode,
@@ -811,7 +822,7 @@ class Api with Logging {
       {
         _kIsNative: true,
         _kClerkJsVersion: ClerkConstants.jsVersion,
-        if (withSession) //
+        if (withSession && _multiSessionMode) //
           _kClerkSessionId: _tokenCache.sessionId,
         if (method.isGet) //
           ...?params,
@@ -838,6 +849,8 @@ class Api with Logging {
       if (_tokenCache.clientToken.isNotEmpty) //
         HttpHeaders.authorizationHeader: _tokenCache.clientToken,
       _kClerkAPIVersion: ClerkConstants.clerkApiVersion,
+      _kClerkClientId: _tokenCache.clientId,
+      _kClerkNativeDeviceId: _nativeDeviceId,
       _kXFlutterSDKVersion: ClerkConstants.flutterSdkVersion,
       _kXMobile: '1',
       ...?headers,

@@ -13,7 +13,6 @@ class AuthConfig {
     this.singleSessionMode = false,
     this.enhancedEmailDeliverability = false,
     this.testMode = false,
-    this.demo = false,
     this.cookielessDev = false,
     this.urlBasedSessionSyncing = false,
     this.identificationStrategies = const [],
@@ -39,9 +38,6 @@ class AuthConfig {
 
   /// test mode?
   final bool testMode;
-
-  /// demo?
-  final bool demo;
 
   /// cookieless dev?
   final bool cookielessDev;

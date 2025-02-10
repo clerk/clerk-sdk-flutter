@@ -66,6 +66,9 @@ enum Status {
   /// is verified?
   bool get isVerified => this == verified;
 
+  /// is expired?
+  bool get isExpired => this == expired;
+
   /// needs factor?
   bool get needsFactor => this == needsFirstFactor || this == needsSecondFactor;
 

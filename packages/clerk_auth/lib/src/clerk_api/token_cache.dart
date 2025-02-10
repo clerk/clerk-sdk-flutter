@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+import 'package:clerk_auth/src/models/client/client.dart';
 import 'package:clerk_auth/src/models/client/organization.dart';
 import 'package:clerk_auth/src/models/client/session.dart';
 import 'package:clerk_auth/src/models/client/session_token.dart';
@@ -30,9 +31,13 @@ class TokenCache {
 
   String _sessionId = '';
   String _clientToken = '';
+  String _clientId = '';
 
   /// Whether or not we have a [clientToken]
-  bool get hasClientToken => clientToken.isNotEmpty;
+  bool get hasClientToken => _clientToken.isNotEmpty;
+
+  /// Whether or not we have a [clientId]
+  bool get hasClientId => _clientId.isNotEmpty;
 
   /// Whether or not the [sessionTokenFor] can be refreshed
   bool get canRefreshSessionToken => hasClientToken && sessionId.isNotEmpty;
@@ -41,13 +46,12 @@ class TokenCache {
 
   String get _sessionTokenKey => '_clerkSession_Tokens_$_cacheId';
 
-  String get _clientTokenKey => '_clerkClient_TokenValue_$_cacheId';
+  String get _clientTokenKey => '_clerkClient_Token_$_cacheId';
 
-  List<String> get _persistorKeys => [
-        _sessionIdKey,
-        _sessionTokenKey,
-        _clientTokenKey,
-      ];
+  String get _clientIdKey => '_clerkClient_Id_$_cacheId';
+
+  List<String> get _persistorKeys =>
+      [_sessionIdKey, _sessionTokenKey, _clientTokenKey, _clientIdKey];
 
   /// Initialise the cache
   Future<void> initialize() async {
@@ -70,6 +74,9 @@ class TokenCache {
 
     final clientToken = await _persistor.read(_clientTokenKey) ?? '';
     _clientToken = clientToken;
+
+    final clientId = await _persistor.read(_clientIdKey) ?? '';
+    _clientId = clientId;
   }
 
   /// Reset the [TokenCache]
@@ -77,6 +84,7 @@ class TokenCache {
   void clear() {
     _sessionId = '';
     _clientToken = '';
+    _clientId = '';
     _sessionTokens.clear();
     for (final key in _persistorKeys) {
       _persistor.delete(key);
@@ -87,6 +95,8 @@ class TokenCache {
   String get sessionId => _sessionId;
 
   void _setSessionId(String id) {
+    if (_sessionId == id) return;
+
     _sessionId = id;
     _persistor.write(_sessionIdKey, id);
   }
@@ -97,12 +107,18 @@ class TokenCache {
   void _setClientToken(String token) {
     if (token == _clientToken) return;
 
-    try {
-      _clientToken = token;
-      _persistor.write(_clientTokenKey, token);
-    } catch (error, stackTrace) {
-      _logger.severe('ERROR SETTING CLIENT TOKEN: $error', error, stackTrace);
-    }
+    _clientToken = token;
+    _persistor.write(_clientTokenKey, token);
+  }
+
+  /// Get the [clientId]
+  String get clientId => _clientId;
+
+  void _setClientId(String id) {
+    if (_clientId == id) return;
+
+    _clientId = id;
+    _persistor.write(_clientIdKey, id);
   }
 
   /// Get the [sessionTokenFor] for a [orgId]
@@ -135,17 +151,23 @@ class TokenCache {
   /// Update the tokens and IDs from a newly arrived [http.Response]
   /// and [Session]
   ///
-  void updateFrom(http.Response resp, Session? session) {
+  void updateFrom(http.Response resp, Client client) {
     final newClientToken = resp.headers[HttpHeaders.authorizationHeader];
-    if (newClientToken?.isNotEmpty == true) _setClientToken(newClientToken!);
+    if (newClientToken case String token) {
+      _setClientToken(token);
+    }
 
-    if (session is Session) {
-      final newSessionId = session.id;
-      if (newSessionId.isNotEmpty) _setSessionId(newSessionId);
+    if (client.id case String id) {
+      _setClientId(id);
+    }
 
-      final newSessionToken = session.lastActiveToken?.jwt;
-      if (newSessionToken?.isNotEmpty == true) {
-        makeAndCacheSessionToken(newSessionToken!);
+    if (client.activeSession case Session session) {
+      if (session.id case String id) {
+        _setSessionId(id);
+      }
+
+      if (session.lastActiveToken?.jwt case String jwt) {
+        makeAndCacheSessionToken(jwt);
       }
     }
   }

@@ -13,4 +13,7 @@ sealed class ClerkConstants {
 
   /// JsVersion of API
   static const jsVersion = '4.70.0';
+
+  /// Native device ID
+  static const nativeDeviceId = '';
 }

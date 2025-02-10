@@ -14,7 +14,7 @@ class Verification {
     required this.strategy,
     required this.attempts,
     required this.expireAt,
-    this.providerUrl,
+    this.externalVerificationRedirectUrl,
     this.nonce,
   });
 
@@ -31,8 +31,7 @@ class Verification {
   final String? nonce;
 
   /// provider url
-  @JsonKey(name: 'external_verification_redirect_url')
-  final String? providerUrl;
+  final String? externalVerificationRedirectUrl;
 
   /// expire at
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)

@@ -12,7 +12,6 @@ AuthConfig _$AuthConfigFromJson(Map<String, dynamic> json) => AuthConfig(
       enhancedEmailDeliverability:
           json['enhanced_email_deliverability'] as bool? ?? false,
       testMode: json['test_mode'] as bool? ?? false,
-      demo: json['demo'] as bool? ?? false,
       cookielessDev: json['cookieless_dev'] as bool? ?? false,
       urlBasedSessionSyncing:
           json['url_based_session_syncing'] as bool? ?? false,
@@ -47,7 +46,6 @@ Map<String, dynamic> _$AuthConfigToJson(AuthConfig instance) =>
       'single_session_mode': instance.singleSessionMode,
       'enhanced_email_deliverability': instance.enhancedEmailDeliverability,
       'test_mode': instance.testMode,
-      'demo': instance.demo,
       'cookieless_dev': instance.cookielessDev,
       'url_based_session_syncing': instance.urlBasedSessionSyncing,
       'identification_strategies':

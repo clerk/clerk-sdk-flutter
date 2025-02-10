@@ -57,7 +57,6 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   final OverlayEntry _loadingOverlay;
 
   static const _kRotatingTokenNonce = 'rotating_token_nonce';
-
   static const _kSsoRouteName = 'clerk_sso_popup';
 
   @override
@@ -70,47 +69,36 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   }
 
   /// Performs SSO account connection according to the [strategy]
-  Future<void> connect(
+  Future<void> ssoConnect(
     BuildContext context,
     clerk.Strategy strategy, {
     void Function(clerk.AuthError)? onError,
   }) async {
-    final authState = ClerkAuth.of(context, listen: false);
     await call(
       context,
-      () => authState.oauthConnect(strategy: strategy),
+      () => oauthConnect(strategy: strategy),
       onError: onError,
     );
-    final url = authState.client.user?.externalAccounts
-        ?.firstWhereOrNull(
-          (m) => m.verification.strategy == strategy && m.isVerified == false,
-        )
-        ?.verification
-        .providerUrl;
-    if (url != null && context.mounted) {
-      final redirectUrl = await showDialog<String>(
+    final accounts = client.user?.externalAccounts?.toSet() ?? {};
+    final acc = accounts.firstWhereOrNull(
+      (m) => m.verification.strategy == strategy && m.isVerified == false,
+    );
+    if (acc?.verification.externalVerificationRedirectUrl case String url
+        when context.mounted) {
+      final responseUrl = await showDialog<String>(
         context: context,
         useSafeArea: false,
         useRootNavigator: true,
         routeSettings: const RouteSettings(name: _kSsoRouteName),
         builder: (context) => _SsoWebViewOverlay(url: url),
       );
-      if (redirectUrl != null && context.mounted) {
-        final uri = Uri.parse(redirectUrl);
-        final token = uri.queryParameters[_kRotatingTokenNonce];
-        if (token case String token) {
-          await call(
-            context,
-            () => authState.attemptSignIn(strategy: strategy, token: token),
-            onError: onError,
-          );
-        } else {
-          await authState.refreshClient();
-          if (context.mounted) {
-            await call(context, () => authState.transfer(), onError: onError);
-          }
-        }
-        if (context.mounted) {
+
+      if (responseUrl == clerk.Auth.oauthRedirect) {
+        await refreshClient();
+
+        final newAccounts = client.user?.externalAccounts?.toSet() ?? {};
+
+        if (newAccounts.difference(accounts).isNotEmpty && context.mounted) {
           Navigator.of(context).popUntil(
             (route) => route.settings.name != _kSsoRouteName,
           );
@@ -125,13 +113,13 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     clerk.Strategy strategy, {
     void Function(clerk.AuthError)? onError,
   }) async {
-    final authState = ClerkAuth.of(context, listen: false);
     await call(
       context,
-      () => authState.oauthSignIn(strategy: strategy),
+      () => oauthSignIn(strategy: strategy),
       onError: onError,
     );
-    final url = authState.client.signIn?.firstFactorVerification?.providerUrl;
+    final url =
+        client.signIn?.firstFactorVerification?.externalVerificationRedirectUrl;
     if (url != null && context.mounted) {
       final redirectUrl = await showDialog<String>(
         context: context,
@@ -146,13 +134,13 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
         if (token case String token) {
           await call(
             context,
-            () => authState.attemptSignIn(strategy: strategy, token: token),
+            () => attemptSignIn(strategy: strategy, token: token),
             onError: onError,
           );
         } else {
-          await authState.refreshClient();
+          await refreshClient();
           if (context.mounted) {
-            await call(context, () => authState.transfer(), onError: onError);
+            await call(context, () => transfer(), onError: onError);
           }
         }
         if (context.mounted) {

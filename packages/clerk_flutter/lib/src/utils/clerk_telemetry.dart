@@ -10,12 +10,14 @@ mixin ClerkTelemetryStateMixin<T extends StatefulWidget> on State<T> {
   static const _equalityChecker = DeepCollectionEquality();
 
   Map<String, dynamic>? _telemetryData;
-  clerk.Telemetry? _telemetry;
+
+  /// The [clerk.Auth] object being used for telemetry
+  late clerk.Auth telemetryAuth = ClerkAuth.of(context, listen: false);
 
   /// Get the [ClerkAuthState] with which to make the telemetry report
-  /// to the back end
-  clerk.Telemetry? get telemetry =>
-      _telemetry ??= ClerkAuth.of(context, listen: false).telemetry;
+  /// to the back end. (Needs to be nullable because of the override
+  /// in ClerkAuth which cannot be guaranteed populated)
+  late clerk.Telemetry? telemetry = telemetryAuth.telemetry;
 
   /// The payload of widget metadata that will be sent to telemetry
   Map<String, dynamic> get telemetryPayload => const {};
@@ -41,8 +43,8 @@ mixin ClerkTelemetryStateMixin<T extends StatefulWidget> on State<T> {
       }
       // this is the first widget build
       else {
-        final data = _telemetryData = _generateTelemetryPayload();
-        telemetry.sendComponentMounted(data);
+        _telemetryData = _generateTelemetryPayload();
+        telemetry.sendComponentMounted(_telemetryData!);
       }
     }
   }
@@ -61,21 +63,15 @@ extension on clerk.Telemetry {
   static const _componentUpdated = 'COMPONENT UPDATED';
   static const _componentDismounted = 'COMPONENT DISMOUNTED';
 
-  Future<void> sendComponentMounted(
-    Map<String, dynamic> payload,
-  ) async {
+  Future<void> sendComponentMounted(Map<String, dynamic> payload) async {
     await send(_componentMounted, payload: payload);
   }
 
-  Future<void> sendComponentUpdated(
-    Map<String, dynamic> payload,
-  ) async {
+  Future<void> sendComponentUpdated(Map<String, dynamic> payload) async {
     await send(_componentUpdated, payload: payload);
   }
 
-  Future<void> sendComponentDismounted(
-    Map<String, dynamic> payload,
-  ) async {
+  Future<void> sendComponentDismounted(Map<String, dynamic> payload) async {
     await send(_componentDismounted, payload: payload);
   }
 }

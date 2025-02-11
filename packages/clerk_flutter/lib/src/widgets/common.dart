@@ -91,6 +91,7 @@ const emptyPadding = EdgeInsets.zero;
 
 const hor8ver4 = EdgeInsets.symmetric(horizontal: 8, vertical: 4);
 const hor32top20 = EdgeInsets.fromLTRB(32, 20, 32, 0);
+const hor24bottom16 = EdgeInsets.fromLTRB(24, 0, 24, 16);
 
 const horizontalPadding4 = EdgeInsets.symmetric(horizontal: 4.0);
 const horizontalPadding8 = EdgeInsets.symmetric(horizontal: 8.0);

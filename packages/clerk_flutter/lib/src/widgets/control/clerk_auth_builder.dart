@@ -39,8 +39,7 @@ class _ClerkAuthBuilderState extends State<ClerkAuthBuilder>
   @override
   Map<String, dynamic> get telemetryPayload {
     return {
-      if (mounted) //
-        'user_is_signed_in': ClerkAuth.of(context).user is clerk.User,
+      'user_is_signed_in': telemetryAuth.user is clerk.User,
       'signed_in_builder': widget.signedInBuilder is AuthWidgetBuilder,
       'signed_out_builder': widget.signedOutBuilder is AuthWidgetBuilder,
       'builder': widget.builder is AuthWidgetBuilder,

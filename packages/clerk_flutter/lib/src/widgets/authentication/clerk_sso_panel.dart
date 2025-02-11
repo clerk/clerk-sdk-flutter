@@ -16,7 +16,7 @@ class ClerkSSOPanel extends StatefulWidget {
   /// Construct a new [ClerkSSOPanel]
   const ClerkSSOPanel({super.key, required this.onStrategyChosen});
 
-  /// the function to call once a provider has been chosen
+  /// Function to call when a strategy is chosen
   final ValueChanged<clerk.Strategy> onStrategyChosen;
 
   @override
@@ -42,15 +42,15 @@ class _ClerkSSOPanelState extends State<ClerkSSOPanel>
     return Row(
       children: [
         for (final (index, connection) in socialConnections.indexed) ...[
+          if (index > 0) //
+            horizontalMargin8,
           Expanded(
             child: SocialConnectionButton(
               key: ValueKey<clerk.SocialConnection>(connection),
               connection: connection,
-              onPressed: widget.onStrategyChosen,
+              onPressed: () => widget.onStrategyChosen(connection.strategy),
             ),
           ),
-          if (index < socialConnections.length - 1) //
-            horizontalMargin8,
         ],
       ],
     );

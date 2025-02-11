@@ -2,27 +2,32 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
 /// Sign in to an additional account
-class ManageAccountScreen extends StatelessWidget {
-  /// Construct a [ManageAccountScreen]
-  const ManageAccountScreen._({
+class ClerkPage extends StatelessWidget {
+  /// Construct a [ClerkPage]
+  const ClerkPage._({
     required this.authState,
+    required this.builder,
   });
 
   /// An injected [ClerkAuthState]
   final ClerkAuthState authState;
 
-  /// The name of the route to this screen
-  static const routeName = 'clerk_add_account';
+  /// The [builder] for the child
+  final WidgetBuilder builder;
 
   /// static method to show an [AddAccountPanel]
-  static Future<void> show(BuildContext context) async {
+  static Future<void> show(
+    BuildContext context, {
+    required WidgetBuilder builder,
+    String? routeName,
+  }) async {
     final authState = ClerkAuth.of(context, listen: false);
     await Navigator.of(context).push(
       MaterialPageRoute(
-        settings: const RouteSettings(name: routeName),
+        settings: RouteSettings(name: routeName),
         fullscreenDialog: true,
         builder: (BuildContext context) {
-          return ManageAccountScreen._(authState: authState);
+          return ClerkPage._(authState: authState, builder: builder);
         },
       ),
     );
@@ -38,8 +43,8 @@ class ManageAccountScreen extends StatelessWidget {
           forceMaterialTransparency: true,
         ),
         body: Padding(
-          padding: horizontalPadding24 + bottomPadding16,
-          child: const ClerkUserProfile(),
+          padding: hor24bottom16,
+          child: Builder(builder: builder),
         ),
       ),
     );

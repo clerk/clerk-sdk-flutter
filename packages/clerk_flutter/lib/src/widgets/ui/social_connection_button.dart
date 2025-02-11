@@ -16,8 +16,8 @@ class SocialConnectionButton extends StatelessWidget {
     required this.onPressed,
   });
 
-  /// the function to call when button pressed
-  final ValueChanged<clerk.Strategy> onPressed;
+  /// Function to call when a strategy chosen
+  final VoidCallback onPressed;
 
   /// The oAuth provider this button represents.
   final clerk.SocialConnection connection;
@@ -25,7 +25,7 @@ class SocialConnectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: () => onPressed(connection.strategy),
+      onPressed: onPressed,
       elevation: 2.0,
       shape: const RoundedRectangleBorder(
         borderRadius: borderRadius4,

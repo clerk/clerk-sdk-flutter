@@ -196,6 +196,15 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                         onAddNew: () => ConnectAccountScreen.show(context),
                       ),
                     ),
+                    const Padding(padding: topPadding16, child: divider),
+                    _ProfileRow(
+                      title: translator.translate('External accounts'),
+                      child: _ExternalAccountList(
+                        user: user,
+                        env: auth.env,
+                        onAddNew: () {},
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -227,36 +236,37 @@ class _ExternalAccountList extends StatelessWidget {
       children: [
         if (user.externalAccounts case List<clerk.ExternalAccount> accounts) //
           for (final account in accounts.where((a) => a.isExpired == false)) //
-            Padding(
-              padding: bottomPadding16,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (env.user.socialSettings[account.provider]
-                      case clerk.SocialConnection social) ...[
+            if (env.user.socialSettings[account.provider]
+                case clerk.SocialConnection social) //
+              Padding(
+                padding: bottomPadding16,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Image.network(social.logoUrl, width: 14),
                     horizontalMargin4,
-                    Text(social.name),
-                  ],
-                  horizontalMargin4,
-                  Expanded(
-                    child: Text(
-                      account.emailAddress,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: ClerkTextStyle.subtitle,
-                    ),
-                  ),
-                  if (account.isVerified == false) //
-                    _RowLabel(
-                      label: translator.translate(
-                        account.verification.status.name.toUpperCase(),
+                    if (account.isVerified) ...[
+                      Text(social.name),
+                      horizontalMargin4,
+                    ],
+                    Expanded(
+                      child: Text(
+                        account.emailAddress,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: ClerkTextStyle.subtitle,
                       ),
                     ),
-                ],
+                    if (account.isVerified == false) //
+                      _RowLabel(
+                        label: translator.translate(
+                          account.verification.status.name.toUpperCase(),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: onAddNew,
@@ -274,8 +284,8 @@ class _ExternalAccountList extends StatelessWidget {
   }
 }
 
-class _IdentifierList extends StatelessWidget {
-  const _IdentifierList({
+class _IdentifierData extends StatelessWidget {
+  const _IdentifierData({
     required this.user,
     required this.addLine,
     required this.onAddNew,

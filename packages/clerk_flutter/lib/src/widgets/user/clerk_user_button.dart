@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/assets.dart';
 import 'package:flutter/material.dart';
 
 /// Class to hold details of user actions available
@@ -34,18 +35,18 @@ class ClerkUserButton extends StatefulWidget {
   const ClerkUserButton({
     super.key,
     this.showName = true,
-    this.sessionActions = const [],
-    this.additionalActions = const [],
+    this.sessionActions,
+    this.additionalActions,
   });
 
   /// Whether to show the user's name or not
   final bool showName;
 
   /// Actions to be added as buttons to the session row
-  final List<ClerkUserAction> sessionActions;
+  final List<ClerkUserAction>? sessionActions;
 
   /// Actions to be added as rows to the user panel
-  final List<ClerkUserAction> additionalActions;
+  final List<ClerkUserAction>? additionalActions;
 
   @override
   State<ClerkUserButton> createState() => _ClerkUserButtonState();
@@ -57,12 +58,63 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
 
   @override
   Map<String, dynamic> get telemetryPayload {
+    final sessionActions = widget.sessionActions ?? _defaultSessionActions();
+    final additionalActions =
+        widget.additionalActions ?? _defaultAdditionalActions();
     return {
       'show_name': widget.showName,
-      'session_actions': widget.sessionActions.map((a) => a.label).join(';'),
-      'additional_actions':
-          widget.additionalActions.map((a) => a.label).join(';'),
+      'session_actions': sessionActions.map((a) => a.label).join(';'),
+      'additional_actions': additionalActions.map((a) => a.label).join(';'),
     };
+  }
+
+  List<ClerkUserAction> _defaultSessionActions() {
+    final translator = ClerkAuth.translatorOf(context);
+    return [
+      ClerkUserAction(
+        asset: ClerkAssets.gearIcon,
+        label: translator.translate('Profile'),
+        callback: _manageAccount,
+      ),
+      ClerkUserAction(
+        asset: ClerkAssets.signOutIcon,
+        label: translator.translate('Sign out'),
+        callback: _signOut,
+      ),
+    ];
+  }
+
+  List<ClerkUserAction> _defaultAdditionalActions() {
+    final authState = ClerkAuth.of(context);
+    return [
+      if (authState.env.config.singleSessionMode == false)
+        ClerkUserAction(
+          asset: ClerkAssets.addIcon,
+          label: authState.translator.translate('Add account'),
+          callback: _addAccount,
+        ),
+    ];
+  }
+
+  Future<void> _addAccount(BuildContext context, ClerkAuthState auth) =>
+      ClerkPage.show(
+        context,
+        builder: (context) => const AddAccountPanel(),
+      );
+
+  Future<void> _manageAccount(BuildContext context, ClerkAuthState auth) =>
+      ClerkPage.show(
+        context,
+        builder: (context) => const ClerkUserProfile(),
+      );
+
+  Future<void> _signOut<T>(BuildContext context, ClerkAuthState auth) async {
+    if (auth.client.sessions.length == 1) {
+      await auth.safelyCall(context, () => auth.signOut());
+    } else {
+      await auth.safelyCall(
+          context, () => auth.signOutOf(auth.client.activeSession!));
+    }
   }
 
   @override
@@ -81,6 +133,11 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
           _sessions.addOrReplaceAll(sessions, by: (s) => s.id);
           final displaySessions = List<clerk.Session>.from(_sessions);
 
+          final sessionActions =
+              widget.sessionActions ?? _defaultSessionActions();
+          final additionalActions =
+              widget.additionalActions ?? _defaultAdditionalActions();
+
           return ClerkVerticalCard(
             topPortion: Column(
               mainAxisSize: MainAxisSize.min,
@@ -92,13 +149,16 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
                     closed: sessions.contains(session) == false,
                     selected: session == auth.client.activeSession,
                     showName: widget.showName,
-                    actions: widget.sessionActions,
-                    onTap: () => auth(context, () => auth.activate(session)),
+                    actions: sessionActions,
+                    onTap: () => auth.safelyCall(
+                      context,
+                      () => auth.activate(session),
+                    ),
                     onEnd: (closed) {
                       if (closed) _sessions.remove(session);
                     },
                   ),
-                for (final action in widget.additionalActions)
+                for (final action in additionalActions)
                   Padding(
                     padding: allPadding16,
                     child: GestureDetector(
@@ -127,7 +187,10 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
                 padding: horizontalPadding16 + verticalPadding12,
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () => auth(context, () => auth.signOut()),
+                  onTap: () => auth.safelyCall(
+                    context,
+                    () => auth.signOut(),
+                  ),
                   child: Row(
                     children: [
                       const Icon(

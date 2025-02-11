@@ -46,7 +46,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         });
       }
 
-      await authState(
+      await authState.safelyCall(
         context,
         () => authState.attemptSignIn(
           strategy: newStrategy,

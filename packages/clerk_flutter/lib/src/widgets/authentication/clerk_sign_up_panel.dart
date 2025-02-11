@@ -28,7 +28,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
   Future<void> _continue(ClerkAuthState auth,
       {String? code, clerk.Strategy? strategy}) async {
-    await auth(context, () async {
+    await auth.safelyCall(context, () async {
       final password = _values[clerk.UserAttribute.password];
       final passwordConfirmation =
           _values[clerk.UserAttribute.passwordConfirmation];

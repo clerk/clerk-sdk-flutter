@@ -74,7 +74,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     clerk.Strategy strategy, {
     void Function(clerk.AuthError)? onError,
   }) async {
-    await call(
+    await safelyCall(
       context,
       () => oauthConnect(strategy: strategy),
       onError: onError,
@@ -113,7 +113,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     clerk.Strategy strategy, {
     void Function(clerk.AuthError)? onError,
   }) async {
-    await call(
+    await safelyCall(
       context,
       () => oauthSignIn(strategy: strategy),
       onError: onError,
@@ -132,7 +132,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
         final uri = Uri.parse(redirectUrl);
         final token = uri.queryParameters[_kRotatingTokenNonce];
         if (token case String token) {
-          await call(
+          await safelyCall(
             context,
             () => attemptSignIn(strategy: strategy, token: token),
             onError: onError,
@@ -140,7 +140,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
         } else {
           await refreshClient();
           if (context.mounted) {
-            await call(context, () => transfer(), onError: onError);
+            await safelyCall(context, () => transfer(), onError: onError);
           }
         }
         if (context.mounted) {
@@ -154,7 +154,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   /// Convenience method to make an auth call to the backend via ClerkAuth
   /// with error handling
-  Future<T?> call<T>(
+  Future<T?> safelyCall<T>(
     BuildContext context,
     Future<T> Function() fn, {
     void Function(clerk.AuthError)? onError,

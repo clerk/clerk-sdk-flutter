@@ -16,4 +16,24 @@ sealed class ClerkConstants {
 
   /// Native device ID
   static const nativeDeviceId = '';
+
+  /// Are we in test mode?
+  static const isTestMode =
+      bool.fromEnvironment('test_mode', defaultValue: false);
+
+  /// Is Telemetry enabled?
+  static const isTelemetryEnabled =
+      bool.fromEnvironment('telemetry', defaultValue: true);
+
+  /// The endpoint to hit when sending telemetry data
+  static const telemetryEndpoint = String.fromEnvironment(
+    'telemetry_endpoint',
+    defaultValue: 'https://clerk-telemetry.com/v1/event',
+  );
+
+  /// The duration between sends of telemtry data: about 30s, but not
+  /// exactly on the button to avoid repeated clashes with other
+  /// regular tasks
+  static const telemetryPeriod =
+      int.fromEnvironment('telemetry_period_ms', defaultValue: 29300);
 }

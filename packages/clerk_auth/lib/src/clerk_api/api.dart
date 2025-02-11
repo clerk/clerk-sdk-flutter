@@ -56,7 +56,7 @@ class Api with Logging {
   late final String _nativeDeviceId;
   Timer? _pollTimer;
   bool _multiSessionMode = false;
-  bool _debugMode = false;
+  bool _testMode = ClerkConstants.isTestMode;
 
   static const _kClerkAPIVersion = 'clerk-api-version';
   static const _kClerkClientId = 'x-clerk-client-id';
@@ -103,7 +103,7 @@ class Api with Logging {
       final body = json.decode(resp.body) as Map<String, dynamic>;
       final env = Environment.fromJson(body);
 
-      _debugMode = env.config.testMode;
+      _testMode = env.config.testMode || ClerkConstants.isTestMode;
       _multiSessionMode = env.config.singleSessionMode == false;
 
       return env;
@@ -411,6 +411,22 @@ class Api with Logging {
   }
 
   // oAuth
+
+  /// Connect an [ExternalAccount]
+  ///
+  Future<ApiResponse> addExternalAccount({
+    required Strategy strategy,
+    String? redirectUrl,
+  }) async {
+    return await _fetchApiResponse(
+      '/me/external_accounts',
+      withSession: true,
+      params: {
+        'strategy': strategy,
+        'redirect_url': redirectUrl,
+      },
+    );
+  }
 
   /// After signing in via oauth, transfer the [SignUp] into an authenticated [User]
   ///
@@ -849,9 +865,10 @@ class Api with Logging {
       if (_tokenCache.clientToken.isNotEmpty) //
         HttpHeaders.authorizationHeader: _tokenCache.clientToken,
       _kClerkAPIVersion: ClerkConstants.clerkApiVersion,
-      _kClerkClientId: _tokenCache.clientId,
-      _kClerkNativeDeviceId: _nativeDeviceId,
       _kXFlutterSDKVersion: ClerkConstants.flutterSdkVersion,
+      if (_testMode) //
+        _kClerkClientId: _tokenCache.clientId,
+      _kClerkNativeDeviceId: _nativeDeviceId,
       _kXMobile: '1',
       ...?headers,
     };

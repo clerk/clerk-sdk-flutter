@@ -197,13 +197,14 @@ class Auth {
           .then(_housekeeping);
     }
     update();
+    return client;
   }
 
   /// Prepare to connect an account via an oAuth provider
   ///
   Future<void> oauthConnect({required Strategy strategy}) async {
     await _api
-        .connectAccount(strategy: strategy, redirectUrl: oauthRedirect)
+        .addExternalAccount(strategy: strategy, redirectUrl: oauthRedirect)
         .then(_housekeeping);
     update();
   }

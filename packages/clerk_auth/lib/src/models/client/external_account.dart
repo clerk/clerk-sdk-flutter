@@ -67,11 +67,11 @@ class ExternalAccount {
 
   /// updated at
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   /// created at
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
   /// is verified?
   bool get isVerified => verification.status.isVerified;

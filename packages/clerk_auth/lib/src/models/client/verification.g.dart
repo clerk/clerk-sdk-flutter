@@ -11,7 +11,8 @@ Verification _$VerificationFromJson(Map<String, dynamic> json) => Verification(
       strategy: Strategy.fromJson(json['strategy'] as String),
       attempts: (json['attempts'] as num?)?.toInt(),
       expireAt: intToDateTime(json['expire_at']),
-      providerUrl: json['external_verification_redirect_url'] as String?,
+      externalVerificationRedirectUrl:
+          json['external_verification_redirect_url'] as String?,
       nonce: json['nonce'] as String?,
     );
 
@@ -29,7 +30,8 @@ Map<String, dynamic> _$VerificationToJson(Verification instance) {
 
   writeNotNull('attempts', instance.attempts);
   writeNotNull('nonce', instance.nonce);
-  writeNotNull('external_verification_redirect_url', instance.providerUrl);
+  writeNotNull('external_verification_redirect_url',
+      instance.externalVerificationRedirectUrl);
   val['expire_at'] = dateTimeToInt(instance.expireAt);
   return val;
 }

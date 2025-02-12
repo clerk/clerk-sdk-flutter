@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
+import 'package:clerk_flutter/src/widgets/user/connect_account_panel.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -193,7 +194,10 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                       child: _ExternalAccountList(
                         user: user,
                         env: auth.env,
-                        onAddNew: () => ConnectAccountScreen.show(context),
+                        onAddNew: () => ClerkPage.show(
+                          context,
+                          builder: (context) => const ConnectAccountPanel(),
+                        ),
                       ),
                     ),
                     const Padding(padding: topPadding16, child: divider),
@@ -284,8 +288,8 @@ class _ExternalAccountList extends StatelessWidget {
   }
 }
 
-class _IdentifierData extends StatelessWidget {
-  const _IdentifierData({
+class _IdentifierList extends StatelessWidget {
+  const _IdentifierList({
     required this.user,
     required this.addLine,
     required this.onAddNew,

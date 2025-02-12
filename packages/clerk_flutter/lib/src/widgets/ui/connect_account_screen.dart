@@ -81,7 +81,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                   padding: horizontalPadding32 + bottomPadding32,
                   child: ClerkSSOPanel(
                     onStrategyChosen: (strategy) =>
-                        auth.connect(context, strategy),
+                        auth.ssoConnect(context, strategy),
                   ),
                 );
               },

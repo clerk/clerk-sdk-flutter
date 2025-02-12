@@ -197,7 +197,6 @@ class Auth {
           .then(_housekeeping);
     }
     update();
-    return client;
   }
 
   /// Prepare to connect an account via an oAuth provider

@@ -1,5 +1,12 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
+import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
+import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/material.dart';
 
 /// The [ClerkSignUpPanel] renders a UI for signing up users.

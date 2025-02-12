@@ -1,4 +1,5 @@
-import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -140,7 +141,9 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
 
   @override
   Widget build(BuildContext context) {
-    if (loading) return emptyWidget;
+    if (loading) {
+      return emptyWidget;
+    }
 
     final text = _editingValue.text;
     const color = ClerkColors.midGrey;

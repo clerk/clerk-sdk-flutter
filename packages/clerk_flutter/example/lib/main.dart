@@ -50,7 +50,7 @@ class ExampleApp extends StatelessWidget {
           return ClerkErrorListener(child: child!);
         },
         home: Scaffold(
-          backgroundColor: ClerkColors.whiteSmoke,
+          backgroundColor: const Color(0xFFf5f5f5),
           body: SafeArea(
             child: Center(
               child: ClerkAuthBuilder(
@@ -67,7 +67,7 @@ class ExampleApp extends StatelessWidget {
                           SizedBox(
                             height: 40,
                             child: AppBar(
-                              backgroundColor: ClerkColors.whiteSmoke,
+                              backgroundColor: const Color(0xFFf5f5f5),
                               bottom: const TabBar(
                                 tabs: [
                                   SizedBox(
@@ -86,14 +86,14 @@ class ExampleApp extends StatelessWidget {
                             child: TabBarView(
                               children: [
                                 const Padding(
-                                  padding: allPadding16,
+                                  padding: EdgeInsets.all(16),
                                   child: Align(
                                     alignment: Alignment.topCenter,
                                     child: ClerkUserButton(),
                                   ),
                                 ),
                                 Padding(
-                                  padding: allPadding16,
+                                  padding: const EdgeInsets.all(16),
                                   child: Align(
                                     alignment: Alignment.topCenter,
                                     child: ClerkOrganizationList(
@@ -110,7 +110,7 @@ class ExampleApp extends StatelessWidget {
                   );
                 },
                 signedOutBuilder: (context, auth) {
-                  return const ClerkAuthenticationWidget();
+                  return const ClerkAuthentication();
                 },
               ),
             ),

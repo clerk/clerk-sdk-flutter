@@ -1,4 +1,12 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
+import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
+import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/or_divider.dart';
+import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
+import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -13,24 +21,23 @@ enum _AuthState {
   _AuthState get nextState => values[(index + 1) % values.length];
 }
 
-/// The [ClerkAuthenticationWidget] renders a UI for signing users or up.
+/// The [ClerkAuthentication] renders a UI for signing users or up.
 ///
-/// The functionality of the [ClerkAuthenticationWidget] is controlled by the instance settings you
+/// The functionality of the [ClerkAuthentication] is controlled by the instance settings you
 /// specify in your Clerk Dashboard, such as sign-in and sign-ip options and social
-/// connections. You can further customize you [ClerkAuthenticationWidget] by passing additional
+/// connections. You can further customize you [ClerkAuthentication] by passing additional
 /// properties.
 ///
 @immutable
-class ClerkAuthenticationWidget extends StatefulWidget {
-  /// Constructs a new [ClerkAuthenticationWidget].
-  const ClerkAuthenticationWidget({super.key});
+class ClerkAuthentication extends StatefulWidget {
+  /// Constructs a new [ClerkAuthentication].
+  const ClerkAuthentication({super.key});
 
   @override
-  State<ClerkAuthenticationWidget> createState() =>
-      _ClerkAuthenticationWidgetState();
+  State<ClerkAuthentication> createState() => _ClerkAuthenticationState();
 }
 
-class _ClerkAuthenticationWidgetState extends State<ClerkAuthenticationWidget>
+class _ClerkAuthenticationState extends State<ClerkAuthentication>
     with ClerkTelemetryStateMixin {
   _AuthState _state = _AuthState.signingIn;
 

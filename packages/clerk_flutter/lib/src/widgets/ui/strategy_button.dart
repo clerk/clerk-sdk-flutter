@@ -1,5 +1,8 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
+import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// The [StrategyButton] is to be used with the authentication flow when working with
@@ -43,7 +46,9 @@ class StrategyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final descriptor = _descriptors[strategy];
-    if (descriptor is! _StrategyDescriptor) return emptyWidget;
+    if (descriptor is! _StrategyDescriptor) {
+      return emptyWidget;
+    }
 
     final translator = ClerkAuth.translatorOf(context);
 

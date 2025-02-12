@@ -1,6 +1,8 @@
 import 'package:clerk_flutter/src/clerk_user_action.dart';
 import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
-import 'package:clerk_flutter/src/widgets/ui/clerk_ui.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
+import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// A row for use in one of the panels expressing an [action]

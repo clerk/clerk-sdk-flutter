@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
+import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
+import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
-
-import 'clerk_ui.dart';
 
 /// [ClerkAvatar] shows a user image, or the user's initials
 ///

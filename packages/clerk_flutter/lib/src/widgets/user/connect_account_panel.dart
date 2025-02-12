@@ -1,4 +1,7 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
+import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/material.dart';
 
 /// A screen to allow additional accounts to be signed into

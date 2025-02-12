@@ -1,5 +1,6 @@
 import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
-import 'package:clerk_flutter/src/widgets/ui/clerk_ui.dart';
+import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// A Generic header widget for use across the Clerk UI

@@ -1,8 +1,6 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/assets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 enum _AuthState {
   signingIn,
@@ -99,50 +97,16 @@ class _TopPortion extends StatelessWidget {
     final display = ClerkAuth.displayConfigOf(context);
     final translator = ClerkAuth.translatorOf(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: verticalPadding32,
-          child: Center(
-            child: SizedBox.square(
-              dimension: 32.0,
-              child: display.logoUrl?.isNotEmpty == true
-                  ? Image.network(display.logoUrl!)
-                  : SvgPicture.asset(
-                      ClerkAssets.defaultOrganizationLogo,
-                      package: 'clerk_flutter',
-                    ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: horizontalPadding32,
-          child: Text(
-            translator.translate(
-              state.isSigningIn ? 'Sign in to ###' : 'Sign up to ###',
-              substitution: display.applicationName,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            style: ClerkTextStyle.title,
-          ),
-        ),
-        Padding(
-          padding: horizontalPadding32 + bottomPadding24,
-          child: Text(
-            translator.translate(
-              state.isSigningIn
-                  ? 'Welcome back! Please sign in to continue'
-                  : 'Welcome! Please fill in the details to get started',
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            style: ClerkTextStyle.subtitle,
-          ),
-        ),
-      ],
+    return ClerkPanelHeader(
+      title: translator.translate(
+        state.isSigningIn ? 'Sign in to ###' : 'Sign up to ###',
+        substitution: display.applicationName,
+      ),
+      subtitle: translator.translate(
+        state.isSigningIn
+            ? 'Welcome back! Please sign in to continue'
+            : 'Welcome! Please fill in the details to get started',
+      ),
     );
   }
 }

@@ -17,6 +17,12 @@ sealed class ClerkConstants {
   /// Native device ID
   static const nativeDeviceId = '';
 
+  /// The default url catch oauth redirects
+  static const oauthRedirect = String.fromEnvironment(
+    'oauth_redirect',
+    defaultValue: 'com.flutter.example://callback',
+  );
+
   /// Are we in test mode?
   static const isTestMode =
       bool.fromEnvironment('test_mode', defaultValue: false);

@@ -1,5 +1,6 @@
 import 'package:clerk_auth/src/models/client/organization.dart';
 import 'package:clerk_auth/src/models/client/user_public.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -37,6 +38,9 @@ class OrganizationMembership {
   /// created at
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
   final DateTime createdAt;
+
+  /// A fancier way of describing the role
+  String get displayRole => role.split(':').last.capitalized;
 
   /// fromJson
   static OrganizationMembership fromJson(Map<String, dynamic> json) =>

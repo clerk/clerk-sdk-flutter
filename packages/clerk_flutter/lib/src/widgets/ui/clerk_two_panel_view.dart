@@ -1,5 +1,5 @@
 import 'package:clerk_flutter/src/assets.dart';
-import 'package:clerk_flutter/src/widgets/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

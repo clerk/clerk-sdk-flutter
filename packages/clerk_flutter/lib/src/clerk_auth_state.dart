@@ -7,6 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+/// Function type used to report [clerk.AuthError]s
+///
+typedef ClerkErrorCallback = void Function(clerk.AuthError);
+
 /// An extension of [clerk.Auth] with [ChangeNotifier] so that
 /// updates to the auth state can be propagated out into the UI
 ///
@@ -72,7 +76,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   Future<void> ssoConnect(
     BuildContext context,
     clerk.Strategy strategy, {
-    void Function(clerk.AuthError)? onError,
+    ClerkErrorCallback? onError,
   }) async {
     await safelyCall(
       context,
@@ -90,10 +94,13 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
         useSafeArea: false,
         useRootNavigator: true,
         routeSettings: const RouteSettings(name: _kSsoRouteName),
-        builder: (context) => _SsoWebViewOverlay(url: url),
+        builder: (context) => _SsoWebViewOverlay(
+          url: url,
+          onError: (error) => _onError(error, onError),
+        ),
       );
 
-      if (responseUrl == clerk.Auth.oauthRedirect) {
+      if (responseUrl == clerk.ClerkConstants.oauthRedirect) {
         await refreshClient();
 
         final newAccounts = client.user?.externalAccounts?.toSet() ?? {};
@@ -111,7 +118,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   Future<void> ssoSignIn(
     BuildContext context,
     clerk.Strategy strategy, {
-    void Function(clerk.AuthError)? onError,
+    ClerkErrorCallback? onError,
   }) async {
     await safelyCall(
       context,
@@ -126,7 +133,10 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
         useSafeArea: false,
         useRootNavigator: true,
         routeSettings: const RouteSettings(name: _kSsoRouteName),
-        builder: (context) => _SsoWebViewOverlay(url: url),
+        builder: (context) => _SsoWebViewOverlay(
+          url: url,
+          onError: (error) => _onError(error, onError),
+        ),
       );
       if (redirectUrl != null && context.mounted) {
         final uri = Uri.parse(redirectUrl);
@@ -157,7 +167,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   Future<T?> safelyCall<T>(
     BuildContext context,
     Future<T> Function() fn, {
-    void Function(clerk.AuthError)? onError,
+    ClerkErrorCallback? onError,
   }) async {
     T? result;
     try {
@@ -166,14 +176,18 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       }
       result = await fn();
     } on clerk.AuthError catch (error) {
-      _errors.add(error);
-      onError?.call(error);
+      _onError(error, onError);
     } finally {
       if (_loadingOverlay.mounted) {
         _loadingOverlay.remove();
       }
     }
     return result;
+  }
+
+  void _onError(clerk.AuthError error, ClerkErrorCallback? onError) {
+    _errors.add(error);
+    onError?.call(error);
   }
 
   /// Returns a boolean regarding whether or not a password has been supplied,
@@ -239,9 +253,12 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 class _SsoWebViewOverlay extends StatefulWidget {
   const _SsoWebViewOverlay({
     required this.url,
+    required this.onError,
   });
 
   final String url;
+
+  final ClerkErrorCallback onError;
 
   @override
   State<_SsoWebViewOverlay> createState() => _SsoWebViewOverlayState();
@@ -263,16 +280,27 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (_) => _updateTitle(),
+          onHttpError: (e) => widget.onError(
+            clerk.AuthError(message: e.toString()),
+          ),
+          onWebResourceError: (e) => widget.onError(
+            clerk.AuthError(message: e.toString()),
+          ),
           onNavigationRequest: (NavigationRequest request) async {
-            if (request.url.startsWith(clerk.Auth.oauthRedirect)) {
-              scheduleMicrotask(() {
-                if (mounted) {
-                  Navigator.of(context).pop(request.url);
-                }
-              });
-              return NavigationDecision.prevent;
+            try {
+              if (request.url.startsWith(clerk.ClerkConstants.oauthRedirect)) {
+                scheduleMicrotask(() {
+                  if (mounted) {
+                    Navigator.of(context).pop(request.url);
+                  }
+                });
+                return NavigationDecision.prevent;
+              }
+              return NavigationDecision.navigate;
+            } on clerk.AuthError catch (error) {
+              widget.onError(error);
+              return NavigationDecision.navigate;
             }
-            return NavigationDecision.navigate;
           },
         ),
       );

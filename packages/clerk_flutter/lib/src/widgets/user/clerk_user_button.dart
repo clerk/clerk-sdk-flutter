@@ -5,27 +5,6 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:flutter/material.dart';
 
-/// Class to hold details of user actions available
-/// from the UI
-///
-class ClerkUserAction {
-  /// Construct a [ClerkUserAction]
-  const ClerkUserAction({
-    required this.asset,
-    required this.label,
-    required this.callback,
-  });
-
-  /// The icon for this action
-  final String asset;
-
-  /// The label for this action
-  final String label;
-
-  /// The callback to be invoked when tapped
-  final FutureOr<void> Function(BuildContext, ClerkAuthState) callback;
-}
-
 /// The [ClerkUserButton] renders a list of all users from
 /// [clerk.Session]s currently signed in, plus controls to sign
 /// out of all sessions
@@ -171,9 +150,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
                           horizontalMargin32,
                           Text(
                             action.label,
-                            style: ClerkTextStyle.buttonTitle.copyWith(
-                              color: ClerkColors.almostBlack,
-                            ),
+                            style: ClerkTextStyle.buttonTitleDark,
                           ),
                         ],
                       ),
@@ -262,9 +239,7 @@ class _SessionRow extends StatelessWidget {
                         if (showName)
                           Text(
                             user.name,
-                            style: ClerkTextStyle.buttonTitle.copyWith(
-                              color: ClerkColors.almostBlack,
-                            ),
+                            style: ClerkTextStyle.buttonTitleDark,
                           ),
                         if (user.email is String)
                           Text(user.email!, style: ClerkTextStyle.buttonTitle),

@@ -71,6 +71,16 @@ class Client {
     return null;
   }
 
+  /// Find a [Session] for a given [User]
+  Session? sessionFor(User user) {
+    for (final session in sessions) {
+      if (session.user.id == user.id) {
+        return session;
+      }
+    }
+    return null;
+  }
+
   /// the current [User] if available
   User? get user => activeSession?.user;
 }

@@ -2,6 +2,7 @@
 library;
 
 export 'src/clerk_auth_state.dart';
+export 'src/clerk_user_action.dart';
 export 'src/utils/clerk_telemetry.dart';
 export 'src/utils/clerk_translator.dart';
 export 'src/widgets/authentication/clerk_authentication_widget.dart';
@@ -9,7 +10,6 @@ export 'src/widgets/authentication/clerk_sign_in_panel.dart';
 export 'src/widgets/authentication/clerk_sign_out_panel.dart';
 export 'src/widgets/authentication/clerk_sign_up_panel.dart';
 export 'src/widgets/authentication/clerk_sso_panel.dart';
-export 'src/widgets/common.dart';
 export 'src/widgets/control/clerk_account_change_observer.dart';
 export 'src/widgets/control/clerk_auth.dart';
 export 'src/widgets/control/clerk_auth_builder.dart';

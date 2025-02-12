@@ -102,9 +102,8 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
       },
     );
 
-    identifier = identifier.trim();
-
     if (submitted) {
+      identifier = identifier.trim().toLowerCase();
       if (_validate(identifier, type)) {
         await authState.addIdentifyingData(identifier, type);
         if (context.mounted) {
@@ -206,7 +205,10 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                       child: _ExternalAccountList(
                         user: user,
                         env: auth.env,
-                        onAddNew: () {},
+                        onAddNew: () => ClerkPage.show(
+                          context,
+                          builder: (context) => const ConnectAccountPanel(),
+                        ),
                       ),
                     ),
                   ],

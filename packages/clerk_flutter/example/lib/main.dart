@@ -82,10 +82,10 @@ class ExampleApp extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Expanded(
+                          Expanded(
                             child: TabBarView(
                               children: [
-                                Padding(
+                                const Padding(
                                   padding: allPadding16,
                                   child: Align(
                                     alignment: Alignment.topCenter,
@@ -96,7 +96,9 @@ class ExampleApp extends StatelessWidget {
                                   padding: allPadding16,
                                   child: Align(
                                     alignment: Alignment.topCenter,
-                                    child: ClerkOrganizationList(),
+                                    child: ClerkOrganizationList(
+                                      initialUser: auth.user!,
+                                    ),
                                   ),
                                 ),
                               ],

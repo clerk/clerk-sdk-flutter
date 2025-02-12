@@ -73,7 +73,7 @@ class Api with Logging {
   static const _kXMobile = 'x-mobile';
   static const _scheme = 'https';
 
-  static const _defaultPollDelay = Duration(seconds: 55);
+  static const _defaultPollDelay = Duration(seconds: 53);
 
   /// Initialise the API
   Future<void> initialize() async {
@@ -599,13 +599,19 @@ class Api with Logging {
 
   /// Create a new [Organization]
   ///
-  Future<ApiResponse> createOrganization(String name) async {
-    return await _fetchApiResponse(
+  Future<ApiResponse> createOrganization(
+    String name, [
+    String? sessionId,
+  ]) async {
+    final xxx = await _fetchApiResponse(
       '/organizations',
+      withSession: true,
       params: {
         'name': name,
+        _kClerkSessionId: sessionId, // An explict session ID, if supplied
       },
     );
+    return xxx;
   }
 
   /// Update an [Organization]
@@ -834,15 +840,17 @@ class Api with Logging {
     HttpMethod method, {
     bool withSession = false,
     Map<String, dynamic>? params,
-  }) =>
-      {
-        _kIsNative: true,
-        _kClerkJsVersion: ClerkConstants.jsVersion,
-        if (withSession && _multiSessionMode) //
-          _kClerkSessionId: _tokenCache.sessionId,
-        if (method.isGet) //
-          ...?params,
-      };
+  }) {
+    final sessionId = params?.remove(_kClerkSessionId) ?? _tokenCache.sessionId;
+    return {
+      _kIsNative: true,
+      _kClerkJsVersion: ClerkConstants.jsVersion,
+      if (withSession && _multiSessionMode) //
+        _kClerkSessionId: sessionId,
+      if (method.isGet) //
+        ...?params,
+    };
+  }
 
   Uri _uri(String path, {Map<String, dynamic>? params}) {
     return Uri(

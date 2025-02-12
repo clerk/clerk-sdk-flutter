@@ -27,6 +27,12 @@ class ClerkTextStyle {
     color: ClerkColors.stormGrey,
   );
 
+  /// The Clerk-branded text style for user's name.
+  static const buttonTitleDark = TextStyle(
+    fontSize: 12.0,
+    color: ClerkColors.almostBlack,
+  );
+
   /// The Clerk-branded text style for button subtitles.
   static const buttonSubtitle = TextStyle(
     fontSize: 10.0,
@@ -44,7 +50,7 @@ class ClerkTextStyle {
     fontSize: 14.0,
     color: ClerkColors.darkJungleGreen,
     letterSpacing: 0.1,
-    height: 0.95,
+    height: 1.2,
   );
 
   /// The Clerk-branded text style for user button titles.

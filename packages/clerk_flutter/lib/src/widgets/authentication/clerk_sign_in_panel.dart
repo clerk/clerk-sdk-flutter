@@ -69,6 +69,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final factor = authState.client.signIn?.supportedFirstFactors
         .firstWhereOrNull((f) => f.strategy == _strategy);
     final safeIdentifier = factor?.safeIdentifier;
+    final otherStrategies = env.otherStrategies.where(StrategyButton.supports);
 
     if (identifiers.isEmpty) {
       return emptyWidget;
@@ -143,19 +144,18 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                         _continue(authState, strategy: clerk.Strategy.password),
                   ),
                 ),
-              if (env.hasOtherStrategies) ...[
+              if (otherStrategies.isNotEmpty) ...[
                 if (env.hasPasswordStrategy) //
                   const OrDivider(),
-                for (final strategy in env.otherStrategies)
-                  if (StrategyButton.supports(strategy))
-                    Padding(
-                      padding: topPadding4,
-                      child: StrategyButton(
-                        key: ValueKey<clerk.Strategy>(strategy),
-                        strategy: strategy,
-                        onClick: () => _continue(authState, strategy: strategy),
-                      ),
+                for (final strategy in otherStrategies)
+                  Padding(
+                    padding: topPadding4,
+                    child: StrategyButton(
+                      key: ValueKey<clerk.Strategy>(strategy),
+                      strategy: strategy,
+                      onClick: () => _continue(authState, strategy: strategy),
                     ),
+                  ),
                 Padding(
                   padding: horizontalPadding32 + bottomPadding32 + topPadding16,
                   child: ClerkMaterialButton(

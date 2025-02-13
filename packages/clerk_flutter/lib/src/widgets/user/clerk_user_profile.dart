@@ -207,19 +207,9 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                         env: auth.env,
                         onAddNew: () => ClerkPage.show(
                           context,
-                          builder: (context) => const ConnectAccountPanel(),
-                        ),
-                      ),
-                    ),
-                    const Padding(padding: topPadding16, child: divider),
-                    _ProfileRow(
-                      title: translator.translate('External accounts'),
-                      child: _ExternalAccountList(
-                        user: user,
-                        env: auth.env,
-                        onAddNew: () => ClerkPage.show(
-                          context,
-                          builder: (context) => const ConnectAccountPanel(),
+                          builder: (context) => ConnectAccountPanel(
+                            onDone: (context) => Navigator.of(context).pop(),
+                          ),
                         ),
                       ),
                     ),

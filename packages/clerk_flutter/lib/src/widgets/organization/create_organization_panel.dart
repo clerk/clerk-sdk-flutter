@@ -71,7 +71,7 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
   Widget build(BuildContext context) {
     final translator = ClerkAuth.translatorOf(context);
     return Padding(
-      padding: allPadding16,
+      padding: allPadding16 + MediaQuery.viewInsetsOf(context),
       child: Center(
         child: ClerkVerticalCard(
           topPortion: Padding(

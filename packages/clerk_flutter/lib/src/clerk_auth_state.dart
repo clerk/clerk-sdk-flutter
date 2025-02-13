@@ -247,8 +247,9 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   }
 
   /// Add an [clerk.AuthError] for [message] to the [errorStream]
-  void addError(String message) =>
-      _errors.add(clerk.AuthError(message: message));
+  void addError(String message) {
+    _errors.add(clerk.AuthError(message: message));
+  }
 }
 
 class _SsoWebViewOverlay extends StatefulWidget {
@@ -281,9 +282,12 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (_) => _updateTitle(),
-          onHttpError: (e) => widget.onError(
-            clerk.AuthError(message: e.toString()),
-          ),
+          onHttpError: (e) {
+            if (e.request?.uri.path.endsWith('.ico') != true) {
+              // we don't care about favicon errors
+              widget.onError(clerk.AuthError(message: e.toString()));
+            }
+          },
           onWebResourceError: (e) => widget.onError(
             clerk.AuthError(message: e.toString()),
           ),

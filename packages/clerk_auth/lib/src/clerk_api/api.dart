@@ -753,9 +753,6 @@ class Api with Logging {
     HttpMethod method = HttpMethod.post,
     Map<String, String>? headers,
     Map<String, dynamic>? params,
-
-    /// for requests that require a `_client_session_id` query parameter,
-    /// set this to true. see: https://clerk.com/docs/reference/frontend-api/tag/Email-Addresses#operation/createEmailAddresses
     bool withSession = false,
   }) async {
     try {

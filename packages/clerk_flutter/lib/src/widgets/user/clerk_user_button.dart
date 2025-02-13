@@ -89,7 +89,9 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
   Future<void> _addAccount(BuildContext context, ClerkAuthState auth) =>
       ClerkPage.show(
         context,
-        builder: (context) => const AddAccountPanel(),
+        builder: (context) => AddAccountPanel(
+          onDone: (context) => Navigator.of(context).pop(),
+        ),
       );
 
   Future<void> _manageAccount(BuildContext context, ClerkAuthState auth) =>

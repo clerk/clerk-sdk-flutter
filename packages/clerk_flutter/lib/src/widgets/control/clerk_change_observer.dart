@@ -4,46 +4,47 @@ import 'package:flutter/material.dart';
 /// An observer that updates its child when it observes a change to the
 /// sessions/users/accounts held by the client
 ///
-class ClerkAccountChangeObserver extends StatefulWidget {
-  /// Create an [ClerkAccountChangeObserver]
-  const ClerkAccountChangeObserver({
+class ClerkChangeObserver<T> extends StatefulWidget {
+  /// Create an [ClerkChangeObserver]
+  const ClerkChangeObserver({
     super.key,
     required this.builder,
     required this.onChange,
+    required this.accumulateData,
   });
 
   /// the [builder] of any child widget tree
   final WidgetBuilder builder;
 
   /// The callback to use when a change is observed
-  final VoidCallback onChange;
+  final ValueChanged<BuildContext>? onChange;
+
+  /// The function that returns a set of arbitrary indicators
+  /// that change has occurred e.g. the updated times of users or
+  /// external accounts
+  final Iterable<T> Function() accumulateData;
 
   @override
-  State<ClerkAccountChangeObserver> createState() =>
-      _ClerkAccountChangeObserverState();
+  State<ClerkChangeObserver> createState() => _ClerkChangeObserverState<T>();
 }
 
-class _ClerkAccountChangeObserverState
-    extends State<ClerkAccountChangeObserver> {
+class _ClerkChangeObserverState<T> extends State<ClerkChangeObserver<T>> {
   late ClerkAuthState authState;
-  late Set<DateTime> userUpdatedTimes;
+  late Set<T> originalData;
 
   @override
   void initState() {
     super.initState();
     authState = ClerkAuth.of(context, listen: false);
-    userUpdatedTimes = _userUpdatedTimes();
+    originalData = widget.accumulateData().toSet();
     authState.addListener(_onAuthStateChanged);
   }
 
-  Set<DateTime> _userUpdatedTimes() =>
-      authState.client.sessions.map((s) => s.user.updatedAt).toSet();
-
   void _onAuthStateChanged() {
     // if we successfully logged in and got a new session, pop the screen
-    final newUserUpdatedTimes = _userUpdatedTimes();
-    if (newUserUpdatedTimes.difference(userUpdatedTimes).isNotEmpty) {
-      widget.onChange();
+    final newData = widget.accumulateData().toSet();
+    if (newData.difference(originalData).isNotEmpty) {
+      widget.onChange?.call(context);
     }
   }
 

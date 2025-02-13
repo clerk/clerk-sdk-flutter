@@ -66,8 +66,7 @@ class Auth {
   final Api _api;
 
   static const _clientTimerPeriod = Duration(seconds: 11);
-  late final _clientTimer =
-      Timer.periodic(_clientTimerPeriod, (_) => refreshClient());
+  late final _clientTimer;
 
   static const _codeLength = 6;
 
@@ -123,6 +122,7 @@ class Auth {
     await telemetry.initialize(
       instanceType: this.env.display.instanceEnvironmentType,
     );
+    _clientTimer = Timer.periodic(_clientTimerPeriod, (_) => refreshClient());
   }
 
   /// Disposal of the [Auth] object

@@ -266,7 +266,7 @@ class _MembershipRow extends StatelessWidget {
                   style: ClerkTextStyle.buttonTitleDark,
                 ),
                 Text(
-                  membership.displayRole,
+                  membership.roleName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: ClerkTextStyle.buttonTitle,

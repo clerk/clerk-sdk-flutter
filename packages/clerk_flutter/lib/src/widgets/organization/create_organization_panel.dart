@@ -32,7 +32,7 @@ class OrganizationData {
 @immutable
 class CreateOrganizationPanel extends StatefulWidget {
   /// Constructs a const [CreateOrganizationPanel].
-  CreateOrganizationPanel._({
+  const CreateOrganizationPanel._({
     required this.authState,
   });
 

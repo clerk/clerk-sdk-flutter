@@ -484,7 +484,7 @@ class Api with Logging {
         'primary_phone_number_id': user.primaryPhoneNumberId,
         'primary_web3_wallet_id': user.primaryWeb3WalletId,
         'unsafe_metadata':
-            user.hasMetadata ? json.encode(user.userMetadata) : null,
+            user.hasMetadata ? json.encode(user.unsafeMetadata) : null,
       },
     );
   }

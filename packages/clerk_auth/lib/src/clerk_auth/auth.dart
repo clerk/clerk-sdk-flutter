@@ -462,7 +462,7 @@ class Auth {
         username: username,
         firstName: firstName,
         lastName: lastName,
-        userMetadata: metadata,
+        unsafeMetadata: metadata,
       );
       await _api.updateUser(newUser, env.config).then(_housekeeping);
       update();

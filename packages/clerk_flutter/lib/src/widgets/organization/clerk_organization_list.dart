@@ -55,11 +55,12 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
   List<ClerkUserAction> _defaultActions() {
     final authState = ClerkAuth.of(context);
     return [
-      ClerkUserAction(
-        asset: ClerkAssets.addIcon,
-        label: authState.translator.translate('Create organization'),
-        callback: _createOrganization,
-      ),
+      if (authState.user?.createOrganizationEnabled == true) //
+        ClerkUserAction(
+          asset: ClerkAssets.addIcon,
+          label: authState.translator.translate('Create organization'),
+          callback: _createOrganization,
+        ),
     ];
   }
 

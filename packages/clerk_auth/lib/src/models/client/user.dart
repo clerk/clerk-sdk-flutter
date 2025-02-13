@@ -29,12 +29,13 @@ class User {
     required this.primaryWeb3WalletId,
     required this.publicMetadata,
     required this.privateMetadata,
-    required this.userMetadata,
+    required this.unsafeMetadata,
     required this.emailAddresses,
     required this.phoneNumbers,
     required this.web3Wallets,
     required this.passkeys,
     required this.organizationMemberships,
+    required this.createOrganizationEnabled,
     required this.passwordEnabled,
     required this.twoFactorEnabled,
     required this.totpEnabled,
@@ -85,11 +86,11 @@ class User {
   final Map<String, dynamic>? publicMetadata;
 
   /// private metadata
-  final Map<String, dynamic>? privateMetadata;
+  @JsonKey(defaultValue: <String, dynamic>{})
+  final Map<String, dynamic> privateMetadata;
 
   /// unsafe metadata
-  @JsonKey(name: 'unsafe_metadata')
-  final Map<String, dynamic>? userMetadata;
+  final Map<String, dynamic>? unsafeMetadata;
 
   /// email addresses
   final List<Email>? emailAddresses;
@@ -105,6 +106,9 @@ class User {
 
   /// organization memberships
   final List<OrganizationMembership>? organizationMemberships;
+
+  /// can create organizations?
+  final bool createOrganizationEnabled;
 
   /// external accounts
   final List<ExternalAccount>? externalAccounts;
@@ -153,13 +157,38 @@ class User {
   final DateTime lastActiveAt;
 
   /// Does this user have metadata?
-  bool get hasMetadata => userMetadata?.isNotEmpty == true;
+  bool get hasMetadata => unsafeMetadata?.isNotEmpty == true;
 
   /// fromJson
   static User fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   /// toJson
   Map<String, dynamic> toJson() => _$UserToJson(this);
+
+  static const _kCurrentOrganization = r'$current-organization$';
+
+  /// current organization
+  OrganizationMembership? get currentOrganization =>
+      privateMetadata[_kCurrentOrganization];
+
+  set currentOrganization(OrganizationMembership? org) =>
+      privateMetadata[_kCurrentOrganization] = org;
+
+  /// The [nextOrganization], following the [currentOrganization]
+  OrganizationMembership? get nextOrganization {
+    if (organizationMemberships case List<OrganizationMembership> orgs
+        when orgs.isNotEmpty) {
+      if (currentOrganization case OrganizationMembership org) {
+        final idx = orgs.indexOf(org);
+        if (idx >= 0 && idx < orgs.length - 1) {
+          return orgs[idx + 1];
+        }
+      } else {
+        return orgs.first;
+      }
+    }
+    return null;
+  }
 
   /// name
   String get name => '$firstName $lastName';
@@ -234,7 +263,7 @@ class User {
     String? primaryWeb3WalletId,
     Map<String, dynamic>? publicMetadata,
     Map<String, dynamic>? privateMetadata,
-    Map<String, dynamic>? userMetadata,
+    Map<String, dynamic>? unsafeMetadata,
     List<Email>? emailAddresses,
     List<PhoneNumber>? phoneNumbers,
     List<Web3Wallet>? web3Wallets,
@@ -254,6 +283,7 @@ class User {
     DateTime? createdAt,
     DateTime? lastActiveAt,
     bool? deleteSelfEnabled,
+    bool? createOrganizationEnabled,
   }) {
     return User(
       id: id,
@@ -269,13 +299,15 @@ class User {
       primaryWeb3WalletId: primaryWeb3WalletId ?? this.primaryWeb3WalletId,
       publicMetadata: publicMetadata ?? this.publicMetadata,
       privateMetadata: privateMetadata ?? this.privateMetadata,
-      userMetadata: userMetadata ?? this.userMetadata,
+      unsafeMetadata: unsafeMetadata ?? this.unsafeMetadata,
       emailAddresses: emailAddresses ?? this.emailAddresses,
       phoneNumbers: phoneNumbers ?? this.phoneNumbers,
       web3Wallets: web3Wallets ?? this.web3Wallets,
       passkeys: passkeys ?? this.passkeys,
       organizationMemberships:
           organizationMemberships ?? this.organizationMemberships,
+      createOrganizationEnabled:
+          createOrganizationEnabled ?? this.createOrganizationEnabled,
       externalAccounts: externalAccounts ?? this.externalAccounts,
       passwordEnabled: passwordEnabled ?? this.passwordEnabled,
       twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,

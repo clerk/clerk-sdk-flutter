@@ -18,8 +18,8 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       primaryPhoneNumberId: json['primary_phone_number_id'] as String?,
       primaryWeb3WalletId: json['primary_web3_wallet_id'] as String?,
       publicMetadata: json['public_metadata'] as Map<String, dynamic>?,
-      privateMetadata: json['private_metadata'] as Map<String, dynamic>?,
-      userMetadata: json['unsafe_metadata'] as Map<String, dynamic>?,
+      privateMetadata: json['private_metadata'] as Map<String, dynamic>? ?? {},
+      unsafeMetadata: json['unsafe_metadata'] as Map<String, dynamic>?,
       emailAddresses: (json['email_addresses'] as List<dynamic>?)
           ?.map((e) => Email.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -37,6 +37,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
           ?.map(
               (e) => OrganizationMembership.fromJson(e as Map<String, dynamic>))
           .toList(),
+      createOrganizationEnabled: json['create_organization_enabled'] as bool,
       passwordEnabled: json['password_enabled'] as bool?,
       twoFactorEnabled: json['two_factor_enabled'] as bool?,
       totpEnabled: json['totp_enabled'] as bool?,
@@ -55,7 +56,10 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       createdAt: intToDateTime(json['created_at']),
       lastActiveAt: intToDateTime(json['last_active_at']),
       deleteSelfEnabled: json['delete_self_enabled'] as bool?,
-    );
+    )..currentOrganization = json['current_organization'] == null
+        ? null
+        : OrganizationMembership.fromJson(
+            json['current_organization'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$UserToJson(User instance) {
   final val = <String, dynamic>{
@@ -78,8 +82,8 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('primary_phone_number_id', instance.primaryPhoneNumberId);
   writeNotNull('primary_web3_wallet_id', instance.primaryWeb3WalletId);
   writeNotNull('public_metadata', instance.publicMetadata);
-  writeNotNull('private_metadata', instance.privateMetadata);
-  writeNotNull('unsafe_metadata', instance.userMetadata);
+  val['private_metadata'] = instance.privateMetadata;
+  writeNotNull('unsafe_metadata', instance.unsafeMetadata);
   writeNotNull('email_addresses',
       instance.emailAddresses?.map((e) => e.toJson()).toList());
   writeNotNull(
@@ -89,6 +93,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('passkeys', instance.passkeys?.map((e) => e.toJson()).toList());
   writeNotNull('organization_memberships',
       instance.organizationMemberships?.map((e) => e.toJson()).toList());
+  val['create_organization_enabled'] = instance.createOrganizationEnabled;
   writeNotNull('external_accounts',
       instance.externalAccounts?.map((e) => e.toJson()).toList());
   writeNotNull('password_enabled', instance.passwordEnabled);
@@ -105,5 +110,6 @@ Map<String, dynamic> _$UserToJson(User instance) {
   val['updated_at'] = dateTimeToInt(instance.updatedAt);
   val['created_at'] = dateTimeToInt(instance.createdAt);
   val['last_active_at'] = dateTimeToInt(instance.lastActiveAt);
+  writeNotNull('current_organization', instance.currentOrganization?.toJson());
   return val;
 }

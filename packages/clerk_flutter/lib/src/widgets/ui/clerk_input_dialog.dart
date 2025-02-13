@@ -1,4 +1,8 @@
-import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/clerk_auth_state.dart';
+import 'package:clerk_flutter/src/widgets/common.dart';
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
 import 'package:flutter/material.dart';
 
 /// Creates a dialog containing a [child] widget which, typically,
@@ -41,36 +45,40 @@ class ClerkInputDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final translator = authState.translator;
-    return AlertDialog(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-      ),
-      content: Material(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ClerkAuth(authState: authState, child: child),
-            verticalMargin8,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+    return Padding(
+      padding: allPadding16 + MediaQuery.viewInsetsOf(context),
+      child: Center(
+        child: ClerkVerticalCard(
+          topPortion: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                if (showOk) //
-                  ClerkMaterialButton(
-                    label: Text(translator.translate('OK')),
-                    onPressed: () => Navigator.of(context).pop(true),
-                    style: ClerkMaterialButtonStyle.light,
-                    height: 16,
-                  ),
-                horizontalMargin8,
-                ClerkMaterialButton(
-                  label: Text(translator.translate('Cancel')),
-                  onPressed: () => Navigator.of(context).pop(false),
-                  style: ClerkMaterialButtonStyle.light,
-                  height: 16,
+                ClerkAuth(authState: authState, child: child),
+                verticalMargin16,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ClerkMaterialButton(
+                      label: Text(translator.translate('Cancel')),
+                      onPressed: () => Navigator.of(context).pop(false),
+                      style: ClerkMaterialButtonStyle.light,
+                      height: 16,
+                    ),
+                    if (showOk) ...[
+                      horizontalMargin8,
+                      ClerkMaterialButton(
+                        label: Text(translator.translate('OK')),
+                        onPressed: () => Navigator.of(context).pop(true),
+                        style: ClerkMaterialButtonStyle.light,
+                        height: 16,
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

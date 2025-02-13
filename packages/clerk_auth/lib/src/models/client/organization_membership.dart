@@ -28,7 +28,7 @@ class OrganizationMembership {
   final Organization organization;
 
   /// public user data
-  final UserPublic publicUserData;
+  final UserPublic? publicUserData;
 
   /// updated at
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)

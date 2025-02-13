@@ -600,54 +600,67 @@ class Api with Logging {
   /// Create a new [Organization]
   ///
   Future<ApiResponse> createOrganization(
-    String name, [
-    String? sessionId,
-  ]) async {
-    final xxx = await _fetchApiResponse(
+    String name, {
+    Session? session,
+  }) async {
+    return await _fetchApiResponse(
       '/organizations',
       withSession: true,
       params: {
         'name': name,
-        _kClerkSessionId: sessionId, // An explict session ID, if supplied
+        _kClerkSessionId: session?.id, // An explict session ID, if supplied
       },
     );
-    return xxx;
   }
 
   /// Update an [Organization]
   ///
   Future<ApiResponse> updateOrganization(
     Organization org, {
+    Session? session,
     String? name,
     String? slug,
   }) async {
     return await _fetchApiResponse(
       '/organizations/${org.id}',
       method: HttpMethod.patch,
+      withSession: true,
       params: {
         'name': name,
         'slug': slug,
+        _kClerkSessionId: session?.id, // An explict session ID, if supplied
       },
     );
   }
 
   /// Delete an [Organization]
   ///
-  Future<ApiResponse> deleteOrganization(Organization org) async {
+  Future<ApiResponse> deleteOrganization(
+    Organization org, {
+    Session? session,
+  }) async {
     return await _fetchApiResponse(
       '/organizations/${org.id}',
       method: HttpMethod.delete,
+      withSession: true,
+      params: {
+        _kClerkSessionId: session?.id, // An explict session ID, if supplied
+      },
     );
   }
 
   /// Update the current [User]'s avatar
   ///
   Future<ApiResponse> updateOrganizationLogo(
-    Organization org,
-    File file,
-  ) async {
-    final uri = _uri('/organizations/${org.id}/logo');
-    return await _uploadFile(HttpMethod.put, uri, file);
+    Organization org, {
+    required File image,
+    Session? session,
+  }) async {
+    final params = _multiSessionMode && session is Session
+        ? {_kClerkSessionId: session.id}
+        : null;
+    final uri = _uri('/organizations/${org.id}/logo', params: params);
+    return await _uploadFile(HttpMethod.put, uri, image);
   }
 
   /// Delete an [Organization]'s logo

@@ -13,14 +13,10 @@ class ClerkVerticalCard extends StatelessWidget {
     super.key,
     required this.topPortion,
     this.bottomPortion = emptyWidget,
-    this.middlePortion,
   });
 
   /// Widget to be displayed in the elevated top card in the stack.
   final Widget topPortion;
-
-  /// Widget to be displayed under the topPortion
-  final Widget? middlePortion;
 
   /// Widget to be displayed in the bottom card of the stack. Typically branding and a
   /// text based c.t.a.
@@ -42,14 +38,7 @@ class ClerkVerticalCard extends StatelessWidget {
               color: ClerkColors.white,
               elevation: 1.0,
               shadowColor: ClerkColors.seashell,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  topPortion,
-                  if (middlePortion case Widget middlePortion) //
-                    middlePortion,
-                ],
-              ),
+              child: topPortion,
             ),
             bottomPortion,
             const Divider(
@@ -59,11 +48,9 @@ class ClerkVerticalCard extends StatelessWidget {
             ),
             verticalMargin12,
             Center(
-              child: SizedBox(
-                height: 14.0,
-                width: 121.46,
-                child: SvgPicture.asset(ClerkAssets.securedByClerkLogo,
-                    package: 'clerk_flutter'),
+              child: SvgPicture.asset(
+                ClerkAssets.securedByClerkLogo,
+                package: 'clerk_flutter',
               ),
             ),
             verticalMargin12,

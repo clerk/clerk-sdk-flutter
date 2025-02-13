@@ -78,17 +78,22 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
         body: Padding(
           padding: horizontalPadding32,
           child: ClerkVerticalCard(
-            topPortion: const _TopPortion(),
-            middlePortion: ClerkAuthBuilder(
-              builder: (context, auth) {
-                return Padding(
-                  padding: horizontalPadding32 + bottomPadding32,
-                  child: ClerkSSOPanel(
-                    onStrategyChosen: (strategy) =>
-                        auth.ssoConnect(context, strategy),
-                  ),
-                );
-              },
+            topPortion: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const _TopPortion(),
+                ClerkAuthBuilder(
+                  builder: (context, auth) {
+                    return Padding(
+                      padding: horizontalPadding32 + bottomPadding32,
+                      child: ClerkSSOPanel(
+                        onStrategyChosen: (strategy) =>
+                            auth.ssoConnect(context, strategy),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ),

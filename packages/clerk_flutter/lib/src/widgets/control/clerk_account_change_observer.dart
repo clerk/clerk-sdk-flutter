@@ -1,4 +1,3 @@
-import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -37,9 +36,8 @@ class _ClerkAccountChangeObserverState
     authState.addListener(_onAuthStateChanged);
   }
 
-  Set<DateTime> _userUpdatedTimes() => authState.client.sessions
-      .map((s) => s.user.updatedAt ?? DateTimeExt.epoch)
-      .toSet();
+  Set<DateTime> _userUpdatedTimes() =>
+      authState.client.sessions.map((s) => s.user.updatedAt).toSet();
 
   void _onAuthStateChanged() {
     // if we successfully logged in and got a new session, pop the screen

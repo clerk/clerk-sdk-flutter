@@ -420,10 +420,26 @@ class Auth {
   Future<void> createOrganizationFor(
     User user, {
     required String name,
+    String? slug,
+    File? image,
   }) async {
     final session = client.sessionFor(user);
-    await _api.createOrganization(name, session?.id).then(_housekeeping);
-    update();
+    await _api.createOrganization(name, session: session).then(_housekeeping);
+
+    user = client.refreshUser(user);
+    if (user.organizationNamed(name) case Organization org) {
+      if (slug?.isNotEmpty == true) {
+        await _api
+            .updateOrganization(org, slug: slug, session: session)
+            .then(_housekeeping);
+      }
+      if (image case File image) {
+        await _api
+            .updateOrganizationLogo(org, image: image, session: session)
+            .then(_housekeeping);
+      }
+      update();
+    }
   }
 
   /// Activate the given [Session]

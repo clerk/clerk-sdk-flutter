@@ -15,19 +15,25 @@ class ConnectAccountPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final translator = ClerkAuth.translatorOf(context);
     return ClerkVerticalCard(
-      topPortion: ClerkPanelHeader(
-        subtitle: translator.translate('Please choose an account to connect'),
-      ),
-      middlePortion: ClerkAuthBuilder(
-        builder: (context, auth) {
-          return Padding(
-            padding: horizontalPadding32 + bottomPadding32,
-            child: ClerkSSOPanel(
-              onStrategyChosen: (strategy) =>
-                  auth.ssoConnect(context, strategy),
-            ),
-          );
-        },
+      topPortion: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ClerkPanelHeader(
+            subtitle:
+                translator.translate('Please choose an account to connect'),
+          ),
+          ClerkAuthBuilder(
+            builder: (context, auth) {
+              return Padding(
+                padding: horizontalPadding32 + bottomPadding32,
+                child: ClerkSSOPanel(
+                  onStrategyChosen: (strategy) =>
+                      auth.ssoConnect(context, strategy),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

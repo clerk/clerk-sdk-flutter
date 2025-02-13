@@ -10,6 +10,7 @@ class ClerkCodeInput extends StatelessWidget {
   const ClerkCodeInput({
     super.key,
     required this.onSubmit,
+    this.focusNode,
     this.title,
     this.subtitle,
     this.isSmall = false,
@@ -26,6 +27,10 @@ class ClerkCodeInput extends StatelessWidget {
 
   /// Should the input boxes be compressed?
   final bool isSmall;
+
+  /// focus node
+  final FocusNode? focusNode;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -50,7 +55,11 @@ class ClerkCodeInput extends StatelessWidget {
             style: ClerkTextStyle.subtitleDark,
           ),
         verticalMargin4,
-        MultiDigitCodeInput(onSubmit: onSubmit, isSmall: isSmall),
+        MultiDigitCodeInput(
+          onSubmit: onSubmit,
+          isSmall: isSmall,
+          focusNode: focusNode,
+        ),
       ],
     );
   }

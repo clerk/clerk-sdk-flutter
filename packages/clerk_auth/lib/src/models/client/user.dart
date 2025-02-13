@@ -191,7 +191,7 @@ class User {
   }
 
   /// name
-  String get name => '$firstName $lastName';
+  String get name => [firstName, lastName].nonNulls.join(' ');
 
   /// test the [UserIdentifyingData] to see if it is
   /// one of the [User]'s primary identifiers

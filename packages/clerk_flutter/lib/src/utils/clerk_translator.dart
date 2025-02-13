@@ -31,8 +31,8 @@ abstract class ClerkTranslator {
   ///
   String translate(
     String phrase, {
-    String? substitution,
-    List<String> substitutions = const [],
+    dynamic substitution,
+    List<dynamic>? substitutions,
   });
 
   /// A method that takes a list of pre-translated [items] e.g.
@@ -61,16 +61,16 @@ class DefaultClerkTranslator extends ClerkTranslator {
   @override
   String translate(
     String phrase, {
-    String? substitution,
-    List<String>? substitutions,
+    dynamic substitution,
+    List<dynamic>? substitutions,
   }) {
-    if (substitution case String sub) {
-      return phrase.replaceFirst(substitutionKey(), sub);
+    if (substitution case final sub?) {
+      return phrase.replaceFirst(substitutionKey(), sub.toString());
     }
 
-    if (substitutions case List<String> substitutions) {
-      for (int i = 0; i < substitutions.length; ++i) {
-        phrase = phrase.replaceFirst(substitutionKey(i), substitutions[i]);
+    if (substitutions case List<dynamic> subs) {
+      for (int i = 0; i < subs.length; ++i) {
+        phrase = phrase.replaceFirst(substitutionKey(i), subs[i].toString());
       }
     }
 

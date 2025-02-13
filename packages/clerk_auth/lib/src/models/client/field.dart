@@ -26,7 +26,7 @@ class Field {
   };
 
   /// The [values] of the Fields
-  List<Field> get values => _values.values.toList(growable: false);
+  static List<Field> get values => _values.values.toList(growable: false);
 
   /// The index of this field
   int get index => values.indexOf(this);
@@ -34,6 +34,13 @@ class Field {
   /// the [name] of the [Field]
   final String name;
 
+  /// toString
+  @override
+  String toString() => name;
+
   /// toJson
   String toJson() => name;
+
+  /// A display title for this attribute
+  String get title => name.replaceAll('_', ' ');
 }

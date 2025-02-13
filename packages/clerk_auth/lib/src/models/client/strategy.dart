@@ -1,5 +1,4 @@
-import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
-import 'package:clerk_auth/src/models/client/field.dart';
+import 'package:clerk_auth/clerk_auth.dart';
 
 /// [Strategy] Clerk object
 ///
@@ -190,16 +189,16 @@ class Strategy {
     return null;
   }
 
-  /// For a given field, return an appropriate [Strategy], or
+  /// For a given object, return an appropriate [Strategy], or
   /// throw an error
   ///
-  static Strategy forField(Field field) {
-    return switch (field) {
-      Field.phoneNumber => Strategy.phoneCode,
-      Field.emailAddress => Strategy.emailCode,
-      _ => throw AuthError(
-          message: 'No strategy associated with ###',
-          substitution: field.name,
+  static Strategy forObject<T extends Object>(T object) {
+    return switch (object.toString()) {
+      'phone_number' => Strategy.phoneCode,
+      'email_address' => Strategy.emailCode,
+      String name => throw AuthError(
+          message: 'No strategy associated with ### \'#2#\'',
+          substitutions: [T.runtimeType, name],
         ),
     };
   }

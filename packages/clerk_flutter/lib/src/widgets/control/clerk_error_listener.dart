@@ -32,7 +32,9 @@ class ClerkErrorListener extends StatefulWidget {
 
   /// Default Error Handler
   static Future<void> defaultErrorHandler(
-      BuildContext context, AuthError error) async {
+    BuildContext context,
+    AuthError error,
+  ) async {
     final translator = ClerkAuth.translatorOf(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -45,7 +47,7 @@ class ClerkErrorListener extends StatefulWidget {
         content: Text(
           translator.translate(
             error.message,
-            substitution: error.substitution,
+            substitutions: error.substitutions,
           ),
           style: ClerkTextStyle.subtitle.copyWith(
             color: ClerkColors.white,

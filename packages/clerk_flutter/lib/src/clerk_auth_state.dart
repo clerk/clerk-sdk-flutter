@@ -171,14 +171,23 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     ClerkErrorCallback? onError,
   }) async {
     T? result;
+
+    bool showLoading = true;
+    Future.delayed(
+      Duration.zero,
+      () {
+        if (showLoading && context.mounted && !_loadingOverlay.mounted) {
+          Overlay.of(context).insert(_loadingOverlay);
+        }
+      },
+    );
+
     try {
-      if (context.mounted && !_loadingOverlay.mounted) {
-        Overlay.of(context).insert(_loadingOverlay);
-      }
       result = await fn();
     } on clerk.AuthError catch (error) {
       _onError(error, onError);
     } finally {
+      showLoading = false;
       if (_loadingOverlay.mounted) {
         _loadingOverlay.remove();
       }
@@ -199,10 +208,11 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       env.user.passwordSettings.meetsRequiredCriteria(password!);
 
   /// Checks the password according to the criteria required by the `env`
-  /// Note that password and confirmation must match, but that includes
-  /// not having been supplied (i.e. null or empty). These are valid for parsing
-  /// but may still not be acceptable to the back end
   String? checkPassword(String? password, String? confirmation) {
+    if (password?.isNotEmpty != true) {
+      return translator.translate('A password must be supplied');
+    }
+
     if (password != confirmation) {
       return translator.translate(
         'Password and password confirmation must match',
@@ -212,6 +222,24 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     if (password case String password when password.isNotEmpty) {
       final criteria = env.user.passwordSettings;
       final missing = <String>[];
+
+      if (criteria.meetsLengthCriteria(password) == false) {
+        if (criteria.maxLength > 0) {
+          missing.add(
+            translator.translate(
+              'a length of between ### and #2#',
+              substitutions: [criteria.minLength, criteria.maxLength],
+            ),
+          );
+        } else {
+          missing.add(
+            translator.translate(
+              'a length of ### or greater',
+              substitution: criteria.minLength,
+            ),
+          );
+        }
+      }
 
       if (criteria.meetsLowerCaseCriteria(password) == false) {
         missing.add(translator.translate('a LOWERCASE letter'));

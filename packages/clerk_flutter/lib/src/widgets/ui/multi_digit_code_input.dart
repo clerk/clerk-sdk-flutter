@@ -15,6 +15,7 @@ class MultiDigitCodeInput extends StatefulWidget {
     required this.onSubmit,
     this.length = 6,
     this.isSmall = false,
+    this.focusNode,
   });
 
   /// Function to call once all digits have been entered
@@ -25,6 +26,9 @@ class MultiDigitCodeInput extends StatefulWidget {
 
   /// Whether the widget should display in a trimmer form
   final bool isSmall;
+
+  /// Focus node
+  final FocusNode? focusNode;
 
   @override
   State<MultiDigitCodeInput> createState() => _MultiDigitCodeInputState();
@@ -73,7 +77,7 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
       selection: TextSelection.collapsed(offset: 0),
       composing: TextRange(start: 0, end: 0),
     );
-    _focusNode = FocusNode();
+    _focusNode = widget.focusNode ?? FocusNode();
     _focusNode.addListener(_onFocusChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) => requestKeyboard());
     HardwareKeyboard.instance.addHandler(_onHwKeyChanged);
@@ -121,7 +125,10 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
   void dispose() {
     HardwareKeyboard.instance.removeHandler(_onHwKeyChanged);
     _currentAutofillScope?.unregister(autofillId);
-    _focusNode.dispose();
+    if (widget.focusNode == null) {
+      // must be one we've created locally, so dispose of it now
+      _focusNode.dispose();
+    }
     _closeInputConnectionIfNeeded();
     super.dispose();
   }

@@ -44,7 +44,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
         default:
           throw clerk.AuthError(
             message: "Type '###' invalid",
-            substitution: type.name,
+            substitutions: [type.name],
           );
       }
     }
@@ -109,7 +109,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
           ),
         _ => throw clerk.AuthError(
             message: "Type '###' invalid",
-            substitution: type.name,
+            substitutions: [type.name],
           ),
       },
     );
@@ -124,7 +124,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
       } else {
         throw clerk.AuthError(
           message: "$title '###' is invalid",
-          substitution: identifier,
+          substitutions: [identifier],
         );
       }
     }

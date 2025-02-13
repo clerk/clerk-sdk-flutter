@@ -22,6 +22,7 @@ SignUp _$SignUpFromJson(Map<String, dynamic> json) => SignUp(
       lastName: json['last_name'] as String?,
       unsafeMetadata: json['unsafe_metadata'] as Map<String, dynamic>,
       publicMetadata: json['public_metadata'] as Map<String, dynamic>,
+      verifications: _toFieldVerificationMap(json['verifications']),
       customAction: json['custom_action'] as bool,
       externalId: json['external_id'] as String?,
       createdSessionId: json['created_session_id'] as String?,
@@ -55,6 +56,7 @@ Map<String, dynamic> _$SignUpToJson(SignUp instance) {
   writeNotNull('last_name', instance.lastName);
   val['unsafe_metadata'] = instance.unsafeMetadata;
   val['public_metadata'] = instance.publicMetadata;
+  val['verifications'] = _fromFieldVerificationMap(instance.verifications);
   val['custom_action'] = instance.customAction;
   writeNotNull('external_id', instance.externalId);
   writeNotNull('created_session_id', instance.createdSessionId);

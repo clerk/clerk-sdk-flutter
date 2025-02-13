@@ -15,6 +15,7 @@ import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:clerk_flutter/src/widgets/user/add_account_panel.dart';
 import 'package:flutter/material.dart';
+import 'package:phone_input/phone_input_package.dart';
 
 /// The [ClerkUserButton] renders a list of all users from
 /// [clerk.Session]s currently signed in, plus controls to sign
@@ -242,20 +243,26 @@ class _SessionRow extends StatelessWidget {
               child: Padding(
                 padding: horizontalPadding16 + bottomPadding8,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClerkAvatar(user: user),
                     horizontalMargin16,
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (showName)
+                        if (showName && user.hasName)
                           Text(
                             user.name,
                             style: ClerkTextStyle.buttonTitleDark,
                           ),
-                        if (user.email is String)
-                          Text(user.email!, style: ClerkTextStyle.buttonTitle),
+                        if (user.email is String || user.phoneNumber is String)
+                          Text(
+                            user.email ??
+                                PhoneNumber.parse(user.phoneNumber!)
+                                    .intlFormattedNsn,
+                            style: ClerkTextStyle.buttonTitle,
+                          ),
                       ],
                     )
                   ],

@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/models/client/field.dart';
+import 'package:clerk_auth/src/models/client/verification.dart';
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -25,6 +26,7 @@ class SignUp {
     required this.lastName,
     required this.unsafeMetadata,
     required this.publicMetadata,
+    required this.verifications,
     required this.customAction,
     required this.externalId,
     required this.createdSessionId,
@@ -81,6 +83,10 @@ class SignUp {
   /// public metadata
   final Map<String, dynamic> publicMetadata;
 
+  /// verifications
+  @JsonKey(fromJson: _toFieldVerificationMap, toJson: _fromFieldVerificationMap)
+  final Map<Field, Verification> verifications;
+
   /// custom action
   final bool customAction;
 
@@ -104,14 +110,36 @@ class SignUp {
   Map<String, dynamic> toJson() => _$SignUpToJson(this);
 
   /// is [field] required?
-  bool requires(Field field) => requiredFields.contains(field);
+  bool requires(Field? field) => requiredFields.contains(field);
 
   /// is [field] optional?
-  bool optional(Field field) => optionalFields.contains(field);
+  bool optional(Field? field) => optionalFields.contains(field);
 
   /// is [field] missing?
-  bool missing(Field field) => missingFields.contains(field);
+  bool missing(Field? field) => missingFields.contains(field);
 
   /// is [field] unverified?
-  bool unverified(Field field) => unverifiedFields.contains(field);
+  bool unverified(Field? field) => unverifiedFields.contains(field);
+}
+
+Map<Field, Verification> _toFieldVerificationMap(dynamic data) {
+  final map = <Field, Verification>{};
+  if (data case Map<String, dynamic> json) {
+    for (final entry in json.entries) {
+      if (entry.value case Map<String, dynamic> verificationJson) {
+        map[Field(name: entry.key)] = Verification.fromJson(verificationJson);
+      }
+    }
+  }
+  return map;
+}
+
+Map<String, dynamic> _fromFieldVerificationMap(dynamic data) {
+  final map = <String, dynamic>{};
+  if (data case Map<Field, Verification> verifications) {
+    for (final entry in verifications.entries) {
+      map[entry.key.name] = entry.value.toJson();
+    }
+  }
+  return map;
 }

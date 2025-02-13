@@ -76,6 +76,11 @@ class PasswordSettings {
   /// toJson
   Map<String, dynamic> toJson() => _$PasswordSettingsToJson(this);
 
+  /// is it long enough?
+  bool meetsLengthCriteria(String password) =>
+      password.length >= minLength &&
+      (maxLength == 0 || password.length <= maxLength);
+
   /// does a password meet the lower case criteria?
   bool meetsLowerCaseCriteria(String password) =>
       requireLowercase == false || _lowerCaseRE.hasMatch(password);
@@ -98,6 +103,7 @@ class PasswordSettings {
 
   /// does a password meet all criteria?
   bool meetsRequiredCriteria(String password) =>
+      meetsLengthCriteria(password) &&
       meetsLowerCaseCriteria(password) &&
       meetsUpperCaseCriteria(password) &&
       meetsNumberCriteria(password) &&

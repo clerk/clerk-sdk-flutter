@@ -342,25 +342,42 @@ class Auth {
       throw AuthError(message: "Password and password confirmation must match");
     }
 
-    if (client.signUp == null) {
-      await _api
-          .createSignUp(
-            strategy: strategy,
-            firstName: firstName,
-            lastName: lastName,
-            username: username,
-            emailAddress: emailAddress,
-            phoneNumber: phoneNumber,
-            password: password,
-            code: code,
-            token: token,
-          )
-          .then(_housekeeping);
+    switch (client.signUp) {
+      case null:
+        await _api
+            .createSignUp(
+              strategy: strategy,
+              firstName: firstName,
+              lastName: lastName,
+              username: username,
+              emailAddress: emailAddress,
+              phoneNumber: phoneNumber,
+              password: password,
+              code: code,
+              token: token,
+            )
+            .then(_housekeeping);
+
+      case SignUp signUp when signUp.missingFields.isNotEmpty:
+        await _api
+            .updateSignUp(
+              signUp,
+              strategy: strategy,
+              firstName: firstName,
+              lastName: lastName,
+              username: username,
+              emailAddress: emailAddress,
+              phoneNumber: phoneNumber,
+              password: password,
+              code: code,
+              token: token,
+            )
+            .then(_housekeeping);
     }
 
     if (client.user is! User) {
       switch (client.signUp) {
-        case SignUp signUp when strategy.requiresCode == true && code is String:
+        case SignUp signUp when strategy.requiresCode && code is String:
           await _api
               .attemptSignUp(signUp, strategy: strategy, code: code)
               .then(_housekeeping);
@@ -371,7 +388,7 @@ class Auth {
                 signUp.unverifiedFields.isNotEmpty:
           for (final field in signUp.unverifiedFields) {
             await _api
-                .prepareSignUp(signUp, strategy: Strategy.forField(field))
+                .prepareSignUp(signUp, strategy: Strategy.forObject(field))
                 .then(_housekeeping);
           }
 
@@ -384,22 +401,6 @@ class Auth {
           await _api
               .attemptSignUp(signUp,
                   strategy: strategy, code: code, signature: signature)
-              .then(_housekeeping);
-
-        case SignUp signUp when signUp.status == Status.missingRequirements:
-          await _api
-              .updateSignUp(
-                signUp,
-                strategy: strategy,
-                firstName: firstName,
-                lastName: lastName,
-                username: username,
-                emailAddress: emailAddress,
-                phoneNumber: phoneNumber,
-                password: password,
-                code: code,
-                token: token,
-              )
               .then(_housekeeping);
       }
     }

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
-import 'package:clerk_auth/src/models/enums.dart';
 import 'package:test/test.dart';
 
 void main() {

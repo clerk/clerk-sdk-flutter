@@ -66,7 +66,7 @@ class Auth {
   final Api _api;
 
   static const _clientTimerPeriod = Duration(seconds: 11);
-  late final _clientTimer;
+  late final Timer _clientTimer;
 
   static const _codeLength = 6;
 

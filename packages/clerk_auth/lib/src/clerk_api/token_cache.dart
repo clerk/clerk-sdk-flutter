@@ -7,7 +7,6 @@ import 'package:clerk_auth/src/models/client/organization.dart';
 import 'package:clerk_auth/src/models/client/session.dart';
 import 'package:clerk_auth/src/models/client/session_token.dart';
 import 'package:http/http.dart' as http;
-import 'package:logging/logging.dart';
 
 /// A store for authentication tokens and IDs from the
 /// Clerk back end
@@ -26,7 +25,6 @@ class TokenCache {
   final Persistor _persistor;
   final int _cacheId;
 
-  final _logger = Logger('TokenCache');
   final _sessionTokens = <String, SessionToken>{};
 
   String _sessionId = '';

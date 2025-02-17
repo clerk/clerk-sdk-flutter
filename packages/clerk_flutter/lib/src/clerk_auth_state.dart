@@ -88,28 +88,28 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     final acc = accounts.firstWhereOrNull(
       (m) => m.verification.strategy == strategy && m.isVerified == false,
     );
-    if (acc?.verification.externalVerificationRedirectUrl case String url
-        when context.mounted) {
-      final responseUrl = await showDialog<String>(
-        context: context,
-        useSafeArea: false,
-        useRootNavigator: true,
-        routeSettings: const RouteSettings(name: _kSsoRouteName),
-        builder: (context) => _SsoWebViewOverlay(
-          url: url,
-          onError: (error) => _onError(error, onError),
-        ),
-      );
+    if (acc?.verification.externalVerificationRedirectUrl case String url) {
+      if (context.mounted) {
+        final responseUrl = await showDialog<String>(
+          context: context,
+          useSafeArea: false,
+          useRootNavigator: true,
+          routeSettings: const RouteSettings(name: _kSsoRouteName),
+          builder: (context) => _SsoWebViewOverlay(
+            url: url,
+            onError: (error) => _onError(error, onError),
+          ),
+        );
+        if (responseUrl == clerk.ClerkConstants.oauthRedirect) {
+          await refreshClient();
 
-      if (responseUrl == clerk.ClerkConstants.oauthRedirect) {
-        await refreshClient();
+          final newAccounts = client.user?.externalAccounts?.toSet() ?? {};
 
-        final newAccounts = client.user?.externalAccounts?.toSet() ?? {};
-
-        if (newAccounts.difference(accounts).isNotEmpty && context.mounted) {
-          Navigator.of(context).popUntil(
-            (route) => route.settings.name != _kSsoRouteName,
-          );
+          if (newAccounts.difference(accounts).isNotEmpty && context.mounted) {
+            Navigator.of(context).popUntil(
+              (route) => route.settings.name != _kSsoRouteName,
+            );
+          }
         }
       }
     }
@@ -282,12 +282,6 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (_) => _updateTitle(),
-          onHttpError: (e) {
-            if (e.request?.uri.path.endsWith('.ico') != true) {
-              // we don't care about favicon errors
-              widget.onError(clerk.AuthError(message: e.toString()));
-            }
-          },
           onWebResourceError: (e) => widget.onError(
             clerk.AuthError(message: e.toString()),
           ),

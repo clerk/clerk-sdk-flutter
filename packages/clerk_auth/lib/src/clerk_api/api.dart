@@ -55,7 +55,7 @@ class Api with Logging {
   final SessionTokenPollMode _pollMode;
   late final String _nativeDeviceId;
   Timer? _pollTimer;
-  bool _multiSessionMode = false;
+  bool _multiSessionMode = true;
   bool _testMode = ClerkConstants.isTestMode;
 
   static const _kClerkAPIVersion = 'clerk-api-version';

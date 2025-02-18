@@ -71,6 +71,8 @@ class TestHttpService implements HttpService {
       ..remove(HttpHeaders.authorizationHeader)
       ..remove('clerk-api-version')
       ..remove('x-flutter-sdk-version')
+      ..remove('x-native-device-id')
+      ..remove('x-clerk-client-id')
       ..remove('x-mobile');
 
     final queryParams = {

@@ -34,6 +34,7 @@ void main() {
       httpService: httpService,
       pollMode: SessionTokenPollMode.lazy,
     );
+    await api.initialize();
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });
 

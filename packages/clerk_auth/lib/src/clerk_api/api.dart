@@ -851,11 +851,12 @@ class Api with Logging {
     bool withSession = false,
     Map<String, dynamic>? params,
   }) {
-    final sessionId = params?.remove(_kClerkSessionId) ?? _tokenCache.sessionId;
+    final sessionId =
+        params?.remove(_kClerkSessionId)?.toString() ?? _tokenCache.sessionId;
     return {
       _kIsNative: true,
       _kClerkJsVersion: ClerkConstants.jsVersion,
-      if (withSession && _multiSessionMode) //
+      if (withSession && _multiSessionMode && sessionId.isNotEmpty) //
         _kClerkSessionId: sessionId,
       if (method.isGet) //
         ...?params,

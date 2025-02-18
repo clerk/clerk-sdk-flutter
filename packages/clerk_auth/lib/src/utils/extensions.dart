@@ -34,6 +34,9 @@ extension StringExtension on String {
   /// Decode a [String] that has been base64 encoded
   ///
   String get b64decoded => utf8.decode(base64.decode(base64.normalize(this)));
+
+  /// A version of the [String] which is null if empty
+  String? get orNullIfEmpty => isNotEmpty ? this : null;
 }
 
 /// Extensions to the [List] class

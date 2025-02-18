@@ -6,10 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:phone_input/phone_input_package.dart';
 
-extension NullExtension on String {
-  String? get orNullIfEmpty => isEmpty ? null : this;
-}
-
 extension PhoneNumberExtension on PhoneNumber {
   String get intlFormattedNsn => '(+$countryCode) ${getFormattedNsn()}';
 }

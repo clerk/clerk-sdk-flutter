@@ -1,8 +1,8 @@
 import 'package:clerk_flutter/src/clerk_auth_state.dart';
-import 'package:clerk_flutter/src/widgets/common.dart';
 import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
+import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/material.dart';
 
 /// Creates a dialog containing a [child] widget which, typically,

@@ -68,7 +68,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     String? code,
     clerk.Strategy? strategy,
   }) async {
-    await auth.call(
+    await auth.safelyCall(
       context,
       () async {
         final password = _valueOrNull(clerk.UserAttribute.password);

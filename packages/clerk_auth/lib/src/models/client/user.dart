@@ -6,6 +6,7 @@ import 'package:clerk_auth/src/models/client/passkey.dart';
 import 'package:clerk_auth/src/models/client/phone_number.dart';
 import 'package:clerk_auth/src/models/client/user_identifying_data.dart';
 import 'package:clerk_auth/src/models/client/web3_wallet.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -190,8 +191,13 @@ class User {
     return null;
   }
 
+  /// do we have a name?
+  bool get hasName =>
+      firstName?.isNotEmpty == true || lastName?.isNotEmpty == true;
+
   /// name
-  String get name => [firstName, lastName].nonNulls.join(' ');
+  String get name =>
+      [firstName?.orNullIfEmpty, lastName?.orNullIfEmpty].nonNulls.join(' ');
 
   /// test the [UserIdentifyingData] to see if it is
   /// one of the [User]'s primary identifiers

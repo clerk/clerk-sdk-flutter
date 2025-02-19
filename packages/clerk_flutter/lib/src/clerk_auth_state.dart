@@ -173,8 +173,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     T? result;
 
     bool showLoading = true;
-    Future.delayed(
-      Duration.zero,
+    scheduleMicrotask(
       () {
         if (showLoading && context.mounted && !_loadingOverlay.mounted) {
           Overlay.of(context).insert(_loadingOverlay);

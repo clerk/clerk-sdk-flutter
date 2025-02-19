@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 const _defaultDuration = Duration(milliseconds: 250);
@@ -132,7 +134,7 @@ class _AnimatedCloseableState extends State<AnimatedCloseable> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, _update);
+    scheduleMicrotask(_update);
   }
 
   @override

@@ -1,8 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'user_public.g.dart';
 
 /// [UserPublic] Clerk object
+@immutable
 @JsonSerializable()
 class UserPublic {
   /// Constructor

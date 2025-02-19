@@ -1,10 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 import '../environment.dart';
 
 part 'organization_settings.g.dart';
 
 /// [OrganizationSettings] Clerk object
+@immutable
 @JsonSerializable()
 class OrganizationSettings {
   /// Constructor

@@ -10,10 +10,12 @@ import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'user.g.dart';
 
 /// [User] Clerk object
+@immutable
 @JsonSerializable()
 class User {
   /// Constructor

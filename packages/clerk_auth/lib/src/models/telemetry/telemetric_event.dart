@@ -1,9 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'telemetric_event.g.dart';
 
 /// A [TelemetricEvent] to be sent to the backend
 ///
+@immutable
 @JsonSerializable()
 class TelemetricEvent {
   /// Create a [TelemetricEvent]

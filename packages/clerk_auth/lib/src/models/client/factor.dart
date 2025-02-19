@@ -1,9 +1,11 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'factor.g.dart';
 
 /// [Factor] Clerk object
+@immutable
 @JsonSerializable()
 class Factor {
   /// Constructor

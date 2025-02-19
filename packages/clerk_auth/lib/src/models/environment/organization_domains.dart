@@ -1,10 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 import '../enums.dart';
 
 part 'organization_domains.g.dart';
 
 /// [OrganizationDomains] Clerk object
+@immutable
 @JsonSerializable()
 class OrganizationDomains {
   /// Constructor

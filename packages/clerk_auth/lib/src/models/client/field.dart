@@ -1,5 +1,8 @@
+import 'package:meta/meta.dart';
+
 /// Pseudo-enum representing fields
 ///
+@immutable
 class Field {
   const Field._({required this.name});
 

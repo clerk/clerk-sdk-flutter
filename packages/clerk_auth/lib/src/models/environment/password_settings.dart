@@ -1,10 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 import '../../utils/json_serialization_helpers.dart';
 
 part 'password_settings.g.dart';
 
 /// [PasswordSettings] Clerk object
+@immutable
 @JsonSerializable()
 class PasswordSettings {
   /// Constructor

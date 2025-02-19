@@ -1,7 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'organization_actions.g.dart';
 
+@immutable
 @JsonSerializable()
 
 /// [OrganizationActions] Clerk object

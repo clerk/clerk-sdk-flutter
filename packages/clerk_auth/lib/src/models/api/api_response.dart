@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:clerk_auth/src/models/api/api_error.dart';
 import 'package:clerk_auth/src/models/client/client.dart';
+import 'package:meta/meta.dart';
 
 /// [ApiResponse] holds parsed Clerk data from a back-end http response
+@immutable
 class ApiResponse {
   /// Constructs an instance of [ApiResponse]
   const ApiResponse({

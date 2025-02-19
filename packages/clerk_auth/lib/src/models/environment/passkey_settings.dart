@@ -1,8 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'passkey_settings.g.dart';
 
 /// [PasskeySettings] Clerk object
+@immutable
 @JsonSerializable()
 class PasskeySettings {
   /// Constructor

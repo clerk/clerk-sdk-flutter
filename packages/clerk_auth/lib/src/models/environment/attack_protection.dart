@@ -1,8 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'attack_protection.g.dart';
 
 /// [AttackProtection] Clerk object
+@immutable
 @JsonSerializable()
 class AttackProtection {
   /// Constructor
@@ -35,6 +37,7 @@ class AttackProtection {
 }
 
 /// [UserLockout] Clerk object
+@immutable
 @JsonSerializable()
 class UserLockout {
   /// Constructor

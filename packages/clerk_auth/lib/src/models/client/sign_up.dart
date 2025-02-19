@@ -3,10 +3,12 @@ import 'package:clerk_auth/src/models/client/verification.dart';
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'sign_up.g.dart';
 
 /// [SignUp] Clerk object
+@immutable
 @JsonSerializable()
 class SignUp {
   /// Constructor

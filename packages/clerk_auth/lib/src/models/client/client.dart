@@ -1,13 +1,14 @@
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/models/client.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import '../models.dart';
+import 'package:meta/meta.dart';
 
 part 'client.g.dart';
 
 /// [Client] Clerk object
+@immutable
 @JsonSerializable()
 class Client {
   /// Constructor

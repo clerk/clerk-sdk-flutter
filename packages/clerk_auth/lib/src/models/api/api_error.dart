@@ -1,8 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'api_error.g.dart';
 
 /// [ApiError] Clerk object
+@immutable
 @JsonSerializable()
 class ApiError {
   /// Constructor

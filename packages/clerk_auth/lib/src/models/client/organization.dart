@@ -1,10 +1,12 @@
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'organization.g.dart';
 
 /// [Organization] Clerk object
+@immutable
 @JsonSerializable()
 class Organization {
   /// Constructor

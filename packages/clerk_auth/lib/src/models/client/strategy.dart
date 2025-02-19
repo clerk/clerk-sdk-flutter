@@ -1,10 +1,13 @@
-import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/models/client/field.dart';
+import 'package:meta/meta.dart';
 
 /// [Strategy] Clerk object
 ///
 /// A [Strategy] has a [name]. The various oAuth strategies ('oauth',
 /// 'oauth_token' and 'oauth_custom') also have a [provider]
 ///
+@immutable
 class Strategy {
   /// Constructor for [Strategy]
   const Strategy({required this.name, this.provider});

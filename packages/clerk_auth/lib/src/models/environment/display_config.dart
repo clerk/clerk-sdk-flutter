@@ -1,10 +1,12 @@
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'display_config.g.dart';
 
 /// Display Configuration
 ///
+@immutable
 @JsonSerializable()
 class DisplayConfig {
   /// Constructs an instance of [DisplayConfig]

@@ -4,10 +4,12 @@ import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
 import 'package:clerk_auth/src/models/client/organization.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'session_token.g.dart';
 
 /// [SessionToken] Clerk object
+@immutable
 @JsonSerializable()
 class SessionToken {
   /// Constructor

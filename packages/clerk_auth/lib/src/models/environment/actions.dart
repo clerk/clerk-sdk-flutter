@@ -1,8 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'actions.g.dart';
 
 /// [Actions] Clerk object
+@immutable
 @JsonSerializable()
 class Actions {
   /// Constructor

@@ -74,10 +74,10 @@ class ClerkMaterialButton extends StatelessWidget {
       child: FilledButton(
         onPressed: onPressed,
         style: ButtonStyle(
-          padding: WidgetStateProperty.all(EdgeInsets.zero),
-          backgroundColor: WidgetStateProperty.all(color),
-          foregroundColor: WidgetStateProperty.all(textColor),
-          shape: WidgetStateProperty.all(
+          padding: MaterialStateProperty.all(EdgeInsets.zero),
+          backgroundColor: MaterialStateProperty.all(color),
+          foregroundColor: MaterialStateProperty.all(textColor),
+          shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(height / 6),
               side: const BorderSide(color: ClerkColors.dawnPink),

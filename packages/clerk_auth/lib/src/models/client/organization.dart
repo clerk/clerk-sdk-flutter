@@ -10,7 +10,7 @@ part 'organization.g.dart';
 @JsonSerializable()
 class Organization {
   /// Constructor
-  Organization({
+  const Organization({
     this.id = '',
     this.name = '',
     this.maxAllowedMemberships = 0,
@@ -73,7 +73,7 @@ class Organization {
   static const _personalOrgId = r'$PERSONAL$';
 
   /// The id used internally for the personal organization
-  static final personal = Organization(id: _personalOrgId);
+  static const personal = Organization(id: _personalOrgId);
 
   /// fromJson
   static Organization fromJson(Map<String, dynamic> json) =>

@@ -1,5 +1,4 @@
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
-import 'package:clerk_auth/src/models/client/field.dart';
 import 'package:meta/meta.dart';
 
 /// [Strategy] Clerk object

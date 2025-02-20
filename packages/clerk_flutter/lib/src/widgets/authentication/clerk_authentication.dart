@@ -45,53 +45,58 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 530.0),
-      child: ClerkVerticalCard(
-        topPortion: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _TopPortion(state: _state),
-            ClerkAuthBuilder(
-              builder: (context, auth) {
-                final env = auth.env;
-                return Padding(
-                  padding: horizontalPadding32,
-                  child: Column(
-                    children: [
-                      if (env.hasOauthStrategies) //
-                        Closeable(
-                          closed: auth.isSigningIn || auth.isSigningUp,
-                          child: ClerkSSOPanel(
-                            onStrategyChosen: (strategy) =>
-                                auth.ssoSignIn(context, strategy),
-                          ),
-                        ),
-                      if (env.hasIdentificationStrategies) ...[
+    return Padding(
+      padding: allPadding16,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 530.0),
+        child: ClerkVerticalCard(
+          topPortion: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _TopPortion(state: _state),
+              ClerkAuthBuilder(
+                builder: (context, auth) {
+                  final env = auth.env;
+                  return Padding(
+                    padding: horizontalPadding32,
+                    child: Column(
+                      children: [
                         if (env.hasOauthStrategies) //
-                          const Padding(
-                            padding: verticalPadding24,
-                            child: OrDivider(),
+                          Closeable(
+                            closed: auth.isSigningIn || auth.isSigningUp,
+                            child: ClerkSSOPanel(
+                              onStrategyChosen: (strategy) =>
+                                  auth.ssoSignIn(context, strategy),
+                            ),
                           ),
-                        Closeable(
-                          closed: _state.isSigningIn == false,
-                          child: const ClerkSignInPanel(),
-                        ),
-                        Closeable(
-                          closed: _state.isSigningUp == false,
-                          child: const ClerkSignUpPanel(),
-                        ),
+                        if (env.hasIdentificationStrategies) ...[
+                          if (env.hasOauthStrategies) //
+                            const Padding(
+                              padding: verticalPadding24,
+                              child: OrDivider(),
+                            ),
+                          Closeable(
+                            closed: _state.isSigningIn == false,
+                            child:
+                                ClerkSignInPanel(isActive: _state.isSigningIn),
+                          ),
+                          Closeable(
+                            closed: _state.isSigningUp == false,
+                            child:
+                                ClerkSignUpPanel(isActive: _state.isSigningUp),
+                          ),
+                        ],
                       ],
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-        bottomPortion: _BottomPortion(
-          state: _state,
-          onChange: _toggle,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          bottomPortion: _BottomPortion(
+            state: _state,
+            onChange: _toggle,
+          ),
         ),
       ),
     );
@@ -107,18 +112,15 @@ class _TopPortion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final display = ClerkAuth.displayConfigOf(context);
-    final translator = ClerkAuth.translatorOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
 
     return ClerkPanelHeader(
-      title: translator.translate(
-        state.isSigningIn ? 'Sign in to ###' : 'Sign up to ###',
-        substitution: display.applicationName,
-      ),
-      subtitle: translator.translate(
-        state.isSigningIn
-            ? 'Welcome back! Please sign in to continue'
-            : 'Welcome! Please fill in the details to get started',
-      ),
+      title: state.isSigningIn
+          ? localizations.signInTo(display.applicationName)
+          : localizations.signUpTo(display.applicationName),
+      subtitle: state.isSigningIn
+          ? localizations.welcomeBackPleaseSignInToContinue
+          : localizations.welcomePleaseFillInTheDetailsToGetStarted,
     );
   }
 }
@@ -132,7 +134,7 @@ class _BottomPortion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final translator = ClerkAuth.translatorOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -145,15 +147,15 @@ class _BottomPortion extends StatelessWidget {
               children: [
                 TextSpan(
                   text: state.isSigningIn
-                      ? translator.translate('Don’t have an account?')
-                      : translator.translate('Already have an account?'),
+                      ? localizations.dontHaveAnAccount
+                      : localizations.alreadyHaveAnAccount,
                   style: ClerkTextStyle.subtitle,
                 ),
                 const WidgetSpan(child: SizedBox(width: 6)),
                 TextSpan(
                   text: state.isSigningIn
-                      ? translator.translate('Sign up')
-                      : translator.translate('Sign in'),
+                      ? localizations.signUp
+                      : localizations.signIn,
                   style: ClerkTextStyle.subtitle
                       .copyWith(color: ClerkColors.darkJungleGreen),
                   recognizer: TapGestureRecognizer()..onTap = onChange,

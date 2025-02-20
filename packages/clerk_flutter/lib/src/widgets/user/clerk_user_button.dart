@@ -60,16 +60,16 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
   }
 
   List<ClerkUserAction> _defaultSessionActions() {
-    final translator = ClerkAuth.translatorOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     return [
       ClerkUserAction(
         asset: ClerkAssets.gearIcon,
-        label: translator.translate('Profile'),
+        label: localizations.profile,
         callback: _manageAccount,
       ),
       ClerkUserAction(
         asset: ClerkAssets.signOutIcon,
-        label: translator.translate('Sign out'),
+        label: localizations.signOut,
         callback: _signOut,
       ),
     ];
@@ -77,11 +77,12 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
 
   List<ClerkUserAction> _defaultAdditionalActions() {
     final authState = ClerkAuth.of(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     return [
       if (authState.env.config.singleSessionMode == false)
         ClerkUserAction(
           asset: ClerkAssets.addIcon,
-          label: authState.translator.translate('Add account'),
+          label: localizations.addAccount,
           callback: _addAccount,
         ),
     ];
@@ -120,7 +121,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
       ),
       child: ClerkAuthBuilder(
         builder: (context, auth) {
-          final translator = auth.translator;
+          final localizations = ClerkAuth.localizationsOf(context);
           final sessions = auth.client.sessions;
 
           _sessions.addOrReplaceAll(sessions, by: (s) => s.id);
@@ -191,7 +192,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
                       ),
                       horizontalMargin8,
                       Text(
-                        translator.translate('Sign out of all accounts'),
+                        localizations.signOutOfAllAccounts,
                         style: ClerkTextStyle.buttonTitle,
                       )
                     ],

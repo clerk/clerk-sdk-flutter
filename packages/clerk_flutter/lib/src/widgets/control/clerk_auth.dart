@@ -14,7 +14,7 @@ class ClerkAuth extends StatefulWidget {
     this.publishableKey,
     this.pollMode = clerk.SessionTokenPollMode.lazy,
     this.authState,
-    this.translator = const DefaultClerkTranslator(),
+    this.localizations = ClerkSdkLocalizations.delegate,
     this.persistor,
     this.loading,
     this.httpService,
@@ -35,7 +35,7 @@ class ClerkAuth extends StatefulWidget {
   final clerk.Persistor? persistor;
 
   /// Injectable translations for strings
-  final ClerkTranslator translator;
+  final LocalizationsDelegate<ClerkSdkLocalizations> localizations;
 
   /// Poll mode: should we regularly poll for session token?
   final clerk.SessionTokenPollMode pollMode;
@@ -78,8 +78,8 @@ class ClerkAuth extends StatefulWidget {
   }
 
   /// Get the [ClerkTranslator]
-  static ClerkTranslator translatorOf(BuildContext context) =>
-      of(context, listen: false).translator;
+  static ClerkSdkLocalizations localizationsOf(BuildContext context) =>
+      ClerkSdkLocalizations.of(context)!;
 
   /// Get the [clerk.DisplayConfig]
   static clerk.DisplayConfig displayConfigOf(BuildContext context) =>
@@ -113,7 +113,6 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
       ClerkAuthState.create(
         publishableKey: widget.publishableKey!,
         persistor: widget.persistor,
-        translator: widget.translator,
         loading: widget.loading,
         pollMode: widget.pollMode,
       ).then((authState) {
@@ -133,17 +132,20 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
   @override
   Widget build(BuildContext context) {
     if (effectiveAuthState case ClerkAuthState authState) {
-      return ListenableBuilder(
-        listenable: authState,
-        builder: (BuildContext context, Widget? child) {
-          return _ClerkAuthData(
-            authState: authState,
-            child: widget.child,
-          );
-        },
+      return Localizations.override(
+        context: context,
+        delegates: [widget.localizations],
+        child: ListenableBuilder(
+          listenable: authState,
+          builder: (BuildContext context, Widget? child) {
+            return _ClerkAuthData(
+              authState: authState,
+              child: widget.child,
+            );
+          },
+        ),
       );
     }
-
     return widget.loading ?? emptyWidget;
   }
 }

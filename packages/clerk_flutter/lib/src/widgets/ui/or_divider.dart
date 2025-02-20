@@ -13,13 +13,13 @@ class OrDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final translator = ClerkAuth.translatorOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     return Row(
       children: [
         const Expanded(child: Divider(color: ClerkColors.whiteSmoke)),
         horizontalMargin24,
         Text(
-          translator.translate('or'),
+          localizations.or,
           style: ClerkTextStyle.subtitle.copyWith(fontSize: 12.0),
         ),
         horizontalMargin24,

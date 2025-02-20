@@ -17,14 +17,13 @@ class ConnectAccountPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final translator = ClerkAuth.translatorOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     return ClerkVerticalCard(
       topPortion: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           ClerkPanelHeader(
-            subtitle:
-                translator.translate('Please choose an account to connect'),
+            subtitle: localizations.pleaseChooseAnAccountToConnect,
           ),
           ClerkAuthBuilder(
             builder: (context, auth) {

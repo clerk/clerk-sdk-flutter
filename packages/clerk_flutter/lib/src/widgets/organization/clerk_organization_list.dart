@@ -54,11 +54,12 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
 
   List<ClerkUserAction> _defaultActions() {
     final authState = ClerkAuth.of(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     return [
       if (authState.user?.createOrganizationEnabled == true) //
         ClerkUserAction(
           asset: ClerkAssets.addIcon,
-          label: authState.translator.translate('Create organization'),
+          label: localizations.createOrganization,
           callback: _createOrganization,
         ),
     ];
@@ -98,6 +99,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
 
   @override
   Widget build(BuildContext context) {
+    final localizations = ClerkAuth.localizationsOf(context);
     return DecoratedBox(
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -106,7 +108,6 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
       ),
       child: ClerkAuthBuilder(
         builder: (context, auth) {
-          final translator = auth.translator;
           final sessions = auth.client.sessions;
 
           _user = auth.client.refreshUser(_user); // ensure latest version
@@ -119,11 +120,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
             topPortion: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ClerkPanelHeader(
-                  subtitle: translator.translate(
-                    'Select the account with which you wish to continue',
-                  ),
-                ),
+                ClerkPanelHeader(subtitle: localizations.selectAccount),
                 if (_nextUserIsPending) //
                   Stack(
                     children: [

@@ -4,6 +4,7 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/utils/extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_avatar.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
@@ -42,9 +43,9 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
         case clerk.IdentifierType.phoneNumber:
           return PhoneNumber.parse(identifier).isValid();
         default:
+          final localizations = ClerkAuth.localizationsOf(context);
           throw clerk.AuthError(
-            message: "Type '###' invalid",
-            substitutions: [type.name],
+            message: localizations.typeTypeInvalid(type.name),
           );
       }
     }
@@ -56,20 +57,19 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
     ClerkAuthState auth,
     String identifier,
   ) async {
-    final translator = auth.translator;
+    final localizations = ClerkAuth.localizationsOf(context);
 
     final uid = auth.user?.identifierFrom(identifier);
     if (uid case clerk.UserIdentifyingData uid when uid.isUnverified) {
-      final title = uid.type.name.replaceAll('_', ' ').capitalized;
       await ClerkInputDialog.show(
         context,
         showOk: false,
         child: ClerkCodeInput(
-          title: translator.translate('$title verification'),
-          subtitle: translator.translate(
-            'Enter the code sent to ###',
-            substitution: identifier,
+          title: localizations.lookup(
+            uid.type.name,
+            type: ClerkSdkLocalizationType.verification,
           ),
+          subtitle: localizations.enterCodeSentTo(identifier),
           onSubmit: (code) async {
             await auth.verifyIdentifyingData(uid, code);
             final newUid = auth.user!.identifierFrom(uid.identifier);
@@ -87,8 +87,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
     clerk.IdentifierType type,
   ) async {
     final authState = ClerkAuth.of(context, listen: false);
-    final translator = authState.translator;
-    final title = type.name.replaceAll('_', ' ').capitalized;
+    final localizations = ClerkAuth.localizationsOf(context);
 
     String identifier = '';
 
@@ -96,20 +95,19 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
       context,
       child: switch (type) {
         clerk.IdentifierType.emailAddress => ClerkTextFormField(
-            label: translator.translate(title),
+            label: localizations.emailAddress,
             autofocus: true,
             onChanged: (text) => identifier = text,
             onSubmit: (_) => Navigator.of(context).pop(true),
             validator: (text) => _validate(text, type),
           ),
         clerk.IdentifierType.phoneNumber => ClerkPhoneNumberFormField(
-            label: translator.translate(title),
+            label: localizations.phoneNumber,
             onChanged: (text) => identifier = text,
             onSubmit: (_) => Navigator.of(context).pop(true),
           ),
         _ => throw clerk.AuthError(
-            message: "Type '###' invalid",
-            substitutions: [type.name],
+            message: localizations.typeTypeInvalid(type.name),
           ),
       },
     );
@@ -123,8 +121,9 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
         }
       } else {
         throw clerk.AuthError(
-          message: "$title '###' is invalid",
-          substitutions: [identifier],
+          message: type == clerk.IdentifierType.phoneNumber
+              ? localizations.invalidPhoneNumber(identifier)
+              : localizations.invalidEmailAddress(identifier),
         );
       }
     }
@@ -132,7 +131,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
 
   @override
   Widget build(BuildContext context) {
-    final translator = ClerkAuth.translatorOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
 
     return ClerkPanel(
       padding: horizontalPadding24,
@@ -146,7 +145,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
             children: [
               verticalMargin32,
               Text(
-                translator.translate('Profile details'),
+                localizations.profileDetails,
                 maxLines: 1,
                 style: ClerkTextStyle.title,
               ),
@@ -155,17 +154,17 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                 child: ListView(
                   children: [
                     _ProfileRow(
-                      title: translator.translate('Profile'),
+                      title: localizations.profile,
                       child: _EditableUserData(user: user),
                     ),
                     if (auth.env.config.allowsEmailAddress) ...[
                       const Padding(padding: topPadding16, child: divider),
                       _ProfileRow(
-                        title: translator.translate('Email address'),
+                        title: localizations.emailAddress,
                         child: _IdentifierList(
                           user: user,
                           identifiers: user.emailAddresses,
-                          addLine: translator.translate('Add email address'),
+                          addLine: localizations.addEmailAddress,
                           onAddNew: () => _addIdentifyingData(
                             context,
                             auth,
@@ -180,14 +179,14 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                     if (auth.env.config.allowsPhoneNumber) ...[
                       const Padding(padding: topPadding16, child: divider),
                       _ProfileRow(
-                        title: translator.translate('Phone numbers'),
+                        title: localizations.phoneNumber,
                         child: _IdentifierList(
                           user: user,
                           identifiers: user.phoneNumbers,
                           format: (number) {
                             return PhoneNumber.parse(number).intlFormattedNsn;
                           },
-                          addLine: translator.translate('Add phone number'),
+                          addLine: localizations.addPhoneNumber,
                           onAddNew: () => _addIdentifyingData(
                             context,
                             auth,
@@ -201,7 +200,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                     ],
                     const Padding(padding: topPadding16, child: divider),
                     _ProfileRow(
-                      title: translator.translate('Connected accounts'),
+                      title: localizations.connectedAccounts,
                       child: _ExternalAccountList(
                         user: user,
                         env: auth.env,
@@ -238,7 +237,7 @@ class _ExternalAccountList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final translator = ClerkAuth.translatorOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -268,8 +267,8 @@ class _ExternalAccountList extends StatelessWidget {
                     ),
                     if (account.isVerified == false) //
                       _RowLabel(
-                        label: translator.translate(
-                          account.verification.status.name.toUpperCase(),
+                        label: localizations.lookup(
+                          account.verification.status.toString(),
                         ),
                       ),
                   ],
@@ -283,7 +282,7 @@ class _ExternalAccountList extends StatelessWidget {
             children: [
               const ClerkIcon(ClerkAssets.addIconSimpleLight, size: 10),
               horizontalMargin12,
-              Expanded(child: Text(translator.translate('Connect account'))),
+              Expanded(child: Text(localizations.connectedAccounts)),
             ],
           ),
         ),
@@ -311,7 +310,7 @@ class _IdentifierList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final translator = ClerkAuth.translatorOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -331,13 +330,13 @@ class _IdentifierList extends StatelessWidget {
                   ),
                   if (ident.isUnverified) //
                     _RowLabel(
-                      label: translator.translate('UNVERIFIED'),
+                      label: localizations.unverified,
                       color: ClerkColors.incarnadine,
                       onTap: () =>
                           onIdentifierUnverified.call(ident.identifier),
                     ),
                   if (user.isPrimary(ident)) //
-                    _RowLabel(label: translator.translate('PRIMARY')),
+                    _RowLabel(label: localizations.primary),
                 ],
               ),
             ),

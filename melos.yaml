@@ -40,3 +40,15 @@ scripts:
   # Run build and format code
   brunner_format:
     run: melos brunner && melos format
+
+  # Run localizations
+  localization:
+    run: melos run sort_localizations && melos exec -- fvm flutter gen-l10n
+    packageFilters:
+      scope: "clerk_flutter"
+
+  # Sort localizations
+  sort_localizations:
+    run: melos exec -- arb_utils sort l10n/en.arb
+    packageFilters:
+      scope: "clerk_flutter"

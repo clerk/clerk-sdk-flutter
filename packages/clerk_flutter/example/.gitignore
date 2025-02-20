@@ -44,3 +44,5 @@ app.*.map.json
 
 # example env
 example.env
+example.json
+

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/utils/extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,6 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   ClerkAuthState._({
     required super.publishableKey,
     required super.persistor,
-    required this.translator,
     super.pollMode,
     super.httpService,
     Widget? loading,
@@ -32,7 +32,6 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   static Future<ClerkAuthState> create({
     required String publishableKey,
     clerk.Persistor? persistor,
-    ClerkTranslator translator = const DefaultClerkTranslator(),
     clerk.HttpService httpService = const clerk.DefaultHttpService(),
     clerk.SessionTokenPollMode pollMode = clerk.SessionTokenPollMode.lazy,
     Widget? loading,
@@ -43,7 +42,6 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           await clerk.DefaultPersistor.create(
             storageDirectory: await getApplicationDocumentsDirectory(),
           ),
-      translator: translator,
       pollMode: pollMode,
       loading: loading,
       httpService: httpService,
@@ -51,9 +49,6 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     await provider.initialize();
     return provider;
   }
-
-  /// The [ClerkTranslator] for auth UI
-  final ClerkTranslator translator;
 
   /// The [clerk.AuthError] stream
   late final errorStream = _errors.stream;
@@ -207,15 +202,17 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       env.user.passwordSettings.meetsRequiredCriteria(password!);
 
   /// Checks the password according to the criteria required by the `env`
-  String? checkPassword(String? password, String? confirmation) {
+  String? checkPassword(
+    String? password,
+    String? confirmation,
+    ClerkSdkLocalizations localizations,
+  ) {
     if (password?.isNotEmpty != true) {
-      return translator.translate('A password must be supplied');
+      return localizations.passwordMustBeSupplied;
     }
 
     if (password != confirmation) {
-      return translator.translate(
-        'Password and password confirmation must match',
-      );
+      return localizations.passwordAndPasswordConfirmationMustMatch;
     }
 
     if (password case String password when password.isNotEmpty) {
@@ -225,47 +222,41 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       if (criteria.meetsLengthCriteria(password) == false) {
         if (criteria.maxLength > 0) {
           missing.add(
-            translator.translate(
-              'a length of between ### and #2#',
-              substitutions: [criteria.minLength, criteria.maxLength],
+            localizations.aLengthOfBetweenMINAndMAX(
+              criteria.minLength,
+              criteria.maxLength,
             ),
           );
         } else {
           missing.add(
-            translator.translate(
-              'a length of ### or greater',
-              substitution: criteria.minLength,
-            ),
+            localizations.aLengthOfMINOrGreater(criteria.minLength),
           );
         }
       }
 
       if (criteria.meetsLowerCaseCriteria(password) == false) {
-        missing.add(translator.translate('a LOWERCASE letter'));
+        missing.add(localizations.aLowercaseLetter);
       }
 
       if (criteria.meetsUpperCaseCriteria(password) == false) {
-        missing.add(translator.translate('an UPPERCASE letter'));
+        missing.add(localizations.anUppercaseLetter);
       }
 
       if (criteria.meetsNumberCriteria(password) == false) {
-        missing.add(translator.translate('a NUMBER'));
+        missing.add(localizations.aNumber);
       }
 
       if (criteria.meetsSpecialCharCriteria(password) == false) {
         missing.add(
-          translator.translate(
-            'a SPECIAL CHARACTER (###)',
-            substitution: criteria.allowedSpecialCharacters,
-          ),
+          localizations.aSpecialCharacter(criteria.allowedSpecialCharacters),
         );
       }
 
       if (missing.isNotEmpty) {
-        return translator.alternatives(
+        return StringExt.alternatives(
           missing,
-          connector: translator.translate('and'),
-          prefix: translator.translate('Password requires'),
+          connector: localizations.and,
+          prefix: localizations.passwordRequires,
         );
       }
     }
@@ -295,7 +286,7 @@ class _SsoWebViewOverlay extends StatefulWidget {
 
 class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
   late final WebViewController controller;
-  var _title = Future<String?>.value('Loading…');
+  var _title = Future<String?>.value('Loading...');
 
   @override
   void initState() {

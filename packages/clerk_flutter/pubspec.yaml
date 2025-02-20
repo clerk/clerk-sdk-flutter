@@ -22,6 +22,9 @@ dependencies:
   path_provider: ^2.1.2
   phone_input: ^1.0.0
   webview_flutter: ^4.4.3
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_lints: ^3.0.1

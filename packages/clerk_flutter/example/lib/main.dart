@@ -41,80 +41,90 @@ class ExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClerkAuth(
-      publishableKey: publishableKey,
-      pollMode: SessionTokenPollMode.hungry,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        builder: (BuildContext context, Widget? child) {
-          return ClerkErrorListener(child: child!);
-        },
-        home: Scaffold(
-          backgroundColor: const Color(0xFFf5f5f5),
-          body: SafeArea(
-            child: Center(
-              child: ClerkAuthBuilder(
-                signedInBuilder: (context, auth) {
-                  if (auth.env.organization.isEnabled == false) {
-                    return const ClerkUserButton();
-                  }
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      builder: (BuildContext context, Widget? child) {
+        return ClerkAuth(
+          publishableKey: publishableKey,
+          pollMode: SessionTokenPollMode.hungry,
+          child: ClerkErrorListener(child: child!),
+        );
+      },
+      home: Scaffold(
+        backgroundColor: const Color(0xFFf5f5f5),
+        body: SafeArea(
+          child: Center(
+            child: ClerkAuthBuilder(
+              signedInBuilder: (context, auth) {
+                if (auth.env.organization.isEnabled == false) {
+                  return const ClerkUserButton();
+                }
 
-                  return DefaultTabController(
-                    length: 2,
-                    child: Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            child: AppBar(
-                              backgroundColor: const Color(0xFFf5f5f5),
-                              bottom: const TabBar(
-                                tabs: [
-                                  SizedBox(
-                                    height: 30,
-                                    child: Text('Users'),
-                                  ),
-                                  SizedBox(
-                                    height: 30,
-                                    child: Text('Organizations'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: ClerkUserButton(),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: ClerkOrganizationList(
-                                      initialUser: auth.user!,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                signedOutBuilder: (context, auth) {
-                  return const ClerkAuthentication();
-                },
-              ),
+                return const _UserAndOrgTabs();
+              },
+              signedOutBuilder: (context, auth) {
+                return const ClerkAuthentication();
+              },
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _UserAndOrgTabs extends StatelessWidget {
+  const _UserAndOrgTabs();
+
+  @override
+  Widget build(BuildContext context) {
+    final authState = ClerkAuth.of(context);
+    return DefaultTabController(
+      length: 2,
+      child: Center(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 40,
+              child: AppBar(
+                backgroundColor: const Color(0xFFf5f5f5),
+                bottom: const TabBar(
+                  tabs: [
+                    SizedBox(
+                      height: 30,
+                      child: Text('Users'),
+                    ),
+                    SizedBox(
+                      height: 30,
+                      child: Text('Organizations'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: ClerkUserButton(),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: ClerkOrganizationList(
+                        initialUser: authState.user!,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

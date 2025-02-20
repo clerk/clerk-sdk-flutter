@@ -1,6 +1,7 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/utils/extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
@@ -21,7 +22,10 @@ import 'package:phone_input/phone_input_package.dart';
 @immutable
 class ClerkSignUpPanel extends StatefulWidget {
   /// Construct a new [ClerkSignUpPanel]
-  const ClerkSignUpPanel({super.key});
+  const ClerkSignUpPanel({super.key, required this.isActive});
+
+  /// [true] if we are currently signing up
+  final bool isActive;
 
   @override
   State<ClerkSignUpPanel> createState() => _ClerkSignUpPanelState();
@@ -37,44 +41,48 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final authState = ClerkAuth.of(context, listen: false);
-    final signUp = authState.signUp;
-    _values[clerk.UserAttribute.firstName] ??= signUp?.firstName;
-    _values[clerk.UserAttribute.lastName] ??= signUp?.lastName;
-    _values[clerk.UserAttribute.username] ??= signUp?.username;
-    _values[clerk.UserAttribute.emailAddress] ??= signUp?.emailAddress;
-    _values[clerk.UserAttribute.phoneNumber] ??= signUp?.phoneNumber is String
-        ? PhoneNumber.parse(signUp!.phoneNumber!).intlFormattedNsn
-        : null;
 
-    if (signUp?.missingFields case List<clerk.Field> missingFields
-        when missingFields.isNotEmpty) {
-      final translator = authState.translator;
-      authState.addError(
-        translator.alternatives(
-          missingFields.map((f) => translator.translate(f.title)).toList(),
-          prefix: translator.translate('You need to add:'),
-          connector: translator.translate('and'),
-        ),
-      );
+    if (widget.isActive) {
+      final authState = ClerkAuth.of(context, listen: false);
+      final signUp = authState.signUp;
+      _values[clerk.UserAttribute.firstName] ??= signUp?.firstName;
+      _values[clerk.UserAttribute.lastName] ??= signUp?.lastName;
+      _values[clerk.UserAttribute.username] ??= signUp?.username;
+      _values[clerk.UserAttribute.emailAddress] ??= signUp?.emailAddress;
+      _values[clerk.UserAttribute.phoneNumber] ??= signUp?.phoneNumber is String
+          ? PhoneNumber.parse(signUp!.phoneNumber!).intlFormattedNsn
+          : null;
+
+      if (signUp?.missingFields case List<clerk.Field> missingFields
+          when missingFields.isNotEmpty) {
+        final localizations = ClerkAuth.localizationsOf(context);
+        authState.addError(
+          StringExt.alternatives(
+            missingFields.map((f) => localizations.lookup(f.name)).toList(),
+            prefix: localizations.youNeedToAdd,
+            connector: localizations.and,
+          ),
+        );
+      }
     }
   }
 
   String? _valueOrNull(clerk.UserAttribute attr) =>
       _values[attr]?.orNullIfEmpty;
 
-  Future<void> _continue(
-    ClerkAuthState auth, {
+  Future<void> _continue({
     String? code,
     clerk.Strategy? strategy,
   }) async {
+    final auth = ClerkAuth.of(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     await auth.safelyCall(
       context,
       () async {
         final password = _valueOrNull(clerk.UserAttribute.password);
         final passwordConfirmation =
             _valueOrNull(clerk.UserAttribute.passwordConfirmation);
-        if (auth.checkPassword(password, passwordConfirmation)
+        if (auth.checkPassword(password, passwordConfirmation, localizations)
             case String errorMessage) {
           auth.addError(errorMessage);
         } else {
@@ -96,18 +104,6 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     );
   }
 
-  Future<bool> _continueForAttr(
-    clerk.UserAttribute attr, {
-    String? code,
-  }) async {
-    await _continue(
-      ClerkAuth.of(context, listen: false),
-      strategy: clerk.Strategy.forObject(attr),
-      code: code,
-    );
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
@@ -116,7 +112,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     final unverifiedFields = signUp?.unverifiedFields ?? const [];
     final hasPassword =
         _values[clerk.UserAttribute.password]?.isNotEmpty == true;
-    final translator = authState.translator;
+    final localizations = ClerkAuth.localizationsOf(context);
     final attributes = [
       ...authState.env.user.attributes.entries
           .where((a) => a.value.isEnabled)
@@ -137,8 +133,14 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             closed: missingFields.isNotEmpty ||
                 hasPassword == false ||
                 signUp?.unverified(attr.relatedField) != true,
-            onSubmit: (code) => _continueForAttr(attr, code: code),
-            onResend: () => _continueForAttr(attr),
+            onSubmit: (code) async {
+              await _continue(
+                strategy: clerk.Strategy.forObject(attr),
+                code: code,
+              );
+              return false;
+            },
+            onResend: () => _continue(strategy: clerk.Strategy.forObject(attr)),
           ),
         Closeable(
           closed: missingFields.isEmpty &&
@@ -152,7 +154,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                     if (attribute.isPhoneNumber) //
                       ClerkPhoneNumberFormField(
                         initial: _values[attribute.attr],
-                        label: attribute.title,
+                        label: attribute.title(localizations),
                         isOptional: attribute.isOptional,
                         isMissing:
                             missingFields.contains(attribute.attr.relatedField),
@@ -161,7 +163,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                     else
                       ClerkTextFormField(
                         initial: _values[attribute.attr],
-                        label: attribute.title,
+                        label: attribute.title(localizations),
                         isMissing:
                             missingFields.contains(attribute.attr.relatedField),
                         isOptional: attribute.isOptional,
@@ -181,12 +183,12 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           ),
         ),
         ClerkMaterialButton(
-          onPressed: () => _continue(authState),
+          onPressed: _continue,
           label: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(child: Text(translator.translate('Continue'))),
+              Center(child: Text(localizations.cont)),
               horizontalMargin4,
               const Icon(Icons.arrow_right_sharp),
             ],
@@ -232,8 +234,7 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ClerkAuth.of(context, listen: false);
-    final translator = authState.translator;
+    final localizations = ClerkAuth.localizationsOf(context);
 
     return Closeable(
       closed: widget.closed,
@@ -250,13 +251,11 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
             ClerkCodeInput(
               key: Key(widget.attribute.name),
               focusNode: _focus,
-              title: translator.translate(
-                'Verify your ${widget.attribute.relatedField!.title}',
+              title: localizations.lookup(
+                widget.attribute.relatedField!.name,
+                type: ClerkSdkLocalizationType.verify,
               ),
-              subtitle: translator.translate(
-                'Enter code sent to ###',
-                substitution: widget.value,
-              ),
+              subtitle: localizations.enterCodeSentTo(widget.value),
               onSubmit: widget.onSubmit,
             ),
             Padding(
@@ -267,7 +266,7 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
                 child: ClerkMaterialButton(
                   style: ClerkMaterialButtonStyle.light,
                   onPressed: widget.onResend,
-                  label: Text(translator.translate('Resend')),
+                  label: Text(localizations.resend),
                 ),
               ),
             ),
@@ -298,5 +297,6 @@ class _Attribute {
 
   bool get isOptional => isRequired == false;
 
-  String get title => attr.toString().replaceAll('_', ' ').capitalized;
+  String title(ClerkSdkLocalizations localizations) =>
+      localizations.lookup(attr.toString()).capitalized;
 }

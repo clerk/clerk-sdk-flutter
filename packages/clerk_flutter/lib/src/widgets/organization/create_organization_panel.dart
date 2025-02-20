@@ -69,7 +69,7 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final translator = ClerkAuth.translatorOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     return Padding(
       padding: allPadding16 + MediaQuery.viewInsetsOf(context),
       child: Center(
@@ -81,13 +81,13 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  translator.translate('Create Organization'),
+                  localizations.createOrganization,
                   style: ClerkTextStyle.title,
                   maxLines: 1,
                 ),
                 verticalMargin32,
                 Text(
-                  translator.translate('Logo'),
+                  localizations.logo,
                   style: ClerkTextStyle.subtitle,
                   maxLines: 1,
                 ),
@@ -153,9 +153,7 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
                           ),
                           verticalMargin10,
                           Text(
-                            translator.translate(
-                              'Recommend size 1:1, up to 5MB.',
-                            ),
+                            localizations.recommendSize,
                             maxLines: 2,
                             style: ClerkTextStyle.buttonTitle,
                           ),
@@ -166,12 +164,12 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
                 ),
                 verticalMargin28,
                 ClerkTextFormField(
-                  label: translator.translate('Name'),
+                  label: localizations.name,
                   onChanged: (name) => _data.name = name,
                 ),
                 verticalMargin28,
                 ClerkTextFormField(
-                  label: translator.translate('Slug URL'),
+                  label: localizations.slugUrl,
                   onChanged: (slug) => _data.slug = slug,
                 ),
                 verticalMargin28,
@@ -181,7 +179,7 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
                     width: 150.0,
                     child: ClerkMaterialButton(
                       onPressed: () => Navigator.of(context).pop(_data),
-                      label: Text(translator.translate('Create Organization')),
+                      label: Text(localizations.createOrganization),
                     ),
                   ),
                 ),

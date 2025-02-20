@@ -26,13 +26,13 @@ class InputLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final translator = ClerkAuth.translatorOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
     return Row(
       children: [
         if (label case String label) //
           Expanded(
             child: Text(
-              translator.translate(label),
+              label,
               textAlign: TextAlign.start,
               maxLines: 2,
               style: ClerkTextStyle.inputLabel.copyWith(
@@ -41,10 +41,10 @@ class InputLabel extends StatelessWidget {
             ),
           ),
         if (isOptional) //
-          _LabelModifier(translator.translate('(optional)')),
+          _LabelModifier(localizations.optional),
         if (isRequired) //
           _LabelModifier(
-            translator.translate('(required)'),
+            localizations.required,
             color: ClerkColors.incarnadine,
           ),
       ],

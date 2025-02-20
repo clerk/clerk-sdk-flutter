@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 
 /// Clerk Error Handler
 typedef ClerkErrorHandler = FutureOr<void> Function(
-    BuildContext context, AuthError error);
+  BuildContext context,
+  AuthError error,
+);
 
 /// Widget to display error messages as errors are received
 /// from the [ClerkAuthState].
@@ -35,7 +37,6 @@ class ClerkErrorListener extends StatefulWidget {
     BuildContext context,
     AuthError error,
   ) async {
-    final translator = ClerkAuth.translatorOf(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         shape: const RoundedRectangleBorder(
@@ -45,10 +46,7 @@ class ClerkErrorListener extends StatefulWidget {
           ),
         ),
         content: Text(
-          translator.translate(
-            error.message,
-            substitutions: error.substitutions,
-          ),
+          error.message,
           style: ClerkTextStyle.subtitle.copyWith(
             color: ClerkColors.white,
           ),

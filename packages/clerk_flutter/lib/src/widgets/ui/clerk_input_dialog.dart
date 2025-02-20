@@ -44,7 +44,7 @@ class ClerkInputDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final translator = authState.translator;
+    final localizations = ClerkAuth.localizationsOf(context);
     return Padding(
       padding: allPadding16 + MediaQuery.viewInsetsOf(context),
       child: Center(
@@ -60,7 +60,7 @@ class ClerkInputDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ClerkMaterialButton(
-                      label: Text(translator.translate('Cancel')),
+                      label: Text(localizations.cancel),
                       onPressed: () => Navigator.of(context).pop(false),
                       style: ClerkMaterialButtonStyle.light,
                       height: 16,
@@ -68,7 +68,7 @@ class ClerkInputDialog extends StatelessWidget {
                     if (showOk) ...[
                       horizontalMargin8,
                       ClerkMaterialButton(
-                        label: Text(translator.translate('OK')),
+                        label: Text(localizations.ok),
                         onPressed: () => Navigator.of(context).pop(true),
                         style: ClerkMaterialButtonStyle.light,
                         height: 16,

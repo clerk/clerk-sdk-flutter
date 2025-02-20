@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Flutter Run -&gt; 'clerk_flutter_example'" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define-from-file=example.env" />
-    <option name="filePath" value="$PROJECT_DIR$/packages/clerk_flutter/example/lib/main.dart" />
-    <method v="2" />
-  </configuration>
-</component>

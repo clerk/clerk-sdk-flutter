@@ -146,7 +146,8 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get password => 'Password';
 
   @override
-  String get passwordAndPasswordConfirmationMustMatch => 'Password and password confirmation must match';
+  String get passwordAndPasswordConfirmationMustMatch =>
+      'Password and password confirmation must match';
 
   @override
   String get passwordMustBeSupplied => 'A password must be supplied';
@@ -158,7 +159,8 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get phoneNumber => 'phone number';
 
   @override
-  String get pleaseChooseAnAccountToConnect => 'Please choose an account to connect';
+  String get pleaseChooseAnAccountToConnect =>
+      'Please choose an account to connect';
 
   @override
   String get primary => 'PRIMARY';
@@ -179,19 +181,23 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get resend => 'Resend';
 
   @override
-  String get selectAccount => 'Select the account with which you wish to continue';
+  String get selectAccount =>
+      'Select the account with which you wish to continue';
 
   @override
   String get signIn => 'Sign in';
 
   @override
-  String get signInByClickingALinkSentToYouByEmail => 'Sign in by clicking a link sent to you by email';
+  String get signInByClickingALinkSentToYouByEmail =>
+      'Sign in by clicking a link sent to you by email';
 
   @override
-  String get signInByEnteringACodeSentToYouByEmail => 'Sign in by entering a code sent to you by email';
+  String get signInByEnteringACodeSentToYouByEmail =>
+      'Sign in by entering a code sent to you by email';
 
   @override
-  String get signInByEnteringACodeSentToYouByTextMessage => 'Sign in by entering a code sent to you by text message';
+  String get signInByEnteringACodeSentToYouByTextMessage =>
+      'Sign in by entering a code sent to you by text message';
 
   @override
   String signInTo(String name) {
@@ -245,10 +251,12 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get verifyYourPhoneNumber => 'Verify your phone number';
 
   @override
-  String get welcomeBackPleaseSignInToContinue => 'Welcome back! Please sign in to continue';
+  String get welcomeBackPleaseSignInToContinue =>
+      'Welcome back! Please sign in to continue';
 
   @override
-  String get welcomePleaseFillInTheDetailsToGetStarted => 'Welcome! Please fill in the details to get started';
+  String get welcomePleaseFillInTheDetailsToGetStarted =>
+      'Welcome! Please fill in the details to get started';
 
   @override
   String get youNeedToAdd => 'You need to add:';

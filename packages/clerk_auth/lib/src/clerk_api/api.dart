@@ -878,6 +878,7 @@ class Api with Logging {
   }) {
     return {
       HttpHeaders.acceptHeader: 'application/json',
+      HttpHeaders.acceptLanguageHeader: ClerkConstants.languageList.join(', '),
       HttpHeaders.contentTypeHeader: method.isGet
           ? 'application/json'
           : 'application/x-www-form-urlencoded',

@@ -98,13 +98,13 @@ class SignIn {
       case Stage.first:
         throw AuthError(
           message: 'Strategy {arg} unsupported for first factor',
-          argument: strategy,
+          argument: strategy.toString(),
           localizationCode: AuthErrorLocalizationCode.noSuchFirstFactorStrategy,
         );
       case Stage.second:
         throw AuthError(
           message: 'Strategy {arg} unsupported for second factor',
-          argument: strategy,
+          argument: strategy.toString(),
           localizationCode:
               AuthErrorLocalizationCode.noSuchSecondFactorStrategy,
         );

@@ -8,15 +8,15 @@ class AuthError extends Error {
   final String message;
 
   /// Any arguments
-  final dynamic argument;
+  final String? argument;
 
   /// Localization code
   final AuthErrorLocalizationCode? localizationCode;
 
   @override
   String toString() {
-    if (argument != null) {
-      return message.replaceFirst('{arg}', argument.toString());
+    if (argument case String argument) {
+      return message.replaceFirst('{arg}', argument);
     }
     return message;
   }

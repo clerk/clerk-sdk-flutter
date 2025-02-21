@@ -154,7 +154,7 @@ class Auth {
     if (resp.isError) {
       throw AuthError(
         message: '{arg}: ${resp.errorMessage}',
-        argument: resp.status,
+        argument: resp.status.toString(),
       );
     } else if (resp.client case Client client) {
       this.client = client;

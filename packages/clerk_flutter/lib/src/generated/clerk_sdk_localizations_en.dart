@@ -157,12 +157,12 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String noSuchFirstFactorStrategy(String arg) {
-    return 'Unsupported $arg for first factor';
+    return 'Strategy $arg not supported for first factor';
   }
 
   @override
   String noSuchSecondFactorStrategy(String arg) {
-    return 'Unsupported $arg for second factor';
+    return 'Strategy $arg not supported for second factor';
   }
 
   @override

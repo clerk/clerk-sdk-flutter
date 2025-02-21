@@ -129,7 +129,7 @@
       }
     }
   },
-  "noSuchFirstFactorStrategy": "Unsupported {arg} for first factor",
+  "noSuchFirstFactorStrategy": "Strategy {arg} not supported for first factor",
   "@noSuchFirstFactorStrategy": {
     "placeholders": {
       "arg": {
@@ -137,7 +137,7 @@
       }
     }
   },
-  "noSuchSecondFactorStrategy": "Unsupported {arg} for second factor",
+  "noSuchSecondFactorStrategy": "Strategy {arg} not supported for second factor",
   "@noSuchSecondFactorStrategy": {
     "placeholders": {
       "arg": {

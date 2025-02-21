@@ -348,13 +348,13 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @noSuchFirstFactorStrategy.
   ///
   /// In en, this message translates to:
-  /// **'Unsupported {arg} for first factor'**
+  /// **'Strategy {arg} not supported for first factor'**
   String noSuchFirstFactorStrategy(String arg);
 
   /// No description provided for @noSuchSecondFactorStrategy.
   ///
   /// In en, this message translates to:
-  /// **'Unsupported {arg} for second factor'**
+  /// **'Strategy {arg} not supported for second factor'**
   String noSuchSecondFactorStrategy(String arg);
 
   /// No description provided for @noTranslationFor.

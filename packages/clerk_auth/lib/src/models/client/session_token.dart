@@ -25,7 +25,11 @@ class SessionToken {
 
   late final _parts = switch (jwt.split('.')) {
     List<String> parts when parts.length == 3 => parts,
-    _ => throw AuthError(message: "JWT poorly formatted: $jwt"),
+    _ => throw AuthError(
+        message: "JWT poorly formatted: {arg}",
+        argument: jwt,
+        localizationCode: AuthErrorLocalizationCode.jwtPoorlyFormatted,
+      ),
   };
 
   /// The [header] of the token

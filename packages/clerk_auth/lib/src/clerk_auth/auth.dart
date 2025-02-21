@@ -154,7 +154,10 @@ class Auth {
     if (resp.client case Client client when resp.isOkay) {
       this.client = client;
     } else {
-      throw AuthError(code: resp.status, message: resp.errorMessage);
+      throw AuthError(
+        message: '{arg}: ${resp.errorMessage}',
+        argument: resp.status,
+      );
     }
     return resp;
   }
@@ -185,7 +188,10 @@ class Auth {
         : null;
     final token = await _api.sessionToken(org, templateName);
     if (token is! SessionToken) {
-      throw AuthError(message: 'No session token retrieved');
+      throw AuthError(
+        message: 'No session token retrieved',
+        localizationCode: AuthErrorLocalizationCode.noSessionTokenRetrieved,
+      );
     }
     return token;
   }
@@ -339,7 +345,10 @@ class Auth {
     String? signature,
   }) async {
     if (password != passwordConfirmation) {
-      throw AuthError(message: "Password and password confirmation must match");
+      throw AuthError(
+        message: "Password and password confirmation must match",
+        localizationCode: AuthErrorLocalizationCode.passwordMatchError,
+      );
     }
 
     switch (client.signUp) {
@@ -536,6 +545,7 @@ class Auth {
       if (expiry?.isAfter(DateTime.timestamp()) != true) {
         throw AuthError(
           message: 'Awaited user action not completed in required timeframe',
+          localizationCode: AuthErrorLocalizationCode.actionNotTimely,
         );
       }
 

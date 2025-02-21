@@ -168,7 +168,9 @@ enum Stage {
       Status.needsFirstFactor => first,
       Status.needsSecondFactor => second,
       _ => throw AuthError(
-          message: 'No Stage for ${status.toString()}',
+          message: 'No Stage for {arg}',
+          argument: status.toString(),
+          localizationCode: AuthErrorLocalizationCode.noStageForStatus,
         ),
     };
   }

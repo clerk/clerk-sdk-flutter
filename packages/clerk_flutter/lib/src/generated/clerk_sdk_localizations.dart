@@ -129,6 +129,12 @@ abstract class ClerkSdkLocalizations {
   /// **'ABANDONED'**
   String get abandoned;
 
+  /// No description provided for @actionNotTimely.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaited user action not completed in required timeframe'**
+  String get actionNotTimely;
+
   /// No description provided for @active.
   ///
   /// In en, this message translates to:
@@ -267,6 +273,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Invalid phone number: {number}'**
   String invalidPhoneNumber(String number);
 
+  /// No description provided for @jwtPoorlyFormatted.
+  ///
+  /// In en, this message translates to:
+  /// **'JWT poorly formatted: {arg}'**
+  String jwtPoorlyFormatted(String arg);
+
   /// No description provided for @loading.
   ///
   /// In en, this message translates to:
@@ -309,6 +321,42 @@ abstract class ClerkSdkLocalizations {
   /// **'NEEDS SECOND FACTOR'**
   String get needsSecondFactor;
 
+  /// No description provided for @noAssociatedStrategy.
+  ///
+  /// In en, this message translates to:
+  /// **'No strategy associated with {arg}'**
+  String noAssociatedStrategy(String arg);
+
+  /// No description provided for @noSessionFoundForUser.
+  ///
+  /// In en, this message translates to:
+  /// **'No session found for {arg}'**
+  String noSessionFoundForUser(String arg);
+
+  /// No description provided for @noSessionTokenRetrieved.
+  ///
+  /// In en, this message translates to:
+  /// **'No session token retrieved'**
+  String get noSessionTokenRetrieved;
+
+  /// No description provided for @noStageForStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'No stage for {arg}'**
+  String noStageForStatus(String arg);
+
+  /// No description provided for @noSuchFirstFactorStrategy.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported {arg} for first factor'**
+  String noSuchFirstFactorStrategy(String arg);
+
+  /// No description provided for @noSuchSecondFactorStrategy.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported {arg} for second factor'**
+  String noSuchSecondFactorStrategy(String arg);
+
   /// No description provided for @noTranslationFor.
   ///
   /// In en, this message translates to:
@@ -344,6 +392,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Password and password confirmation must match'**
   String get passwordAndPasswordConfirmationMustMatch;
+
+  /// No description provided for @passwordMatchError.
+  ///
+  /// In en, this message translates to:
+  /// **'Password and password confirmation must match'**
+  String get passwordMatchError;
 
   /// No description provided for @passwordMustBeSupplied.
   ///

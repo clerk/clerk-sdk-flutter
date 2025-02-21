@@ -30,6 +30,7 @@
     }
   },
   "abandoned": "ABANDONED",
+  "actionNotTimely": "Awaited user action not completed in required timeframe",
   "active": "ACTIVE",
   "addAccount": "Add account",
   "addEmailAddress": "Add email address",
@@ -88,6 +89,14 @@
       }
     }
   },
+  "jwtPoorlyFormatted": "JWT poorly formatted: {arg}",
+  "@jwtPoorlyFormatted": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
   "loading": "Loading...",
   "logo": "Logo",
   "missingRequirements": "MISSING REQUIREMENTS",
@@ -95,6 +104,47 @@
   "needsFirstFactor": "NEEDS FIRST FACTOR",
   "needsIdentifier": "NEEDS IDENTIFIER",
   "needsSecondFactor": "NEEDS SECOND FACTOR",
+  "noAssociatedStrategy": "No strategy associated with {arg}",
+  "@noAssociatedStrategy": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
+  "noSessionFoundForUser": "No session found for {arg}",
+  "@noSessionFoundForUser": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
+  "noSessionTokenRetrieved": "No session token retrieved",
+  "noStageForStatus": "No stage for {arg}",
+  "@noStageForStatus": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
+  "noSuchFirstFactorStrategy": "Unsupported {arg} for first factor",
+  "@noSuchFirstFactorStrategy": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
+  "noSuchSecondFactorStrategy": "Unsupported {arg} for second factor",
+  "@noSuchSecondFactorStrategy": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
   "noTranslationFor": "No translation for {name}",
   "@noTranslationFor": {
     "placeholders": {
@@ -108,6 +158,7 @@
   "or": "or",
   "password": "Password",
   "passwordAndPasswordConfirmationMustMatch": "Password and password confirmation must match",
+  "passwordMatchError": "Password and password confirmation must match",
   "passwordMustBeSupplied": "A password must be supplied",
   "passwordRequires": "Password requires:",
   "phoneNumber": "phone number",

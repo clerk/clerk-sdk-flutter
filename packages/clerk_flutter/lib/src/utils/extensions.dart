@@ -1,4 +1,35 @@
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/src/generated/clerk_sdk_localizations.dart';
+
+/// An extension class to enable localization of [AuthError] messaging
+///
+extension AuthErrorExtension on clerk.AuthError {
+  /// Allow localization of an [AuthError]
+  String localizedMessage(ClerkSdkLocalizations localizations) {
+    switch (localizationCode) {
+      case clerk.AuthErrorLocalizationCode.noStageForStatus:
+        return localizations.noStageForStatus(argument.toString());
+      case clerk.AuthErrorLocalizationCode.noSessionTokenRetrieved:
+        return localizations.noSessionTokenRetrieved;
+      case clerk.AuthErrorLocalizationCode.noAssociatedStrategy:
+        return localizations.noAssociatedStrategy(argument.toString());
+      case clerk.AuthErrorLocalizationCode.passwordMatchError:
+        return localizations.passwordAndPasswordConfirmationMustMatch;
+      case clerk.AuthErrorLocalizationCode.jwtPoorlyFormatted:
+        return localizations.jwtPoorlyFormatted(argument.toString());
+      case clerk.AuthErrorLocalizationCode.actionNotTimely:
+        return localizations.actionNotTimely;
+      case clerk.AuthErrorLocalizationCode.noSessionFoundForUser:
+        return localizations.noSessionFoundForUser(argument.toString());
+      case clerk.AuthErrorLocalizationCode.noSuchFirstFactorStrategy:
+        return localizations.noSuchFirstFactorStrategy(argument.toString());
+      case clerk.AuthErrorLocalizationCode.noSuchSecondFactorStrategy:
+        return localizations.noSuchSecondFactorStrategy(argument.toString());
+      default:
+        return toString();
+    }
+  }
+}
 
 /// An enum to enable contextual dynamic lookup of string keys
 /// in the localized appiolect. This is required so that we're not relying on

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/utils/extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class ClerkErrorListener extends StatefulWidget {
     BuildContext context,
     AuthError error,
   ) async {
+    final localizations = ClerkAuth.localizationsOf(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         shape: const RoundedRectangleBorder(
@@ -46,7 +48,7 @@ class ClerkErrorListener extends StatefulWidget {
           ),
         ),
         content: Text(
-          error.message,
+          error.localizedMessage(localizations),
           style: ClerkTextStyle.subtitle.copyWith(
             color: ClerkColors.white,
           ),

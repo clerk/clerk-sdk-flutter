@@ -80,7 +80,11 @@ class Client {
         return session;
       }
     }
-    throw AuthError(message: 'No session found for ${user.name}');
+    throw AuthError(
+      message: 'No session found for {arg}',
+      argument: user.name,
+      localizationCode: AuthErrorLocalizationCode.noSessionFoundForUser,
+    );
   }
 
   /// Get the latest version of this [User]

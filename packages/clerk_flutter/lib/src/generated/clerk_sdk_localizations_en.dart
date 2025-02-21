@@ -29,6 +29,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get abandoned => 'ABANDONED';
 
   @override
+  String get actionNotTimely =>
+      'Awaited user action not completed in required timeframe';
+
+  @override
   String get active => 'ACTIVE';
 
   @override
@@ -108,6 +112,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
+  String jwtPoorlyFormatted(String arg) {
+    return 'JWT poorly formatted: $arg';
+  }
+
+  @override
   String get loading => 'Loading...';
 
   @override
@@ -129,6 +138,34 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get needsSecondFactor => 'NEEDS SECOND FACTOR';
 
   @override
+  String noAssociatedStrategy(String arg) {
+    return 'No strategy associated with $arg';
+  }
+
+  @override
+  String noSessionFoundForUser(String arg) {
+    return 'No session found for $arg';
+  }
+
+  @override
+  String get noSessionTokenRetrieved => 'No session token retrieved';
+
+  @override
+  String noStageForStatus(String arg) {
+    return 'No stage for $arg';
+  }
+
+  @override
+  String noSuchFirstFactorStrategy(String arg) {
+    return 'Unsupported $arg for first factor';
+  }
+
+  @override
+  String noSuchSecondFactorStrategy(String arg) {
+    return 'Unsupported $arg for second factor';
+  }
+
+  @override
   String noTranslationFor(String name) {
     return 'No translation for $name';
   }
@@ -147,6 +184,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get passwordAndPasswordConfirmationMustMatch =>
+      'Password and password confirmation must match';
+
+  @override
+  String get passwordMatchError =>
       'Password and password confirmation must match';
 
   @override

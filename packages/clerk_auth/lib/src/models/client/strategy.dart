@@ -199,7 +199,9 @@ class Strategy {
       'phone_number' => Strategy.phoneCode,
       'email_address' => Strategy.emailCode,
       String name => throw AuthError(
-          message: 'No strategy associated with ${T.runtimeType} \'$name\'',
+          message: 'No strategy associated with {arg}',
+          argument: '${T.runtimeType} \'$name\'',
+          localizationCode: AuthErrorLocalizationCode.noAssociatedStrategy,
         ),
     };
   }

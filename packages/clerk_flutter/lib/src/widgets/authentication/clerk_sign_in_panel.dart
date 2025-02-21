@@ -1,7 +1,7 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
-import 'package:clerk_flutter/src/utils/extensions.dart';
+import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
@@ -81,7 +81,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final localizations = ClerkAuth.localizationsOf(context);
     final env = authState.env;
     final identifiers = env.identificationStrategies
-        .map((s) => localizations.lookup(s.toString()));
+        .map((s) => s.localizedMessage(localizations))
+        .toList(growable: false);
     final factor = authState.client.signIn?.supportedFirstFactors
         .firstWhereOrNull((f) => f.strategy == _strategy);
     final safeIdentifier = factor?.safeIdentifier;
@@ -100,7 +101,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           child: ClerkTextFormField(
             key: const Key('identifier'),
             label: StringExt.alternatives(
-              identifiers.toList(growable: false),
+              identifiers,
               connector: localizations.or,
             ).capitalized,
             onChanged: (text) {

@@ -43,13 +43,7 @@ class ExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      builder: (BuildContext context, Widget? child) {
-        return ClerkAuth(
-          publishableKey: publishableKey,
-          pollMode: SessionTokenPollMode.hungry,
-          child: ClerkErrorListener(child: child!),
-        );
-      },
+      builder: ClerkAuth.materialAppBuilder(publishableKey: publishableKey),
       home: Scaffold(
         backgroundColor: const Color(0xFFf5f5f5),
         body: SafeArea(
@@ -59,7 +53,6 @@ class ExampleApp extends StatelessWidget {
                 if (auth.env.organization.isEnabled == false) {
                   return const ClerkUserButton();
                 }
-
                 return const _UserAndOrgTabs();
               },
               signedOutBuilder: (context, auth) {

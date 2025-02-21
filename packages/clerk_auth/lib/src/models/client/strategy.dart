@@ -201,7 +201,7 @@ class Strategy {
       String name => throw AuthError(
           message: 'No strategy associated with {arg}',
           argument: '${T.runtimeType} \'$name\'',
-          localizationCode: AuthErrorLocalizationCode.noAssociatedStrategy,
+          code: AuthErrorCode.noAssociatedStrategy,
         ),
     };
   }

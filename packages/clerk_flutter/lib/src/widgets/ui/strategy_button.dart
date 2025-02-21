@@ -1,6 +1,5 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/utils/extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
@@ -62,10 +61,15 @@ class StrategyButton extends StatelessWidget {
         horizontalMargin8,
         Expanded(
           child: Text(
-            localizations.lookup(
-              strategy.toString(),
-              type: ClerkSdkLocalizationType.signIn,
-            ),
+            switch (strategy) {
+              clerk.Strategy.emailLink =>
+                localizations.signInByClickingALinkSentToYouByEmail,
+              clerk.Strategy.emailCode =>
+                localizations.signInByEnteringACodeSentToYouByEmail,
+              clerk.Strategy.phoneCode =>
+                localizations.signInByEnteringACodeSentToYouByTextMessage,
+              _ => strategy.toString(),
+            },
             maxLines: 1,
             style: ClerkTextStyle.buttonTitle,
           ),

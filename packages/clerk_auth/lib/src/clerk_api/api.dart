@@ -15,10 +15,19 @@ import 'package:http/http.dart' as http;
 
 export 'package:clerk_auth/src/models/enums.dart' show SessionTokenPollMode;
 
+/// Used by [Api] to locate the current user locale preference.
+typedef ClerkLocalesLookup = List<String> Function();
+
 /// [Api] manages communication with the Clerk frontend API
 ///
 class Api with Logging {
-  Api._(this._tokenCache, this._domain, this._httpService, this._pollMode);
+  Api._(
+    this._tokenCache,
+    this._domain,
+    this._httpService,
+    this._localesLookup,
+    this._pollMode,
+  );
 
   /// Create an [Api] object for a given Publishable Key, or return the existing one
   /// if such already exists for that key. Requires a [publishableKey]
@@ -37,6 +46,7 @@ class Api with Logging {
     required String publishableKey,
     required Persistor persistor,
     required HttpService httpService,
+    required ClerkLocalesLookup localesLookup,
     SessionTokenPollMode pollMode = SessionTokenPollMode.lazy,
   }) =>
       Api._(
@@ -46,12 +56,14 @@ class Api with Logging {
         ),
         _deriveDomainFrom(publishableKey),
         httpService,
+        localesLookup,
         pollMode,
       );
 
   final TokenCache _tokenCache;
   final String _domain;
   final HttpService _httpService;
+  final ClerkLocalesLookup _localesLookup;
   final SessionTokenPollMode _pollMode;
   late final String _nativeDeviceId;
   Timer? _pollTimer;
@@ -878,7 +890,7 @@ class Api with Logging {
   }) {
     return {
       HttpHeaders.acceptHeader: 'application/json',
-      HttpHeaders.acceptLanguageHeader: ClerkConstants.languageList.join(', '),
+      HttpHeaders.acceptLanguageHeader: _localesLookup().join(', '),
       HttpHeaders.contentTypeHeader: method.isGet
           ? 'application/json'
           : 'application/x-www-form-urlencoded',

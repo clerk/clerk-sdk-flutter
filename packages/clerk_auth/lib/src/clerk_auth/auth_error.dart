@@ -1,17 +1,21 @@
 /// Container for errors encountered during Clerk auth(entication|orization)
 ///
-class AuthError extends Error {
+class AuthError implements Exception {
   /// Construct an [AuthError]
-  AuthError({required this.message, this.argument, this.localizationCode});
+  const AuthError({
+    required this.code,
+    required this.message,
+    this.argument,
+  });
+
+  /// Error code
+  final AuthErrorCode? code;
 
   /// The associated [message]
   final String message;
 
   /// Any arguments
   final String? argument;
-
-  /// Localization code
-  final AuthErrorLocalizationCode? localizationCode;
 
   @override
   String toString() {
@@ -22,8 +26,20 @@ class AuthError extends Error {
   }
 }
 
-/// Code to enable consuming apps to localize if they choose
-enum AuthErrorLocalizationCode {
+/// Code to enable consuming apps to identify the error
+enum AuthErrorCode {
+  /// Server error response
+  serverErrorResponse,
+
+  /// Error during sign-up flow
+  signUpFlowError,
+
+  /// Invalid Password
+  invalidPassword,
+
+  /// Type Invalid
+  typeInvalid,
+
   /// No stage for status
   noStageForStatus,
 

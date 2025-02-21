@@ -2,6 +2,7 @@
 library clerk_auth;
 
 export 'src/clerk_api/telemetry.dart';
+export 'src/clerk_api/api.dart' show ClerkLocalesLookup;
 export 'src/clerk_auth/auth.dart';
 export 'src/clerk_constants.dart';
 export 'src/models/models.dart';

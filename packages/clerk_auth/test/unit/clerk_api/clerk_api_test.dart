@@ -5,6 +5,8 @@ import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:test/test.dart';
 
+import '../../test_helpers.dart';
+
 void main() {
   group('Derive domain from publishable key', () {
     late final String domain;
@@ -21,6 +23,7 @@ void main() {
           publishableKey: 'NOT A PUBLISHABLE KEY',
           persistor: Persistor.none,
           httpService: HttpService.none,
+          localesLookup: testLocalesLookup,
           pollMode: SessionTokenPollMode.lazy,
         ),
         throwsA(const TypeMatcher<FormatException>()),
@@ -32,6 +35,7 @@ void main() {
         publishableKey: publishableKey,
         persistor: Persistor.none,
         httpService: HttpService.none,
+        localesLookup: testLocalesLookup,
         pollMode: SessionTokenPollMode.lazy,
       );
       expect(result.domain, isA<String>());
@@ -42,6 +46,7 @@ void main() {
         publishableKey: publishableKey,
         persistor: Persistor.none,
         httpService: HttpService.none,
+        localesLookup: () => ['en'],
         pollMode: SessionTokenPollMode.lazy,
       );
       expect(result.domain, domain);

@@ -17,9 +17,6 @@ sealed class ClerkConstants {
   /// Native device ID
   static const nativeDeviceId = '';
 
-  /// Language list for http calls
-  static const languageList = ['en'];
-
   /// The default url catch oauth redirects
   static const oauthRedirect = String.fromEnvironment(
     'oauth_redirect',

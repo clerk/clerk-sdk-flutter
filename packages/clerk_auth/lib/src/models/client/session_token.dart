@@ -28,7 +28,7 @@ class SessionToken {
     _ => throw AuthError(
         message: "JWT poorly formatted: {arg}",
         argument: jwt,
-        localizationCode: AuthErrorLocalizationCode.jwtPoorlyFormatted,
+        code: AuthErrorCode.jwtPoorlyFormatted,
       ),
   };
 

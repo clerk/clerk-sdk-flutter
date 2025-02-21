@@ -283,7 +283,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @loading.
   ///
   /// In en, this message translates to:
-  /// **'Loading...'**
+  /// **'Loading…'**
   String get loading;
 
   /// No description provided for @logo.
@@ -448,11 +448,11 @@ abstract class ClerkSdkLocalizations {
   /// **'Recommend size 1:1, up to 5MB.'**
   String get recommendSize;
 
-  /// No description provided for @required.
+  /// No description provided for @requiredField.
   ///
   /// In en, this message translates to:
   /// **'(required)'**
-  String get required;
+  String get requiredField;
 
   /// No description provided for @resend.
   ///

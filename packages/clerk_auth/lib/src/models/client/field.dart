@@ -23,9 +23,13 @@ class Field {
   /// email address
   static const emailAddress = Field._(name: 'email_address');
 
+  /// username
+  static const username = Field._(name: 'username');
+
   static final _values = <String, Field>{
     phoneNumber.name: phoneNumber,
     emailAddress.name: emailAddress,
+    username.name: username,
   };
 
   /// The [values] of the Fields

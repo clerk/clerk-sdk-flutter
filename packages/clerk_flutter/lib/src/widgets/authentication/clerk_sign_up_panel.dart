@@ -1,7 +1,7 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
-import 'package:clerk_flutter/src/utils/extensions.dart';
+import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
@@ -57,10 +57,15 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           when missingFields.isNotEmpty) {
         final localizations = ClerkAuth.localizationsOf(context);
         authState.addError(
-          StringExt.alternatives(
-            missingFields.map((f) => localizations.lookup(f.name)).toList(),
-            prefix: localizations.youNeedToAdd,
-            connector: localizations.and,
+          clerk.AuthError(
+            code: clerk.AuthErrorCode.signUpFlowError,
+            message: StringExt.alternatives(
+              missingFields
+                  .map((f) => f.localizedMessage(localizations))
+                  .toList(),
+              prefix: localizations.youNeedToAdd,
+              connector: localizations.and,
+            ),
           ),
         );
       }
@@ -84,7 +89,10 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             _valueOrNull(clerk.UserAttribute.passwordConfirmation);
         if (auth.checkPassword(password, passwordConfirmation, localizations)
             case String errorMessage) {
-          auth.addError(errorMessage);
+          auth.addError(clerk.AuthError(
+            code: clerk.AuthErrorCode.invalidPassword,
+            message: errorMessage,
+          ));
         } else {
           await auth.attemptSignUp(
             strategy: strategy ?? clerk.Strategy.password,
@@ -251,10 +259,13 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
             ClerkCodeInput(
               key: Key(widget.attribute.name),
               focusNode: _focus,
-              title: localizations.lookup(
-                widget.attribute.relatedField!.name,
-                type: ClerkSdkLocalizationType.verify,
-              ),
+              title: switch (widget.attribute) {
+                clerk.UserAttribute.emailAddress =>
+                  localizations.verifyYourEmailAddress,
+                clerk.UserAttribute.phoneNumber =>
+                  localizations.verifyYourPhoneNumber,
+                _ => widget.attribute.toString(),
+              },
               subtitle: localizations.enterCodeSentTo(widget.value),
               onSubmit: widget.onSubmit,
             ),
@@ -298,5 +309,5 @@ class _Attribute {
   bool get isOptional => isRequired == false;
 
   String title(ClerkSdkLocalizations localizations) =>
-      localizations.lookup(attr.toString()).capitalized;
+      attr.localizedMessage(localizations).capitalized;
 }

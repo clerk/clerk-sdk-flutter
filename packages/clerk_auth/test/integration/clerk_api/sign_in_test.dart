@@ -24,6 +24,7 @@ void main() {
       publishableKey: env.publishableKey,
       persistor: Persistor.none,
       httpService: httpService,
+      localesLookup: testLocalesLookup,
       pollMode: SessionTokenPollMode.lazy,
     );
     await api.initialize();

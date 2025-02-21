@@ -83,7 +83,7 @@ class Client {
     throw AuthError(
       message: 'No session found for {arg}',
       argument: user.name,
-      localizationCode: AuthErrorLocalizationCode.noSessionFoundForUser,
+      code: AuthErrorCode.noSessionFoundForUser,
     );
   }
 

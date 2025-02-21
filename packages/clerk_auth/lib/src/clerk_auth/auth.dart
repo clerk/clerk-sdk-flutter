@@ -46,6 +46,7 @@ class Auth {
     required Persistor persistor,
     bool sendTelemetryData = true,
     HttpService httpService = const DefaultHttpService(),
+    ClerkLocalesLookup localesLookup = defaultLocalesList,
     SessionTokenPollMode pollMode = SessionTokenPollMode.lazy,
   })  : telemetry = Telemetry(
           publishableKey: publishableKey,
@@ -57,8 +58,12 @@ class Auth {
           publishableKey: publishableKey,
           persistor: persistor,
           httpService: httpService,
+          localesLookup: localesLookup,
           pollMode: pollMode,
         );
+
+  /// Use 'English' as the default locale
+  static List<String> defaultLocalesList() => <String>['en'];
 
   /// The service to send telemetry to the back end
   final Telemetry telemetry;
@@ -153,6 +158,7 @@ class Auth {
   ApiResponse _housekeeping(ApiResponse resp) {
     if (resp.isError) {
       throw AuthError(
+        code: AuthErrorCode.serverErrorResponse,
         message: '{arg}: ${resp.errorMessage}',
         argument: resp.status.toString(),
       );
@@ -188,9 +194,9 @@ class Auth {
         : null;
     final token = await _api.sessionToken(org, templateName);
     if (token is! SessionToken) {
-      throw AuthError(
+      throw const AuthError(
         message: 'No session token retrieved',
-        localizationCode: AuthErrorLocalizationCode.noSessionTokenRetrieved,
+        code: AuthErrorCode.noSessionTokenRetrieved,
       );
     }
     return token;
@@ -345,9 +351,9 @@ class Auth {
     String? signature,
   }) async {
     if (password != passwordConfirmation) {
-      throw AuthError(
+      throw const AuthError(
         message: "Password and password confirmation must match",
-        localizationCode: AuthErrorLocalizationCode.passwordMatchError,
+        code: AuthErrorCode.passwordMatchError,
       );
     }
 
@@ -543,9 +549,9 @@ class Auth {
 
       final expiry = client.signIn?.firstFactorVerification?.expireAt;
       if (expiry?.isAfter(DateTime.timestamp()) != true) {
-        throw AuthError(
+        throw const AuthError(
           message: 'Awaited user action not completed in required timeframe',
-          localizationCode: AuthErrorLocalizationCode.actionNotTimely,
+          code: AuthErrorCode.actionNotTimely,
         );
       }
 

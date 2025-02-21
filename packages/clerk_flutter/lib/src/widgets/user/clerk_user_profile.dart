@@ -4,7 +4,7 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
-import 'package:clerk_flutter/src/utils/extensions.dart';
+import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_avatar.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
@@ -45,6 +45,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
         default:
           final localizations = ClerkAuth.localizationsOf(context);
           throw clerk.AuthError(
+            code: clerk.AuthErrorCode.typeInvalid,
             message: localizations.typeTypeInvalid(type.name),
           );
       }
@@ -65,10 +66,13 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
         context,
         showOk: false,
         child: ClerkCodeInput(
-          title: localizations.lookup(
-            uid.type.name,
-            type: ClerkSdkLocalizationType.verification,
-          ),
+          title: switch (uid.type) {
+            clerk.IdentifierType.emailAddress =>
+              localizations.verificationEmailAddress,
+            clerk.IdentifierType.phoneNumber =>
+              localizations.verificationPhoneNumber,
+            _ => uid.type.toString(),
+          },
           subtitle: localizations.enterCodeSentTo(identifier),
           onSubmit: (code) async {
             await auth.verifyIdentifyingData(uid, code);
@@ -107,6 +111,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
             onSubmit: (_) => Navigator.of(context).pop(true),
           ),
         _ => throw clerk.AuthError(
+            code: clerk.AuthErrorCode.typeInvalid,
             message: localizations.typeTypeInvalid(type.name),
           ),
       },
@@ -121,6 +126,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
         }
       } else {
         throw clerk.AuthError(
+          code: clerk.AuthErrorCode.typeInvalid,
           message: type == clerk.IdentifierType.phoneNumber
               ? localizations.invalidPhoneNumber(identifier)
               : localizations.invalidEmailAddress(identifier),
@@ -267,9 +273,8 @@ class _ExternalAccountList extends StatelessWidget {
                     ),
                     if (account.isVerified == false) //
                       _RowLabel(
-                        label: localizations.lookup(
-                          account.verification.status.toString(),
-                        ),
+                        label: account.verification.status
+                            .localizedMessage(localizations),
                       ),
                   ],
                 ),

@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/utils/extensions.dart';
+import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 
 /// Clerk Error Handler
@@ -39,7 +40,18 @@ class ClerkErrorListener extends StatefulWidget {
     AuthError error,
   ) async {
     final localizations = ClerkAuth.localizationsOf(context);
-    ScaffoldMessenger.of(context).showSnackBar(
+    final message = error.localizedMessage(localizations);
+
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    if (messenger == null) {
+      if (kDebugMode) {
+        debugPrint('Warning: no ScaffoldMessenger found '
+            'to display error: $message');
+      }
+      return;
+    }
+
+    messenger.showSnackBar(
       SnackBar(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -48,7 +60,7 @@ class ClerkErrorListener extends StatefulWidget {
           ),
         ),
         content: Text(
-          error.localizedMessage(localizations),
+          message,
           style: ClerkTextStyle.subtitle.copyWith(
             color: ClerkColors.white,
           ),

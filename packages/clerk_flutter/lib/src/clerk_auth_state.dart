@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/utils/extensions.dart';
+import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +23,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     required super.persistor,
     super.pollMode,
     super.httpService,
+    super.localesLookup,
     Widget? loading,
   }) : _loadingOverlay = OverlayEntry(
           builder: (context) => loading ?? defaultLoadingWidget,
@@ -33,6 +34,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     required String publishableKey,
     clerk.Persistor? persistor,
     clerk.HttpService httpService = const clerk.DefaultHttpService(),
+    clerk.ClerkLocalesLookup localesLookup = clerk.Auth.defaultLocalesList,
     clerk.SessionTokenPollMode pollMode = clerk.SessionTokenPollMode.lazy,
     Widget? loading,
   }) async {
@@ -45,6 +47,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       pollMode: pollMode,
       loading: loading,
       httpService: httpService,
+      localesLookup: localesLookup,
     );
     await provider.initialize();
     return provider;
@@ -90,10 +93,12 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           useSafeArea: false,
           useRootNavigator: true,
           routeSettings: const RouteSettings(name: _kSsoRouteName),
-          builder: (context) => _SsoWebViewOverlay(
-            url: url,
-            onError: (error) => _onError(error, onError),
-          ),
+          builder: (BuildContext context) {
+            return _SsoWebViewOverlay(
+              url: url,
+              onError: (error) => _onError(error, onError),
+            );
+          },
         );
         if (responseUrl == clerk.ClerkConstants.oauthRedirect) {
           await refreshClient();
@@ -265,9 +270,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   }
 
   /// Add an [clerk.AuthError] for [message] to the [errorStream]
-  void addError(String message) {
-    _errors.add(clerk.AuthError(message: message));
-  }
+  void addError(clerk.AuthError error) => _errors.add(error);
 }
 
 class _SsoWebViewOverlay extends StatefulWidget {
@@ -286,11 +289,12 @@ class _SsoWebViewOverlay extends StatefulWidget {
 
 class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
   late final WebViewController controller;
-  var _title = Future<String?>.value('Loading...');
+  Future<String?>? _title;
 
   @override
   void initState() {
     super.initState();
+
     controller = WebViewController()
       ..setUserAgent(
         'Clerk Flutter SDK v${clerk.ClerkConstants.flutterSdkVersion}',
@@ -301,7 +305,10 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
         NavigationDelegate(
           onPageFinished: (_) => _updateTitle(),
           onWebResourceError: (e) => widget.onError(
-            clerk.AuthError(message: e.toString()),
+            clerk.AuthError(
+              code: clerk.AuthErrorCode.serverErrorResponse,
+              message: e.toString(),
+            ),
           ),
           onNavigationRequest: (NavigationRequest request) async {
             try {
@@ -324,6 +331,14 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
     controller.loadRequest(Uri.parse(widget.url));
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _title ??= Future<String?>.value(
+      ClerkAuth.localizationsOf(context).loading,
+    );
+  }
+
   void _updateTitle() {
     setState(() {
       _title = controller.getTitle();
@@ -336,7 +351,7 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: FutureBuilder(
-          future: _title,
+          future: _title!,
           builder: (context, snapshot) {
             return Text(snapshot.data ?? '');
           },

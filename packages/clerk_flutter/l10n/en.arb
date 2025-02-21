@@ -97,7 +97,7 @@
       }
     }
   },
-  "loading": "Loading...",
+  "loading": "Loading…",
   "logo": "Logo",
   "missingRequirements": "MISSING REQUIREMENTS",
   "name": "Name",
@@ -167,7 +167,7 @@
   "profile": "Profile",
   "profileDetails": "Profile details",
   "recommendSize": "Recommend size 1:1, up to 5MB.",
-  "required": "(required)",
+  "requiredField": "(required)",
   "resend": "Resend",
   "selectAccount": "Select the account with which you wish to continue",
   "signIn": "Sign in",

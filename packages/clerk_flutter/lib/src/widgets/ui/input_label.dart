@@ -44,7 +44,7 @@ class InputLabel extends StatelessWidget {
           _LabelModifier(localizations.optional),
         if (isRequired) //
           _LabelModifier(
-            localizations.required,
+            localizations.requiredField,
             color: ClerkColors.incarnadine,
           ),
       ],

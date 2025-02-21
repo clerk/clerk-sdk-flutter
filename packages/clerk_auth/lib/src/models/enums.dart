@@ -170,7 +170,7 @@ enum Stage {
       _ => throw AuthError(
           message: 'No Stage for {arg}',
           argument: status.toString(),
-          localizationCode: AuthErrorLocalizationCode.noStageForStatus,
+          code: AuthErrorCode.noStageForStatus,
         ),
     };
   }

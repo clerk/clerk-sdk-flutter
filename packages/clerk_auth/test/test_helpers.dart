@@ -67,6 +67,7 @@ class TestHttpService implements HttpService {
   ) {
     final hdrs = {...?headers}
       ..remove(HttpHeaders.acceptHeader)
+      ..remove(HttpHeaders.acceptLanguageHeader)
       ..remove(HttpHeaders.contentTypeHeader)
       ..remove(HttpHeaders.authorizationHeader)
       ..remove('clerk-api-version')
@@ -122,3 +123,5 @@ class TestHttpServiceError extends Error {
   @override
   String toString() => '$runtimeType: $message';
 }
+
+List<String> testLocalesLookup() => <String>['en'];

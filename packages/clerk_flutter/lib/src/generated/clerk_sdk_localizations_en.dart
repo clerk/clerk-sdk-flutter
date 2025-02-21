@@ -119,7 +119,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
-  String get loading => 'Loading...';
+  String get loading => 'Loading…';
 
   @override
   String get logo => 'Logo';
@@ -218,7 +218,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get recommendSize => 'Recommend size 1:1, up to 5MB.';
 
   @override
-  String get required => '(required)';
+  String get requiredField => '(required)';
 
   @override
   String get resend => 'Resend';

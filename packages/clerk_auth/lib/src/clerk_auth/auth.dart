@@ -151,13 +151,13 @@ class Auth {
   }
 
   ApiResponse _housekeeping(ApiResponse resp) {
-    if (resp.client case Client client when resp.isOkay) {
-      this.client = client;
-    } else {
+    if (resp.isError) {
       throw AuthError(
         message: '{arg}: ${resp.errorMessage}',
         argument: resp.status,
       );
+    } else if (resp.client case Client client) {
+      this.client = client;
     }
     return resp;
   }

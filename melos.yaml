@@ -39,15 +39,15 @@ scripts:
 
   # Run build and format code
   brunner_format:
-    run: melos brunner && melos format
+    run: melos run brunner && melos run format
 
   # Run localizations
   localization:
-    run: melos run sort_localizations && melos exec -- fvm flutter gen-l10n
+    run: melos run sort_localizations && melos exec -- fvm flutter gen-l10n && melos run format
     packageFilters:
       scope: "clerk_flutter"
 
-  # Sort localizations
+  # Sort localizations `dart pub global activate arb_utils`
   sort_localizations:
     run: melos exec -- arb_utils sort l10n/en.arb
     packageFilters:

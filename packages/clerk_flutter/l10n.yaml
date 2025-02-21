@@ -6,3 +6,6 @@ output-class: ClerkSdkLocalizations
 synthetic-package: false
 suppress-warnings: true
 nullable_getter: false
+format: false
+header: |-
+  // ignore_for_file: public_member_api_docs, use_super_parameters

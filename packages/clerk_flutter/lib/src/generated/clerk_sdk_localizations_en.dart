@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, use_super_parameters
+
 import 'clerk_sdk_localizations.dart';
 
 /// The translations for English (`en`).

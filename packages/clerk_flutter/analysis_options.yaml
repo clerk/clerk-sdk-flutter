@@ -1,8 +1,8 @@
 include: package:flutter_lints/flutter.yaml
 
-# analyzer:
-#   exclude:
-#     - path/to/excluded/files/**
+analyzer:
+   exclude:
+     - lib/src/generated/**
 
 formatter:
   page_width: 80

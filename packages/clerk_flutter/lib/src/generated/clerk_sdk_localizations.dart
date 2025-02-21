@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, use_super_parameters
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';

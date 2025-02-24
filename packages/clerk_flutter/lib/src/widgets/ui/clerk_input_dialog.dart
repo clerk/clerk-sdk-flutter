@@ -54,7 +54,10 @@ class ClerkInputDialog extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ClerkAuth(authState: authState, child: child),
+                ClerkAuth(
+                  authState: authState,
+                  child: child,
+                ),
                 verticalMargin16,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,

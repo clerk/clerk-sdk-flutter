@@ -31,32 +31,37 @@ To use this package you will need to go to your [Clerk Dashboard](https://dashbo
 create an application and copy the public and publishable API keys into your project.
 
 ```dart
+/// Example App
 class ExampleApp extends StatelessWidget {
   /// Constructs an instance of Example App
-  const ExampleApp({
-    super.key,
-    required this.publishableKey,
-  });
+  const ExampleApp({super.key, required this.publishableKey});
 
   /// Publishable Key
   final String publishableKey;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      builder: ClerkAuth.materialAppBuilder(publishableKey: publishableKey),
-      home: Scaffold(
-        backgroundColor: const Color(0xFFf5f5f5),
-        body: SafeArea(
-          child: Center(
-            child: ClerkAuthBuilder(
-              signedInBuilder: (context, auth) {
-                return const ClerkUserButton();
-              },
-              signedOutBuilder: (context, auth) {
-                return const ClerkAuthentication();
-              },
+    return ClerkAuth(
+      config: ClerkAuthConfig(publishableKey: publishableKey),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          backgroundColor: const Color(0xFFf5f5f5),
+          body: SafeArea(
+            child: Center(
+              child: ClerkErrorListener(
+                child: ClerkAuthBuilder(
+                  signedInBuilder: (context, auth) {
+                    if (auth.env.organization.isEnabled == false) {
+                      return const ClerkUserButton();
+                    }
+                    return const _UserAndOrgTabs();
+                  },
+                  signedOutBuilder: (context, auth) {
+                    return const ClerkAuthentication();
+                  },
+                ),
+              ),
             ),
           ),
         ),

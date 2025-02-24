@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_config.dart';
+part of 'config.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AuthConfig _$AuthConfigFromJson(Map<String, dynamic> json) => AuthConfig(
+Config _$ConfigFromJson(Map<String, dynamic> json) => Config(
       id: json['id'] as String? ?? '',
       singleSessionMode: json['single_session_mode'] as bool? ?? false,
       enhancedEmailDeliverability:
@@ -45,8 +45,7 @@ AuthConfig _$AuthConfigFromJson(Map<String, dynamic> json) => AuthConfig(
       allowsPassword: json['password'] == null ? false : isOn(json['password']),
     );
 
-Map<String, dynamic> _$AuthConfigToJson(AuthConfig instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ConfigToJson(Config instance) => <String, dynamic>{
       'id': instance.id,
       'single_session_mode': instance.singleSessionMode,
       'enhanced_email_deliverability': instance.enhancedEmailDeliverability,

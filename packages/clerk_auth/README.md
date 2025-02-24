@@ -32,30 +32,28 @@ import 'package:clerk_auth/clerk_auth.dart';
 
 Future<void> main() async {
   final auth = Auth(
-    publishableKey: '<YOUR-PUBLISHABLE-KEY>',
+    config: const AuthConfig(
+      publishableKey: '<YOUR-PUBLISHABLE-KEY>',
+    ),
     persistor: await DefaultPersistor.create(
       storageDirectory: Directory.current,
     ),
   );
 
-  Client client;
+  await auth.initialize();
 
-  client = await auth.attemptSignIn(
+  await auth.attemptSignIn(
     strategy: Strategy.password,
     identifier: '<USER-EMAIL>',
-  );
-  assert(client.signIn?.status == Status.needsFirstFactor);
-
-  client = await auth.attemptSignIn(
-    strategy: Strategy.password,
     password: '<PASSWORD>',
   );
 
-  assert(client.signIn == null);
-  assert(client.activeSession?.status == Status.active);
-  assert(client.activeSession?.publicUserData.identifier.isNotEmpty == true);
-}
+  print('Signed in as ${auth.user}');
 
+  await auth.signOut();
+
+  auth.terminate();
+}
 ```
 
 For more details see [Clerk Auth object](https://pub.dev/documentation/clerk_auth/latest/clerk_auth/Auth-class.html)

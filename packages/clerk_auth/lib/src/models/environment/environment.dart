@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
-import 'package:clerk_auth/src/models/environment/auth_config.dart';
+import 'package:clerk_auth/src/models/environment/config.dart';
 import 'package:clerk_auth/src/models/environment/display_config.dart';
 import 'package:clerk_auth/src/models/environment/organization_settings.dart';
 import 'package:clerk_auth/src/models/environment/user_settings.dart';
@@ -14,7 +14,7 @@ part 'environment.g.dart';
 class Environment {
   /// Construction
   const Environment({
-    this.config = AuthConfig.empty,
+    this.config = Config.empty,
     this.display = DisplayConfig.empty,
     this.user = UserSettings.empty,
     this.organization = OrganizationSettings.empty,
@@ -23,7 +23,7 @@ class Environment {
 
   /// auth config
   @JsonKey(name: 'auth_config')
-  final AuthConfig config;
+  final Config config;
 
   /// display config
   @JsonKey(name: 'display_config')

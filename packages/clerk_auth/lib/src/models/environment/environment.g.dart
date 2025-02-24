@@ -8,8 +8,8 @@ part of 'environment.dart';
 
 Environment _$EnvironmentFromJson(Map<String, dynamic> json) => Environment(
       config: json['auth_config'] == null
-          ? AuthConfig.empty
-          : AuthConfig.fromJson(json['auth_config'] as Map<String, dynamic>),
+          ? Config.empty
+          : Config.fromJson(json['auth_config'] as Map<String, dynamic>),
       display: json['display_config'] == null
           ? DisplayConfig.empty
           : DisplayConfig.fromJson(

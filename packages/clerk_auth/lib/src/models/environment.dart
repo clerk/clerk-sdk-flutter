@@ -2,7 +2,7 @@ library;
 
 export 'environment/actions.dart';
 export 'environment/attack_protection.dart';
-export 'environment/auth_config.dart';
+export 'environment/config.dart';
 export 'environment/display_config.dart';
 export 'environment/environment.dart';
 export 'environment/organization_actions.dart';

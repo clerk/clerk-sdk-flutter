@@ -22,3 +22,6 @@ pubspec.lock
 # Flutter auto-generated files
 .flutter-plugins
 .flutter-plugins-dependencies
+
+# Persistor file
+clerk_sdk.json

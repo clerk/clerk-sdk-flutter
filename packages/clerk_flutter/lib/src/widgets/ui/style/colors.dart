@@ -28,6 +28,9 @@ class ClerkColors {
   /// Storm Grey (light text color).
   static const stormGrey = Color(0xFF757686);
 
+  /// Drop Shadow Grey
+  static const dropShadowGrey = Color(0xFFbababa);
+
   /// Dawn Pink (button edge color).
   static const dawnPink = Color(0xFFebebeb);
 

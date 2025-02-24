@@ -3,71 +3,53 @@ import 'dart:io';
 
 import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:clerk_auth/src/clerk_api/telemetry.dart';
+import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/clerk_constants.dart';
 import 'package:clerk_auth/src/models/api/api_response.dart';
 import 'package:clerk_auth/src/models/models.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 
-/// [Auth] provides more abstracted access to the Clerk API
+/// [Auth] provides more abstracted access to the Clerk API.
 ///
-/// Requires a [publishableKey] found in the Clerk dashboard
-/// for you account. Additional arguments:
+/// [config]: SDK Configuration containing your publishable key.
 ///
-/// [persistor]: an optional instance of a [Persistor] which will keep track of
-/// tokens and expiry between app activations
+/// [persistor]: an instance of a [Persistor] which will keep track of
+/// tokens and expiry etc between app activations
 ///
-/// [client]: an optional instance of [HttpService] to manage low-level communications
-/// with the back end. Injected for e.g. test mocking
-///
-/// [pollMode]: session token poll mode, default on-demand,
-/// manages how to refresh the [sessionTokenFor].
+/// [httpService]: an instance of [HttpService] to manage low-level
+/// communications with the back end. Injected for e.g. test mocking
 ///
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
-  ///
-  /// [Auth] takes the following parameters:
-  ///
-  /// [publishableKey]: unique string from the Clerk dashboard
-  /// [persistor]: a [Persistor] with which to persist required data across
-  /// app sessions
-  /// [sendTelemetryData]; a [bool], default [true], with which to manage the sending
-  /// of telemetric data to the Clerk back end
-  /// [httpService]: the service through which http requests are made
-  /// [pollMode]: the mode by which session tokens are polled from the back
-  /// end: [SessionTokenPollMode.hungry] or (default) [SessionTokenPollMode.lazy]
   Auth({
-    required String publishableKey,
-    required Persistor persistor,
-    bool sendTelemetryData = true,
+    required this.config,
+    Persistor persistor = Persistor.none,
     HttpService httpService = const DefaultHttpService(),
-    ClerkLocalesLookup localesLookup = defaultLocalesList,
-    SessionTokenPollMode pollMode = SessionTokenPollMode.lazy,
   })  : telemetry = Telemetry(
-          publishableKey: publishableKey,
+          config: config,
           persistor: persistor,
           httpService: httpService,
-          sendTelemetryData: sendTelemetryData,
         ),
         _api = Api(
-          publishableKey: publishableKey,
+          config: config,
           persistor: persistor,
           httpService: httpService,
-          localesLookup: localesLookup,
-          pollMode: pollMode,
         );
 
   /// Use 'English' as the default locale
-  static List<String> defaultLocalesList() => <String>['en'];
+  static List<String> defaultLocalesLookup() => <String>['en'];
 
   /// The service to send telemetry to the back end
   final Telemetry telemetry;
 
-  final Api _api;
+  /// The configuration object
+  final AuthConfig config;
 
-  static const _clientTimerPeriod = Duration(seconds: 11);
-  late final Timer _clientTimer;
+  final Api _api;
+  Timer? _clientTimer;
 
   static const _codeLength = 6;
 
@@ -131,7 +113,12 @@ class Auth {
     await telemetry.initialize(
       instanceType: this.env.display.instanceEnvironmentType,
     );
-    _clientTimer = Timer.periodic(_clientTimerPeriod, (_) => refreshClient());
+    if (config.clientRefreshPeriod.isNotZero) {
+      _clientTimer = Timer.periodic(
+        config.clientRefreshPeriod,
+        (_) => refreshClient(),
+      );
+    }
   }
 
   /// Disposal of the [Auth] object
@@ -140,7 +127,7 @@ class Auth {
   /// method, if that is mixed in e.g. in clerk_flutter
   ///
   void terminate() {
-    _clientTimer.cancel();
+    _clientTimer?.cancel();
     telemetry.terminate();
     _api.terminate();
   }
@@ -252,7 +239,7 @@ class Auth {
   /// Can be repeatedly called with updated parameters
   /// until the user is signed in.
   ///
-  Future<Client> attemptSignIn({
+  Future<void> attemptSignIn({
     required Strategy strategy,
     String? identifier,
     String? password,
@@ -285,13 +272,13 @@ class Auth {
             )
             .then(_housekeeping);
 
-        final signInCompleter = Completer<Client>();
+        final signInCompleter = Completer<void>();
 
         unawaited(
           _pollForCompletion().then(
             (client) {
               this.client = client;
-              signInCompleter.complete(client);
+              signInCompleter.complete();
               update();
             },
           ),
@@ -340,7 +327,6 @@ class Auth {
     }
 
     update();
-    return client;
   }
 
   /// Progressively attempt sign up
@@ -514,10 +500,10 @@ class Auth {
   /// Attempt to verify some [UserIdentifyingData]
   ///
   Future<void> verifyIdentifyingData(
-    UserIdentifyingData ident,
+    UserIdentifyingData uid,
     String code,
   ) async {
-    await _api.verifyIdentifyingData(ident, code).then(_housekeeping);
+    await _api.verifyIdentifyingData(uid, code).then(_housekeeping);
     update();
   }
 

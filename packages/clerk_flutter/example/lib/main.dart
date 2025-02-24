@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
-  await setUpLogging(printer: const LogPrinter());
+  await clerk.setUpLogging(printer: const LogPrinter());
 
   const publishableKey = String.fromEnvironment('publishable_key');
   if (publishableKey.isEmpty) {
@@ -31,33 +31,32 @@ Future<void> main() async {
 /// Example App
 class ExampleApp extends StatelessWidget {
   /// Constructs an instance of Example App
-  const ExampleApp({
-    super.key,
-    required this.publishableKey,
-  });
+  const ExampleApp({super.key, required this.publishableKey});
 
   /// Publishable Key
   final String publishableKey;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      builder: ClerkAuth.materialAppBuilder(publishableKey: publishableKey),
-      home: Scaffold(
-        backgroundColor: const Color(0xFFf5f5f5),
-        body: SafeArea(
-          child: Center(
-            child: ClerkAuthBuilder(
-              signedInBuilder: (context, auth) {
-                if (auth.env.organization.isEnabled == false) {
-                  return const ClerkUserButton();
-                }
-                return const _UserAndOrgTabs();
-              },
-              signedOutBuilder: (context, auth) {
-                return const ClerkAuthentication();
-              },
+    return ClerkAuth(
+      config: ClerkAuthConfig(publishableKey: publishableKey),
+      child: MaterialApp(
+        theme: ThemeData.light(),
+        debugShowCheckedModeBanner: false,
+        home: Material(
+          child: SafeArea(
+            child: ClerkErrorListener(
+              child: ClerkAuthBuilder(
+                signedInBuilder: (context, authState) {
+                  if (authState.env.organization.isEnabled == false) {
+                    return const ClerkUserButton();
+                  }
+                  return const _UserAndOrgTabs();
+                },
+                signedOutBuilder: (context, authState) {
+                  return const ClerkAuthentication();
+                },
+              ),
             ),
           ),
         ),
@@ -74,47 +73,32 @@ class _UserAndOrgTabs extends StatelessWidget {
     final authState = ClerkAuth.of(context);
     return DefaultTabController(
       length: 2,
-      child: Center(
-        child: Column(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Example App'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(child: Text('Users')),
+              Tab(child: Text('Organizations')),
+            ],
+          ),
+        ),
+        body: TabBarView(
           children: [
-            SizedBox(
-              height: 40,
-              child: AppBar(
-                backgroundColor: const Color(0xFFf5f5f5),
-                bottom: const TabBar(
-                  tabs: [
-                    SizedBox(
-                      height: 30,
-                      child: Text('Users'),
-                    ),
-                    SizedBox(
-                      height: 30,
-                      child: Text('Organizations'),
-                    ),
-                  ],
-                ),
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ClerkUserButton(),
               ),
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: ClerkUserButton(),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: ClerkOrganizationList(
-                        initialUser: authState.user!,
-                      ),
-                    ),
-                  ),
-                ],
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ClerkOrganizationList(
+                  initialUser: authState.user!,
+                ),
               ),
             ),
           ],
@@ -125,7 +109,7 @@ class _UserAndOrgTabs extends StatelessWidget {
 }
 
 /// Log Printer
-class LogPrinter extends Printer {
+class LogPrinter extends clerk.Printer {
   /// Constructs an instance of [LogPrinter]
   const LogPrinter();
 

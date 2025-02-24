@@ -18,39 +18,49 @@ typedef ClerkErrorCallback = void Function(clerk.AuthError);
 ///
 class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   /// Construct a [ClerkAuthState]
-  ClerkAuthState._({
-    required super.publishableKey,
-    required super.persistor,
-    super.pollMode,
-    super.httpService,
-    super.localesLookup,
-    Widget? loading,
-  }) : _loadingOverlay = OverlayEntry(
-          builder: (context) => loading ?? defaultLoadingWidget,
+  ClerkAuthState._(
+    this._config,
+    clerk.Persistor persistor,
+    clerk.HttpService httpService,
+  )   : _loadingOverlay = OverlayEntry(
+          builder: (context) => _config.loading ?? defaultLoadingWidget,
+        ),
+        super(
+          config: _config,
+          persistor: persistor,
+          httpService: httpService,
         );
 
   /// Create an [ClerkAuthState] object using appropriate Clerk credentials
   static Future<ClerkAuthState> create({
-    required String publishableKey,
+    required ClerkAuthConfig config,
     clerk.Persistor? persistor,
-    clerk.HttpService httpService = const clerk.DefaultHttpService(),
-    clerk.ClerkLocalesLookup localesLookup = clerk.Auth.defaultLocalesList,
-    clerk.SessionTokenPollMode pollMode = clerk.SessionTokenPollMode.lazy,
-    Widget? loading,
+    clerk.HttpService? httpService,
   }) async {
-    final provider = ClerkAuthState._(
-      publishableKey: publishableKey,
-      persistor: persistor ??
+    final authState = ClerkAuthState._(
+      config,
+      persistor ??
           await clerk.DefaultPersistor.create(
             storageDirectory: await getApplicationDocumentsDirectory(),
           ),
-      pollMode: pollMode,
-      loading: loading,
-      httpService: httpService,
-      localesLookup: localesLookup,
+      httpService ?? const clerk.DefaultHttpService(),
     );
-    await provider.initialize();
-    return provider;
+    await authState.initialize();
+    return authState;
+  }
+
+  /// The [ClerkAuthConfig] object
+  @override
+  ClerkAuthConfig get config => _config;
+  final ClerkAuthConfig _config;
+
+  /// Localizations for the current [ClerkAuthState] and [Locale]
+  ClerkSdkLocalizations localizationsOf(BuildContext context) {
+    final locale = View.of(context).platformDispatcher.locale;
+    final localizations = config.localizations[locale.toLanguageTag()] ??
+        config.localizations[locale.languageCode];
+    assert(localizations != null, 'No localizations found for $locale');
+    return localizations!;
   }
 
   final OverlayEntry _loadingOverlay;
@@ -92,6 +102,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           builder: (BuildContext context) {
             return _SsoWebViewOverlay(
               url: url,
+              oauthRedirect: clerk.ClerkConstants.oauthRedirect,
               onError: (error) => _onError(error, onError),
             );
           },
@@ -132,6 +143,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
         routeSettings: const RouteSettings(name: _kSsoRouteName),
         builder: (context) => _SsoWebViewOverlay(
           url: url,
+          oauthRedirect: clerk.ClerkConstants.oauthRedirect,
           onError: (error) => _onError(error, onError),
         ),
       );
@@ -269,11 +281,12 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 class _SsoWebViewOverlay extends StatefulWidget {
   const _SsoWebViewOverlay({
     required this.url,
+    required this.oauthRedirect,
     required this.onError,
   });
 
   final String url;
-
+  final String oauthRedirect;
   final ClerkErrorCallback onError;
 
   @override
@@ -299,13 +312,13 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
           onPageFinished: (_) => _updateTitle(),
           onWebResourceError: (e) => widget.onError(
             clerk.AuthError(
-              code: clerk.AuthErrorCode.serverErrorResponse,
-              message: e.toString(),
+              code: clerk.AuthErrorCode.webviewErrorResponse,
+              message: e.description,
             ),
           ),
           onNavigationRequest: (NavigationRequest request) async {
             try {
-              if (request.url.startsWith(clerk.ClerkConstants.oauthRedirect)) {
+              if (request.url.startsWith(widget.oauthRedirect)) {
                 scheduleMicrotask(() {
                   if (mounted) {
                     Navigator.of(context).pop(request.url);

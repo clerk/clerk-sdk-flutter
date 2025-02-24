@@ -78,7 +78,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
-    final localizations = ClerkAuth.localizationsOf(context);
+    final localizations = authState.localizationsOf(context);
     final env = authState.env;
     final identifiers = env.identificationStrategies
         .map((s) => s.localizedMessage(localizations))

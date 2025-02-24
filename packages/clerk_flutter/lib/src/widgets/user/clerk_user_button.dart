@@ -90,7 +90,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
     ];
   }
 
-  Future<void> _addAccount(BuildContext context, ClerkAuthState auth) =>
+  Future<void> _addAccount(BuildContext context, ClerkAuthState authState) =>
       ClerkPage.show(
         context,
         builder: (context) => AddAccountPanel(
@@ -98,113 +98,109 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
         ),
       );
 
-  Future<void> _manageAccount(BuildContext context, ClerkAuthState auth) =>
+  Future<void> _manageAccount(BuildContext context, ClerkAuthState authState) =>
       ClerkPage.show(
         context,
         builder: (context) => const ClerkUserProfile(),
       );
 
-  Future<void> _signOut<T>(BuildContext context, ClerkAuthState auth) async {
-    if (auth.client.sessions.length == 1) {
-      await auth.safelyCall(context, () => auth.signOut());
+  Future<void> _signOut<T>(
+    BuildContext context,
+    ClerkAuthState authState,
+  ) async {
+    if (authState.client.sessions.length == 1) {
+      await authState.safelyCall(context, () => authState.signOut());
     } else {
-      await auth.safelyCall(
-          context, () => auth.signOutOf(auth.client.activeSession!));
+      await authState.safelyCall(
+          context, () => authState.signOutOf(authState.client.activeSession!));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        color: ClerkColors.white,
-        boxShadow: [BoxShadow(color: ClerkColors.mercury, blurRadius: 15)],
-      ),
-      child: ClerkAuthBuilder(
-        builder: (context, auth) {
-          final localizations = ClerkAuth.localizationsOf(context);
-          final sessions = auth.client.sessions;
+    return ClerkAuthBuilder(
+      builder: (context, authState) {
+        final localizations = authState.localizationsOf(context);
+        final sessions = authState.client.sessions;
 
-          _sessions.addOrReplaceAll(sessions, by: (s) => s.id);
-          final displaySessions = List<clerk.Session>.from(_sessions);
+        _sessions.addOrReplaceAll(sessions, by: (s) => s.id);
+        final displaySessions = List<clerk.Session>.from(_sessions);
 
-          final sessionActions =
-              widget.sessionActions ?? _defaultSessionActions();
-          final additionalActions =
-              widget.additionalActions ?? _defaultAdditionalActions();
+        final sessionActions =
+            widget.sessionActions ?? _defaultSessionActions();
+        final additionalActions =
+            widget.additionalActions ?? _defaultAdditionalActions();
 
-          return ClerkVerticalCard(
-            topPortion: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (final session in displaySessions)
-                  _SessionRow(
-                    key: Key(session.id),
-                    session: session,
-                    closed: sessions.contains(session) == false,
-                    selected: session == auth.client.activeSession,
-                    showName: widget.showName,
-                    actions: sessionActions,
-                    onTap: () => auth.safelyCall(
-                      context,
-                      () => auth.activate(session),
-                    ),
-                    onEnd: (closed) {
-                      if (closed) _sessions.remove(session);
-                    },
-                  ),
-                for (final action in additionalActions)
-                  Padding(
-                    padding: allPadding16,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => action.callback(context, auth),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          ClerkIcon(action.asset, size: 16),
-                          horizontalMargin32,
-                          Text(
-                            action.label,
-                            style: ClerkTextStyle.buttonTitleDark,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            bottomPortion: Closeable(
-              closed: sessions.length <= 1,
-              child: Padding(
-                padding: horizontalPadding16 + verticalPadding12,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => auth.safelyCall(
+        return ClerkVerticalCard(
+          topPortion: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final session in displaySessions)
+                _SessionRow(
+                  key: Key(session.id),
+                  session: session,
+                  closed: sessions.contains(session) == false,
+                  selected: session == authState.client.activeSession,
+                  showName: widget.showName,
+                  actions: sessionActions,
+                  onTap: () => authState.safelyCall(
                     context,
-                    () => auth.signOut(),
+                    () => authState.activate(session),
                   ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.logout,
-                        color: ClerkColors.grey,
-                        size: 16,
-                      ),
-                      horizontalMargin8,
-                      Text(
-                        localizations.signOutOfAllAccounts,
-                        style: ClerkTextStyle.buttonTitle,
-                      )
-                    ],
+                  onEnd: (closed) {
+                    if (closed) _sessions.remove(session);
+                  },
+                ),
+              for (final action in additionalActions)
+                Padding(
+                  padding: allPadding16,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => action.callback(context, authState),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ClerkIcon(action.asset, size: 16),
+                        horizontalMargin32,
+                        Text(
+                          action.label,
+                          style: ClerkTextStyle.buttonTitleDark,
+                        ),
+                      ],
+                    ),
                   ),
+                ),
+            ],
+          ),
+          bottomPortion: Closeable(
+            closed: sessions.length <= 1,
+            child: Padding(
+              padding: horizontalPadding16 + verticalPadding12,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => authState.safelyCall(
+                  context,
+                  () => authState.signOut(),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.logout,
+                      color: ClerkColors.grey,
+                      size: 16,
+                    ),
+                    horizontalMargin8,
+                    Text(
+                      localizations.signOutOfAllAccounts,
+                      style: ClerkTextStyle.buttonTitle,
+                    )
+                  ],
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

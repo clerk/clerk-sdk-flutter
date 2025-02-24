@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/clerk_auth/auth.dart';
+import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
@@ -20,7 +21,10 @@ void main() {
   setUpAll(() async {
     env = TestEnv('.env.test');
     auth = Auth(
-      publishableKey: env.publishableKey,
+      config: AuthConfig(
+        publishableKey: env.publishableKey,
+        localesLookup: testLocalesLookup,
+      ),
       persistor: Persistor.none,
       httpService: httpService,
     );
@@ -56,13 +60,13 @@ void main() {
         );
 
         expect(auth.user, null);
-        final client = await auth.attemptSignIn(
+        await auth.attemptSignIn(
           identifier: 'test1+clerk_test@some.domain',
           strategy: Strategy.password,
           password: env.password,
         );
-        expect(client.signIn, null);
-        expect(client.user is User, true);
+        expect(auth.signIn, null);
+        expect(auth.user is User, true);
       });
     });
 
@@ -86,13 +90,13 @@ void main() {
           '{"response":{"object":"sign_in_attempt","id":"SIGN_IN_ATTEMPT_ID","status":"complete","supported_identifiers":["email_address","phone_number","username"],"supported_first_factors":null,"supported_second_factors":null,"first_factor_verification":{"status":"verified","strategy":"email_code","attempts":1,"expire_at":$expireAt},"second_factor_verification":null,"identifier":"test1+clerk_test@some.domain","USER_ID":null,"created_session_id":"SESSION_ID","abandon_at":1732106348550},"client":{"object":"client","id":"CLIENT_ID","sessions":[{"object":"session","id":"SESSION_ID","status":"active","expire_at":$expireAt,"abandon_at":1734611949659,"last_active_at":1732019949659,"last_active_organization_id":null,"actor":null,"user":{"id":"USER_ID","object":"user","username":"test1","first_name":"Test","last_name":"User","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJtbktmQms4MlhkZ0pYUzltNlhGZlkyTGZHTiIsImluaXRpYWxzIjoiVFUifQ","has_image":false,"primary_email_address_id":"IDENTIFIER_ID","primary_phone_number_id":"IDENTIFIER_ID","primary_web3_wallet_id":null,"password_enabled":true,"two_factor_enabled":false,"totp_enabled":false,"backup_code_enabled":false,"email_addresses":[{"id":"IDENTIFIER_ID","object":"email_address","email_address":"test1+clerk_test@some.domain","reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"created_at":1727707000228,"updated_at":1729075139789}],"phone_numbers":[{"id":"IDENTIFIER_ID","object":"phone_number","phone_number":"+15555550101","reserved_for_second_factor":false,"default_second_factor":false,"reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"backup_codes":null,"created_at":1727707000277,"updated_at":1727707000277}],"web3_wallets":[],"passkeys":[],"external_accounts":[],"saml_accounts":[],"enterprise_accounts":[],"public_metadata":{},"unsafe_metadata":{},"external_id":null,"last_sign_in_at":1732019949663,"banned":false,"locked":false,"lockout_expires_in_seconds":null,"verification_attempts_remaining":100,"created_at":1727707000164,"updated_at":1732019949686,"delete_self_enabled":true,"create_organization_enabled":true,"last_active_at":1732016622191,"mfa_enabled_at":null,"mfa_disabled_at":null,"legal_accepted_at":null,"profile_image_url":"https://www.gravatar.com/avatar?d=mp","organization_memberships":[]},"public_user_data":{"first_name":"Test","last_name":"User","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJtbktmQms4MlhkZ0pYUzltNlhGZlkyTGZHTiIsImluaXRpYWxzIjoiVFUifQ","has_image":false,"identifier":"test1+clerk_test@some.domain","profile_image_url":"https://www.gravatar.com/avatar?d=mp"},"created_at":1732019949663,"updated_at":1732019949701,"last_active_token":{"object":"token","jwt":"eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3MzIwMjAwMDksImlhdCI6MTczMjAxOTk0OSwiaXNzIjoiaHR0cHM6Ly9tb3JlLXlldGktNTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzMyMDE5OTM5LCJzaWQiOiJzZXNzXzJwNEtYbzVobzBNNEhSdllZOEtFeUpoZnFqRSIsInN1YiI6InVzZXJfMm1uS2ZCazgyWGRnSlhTOW02WEZmWTJMZkdOIn0.o8NkLdSyMF_Q604xee1YIIFBTW89Gjwv6OPEDcNjALqFBzzYWxTo8dzYCcij_49g6GsiuvEUPefC7Mk6JmSwNDsa3pisCrAQZajWc-sfd42zczTVTH7duMD4Yn9QCc6c6LHTZU0yCPF2GY-oevBQhVE6NjnYVFjUYjMohLAK8NBGKXn5eAtQwMGL39slxIZVuuIyTx3j1FKo65Ndc5ezpQucmkD9K9YjxsakFKeT5h71ElKK0JI8PwN-tQbiJrSpp8OtGaR-AHRPLn9p5wynrPfq5KHIKZUL6Qr66c_QuGOLKSDO5eB0-b0Y22Sd2orpxsOxJ-Z0K4xeW9VL0QIJ7w"}}],"sign_in":null,"sign_up":null,"last_active_session_id":"SESSION_ID","cookie_expires_at":null,"created_at":1732019948538,"updated_at":1732019949697}}',
         );
 
-        final client = await auth.attemptSignIn(
+        await auth.attemptSignIn(
           identifier: 'test1+clerk_test@some.domain',
           strategy: Strategy.emailCode,
           code: env.code,
         );
-        expect(client.signIn, null);
-        expect(client.user is User, true);
+        expect(auth.signIn, null);
+        expect(auth.user is User, true);
       });
     });
 
@@ -116,13 +120,13 @@ void main() {
           '{"response":{"object":"sign_in_attempt","id":"SIGN_IN_ATTEMPT_ID","status":"complete","supported_identifiers":["email_address","phone_number","username"],"supported_first_factors":null,"supported_second_factors":null,"first_factor_verification":{"status":"verified","strategy":"phone_code","attempts":1,"expire_at":$expireAt},"second_factor_verification":null,"identifier":"test1+clerk_test@some.domain","USER_ID":null,"created_session_id":"SESSION_ID","abandon_at":1732106416802},"client":{"object":"client","id":"CLIENT_ID","sessions":[{"object":"session","id":"SESSION_ID","status":"active","expire_at":$expireAt,"abandon_at":1734612018086,"last_active_at":1732020018086,"last_active_organization_id":null,"actor":null,"user":{"id":"USER_ID","object":"user","username":"test1","first_name":"Test","last_name":"User","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJtbktmQms4MlhkZ0pYUzltNlhGZlkyTGZHTiIsImluaXRpYWxzIjoiVFUifQ","has_image":false,"primary_email_address_id":"IDENTIFIER_ID","primary_phone_number_id":"IDENTIFIER_ID","primary_web3_wallet_id":null,"password_enabled":true,"two_factor_enabled":false,"totp_enabled":false,"backup_code_enabled":false,"email_addresses":[{"id":"IDENTIFIER_ID","object":"email_address","email_address":"test1+clerk_test@some.domain","reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"created_at":1727707000228,"updated_at":1729075139789}],"phone_numbers":[{"id":"IDENTIFIER_ID","object":"phone_number","phone_number":"+15555550101","reserved_for_second_factor":false,"default_second_factor":false,"reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"backup_codes":null,"created_at":1727707000277,"updated_at":1727707000277}],"web3_wallets":[],"passkeys":[],"external_accounts":[],"saml_accounts":[],"enterprise_accounts":[],"public_metadata":{},"unsafe_metadata":{},"external_id":null,"last_sign_in_at":1732020018094,"banned":false,"locked":false,"lockout_expires_in_seconds":null,"verification_attempts_remaining":100,"created_at":1727707000164,"updated_at":1732020018124,"delete_self_enabled":true,"create_organization_enabled":true,"last_active_at":1732016622191,"mfa_enabled_at":null,"mfa_disabled_at":null,"legal_accepted_at":null,"profile_image_url":"https://www.gravatar.com/avatar?d=mp","organization_memberships":[]},"public_user_data":{"first_name":"Test","last_name":"User","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJtbktmQms4MlhkZ0pYUzltNlhGZlkyTGZHTiIsImluaXRpYWxzIjoiVFUifQ","has_image":false,"identifier":"test1+clerk_test@some.domain","profile_image_url":"https://www.gravatar.com/avatar?d=mp"},"created_at":1732020018094,"updated_at":1732020018157,"last_active_token":{"object":"token","jwt":"eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3MzIwMjAwNzgsImlhdCI6MTczMjAyMDAxOCwiaXNzIjoiaHR0cHM6Ly9tb3JlLXlldGktNTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzMyMDIwMDA4LCJzaWQiOiJzZXNzXzJwNEtnVkprUjdSWDBvczVBSkFqUUhJNTdVZSIsInN1YiI6InVzZXJfMm1uS2ZCazgyWGRnSlhTOW02WEZmWTJMZkdOIn0.fvNQ7MVKYonJSfQXQZnSHtcLFJRYiTXAMC0JbMlZgqX_Xo8FUspCXrMqGiWSLBzqUcltA6lwsTx6oQAQc1HfqrguWPMdmP-L036ssi8u15Q2-TFJnAtZhy_LAh4J45I3AYnGRJeMezO_cy87R3PmJMLXz7TAKqI8P86hLEHKOWbSOIJTpIzsOS8LqEjB8r7VWuZjFR9OEf4Vu4oWZ69UPVYv_wm76wYbDOi79ECc7O3H86Ap1HNRnmykGR0szpz9tFQE4mJJoMUMvDpZMaInf5OusrjqTNCJhM6cmKiglhR5BLg0oCODi-SMvfXSDRqyNsUyqVgvkbcLuUnL2jT8vQ"}}],"sign_in":null,"sign_up":null,"last_active_session_id":"SESSION_ID","cookie_expires_at":null,"created_at":1732020016788,"updated_at":1732020018140}}',
         );
 
-        final client = await auth.attemptSignIn(
+        await auth.attemptSignIn(
           identifier: 'test1+clerk_test@some.domain',
           strategy: Strategy.phoneCode,
           code: env.code,
         );
-        expect(client.signIn, null);
-        expect(client.user is User, true);
+        expect(auth.signIn, null);
+        expect(auth.user is User, true);
       });
     });
 
@@ -156,13 +160,13 @@ void main() {
           '{"response":{"object":"client","id":"CLIENT_ID","sessions":[{"object":"session","id":"SESSION_ID","status":"active","expire_at":$expireAt,"abandon_at":1734612361785,"last_active_at":1732020361785,"last_active_organization_id":null,"actor":null,"user":{"id":"USER_ID","object":"user","username":"shinyford","first_name":"Nic","last_name":"Ford","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJwNExGeFRTUUlJMUhNUkFyNFVMMlhKZmxCWSIsImluaXRpYWxzIjoiTkYifQ","has_image":false,"primary_email_address_id":"IDENTIFIER_ID","primary_phone_number_id":"IDENTIFIER_ID","primary_web3_wallet_id":null,"password_enabled":true,"two_factor_enabled":false,"totp_enabled":false,"backup_code_enabled":false,"email_addresses":[{"id":"IDENTIFIER_ID","object":"email_address","email_address":"test9+clerk_test@some.domain","reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"created_at":1732020300926,"updated_at":1732020300926}],"phone_numbers":[{"id":"IDENTIFIER_ID","object":"phone_number","phone_number":"+447957666211","reserved_for_second_factor":false,"default_second_factor":false,"reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"backup_codes":null,"created_at":1732020300934,"updated_at":1732020300934}],"web3_wallets":[],"passkeys":[],"external_accounts":[],"saml_accounts":[],"enterprise_accounts":[],"public_metadata":{},"unsafe_metadata":{},"external_id":null,"last_sign_in_at":1732020361787,"banned":false,"locked":false,"lockout_expires_in_seconds":null,"verification_attempts_remaining":100,"created_at":1732020300910,"updated_at":1732020361803,"delete_self_enabled":true,"create_organization_enabled":true,"last_active_at":null,"mfa_enabled_at":null,"mfa_disabled_at":null,"legal_accepted_at":null,"profile_image_url":"https://www.gravatar.com/avatar?d=mp","organization_memberships":[]},"public_user_data":{"first_name":"Nic","last_name":"Ford","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJwNExGeFRTUUlJMUhNUkFyNFVMMlhKZmxCWSIsImluaXRpYWxzIjoiTkYifQ","has_image":false,"identifier":"test9+clerk_test@some.domain","profile_image_url":"https://www.gravatar.com/avatar?d=mp"},"created_at":1732020361787,"updated_at":1732020361818,"last_active_token":{"object":"token","jwt":"eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3MzIwMjA0MjIsImlhdCI6MTczMjAyMDM2MiwiaXNzIjoiaHR0cHM6Ly9tb3JlLXlldGktNTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzMyMDIwMzUyLCJzaWQiOiJzZXNzXzJwNExOYnUxNm5wTzJMSmNyOWUwaDByNG5IVCIsInN1YiI6InVzZXJfMnA0TEZ4VFNRSUkxSE1SQXI0VUwyWEpmbEJZIn0.hnF7H_r478o--fNokeerGNYX178OKlmBSBnnKOPK5YaUPfK9sp64uVVc3oENyf30LpzDgz88VIoMiRUJI5jTCfWOzxp55n9b0aAl2KQEyeBq5Zzx_w3G6Tt2NVZfiQ0M9V8YRXavaOc0NI0fpOgU-jJRq4QFsGDI_aCeEoNQ1hzGHx3lYR9Hh4D8O1GbV6TnrD-K-KKOWr1Nri-zspDAjj02kPntsjwzVfYCOBkiTR2eTW0YZoMQ7iLnNHfa5BW6QOuDMn6C9Rrm7F46JbQ51A-ZAiB8Hyn9Hr5Y4-JiPzbVpS0AzWNqF1Dw0kCFvFC_CsoNXTdyFit7lf9iK5NneQ"}}],"sign_in":{"object":"sign_in_attempt","id":"SIGN_IN_ATTEMPT_ID","status":"complete","supported_identifiers":["email_address","phone_number","username"],"supported_first_factors":null,"supported_second_factors":null,"first_factor_verification":{"status":"verified","strategy":"email_link","attempts":null,"expire_at":$expireAt,"verified_at_client":"CLIENT_ID"},"second_factor_verification":null,"identifier":"test9+clerk_test@some.domain","USER_ID":null,"created_session_id":"SESSION_ID","abandon_at":1732106734314},"sign_up":null,"last_active_session_id":"SESSION_ID","cookie_expires_at":null,"created_at":1732020334301,"updated_at":1732020361814},"client":null}',
         );
 
-        final client = await auth.attemptSignIn(
+        await auth.attemptSignIn(
           identifier: 'test9+clerk_test@some.domain',
           strategy: Strategy.emailLink,
           redirectUrl: 'https://www.clerk.com',
         );
-        expect(client.signIn?.status, Status.complete);
-        expect(client.user is User, true);
+        expect(auth.signIn?.status, Status.complete);
+        expect(auth.user is User, true);
       });
     });
   });

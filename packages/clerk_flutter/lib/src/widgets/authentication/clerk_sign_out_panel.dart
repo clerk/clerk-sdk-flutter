@@ -20,7 +20,7 @@ class _ClerkSignOutPanelState extends State<ClerkSignOutPanel>
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
-    final localizations = ClerkAuth.localizationsOf(context);
+    final localizations = authState.localizationsOf(context);
     return Padding(
       padding: horizontalPadding16,
       child: ClerkMaterialButton(

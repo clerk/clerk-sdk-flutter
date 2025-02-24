@@ -34,12 +34,6 @@ enum HttpMethod {
 /// Clerk back-end over http
 ///
 abstract class HttpService {
-  /// Constructor
-  const HttpService();
-
-  /// An empty implementation
-  static final none = _NoneHttpService();
-
   /// [send] data to the back end, and receive a [Response]
   ///
   Future<Response> send(
@@ -59,30 +53,6 @@ abstract class HttpService {
     int length,
     Map<String, String> headers,
   );
-}
-
-class _NoneHttpService implements HttpService {
-  @override
-  Future<Response> send(
-    HttpMethod method,
-    Uri uri, {
-    Map<String, String>? headers,
-    Map<String, dynamic>? params,
-    String? body,
-  }) {
-    return Future.value(Response('', 200));
-  }
-
-  @override
-  Future<Response> sendByteStream(
-    HttpMethod method,
-    Uri uri,
-    ByteStream byteStream,
-    int length,
-    Map<String, String> headers,
-  ) {
-    return Future.value(Response('', 200));
-  }
 }
 
 /// Default implementation of [HttpService]

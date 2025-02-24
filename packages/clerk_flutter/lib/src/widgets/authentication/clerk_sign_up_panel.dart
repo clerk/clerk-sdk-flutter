@@ -55,7 +55,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
       if (signUp?.missingFields case List<clerk.Field> missingFields
           when missingFields.isNotEmpty) {
-        final localizations = ClerkAuth.localizationsOf(context);
+        final localizations = authState.localizationsOf(context);
         authState.addError(
           clerk.AuthError(
             code: clerk.AuthErrorCode.signUpFlowError,
@@ -79,22 +79,23 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     String? code,
     clerk.Strategy? strategy,
   }) async {
-    final auth = ClerkAuth.of(context);
-    final localizations = ClerkAuth.localizationsOf(context);
-    await auth.safelyCall(
+    final authState = ClerkAuth.of(context);
+    final localizations = authState.localizationsOf(context);
+    await authState.safelyCall(
       context,
       () async {
         final password = _valueOrNull(clerk.UserAttribute.password);
         final passwordConfirmation =
             _valueOrNull(clerk.UserAttribute.passwordConfirmation);
-        if (auth.checkPassword(password, passwordConfirmation, localizations)
+        if (authState.checkPassword(
+                password, passwordConfirmation, localizations)
             case String errorMessage) {
-          auth.addError(clerk.AuthError(
+          authState.addError(clerk.AuthError(
             code: clerk.AuthErrorCode.invalidPassword,
             message: errorMessage,
           ));
         } else {
-          await auth.attemptSignUp(
+          await authState.attemptSignUp(
             strategy: strategy ?? clerk.Strategy.password,
             firstName: _valueOrNull(clerk.UserAttribute.firstName),
             lastName: _valueOrNull(clerk.UserAttribute.lastName),
@@ -120,7 +121,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     final unverifiedFields = signUp?.unverifiedFields ?? const [];
     final hasPassword =
         _values[clerk.UserAttribute.password]?.isNotEmpty == true;
-    final localizations = ClerkAuth.localizationsOf(context);
+    final localizations = authState.localizationsOf(context);
     final attributes = [
       ...authState.env.user.attributes.entries
           .where((a) => a.value.isEnabled)

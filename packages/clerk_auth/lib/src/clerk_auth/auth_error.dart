@@ -31,6 +31,9 @@ enum AuthErrorCode {
   /// Server error response
   serverErrorResponse,
 
+  /// Webview error response
+  webviewErrorResponse,
+
   /// Error during sign-up flow
   signUpFlowError,
 

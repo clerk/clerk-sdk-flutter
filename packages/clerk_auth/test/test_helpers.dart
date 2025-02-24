@@ -125,3 +125,31 @@ class TestHttpServiceError extends Error {
 }
 
 List<String> testLocalesLookup() => <String>['en'];
+
+const noneHttpService = NoneHttpService();
+
+class NoneHttpService implements HttpService {
+  const NoneHttpService();
+
+  @override
+  Future<Response> send(
+    HttpMethod method,
+    Uri uri, {
+    Map<String, String>? headers,
+    Map<String, dynamic>? params,
+    String? body,
+  }) {
+    return Future.value(Response('', 200));
+  }
+
+  @override
+  Future<Response> sendByteStream(
+    HttpMethod method,
+    Uri uri,
+    ByteStream byteStream,
+    int length,
+    Map<String, String> headers,
+  ) {
+    return Future.value(Response('', 200));
+  }
+}

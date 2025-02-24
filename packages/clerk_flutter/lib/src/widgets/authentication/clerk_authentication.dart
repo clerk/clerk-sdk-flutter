@@ -47,56 +47,52 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
   Widget build(BuildContext context) {
     return Padding(
       padding: allPadding16,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 530.0),
-        child: ClerkVerticalCard(
-          topPortion: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _TopPortion(state: _state),
-              ClerkAuthBuilder(
-                builder: (context, auth) {
-                  final env = auth.env;
-                  return Padding(
-                    padding: horizontalPadding32,
-                    child: Column(
-                      children: [
+      child: ClerkVerticalCard(
+        topPortion: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _TopPortion(state: _state),
+            ClerkAuthBuilder(
+              builder: (context, authState) {
+                final env = authState.env;
+                return Padding(
+                  padding: horizontalPadding32,
+                  child: Column(
+                    children: [
+                      if (env.hasOauthStrategies) //
+                        Closeable(
+                          closed:
+                              authState.isSigningIn || authState.isSigningUp,
+                          child: ClerkSSOPanel(
+                            onStrategyChosen: (strategy) =>
+                                authState.ssoSignIn(context, strategy),
+                          ),
+                        ),
+                      if (env.hasIdentificationStrategies) ...[
                         if (env.hasOauthStrategies) //
-                          Closeable(
-                            closed: auth.isSigningIn || auth.isSigningUp,
-                            child: ClerkSSOPanel(
-                              onStrategyChosen: (strategy) =>
-                                  auth.ssoSignIn(context, strategy),
-                            ),
+                          const Padding(
+                            padding: verticalPadding24,
+                            child: OrDivider(),
                           ),
-                        if (env.hasIdentificationStrategies) ...[
-                          if (env.hasOauthStrategies) //
-                            const Padding(
-                              padding: verticalPadding24,
-                              child: OrDivider(),
-                            ),
-                          Closeable(
-                            closed: _state.isSigningIn == false,
-                            child:
-                                ClerkSignInPanel(isActive: _state.isSigningIn),
-                          ),
-                          Closeable(
-                            closed: _state.isSigningUp == false,
-                            child:
-                                ClerkSignUpPanel(isActive: _state.isSigningUp),
-                          ),
-                        ],
+                        Closeable(
+                          closed: _state.isSigningIn == false,
+                          child: ClerkSignInPanel(isActive: _state.isSigningIn),
+                        ),
+                        Closeable(
+                          closed: _state.isSigningUp == false,
+                          child: ClerkSignUpPanel(isActive: _state.isSigningUp),
+                        ),
                       ],
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          bottomPortion: _BottomPortion(
-            state: _state,
-            onChange: _toggle,
-          ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        bottomPortion: _BottomPortion(
+          state: _state,
+          onChange: _toggle,
         ),
       ),
     );

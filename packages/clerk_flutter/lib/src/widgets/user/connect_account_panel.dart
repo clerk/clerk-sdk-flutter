@@ -26,21 +26,21 @@ class ConnectAccountPanel extends StatelessWidget {
             subtitle: localizations.pleaseChooseAnAccountToConnect,
           ),
           ClerkAuthBuilder(
-            builder: (context, auth) {
+            builder: (context, authState) {
               return Padding(
                 padding: horizontalPadding32 + bottomPadding32,
                 child: ClerkChangeObserver<DateTime>(
                   onChange: onDone,
                   accumulateData: () {
-                    final accounts =
-                        auth.client.user?.externalAccounts ?? const [];
+                    final accounts = 
+		        authState.client.user?.externalAccounts ?? const [];
                     return accounts
                         .where((a) => a.isVerified || a.isInError)
                         .map((a) => a.updatedAt);
                   },
                   builder: (context) => ClerkSSOPanel(
                     onStrategyChosen: (strategy) =>
-                        auth.ssoConnect(context, strategy),
+                        authState.ssoConnect(context, strategy),
                   ),
                 ),
               );

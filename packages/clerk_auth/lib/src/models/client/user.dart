@@ -334,4 +334,14 @@ class User {
       deleteSelfEnabled: deleteSelfEnabled ?? this.deleteSelfEnabled,
     );
   }
+
+  @override
+  String toString() {
+    return '${describeIdentity()}{'
+        'id: $id, '
+        'username: $username, '
+        'name: $name, '
+        'email: $email'
+        '}';
+  }
 }

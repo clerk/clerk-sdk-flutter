@@ -55,12 +55,12 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
 
   Future<void> _verifyIdentifyingData(
     BuildContext context,
-    ClerkAuthState auth,
+    ClerkAuthState authState,
     String identifier,
   ) async {
-    final localizations = ClerkAuth.localizationsOf(context);
+    final localizations = authState.localizationsOf(context);
 
-    final uid = auth.user?.identifierFrom(identifier);
+    final uid = authState.user?.identifierFrom(identifier);
     if (uid case clerk.UserIdentifyingData uid when uid.isUnverified) {
       await ClerkInputDialog.show(
         context,
@@ -75,8 +75,8 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
           },
           subtitle: localizations.enterCodeSentTo(identifier),
           onSubmit: (code) async {
-            await auth.verifyIdentifyingData(uid, code);
-            final newUid = auth.user!.identifierFrom(uid.identifier);
+            await authState.verifyIdentifyingData(uid, code);
+            final newUid = authState.user!.identifierFrom(uid.identifier);
             if (context.mounted) Navigator.of(context).pop(true);
             return newUid?.isVerified == true;
           },
@@ -87,11 +87,10 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
 
   Future<void> _addIdentifyingData(
     BuildContext context,
-    ClerkAuthState auth,
+    ClerkAuthState authState,
     clerk.IdentifierType type,
   ) async {
-    final authState = ClerkAuth.of(context, listen: false);
-    final localizations = ClerkAuth.localizationsOf(context);
+    final localizations = authState.localizationsOf(context);
 
     String identifier = '';
 
@@ -143,8 +142,8 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
       padding: horizontalPadding24,
       child: ClerkAuthBuilder(
         builder: (_, __) => emptyWidget,
-        signedInBuilder: (context, auth) {
-          final user = auth.user!;
+        signedInBuilder: (context, authState) {
+          final user = authState.user!;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
@@ -163,7 +162,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                       title: localizations.profile,
                       child: _EditableUserData(user: user),
                     ),
-                    if (auth.env.config.allowsEmailAddress) ...[
+                    if (authState.env.config.allowsEmailAddress) ...[
                       const Padding(padding: topPadding16, child: divider),
                       _ProfileRow(
                         title: localizations.emailAddress,
@@ -173,16 +172,17 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                           addLine: localizations.addEmailAddress,
                           onAddNew: () => _addIdentifyingData(
                             context,
-                            auth,
+                            authState,
                             clerk.IdentifierType.emailAddress,
                           ),
                           onIdentifierUnverified: (emailAddress) {
-                            _verifyIdentifyingData(context, auth, emailAddress);
+                            _verifyIdentifyingData(
+                                context, authState, emailAddress);
                           },
                         ),
                       ),
                     ],
-                    if (auth.env.config.allowsPhoneNumber) ...[
+                    if (authState.env.config.allowsPhoneNumber) ...[
                       const Padding(padding: topPadding16, child: divider),
                       _ProfileRow(
                         title: localizations.phoneNumber,
@@ -195,11 +195,12 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                           addLine: localizations.addPhoneNumber,
                           onAddNew: () => _addIdentifyingData(
                             context,
-                            auth,
+                            authState,
                             clerk.IdentifierType.phoneNumber,
                           ),
                           onIdentifierUnverified: (phoneNumber) {
-                            _verifyIdentifyingData(context, auth, phoneNumber);
+                            _verifyIdentifyingData(
+                                context, authState, phoneNumber);
                           },
                         ),
                       ),
@@ -209,7 +210,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                       title: localizations.connectedAccounts,
                       child: _ExternalAccountList(
                         user: user,
-                        env: auth.env,
+                        env: authState.env,
                       ),
                     ),
                   ],
@@ -431,12 +432,12 @@ class _ProfileRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 2,
+          SizedBox(
+            width: 96,
             child: Text(title, maxLines: 2),
           ),
           horizontalMargin8,
-          Expanded(flex: 3, child: child),
+          Expanded(child: child),
         ],
       ),
     );

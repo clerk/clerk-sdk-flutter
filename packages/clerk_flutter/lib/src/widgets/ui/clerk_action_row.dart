@@ -17,12 +17,12 @@ class ClerkActionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = ClerkAuth.of(context, listen: false);
+    final authState = ClerkAuth.of(context, listen: false);
     return Padding(
       padding: allPadding16,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => action.callback(context, auth),
+        onTap: () => action.callback(context, authState),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

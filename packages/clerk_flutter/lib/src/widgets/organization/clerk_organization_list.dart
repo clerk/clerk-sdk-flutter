@@ -69,11 +69,11 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
 
   Future<void> _createOrganization(
     BuildContext context,
-    ClerkAuthState auth,
+    ClerkAuthState authState,
   ) async {
     final orgData = await CreateOrganizationPanel.show(context);
     if (orgData case OrganizationData orgData) {
-      await auth.createOrganizationFor(
+      await authState.createOrganizationFor(
         _user,
         name: orgData.name,
         slug: orgData.slug,
@@ -102,69 +102,62 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        color: ClerkColors.white,
-        boxShadow: [BoxShadow(color: ClerkColors.mercury, blurRadius: 15)],
-      ),
-      child: ClerkAuthBuilder(
-        builder: (context, auth) {
-          final sessions = auth.client.sessions;
+    return ClerkAuthBuilder(
+      builder: (context, authState) {
+        final sessions = authState.client.sessions;
 
-          _user = auth.client.refreshUser(_user); // ensure latest version
+        _user = authState.client.refreshUser(_user); // ensure latest version
 
-          final memberships = _user.organizationMemberships ?? [];
+        final memberships = _user.organizationMemberships ?? [];
 
-          final actions = widget.actions ?? _defaultActions();
+        final actions = widget.actions ?? _defaultActions();
 
-          return ClerkVerticalCard(
-            topPortion: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ClerkPanelHeader(subtitle: localizations.selectAccount),
-                if (_nextUserIsPending) //
-                  Stack(
-                    children: [
-                      _UserRow(
-                        key: Key(_user.id),
-                        user: _user,
-                        onChange: () => _setNextUser(sessions),
-                      ),
-                      if (_nextUserIsPending) //
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: AnimatedCloseable(
-                            closed: false,
-                            axis: ClosingAxis.horizontal,
-                            onEnd: (_) => _transitionUser(),
-                            child: _UserRow(user: _nextUser!, bordered: true),
-                          ),
+        return ClerkVerticalCard(
+          topPortion: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClerkPanelHeader(subtitle: localizations.selectAccount),
+              if (_nextUserIsPending) //
+                Stack(
+                  children: [
+                    _UserRow(
+                      key: Key(_user.id),
+                      user: _user,
+                      onChange: () => _setNextUser(sessions),
+                    ),
+                    if (_nextUserIsPending) //
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: AnimatedCloseable(
+                          closed: false,
+                          axis: ClosingAxis.horizontal,
+                          onEnd: (_) => _transitionUser(),
+                          child: _UserRow(user: _nextUser!, bordered: true),
                         ),
-                    ],
-                  )
-                else
-                  _UserRow(
-                    key: Key(_user.id),
-                    user: _user,
-                    onChange: () => _setNextUser(sessions),
-                    onChangeEnabled: sessions.length > 1,
-                  ),
-                for (final membership in memberships) //
-                  AnimatedCloseable(
-                    key: Key(membership.id),
-                    closed: _nextUserIsPending,
-                    child: _MembershipRow(membership: membership),
-                  ),
-                for (final action in actions) ...[
-                  ClerkActionRow(action: action),
-                  narrowDivider,
-                ],
+                      ),
+                  ],
+                )
+              else
+                _UserRow(
+                  key: Key(_user.id),
+                  user: _user,
+                  onChange: () => _setNextUser(sessions),
+                  onChangeEnabled: sessions.length > 1,
+                ),
+              for (final membership in memberships) //
+                AnimatedCloseable(
+                  key: Key(membership.id),
+                  closed: _nextUserIsPending,
+                  child: _MembershipRow(membership: membership),
+                ),
+              for (final action in actions) ...[
+                ClerkActionRow(action: action),
+                narrowDivider,
               ],
-            ),
-          );
-        },
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

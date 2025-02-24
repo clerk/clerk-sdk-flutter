@@ -24,37 +24,52 @@ class ClerkVerticalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      borderRadius: borderRadius12,
-      clipBehavior: Clip.antiAlias,
-      color: ClerkColors.lightGrey,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Material(
-              borderRadius: borderRadius12,
-              clipBehavior: Clip.antiAlias,
-              color: ClerkColors.white,
-              elevation: 1.0,
-              shadowColor: ClerkColors.seashell,
-              child: topPortion,
-            ),
-            bottomPortion,
-            const Divider(
-              color: ClerkColors.seashell,
-              thickness: 2.0,
-              height: 2.0,
-            ),
-            verticalMargin12,
-            Center(
-              child: SvgPicture.asset(
-                ClerkAssets.securedByClerkLogo,
-                package: 'clerk_flutter',
-              ),
-            ),
-            verticalMargin12,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          borderRadius: borderRadius12,
+          boxShadow: [
+            BoxShadow(
+              color: ClerkColors.dropShadowGrey,
+              offset: Offset(0.0, 6.0),
+              blurRadius: 12,
+            )
           ],
+        ),
+        child: Material(
+          borderRadius: borderRadius12,
+          clipBehavior: Clip.antiAlias,
+          color: ClerkColors.lightGrey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Material(
+                  borderRadius: borderRadius6,
+                  clipBehavior: Clip.antiAlias,
+                  color: ClerkColors.white,
+                  elevation: 1.0,
+                  shadowColor: ClerkColors.seashell,
+                  child: topPortion,
+                ),
+                bottomPortion,
+                const Divider(
+                  color: ClerkColors.seashell,
+                  thickness: 2.0,
+                  height: 2.0,
+                ),
+                verticalMargin12,
+                Center(
+                  child: SvgPicture.asset(
+                    ClerkAssets.securedByClerkLogo,
+                    package: 'clerk_flutter',
+                  ),
+                ),
+                verticalMargin12,
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -5,6 +5,8 @@ import 'dart:math' as math;
 
 import 'package:logging/logging.dart';
 
+export 'package:logging/logging.dart' show Level;
+
 // ignore: constant_identifier_names
 const Level _NOTICE = Level('NOTICE', 850);
 

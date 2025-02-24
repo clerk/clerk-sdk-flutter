@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/clerk_api/api.dart';
+import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/models/api/api_response.dart';
 import 'package:clerk_auth/src/models/client/email.dart';
@@ -6,7 +7,7 @@ import 'package:clerk_auth/src/models/client/phone_number.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/enums.dart';
-import 'package:clerk_auth/src/models/environment/auth_config.dart';
+import 'package:clerk_auth/src/models/environment/config.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
@@ -29,11 +30,12 @@ void main() {
   setUpAll(() async {
     env = TestEnv('.env.test');
     api = Api(
-      publishableKey: env.publishableKey,
+      config: AuthConfig(
+        publishableKey: env.publishableKey,
+        localesLookup: testLocalesLookup,
+      ),
       persistor: Persistor.none,
       httpService: httpService,
-      localesLookup: testLocalesLookup,
-      pollMode: SessionTokenPollMode.lazy,
     );
     await api.initialize();
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
@@ -103,7 +105,7 @@ void main() {
           '{"response":{"id":"USER_ID","object":"user","username":"test1","first_name":"Test","last_name":"User","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJtbktmQms4MlhkZ0pYUzltNlhGZlkyTGZHTiIsImluaXRpYWxzIjoiVFUifQ","has_image":false,"primary_email_address_id":"IDENTIFIER_ID","primary_phone_number_id":"IDENTIFIER_ID","primary_web3_wallet_id":null,"password_enabled":true,"two_factor_enabled":false,"totp_enabled":false,"backup_code_enabled":false,"email_addresses":[{"id":"IDENTIFIER_ID","object":"email_address","email_address":"test1+clerk_test@some.domain","reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"created_at":1727707000228,"updated_at":1729075139789}],"phone_numbers":[{"id":"IDENTIFIER_ID","object":"phone_number","phone_number":"+15555550101","reserved_for_second_factor":false,"default_second_factor":false,"reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"backup_codes":null,"created_at":1727707000277,"updated_at":1727707000277}],"web3_wallets":[],"passkeys":[],"external_accounts":[],"saml_accounts":[],"enterprise_accounts":[],"public_metadata":{},"unsafe_metadata":{},"external_id":null,"last_sign_in_at":1732016622125,"banned":false,"locked":false,"lockout_expires_in_seconds":null,"verification_attempts_remaining":100,"created_at":1727707000164,"updated_at":1732016623480,"delete_self_enabled":true,"create_organization_enabled":true,"last_active_at":1731928604966,"mfa_enabled_at":null,"mfa_disabled_at":null,"legal_accepted_at":null,"profile_image_url":"https://www.gravatar.com/avatar?d=mp"},"client":{"object":"client","id":"CLIENT_ID","sessions":[{"object":"session","id":"SESSION_ID","status":"active","expire_at":$expireAt,"abandon_at":1734608622117,"last_active_at":1732016622117,"last_active_organization_id":null,"actor":null,"user":{"id":"USER_ID","object":"user","username":"test1","first_name":"Test","last_name":"User","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJtbktmQms4MlhkZ0pYUzltNlhGZlkyTGZHTiIsImluaXRpYWxzIjoiVFUifQ","has_image":false,"primary_email_address_id":"IDENTIFIER_ID","primary_phone_number_id":"IDENTIFIER_ID","primary_web3_wallet_id":null,"password_enabled":true,"two_factor_enabled":false,"totp_enabled":false,"backup_code_enabled":false,"email_addresses":[{"id":"IDENTIFIER_ID","object":"email_address","email_address":"test1+clerk_test@some.domain","reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"created_at":1727707000228,"updated_at":1729075139789}],"phone_numbers":[{"id":"IDENTIFIER_ID","object":"phone_number","phone_number":"+15555550101","reserved_for_second_factor":false,"default_second_factor":false,"reserved":false,"verification":{"status":"verified","strategy":"admin","attempts":null,"expire_at":null},"linked_to":[],"backup_codes":null,"created_at":1727707000277,"updated_at":1727707000277}],"web3_wallets":[],"passkeys":[],"external_accounts":[],"saml_accounts":[],"enterprise_accounts":[],"public_metadata":{},"unsafe_metadata":{},"external_id":null,"last_sign_in_at":1732016622125,"banned":false,"locked":false,"lockout_expires_in_seconds":null,"verification_attempts_remaining":100,"created_at":1727707000164,"updated_at":1732016623480,"delete_self_enabled":true,"create_organization_enabled":true,"last_active_at":1731928604966,"mfa_enabled_at":null,"mfa_disabled_at":null,"legal_accepted_at":null,"profile_image_url":"https://www.gravatar.com/avatar?d=mp","organization_memberships":[]},"public_user_data":{"first_name":"Test","last_name":"User","image_url":"https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJyaWQiOiJ1c2VyXzJtbktmQms4MlhkZ0pYUzltNlhGZlkyTGZHTiIsImluaXRpYWxzIjoiVFUifQ","has_image":false,"identifier":"test1+clerk_test@some.domain","profile_image_url":"https://www.gravatar.com/avatar?d=mp"},"created_at":1732016622125,"updated_at":1732016622187,"last_active_token":{"object":"token","jwt":"eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18ya3ZZdzF0WkY4OHNvQjdtN0FYaGlEQ2llMmsiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3MzIwMTY2ODMsImlhdCI6MTczMjAxNjYyMywiaXNzIjoiaHR0cHM6Ly9tb3JlLXlldGktNTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzMyMDE2NjEzLCJzaWQiOiJzZXNzXzJwNERuZjZDamVZMXN0RnB1Z1lQSU52YmJxdCIsInN1YiI6InVzZXJfMm1uS2ZCazgyWGRnSlhTOW02WEZmWTJMZkdOIn0.nwfUsotPCwP0mzpu3a-HR-0d0h5uELQcUc87t2a72pQ17-Vxyg70LH7U0kpLmqpmiPDGEHj2yvXMRllTc_idZsHhPc3P4SXRCKijatap6zKPn8rg6GyTHA2Khpouek2ccR325fot3NxbU-3ApWSWLyq10mx_fV6vs9DKKVBE6U8luaQxqJbfBt-NoU37GSEMm6i5DOmaHwvULFETodd9nclD4WbrGPtxbrzp5nkNWu3YrFM026jwaEBYVY4ULkJyw2vPy8kfvpLSC6InilbooEvVyDxGX4Q8mT-Ew2K5B1zEZDHRawqzalDSFF-QGTfLfp8kM7wR80sVrB-LxglFAQ"}}],"sign_in":null,"sign_up":null,"last_active_session_id":"SESSION_ID","cookie_expires_at":null,"created_at":1732016621555,"updated_at":1732016622183}}',
         );
 
-        const config = AuthConfig(
+        const config = Config(
           allowsFirstName: true,
           allowsLastName: true,
         );

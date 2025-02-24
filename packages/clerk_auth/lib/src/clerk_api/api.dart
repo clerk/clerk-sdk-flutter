@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io' show File, HttpHeaders, HttpStatus;
 
 import 'package:clerk_auth/src/clerk_api/token_cache.dart';
+import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/clerk_constants.dart';
@@ -15,65 +16,36 @@ import 'package:http/http.dart' as http;
 
 export 'package:clerk_auth/src/models/enums.dart' show SessionTokenPollMode;
 
-/// Used by [Api] to locate the current user locale preference.
-typedef ClerkLocalesLookup = List<String> Function();
-
 /// [Api] manages communication with the Clerk frontend API
 ///
 class Api with Logging {
-  Api._(
-    this._tokenCache,
-    this._domain,
-    this._httpService,
-    this._localesLookup,
-    this._pollMode,
-  );
-
-  /// Create an [Api] object for a given Publishable Key, or return the existing one
-  /// if such already exists for that key. Requires a [publishableKey]
-  /// found in the Clerk dashboard for you account. Additional arguments:
+  /// Create an [Api] object
   ///
-  /// [persistor]: an optional instance of a [Persistor] which will keep track of
-  /// tokens and expiry between app activations
-  ///
-  /// [client]: an optional instance of [HttpService] to manage low-level communications
-  /// with the back end. Injected for e.g. test mocking
-  ///
-  /// [pollMode]: session token poll mode, default [SessionTokenPollMode.lazy],
-  /// manages how to refresh the [sessionToken].
-  ///
-  factory Api({
-    required String publishableKey,
+  Api({
+    required AuthConfig config,
     required Persistor persistor,
     required HttpService httpService,
-    required ClerkLocalesLookup localesLookup,
-    SessionTokenPollMode pollMode = SessionTokenPollMode.lazy,
-  }) =>
-      Api._(
-        TokenCache(
+  })  : _config = config,
+        _tokenCache = TokenCache(
           persistor: persistor,
-          cacheId: publishableKey.hashCode,
+          publishableKey: config.publishableKey,
         ),
-        _deriveDomainFrom(publishableKey),
-        httpService,
-        localesLookup,
-        pollMode,
-      );
+        _httpService = httpService,
+        _domain = _deriveDomainFrom(config.publishableKey),
+        _testMode = config.isTestMode;
 
+  final AuthConfig _config;
   final TokenCache _tokenCache;
-  final String _domain;
   final HttpService _httpService;
-  final ClerkLocalesLookup _localesLookup;
-  final SessionTokenPollMode _pollMode;
-  late final String _nativeDeviceId;
+  final String _domain;
+
+  bool _testMode;
   Timer? _pollTimer;
   bool _multiSessionMode = true;
-  bool _testMode = ClerkConstants.isTestMode;
 
   static const _kClerkAPIVersion = 'clerk-api-version';
   static const _kClerkClientId = 'x-clerk-client-id';
   static const _kClerkJsVersion = '_clerk_js_version';
-  static const _kClerkNativeDeviceId = 'x-native-device-id';
   static const _kClerkSessionId = '_clerk_session_id';
   static const _kClientKey = 'client';
   static const _kErrorsKey = 'errors';
@@ -90,8 +62,7 @@ class Api with Logging {
   /// Initialise the API
   Future<void> initialize() async {
     await _tokenCache.initialize();
-    _nativeDeviceId = 'PENDING'; // TODO get this value
-    if (_pollMode == SessionTokenPollMode.hungry) {
+    if (_config.sessionTokenPollMode == SessionTokenPollMode.hungry) {
       await _pollForSessionToken();
     }
   }
@@ -115,7 +86,7 @@ class Api with Logging {
       final body = json.decode(resp.body) as Map<String, dynamic>;
       final env = Environment.fromJson(body);
 
-      _testMode = env.config.testMode || ClerkConstants.isTestMode;
+      _testMode = env.config.testMode && _config.isTestMode;
       _multiSessionMode = env.config.singleSessionMode == false;
 
       return env;
@@ -492,7 +463,7 @@ class Api with Logging {
 
   /// Update details pertaining to the current [User]
   ///
-  Future<ApiResponse> updateUser(User user, AuthConfig config) async {
+  Future<ApiResponse> updateUser(User user, Config config) async {
     return await _fetchApiResponse(
       '/me',
       method: HttpMethod.patch,
@@ -902,7 +873,7 @@ class Api with Logging {
   }) {
     return {
       HttpHeaders.acceptHeader: 'application/json',
-      HttpHeaders.acceptLanguageHeader: _localesLookup().join(', '),
+      HttpHeaders.acceptLanguageHeader: _config.localesLookup().join(', '),
       HttpHeaders.contentTypeHeader: method.isGet
           ? 'application/json'
           : 'application/x-www-form-urlencoded',
@@ -912,7 +883,6 @@ class Api with Logging {
       _kXFlutterSDKVersion: ClerkConstants.flutterSdkVersion,
       if (_testMode) //
         _kClerkClientId: _tokenCache.clientId,
-      _kClerkNativeDeviceId: _nativeDeviceId,
       _kXMobile: '1',
       ...?headers,
     };

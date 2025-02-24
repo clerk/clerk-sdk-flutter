@@ -14,9 +14,10 @@ class AddAccountPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = ClerkAuth.of(context, listen: false);
+    final authState = ClerkAuth.of(context, listen: false);
     return ClerkChangeObserver<DateTime>(
-      accumulateData: () => auth.client.sessions.map((s) => s.user.updatedAt),
+      accumulateData: () =>
+          authState.client.sessions.map((s) => s.user.updatedAt),
       onChange: onDone,
       builder: (context) => const ClerkAuthentication(),
     );

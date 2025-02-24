@@ -3,14 +3,14 @@ import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
-part 'auth_config.g.dart';
+part 'config.g.dart';
 
-/// [AuthConfig] Clerk object
+/// [Config] Clerk object
 @immutable
 @JsonSerializable()
-class AuthConfig {
+class Config {
   /// Constructor
-  const AuthConfig({
+  const Config({
     this.id = '',
     this.singleSessionMode = false,
     this.enhancedEmailDeliverability = false,
@@ -83,13 +83,12 @@ class AuthConfig {
   @JsonKey(name: 'password', fromJson: isOn)
   final bool allowsPassword;
 
-  /// empty [AuthConfig]
-  static const empty = AuthConfig();
+  /// empty [Config]
+  static const empty = Config();
 
   /// fromJson
-  static AuthConfig fromJson(Map<String, dynamic> json) =>
-      _$AuthConfigFromJson(json);
+  static Config fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$AuthConfigToJson(this);
+  Map<String, dynamic> toJson() => _$ConfigToJson(this);
 }

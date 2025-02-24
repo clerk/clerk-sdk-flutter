@@ -2,63 +2,45 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:clerk_auth/src/clerk_auth/http_service.dart';
-import 'package:clerk_auth/src/clerk_auth/persistor.dart';
-import 'package:clerk_auth/src/clerk_constants.dart';
-import 'package:clerk_auth/src/models/enums.dart';
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/models/telemetry/telemetric_event.dart';
-import 'package:clerk_auth/src/utils/logging.dart';
 
 /// Telemetry
 ///
 class Telemetry with Logging {
-  Telemetry._(
-    this._publishableKey,
-    this._persistor,
-    this._httpService,
-    this._sendTelemetryData,
-  );
-
   /// Create a [Telemetry] object
-  factory Telemetry({
-    required String publishableKey,
-    required Persistor persistor,
-    required HttpService httpService,
-    required bool sendTelemetryData,
-  }) {
-    return Telemetry._(
-      publishableKey,
-      persistor,
-      httpService,
-      sendTelemetryData,
-    );
-  }
+  Telemetry({
+    required this.config,
+    required this.persistor,
+    required this.httpService,
+  });
 
-  final bool _sendTelemetryData;
-  final String _publishableKey;
-  final Persistor _persistor;
-  final HttpService _httpService;
+  /// The config used to initialise this telemetry instance.
+  final AuthConfig config;
+
+  /// The [Persistor] used for Telemetry to store its event queue.
+  final Persistor persistor;
+
+  /// The [HttpService] used to send the telemetry events.
+  final HttpService httpService;
+
   late final InstanceType _instanceType;
+  late final _telemetryEndpoint = Uri.parse(config.telemetryEndpoint);
   Timer? _timer;
   final _telemetricEventsQueue = <TelemetricEvent>[];
 
   static const _kTelemetricEventQueueKey = 'telemetricEventQueue';
   static const _telemetricEventsQueueMaxLength = 2000;
-  static const _telemetryPeriod =
-      Duration(milliseconds: ClerkConstants.telemetryPeriod);
-  static final _telemetryEndpoint = Uri.parse(ClerkConstants.telemetryEndpoint);
 
   /// Are we telemetricising?
   bool get isEnabled =>
-      _sendTelemetryData &&
-      _instanceType.isDevelopment &&
-      ClerkConstants.isTelemetryEnabled;
+      config.telemetryPeriod.isNotZero && _instanceType.isDevelopment;
 
   /// Initialise telemetry
   Future<void> initialize({required InstanceType instanceType}) async {
     _instanceType = instanceType;
     if (isEnabled) {
-      final data = await _persistor.read<String>(_kTelemetricEventQueueKey);
+      final data = await persistor.read<String>(_kTelemetricEventQueueKey);
       if (data case String data) {
         final jsonList = json.decode(data) as List<dynamic>;
         final eventList = jsonList.map(
@@ -66,7 +48,7 @@ class Telemetry with Logging {
         );
         _telemetricEventsQueue.addAll(eventList);
       }
-      _timer = Timer.periodic(_telemetryPeriod, _sendTelemetry);
+      _timer = Timer.periodic(config.telemetryPeriod, _sendTelemetry);
     }
   }
 
@@ -98,7 +80,7 @@ class Telemetry with Logging {
     if (excess > 0) {
       _telemetricEventsQueue.removeRange(0, excess);
     }
-    _persistor.write(
+    persistor.write(
       _kTelemetricEventQueueKey,
       json.encode(_telemetricEventsQueue),
     );
@@ -108,7 +90,7 @@ class Telemetry with Logging {
     return {
       'event': event.event,
       'it': _instanceType.toString(),
-      'pk': _publishableKey,
+      'pk': config.publishableKey,
       'cv': ClerkConstants.clerkApiVersion,
       'sdk': ClerkConstants.sdkName,
       'sdkv': ClerkConstants.flutterSdkVersion,
@@ -123,7 +105,7 @@ class Telemetry with Logging {
     final events = [..._telemetricEventsQueue];
     if (events.isNotEmpty) {
       _telemetricEventsQueue.clear();
-      final resp = await _httpService.send(
+      final resp = await httpService.send(
         HttpMethod.post,
         _telemetryEndpoint,
         body: json.encode({

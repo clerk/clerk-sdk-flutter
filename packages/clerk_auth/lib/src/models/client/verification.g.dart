@@ -7,7 +7,7 @@ part of 'verification.dart';
 // **************************************************************************
 
 Verification _$VerificationFromJson(Map<String, dynamic> json) => Verification(
-      status: $enumDecode(_$StatusEnumMap, json['status']),
+      status: Status.fromJson(json['status'] as String),
       strategy: Strategy.fromJson(json['strategy'] as String),
       attempts: (json['attempts'] as num?)?.toInt(),
       expireAt: intToDateTime(json['expire_at']),
@@ -18,7 +18,7 @@ Verification _$VerificationFromJson(Map<String, dynamic> json) => Verification(
 
 Map<String, dynamic> _$VerificationToJson(Verification instance) {
   final val = <String, dynamic>{
-    'status': _$StatusEnumMap[instance.status]!,
+    'status': instance.status.toJson(),
     'strategy': instance.strategy.toJson(),
   };
 
@@ -35,18 +35,3 @@ Map<String, dynamic> _$VerificationToJson(Verification instance) {
   val['expire_at'] = dateTimeToInt(instance.expireAt);
   return val;
 }
-
-const _$StatusEnumMap = {
-  Status.abandoned: 'abandoned',
-  Status.active: 'active',
-  Status.missingRequirements: 'missing_requirements',
-  Status.needsIdentifier: 'needs_identifier',
-  Status.needsFirstFactor: 'needs_first_factor',
-  Status.needsSecondFactor: 'needs_second_factor',
-  Status.transferable: 'transferable',
-  Status.unverified: 'unverified',
-  Status.verified: 'verified',
-  Status.complete: 'complete',
-  Status.expired: 'expired',
-  Status.failed: 'failed',
-};

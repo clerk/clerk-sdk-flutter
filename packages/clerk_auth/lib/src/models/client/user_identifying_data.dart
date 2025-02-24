@@ -1,5 +1,6 @@
 import 'package:clerk_auth/src/models/client/verification.dart';
 import 'package:clerk_auth/src/models/enums.dart';
+import 'package:clerk_auth/src/models/status.dart';
 
 export 'package:clerk_auth/src/models/client/verification.dart';
 

@@ -8,7 +8,7 @@ part of 'sign_in.dart';
 
 SignIn _$SignInFromJson(Map<String, dynamic> json) => SignIn(
       id: json['id'] as String,
-      status: $enumDecode(_$StatusEnumMap, json['status']),
+      status: Status.fromJson(json['status'] as String),
       supportedIdentifiers: (json['supported_identifiers'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -40,7 +40,7 @@ SignIn _$SignInFromJson(Map<String, dynamic> json) => SignIn(
 Map<String, dynamic> _$SignInToJson(SignIn instance) {
   final val = <String, dynamic>{
     'id': instance.id,
-    'status': _$StatusEnumMap[instance.status]!,
+    'status': instance.status.toJson(),
     'supported_identifiers': instance.supportedIdentifiers,
   };
 
@@ -64,18 +64,3 @@ Map<String, dynamic> _$SignInToJson(SignIn instance) {
       instance.supportedSecondFactors.map((e) => e.toJson()).toList();
   return val;
 }
-
-const _$StatusEnumMap = {
-  Status.abandoned: 'abandoned',
-  Status.active: 'active',
-  Status.missingRequirements: 'missing_requirements',
-  Status.needsIdentifier: 'needs_identifier',
-  Status.needsFirstFactor: 'needs_first_factor',
-  Status.needsSecondFactor: 'needs_second_factor',
-  Status.transferable: 'transferable',
-  Status.unverified: 'unverified',
-  Status.verified: 'verified',
-  Status.complete: 'complete',
-  Status.expired: 'expired',
-  Status.failed: 'failed',
-};

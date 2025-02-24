@@ -1,6 +1,7 @@
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
 import 'package:clerk_auth/src/models/client/field.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
+import 'package:clerk_auth/src/models/status.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -24,61 +25,6 @@ enum EnrollmentMode {
 
   @override
   String toString() => _$EnrollmentModeEnumMap[this]!;
-}
-
-/// [Status] Clerk object
-@JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
-enum Status {
-  /// abandoned
-  abandoned,
-
-  /// active
-  active,
-
-  /// missing requirements
-  missingRequirements,
-
-  /// needs identifier
-  needsIdentifier,
-
-  /// needs first factor
-  needsFirstFactor,
-
-  /// needs second factor
-  needsSecondFactor,
-
-  /// transferable
-  transferable,
-
-  /// unverified
-  unverified,
-
-  /// verified
-  verified,
-
-  /// complete
-  complete,
-
-  /// expired
-  expired,
-
-  /// failed
-  failed;
-
-  /// is active?
-  bool get isActive => this == active;
-
-  /// is verified?
-  bool get isVerified => this == verified;
-
-  /// is expired?
-  bool get isExpired => this == expired;
-
-  /// needs factor?
-  bool get needsFactor => this == needsFirstFactor || this == needsSecondFactor;
-
-  @override
-  String toString() => _$StatusEnumMap[this]!;
 }
 
 /// [IdentificationStrategy] Clerk object

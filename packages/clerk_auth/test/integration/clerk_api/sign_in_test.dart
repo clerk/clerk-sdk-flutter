@@ -4,6 +4,7 @@ import 'package:clerk_auth/src/models/api/api_response.dart';
 import 'package:clerk_auth/src/models/client/sign_in.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/enums.dart';
+import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';

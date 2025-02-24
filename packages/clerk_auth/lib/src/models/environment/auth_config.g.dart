@@ -15,19 +15,24 @@ AuthConfig _$AuthConfigFromJson(Map<String, dynamic> json) => AuthConfig(
       cookielessDev: json['cookieless_dev'] as bool? ?? false,
       urlBasedSessionSyncing:
           json['url_based_session_syncing'] as bool? ?? false,
-      identificationStrategies: json['identification_strategies'] == null
-          ? const []
-          : toStrategyList(json['identification_strategies']),
-      firstFactors: json['first_factors'] == null
-          ? const []
-          : toStrategyList(json['first_factors']),
-      secondFactors: json['second_factors'] == null
-          ? const []
-          : toStrategyList(json['second_factors']),
+      identificationStrategies:
+          (json['identification_strategies'] as List<dynamic>?)
+                  ?.map((e) => Strategy.fromJson(e as String))
+                  .toList() ??
+              const [],
+      firstFactors: (json['first_factors'] as List<dynamic>?)
+              ?.map((e) => Strategy.fromJson(e as String))
+              .toList() ??
+          const [],
+      secondFactors: (json['second_factors'] as List<dynamic>?)
+              ?.map((e) => Strategy.fromJson(e as String))
+              .toList() ??
+          const [],
       emailAddressVerificationStrategies:
-          json['email_address_verification_strategies'] == null
-              ? const []
-              : toStrategyList(json['email_address_verification_strategies']),
+          (json['email_address_verification_strategies'] as List<dynamic>?)
+                  ?.map((e) => Strategy.fromJson(e as String))
+                  .toList() ??
+              const [],
       allowsFirstName:
           json['first_name'] == null ? false : isOn(json['first_name']),
       allowsLastName:

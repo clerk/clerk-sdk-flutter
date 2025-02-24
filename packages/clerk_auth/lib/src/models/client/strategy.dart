@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 /// [Strategy] Clerk object
@@ -7,6 +8,7 @@ import 'package:meta/meta.dart';
 /// 'oauth_token' and 'oauth_custom') also have a [provider]
 ///
 @immutable
+@JsonSerializable()
 class Strategy {
   /// Constructor for [Strategy]
   const Strategy({required this.name, this.provider});

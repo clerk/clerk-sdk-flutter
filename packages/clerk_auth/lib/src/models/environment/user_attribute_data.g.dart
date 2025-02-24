@@ -13,21 +13,24 @@ UserAttributeData _$UserAttributeDataFromJson(Map<String, dynamic> json) =>
       usedForFirstFactor: json['used_for_first_factor'] == null
           ? false
           : isTrue(json['used_for_first_factor']),
-      firstFactors: json['first_factors'] == null
-          ? const []
-          : toStrategyList(json['first_factors']),
+      firstFactors: (json['first_factors'] as List<dynamic>?)
+              ?.map((e) => Strategy.fromJson(e as String))
+              .toList() ??
+          const [],
       userForSecondFactor: json['user_for_second_factor'] == null
           ? false
           : isTrue(json['user_for_second_factor']),
-      secondFactors: json['second_factors'] == null
-          ? const []
-          : toStrategyList(json['second_factors']),
+      secondFactors: (json['second_factors'] as List<dynamic>?)
+              ?.map((e) => Strategy.fromJson(e as String))
+              .toList() ??
+          const [],
       verifyAtSignUp: json['verify_at_sign_up'] == null
           ? false
           : isTrue(json['verify_at_sign_up']),
-      verifications: json['verifications'] == null
-          ? const []
-          : toStrategyList(json['verifications']),
+      verifications: (json['verifications'] as List<dynamic>?)
+              ?.map((e) => Strategy.fromJson(e as String))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$UserAttributeDataToJson(UserAttributeData instance) =>

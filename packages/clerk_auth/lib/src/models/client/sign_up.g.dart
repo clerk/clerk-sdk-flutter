@@ -8,11 +8,19 @@ part of 'sign_up.dart';
 
 SignUp _$SignUpFromJson(Map<String, dynamic> json) => SignUp(
       id: json['id'] as String,
-      status: $enumDecode(_$StatusEnumMap, json['status']),
-      requiredFields: toFieldList(json['required_fields']),
-      optionalFields: toFieldList(json['optional_fields']),
-      missingFields: toFieldList(json['missing_fields']),
-      unverifiedFields: toFieldList(json['unverified_fields']),
+      status: Status.fromJson(json['status'] as String),
+      requiredFields: (json['required_fields'] as List<dynamic>)
+          .map((e) => Field.fromJson(e as String))
+          .toList(),
+      optionalFields: (json['optional_fields'] as List<dynamic>)
+          .map((e) => Field.fromJson(e as String))
+          .toList(),
+      missingFields: (json['missing_fields'] as List<dynamic>)
+          .map((e) => Field.fromJson(e as String))
+          .toList(),
+      unverifiedFields: (json['unverified_fields'] as List<dynamic>)
+          .map((e) => Field.fromJson(e as String))
+          .toList(),
       username: json['username'] as String?,
       emailAddress: json['email_address'] as String?,
       phoneNumber: json['phone_number'] as String?,
@@ -33,7 +41,7 @@ SignUp _$SignUpFromJson(Map<String, dynamic> json) => SignUp(
 Map<String, dynamic> _$SignUpToJson(SignUp instance) {
   final val = <String, dynamic>{
     'id': instance.id,
-    'status': _$StatusEnumMap[instance.status]!,
+    'status': instance.status.toJson(),
     'required_fields': instance.requiredFields.map((e) => e.toJson()).toList(),
     'optional_fields': instance.optionalFields.map((e) => e.toJson()).toList(),
     'missing_fields': instance.missingFields.map((e) => e.toJson()).toList(),
@@ -64,18 +72,3 @@ Map<String, dynamic> _$SignUpToJson(SignUp instance) {
   val['abandon_at'] = dateTimeToInt(instance.abandonAt);
   return val;
 }
-
-const _$StatusEnumMap = {
-  Status.abandoned: 'abandoned',
-  Status.active: 'active',
-  Status.missingRequirements: 'missing_requirements',
-  Status.needsIdentifier: 'needs_identifier',
-  Status.needsFirstFactor: 'needs_first_factor',
-  Status.needsSecondFactor: 'needs_second_factor',
-  Status.transferable: 'transferable',
-  Status.unverified: 'unverified',
-  Status.verified: 'verified',
-  Status.complete: 'complete',
-  Status.expired: 'expired',
-  Status.failed: 'failed',
-};

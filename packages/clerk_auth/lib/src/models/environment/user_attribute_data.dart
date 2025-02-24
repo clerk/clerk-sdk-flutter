@@ -22,15 +22,12 @@ class UserAttributeData {
   });
 
   /// first factors
-  @JsonKey(fromJson: toStrategyList)
   final List<Strategy> firstFactors;
 
   /// second factors
-  @JsonKey(fromJson: toStrategyList)
   final List<Strategy> secondFactors;
 
   /// verifications
-  @JsonKey(fromJson: toStrategyList)
   final List<Strategy> verifications;
 
   /// used for first factor?

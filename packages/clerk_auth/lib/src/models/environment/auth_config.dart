@@ -48,19 +48,15 @@ class AuthConfig {
   final bool urlBasedSessionSyncing;
 
   /// identification strategies
-  @JsonKey(fromJson: toStrategyList)
   final List<Strategy> identificationStrategies;
 
   /// first factors
-  @JsonKey(fromJson: toStrategyList)
   final List<Strategy> firstFactors;
 
   /// second factors
-  @JsonKey(fromJson: toStrategyList)
   final List<Strategy> secondFactors;
 
   /// email address verification strategy
-  @JsonKey(fromJson: toStrategyList)
   final List<Strategy> emailAddressVerificationStrategies;
 
   /// allows first name?

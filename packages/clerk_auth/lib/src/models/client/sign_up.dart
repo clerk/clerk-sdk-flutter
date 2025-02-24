@@ -1,6 +1,6 @@
 import 'package:clerk_auth/src/models/client/field.dart';
 import 'package:clerk_auth/src/models/client/verification.dart';
-import 'package:clerk_auth/src/models/enums.dart';
+import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -43,19 +43,15 @@ class SignUp {
   final Status status;
 
   /// required fields
-  @JsonKey(fromJson: toFieldList)
   final List<Field> requiredFields;
 
   /// optional fields
-  @JsonKey(fromJson: toFieldList)
   final List<Field> optionalFields;
 
   /// missing fields
-  @JsonKey(fromJson: toFieldList)
   final List<Field> missingFields;
 
   /// unverified fields
-  @JsonKey(fromJson: toFieldList)
   final List<Field> unverifiedFields;
 
   /// username

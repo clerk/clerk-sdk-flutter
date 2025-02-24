@@ -8,7 +8,7 @@ part of 'session.dart';
 
 Session _$SessionFromJson(Map<String, dynamic> json) => Session(
       id: json['id'] as String,
-      status: $enumDecode(_$StatusEnumMap, json['status']),
+      status: Status.fromJson(json['status'] as String),
       lastActiveAt: intToDateTime(json['last_active_at']),
       expireAt: intToDateTime(json['expire_at']),
       abandonAt: intToDateTime(json['abandon_at']),
@@ -24,7 +24,7 @@ Session _$SessionFromJson(Map<String, dynamic> json) => Session(
 Map<String, dynamic> _$SessionToJson(Session instance) {
   final val = <String, dynamic>{
     'id': instance.id,
-    'status': _$StatusEnumMap[instance.status]!,
+    'status': instance.status.toJson(),
     'public_user_data': instance.publicUserData.toJson(),
   };
 
@@ -41,18 +41,3 @@ Map<String, dynamic> _$SessionToJson(Session instance) {
   val['abandon_at'] = dateTimeToInt(instance.abandonAt);
   return val;
 }
-
-const _$StatusEnumMap = {
-  Status.abandoned: 'abandoned',
-  Status.active: 'active',
-  Status.missingRequirements: 'missing_requirements',
-  Status.needsIdentifier: 'needs_identifier',
-  Status.needsFirstFactor: 'needs_first_factor',
-  Status.needsSecondFactor: 'needs_second_factor',
-  Status.transferable: 'transferable',
-  Status.unverified: 'unverified',
-  Status.verified: 'verified',
-  Status.complete: 'complete',
-  Status.expired: 'expired',
-  Status.failed: 'failed',
-};

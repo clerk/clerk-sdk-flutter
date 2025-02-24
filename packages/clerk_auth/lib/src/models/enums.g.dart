@@ -10,21 +10,6 @@ const _$EnrollmentModeEnumMap = {
   EnrollmentMode.manualInvitation: 'manual_invitation',
 };
 
-const _$StatusEnumMap = {
-  Status.abandoned: 'abandoned',
-  Status.active: 'active',
-  Status.missingRequirements: 'missing_requirements',
-  Status.needsIdentifier: 'needs_identifier',
-  Status.needsFirstFactor: 'needs_first_factor',
-  Status.needsSecondFactor: 'needs_second_factor',
-  Status.transferable: 'transferable',
-  Status.unverified: 'unverified',
-  Status.verified: 'verified',
-  Status.complete: 'complete',
-  Status.expired: 'expired',
-  Status.failed: 'failed',
-};
-
 const _$IdentificationStrategyEnumMap = {
   IdentificationStrategy.emailAddress: 'email_address',
   IdentificationStrategy.oauthApple: 'oauth_apple',

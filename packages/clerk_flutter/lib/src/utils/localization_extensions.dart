@@ -52,6 +52,7 @@ extension ClerkStatusLocalization on clerk.Status {
       clerk.Status.complete => localizations.complete,
       clerk.Status.expired => localizations.expired,
       clerk.Status.failed => localizations.failed,
+      _ => title,
     };
   }
 }

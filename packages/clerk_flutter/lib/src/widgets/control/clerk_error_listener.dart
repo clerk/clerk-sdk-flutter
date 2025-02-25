@@ -35,18 +35,20 @@ class ClerkErrorListener extends StatefulWidget {
   final Widget child;
 
   /// Default Error Handler
-  static Future<void> defaultErrorHandler(
+  static void defaultErrorHandler(
     BuildContext context,
     AuthError error,
-  ) async {
+  ) {
     final localizations = ClerkAuth.localizationsOf(context);
     final message = error.localizedMessage(localizations);
 
     final messenger = ScaffoldMessenger.maybeOf(context);
     if (messenger == null) {
       if (kDebugMode) {
-        debugPrint('Warning: no ScaffoldMessenger found '
-            'to display error: $message');
+        debugPrint(
+          'Warning: no ScaffoldMessenger found '
+          'to display error: $message',
+        );
       }
       return;
     }

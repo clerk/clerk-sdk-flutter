@@ -236,6 +236,12 @@ class Auth {
     update();
   }
 
+  /// Delete an external account
+  Future<void> deleteExternalAccount({required ExternalAccount account}) async {
+    await _api.deleteExternalAccount(account: account).then(_housekeeping);
+    update();
+  }
+
   /// Progressively attempt sign in
   ///
   /// Can be repeatedly called with updated parameters

@@ -210,12 +210,6 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                       child: _ExternalAccountList(
                         user: user,
                         env: auth.env,
-                        onAddNew: () => ClerkPage.show(
-                          context,
-                          builder: (context) => ConnectAccountPanel(
-                            onDone: (context) => Navigator.of(context).pop(),
-                          ),
-                        ),
                       ),
                     ),
                   ],
@@ -234,12 +228,36 @@ class _ExternalAccountList extends StatelessWidget {
   const _ExternalAccountList({
     required this.user,
     required this.env,
-    required this.onAddNew,
   });
 
   final clerk.User user;
   final clerk.Environment env;
-  final VoidCallback onAddNew;
+
+  void _onAddNew(BuildContext context) {
+    ClerkPage.show(
+      context,
+      builder: (context) => ConnectAccountPanel(
+        onDone: (context) async {
+          Navigator.of(context).pop();
+
+          final auth = ClerkAuth.of(context);
+          if (auth.user?.externalAccounts case final accounts?) {
+            for (final account in accounts) {
+              if (account.verification.errorMessage case String errorMessage) {
+                auth.addError(
+                  clerk.AuthError(
+                    message: errorMessage,
+                    code: clerk.AuthErrorCode.serverErrorResponse,
+                  ),
+                );
+                await auth.deleteExternalAccount(account: account);
+              }
+            }
+          }
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -281,7 +299,7 @@ class _ExternalAccountList extends StatelessWidget {
               ),
         GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: onAddNew,
+          onTap: () => _onAddNew(context),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -320,7 +338,7 @@ class _IdentifierList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (identifiers case List<clerk.UserIdentifyingData> identifiers) //
-          for (final ident in identifiers) //
+          for (final uid in identifiers) //
             Padding(
               padding: bottomPadding16,
               child: Row(
@@ -328,19 +346,18 @@ class _IdentifierList extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      format?.call(ident.identifier) ?? ident.identifier,
+                      format?.call(uid.identifier) ?? uid.identifier,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (ident.isUnverified) //
+                  if (uid.isUnverified) //
                     _RowLabel(
                       label: localizations.unverified,
                       color: ClerkColors.incarnadine,
-                      onTap: () =>
-                          onIdentifierUnverified.call(ident.identifier),
+                      onTap: () => onIdentifierUnverified.call(uid.identifier),
                     ),
-                  if (user.isPrimary(ident)) //
+                  if (user.isPrimary(uid)) //
                     _RowLabel(label: localizations.primary),
                 ],
               ),

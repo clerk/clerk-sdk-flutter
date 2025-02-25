@@ -440,6 +440,18 @@ class Api with Logging {
     );
   }
 
+  /// Delete an [ExternalAccount]
+  ///
+  Future<ApiResponse> deleteExternalAccount({
+    required ExternalAccount account,
+  }) async {
+    return await _fetchApiResponse(
+      '/me/external_accounts/${account.id}',
+      withSession: true,
+      method: HttpMethod.delete,
+    );
+  }
+
   /// After signing in via oauth, transfer the [SignUp] into an authenticated [User]
   ///
   Future<ApiResponse> transfer() async {

@@ -31,11 +31,13 @@ class ConnectAccountPanel extends StatelessWidget {
                 padding: horizontalPadding32 + bottomPadding32,
                 child: ClerkChangeObserver<DateTime>(
                   onChange: onDone,
-                  accumulateData: () =>
-                      auth.client.user?.externalAccounts?.map(
-                        (o) => o.updatedAt,
-                      ) ??
-                      const [],
+                  accumulateData: () {
+                    final accounts =
+                        auth.client.user?.externalAccounts ?? const [];
+                    return accounts
+                        .where((a) => a.isVerified || a.isInError)
+                        .map((a) => a.updatedAt);
+                  },
                   builder: (context) => ClerkSSOPanel(
                     onStrategyChosen: (strategy) =>
                         auth.ssoConnect(context, strategy),

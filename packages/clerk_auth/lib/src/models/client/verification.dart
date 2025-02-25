@@ -17,6 +17,7 @@ class Verification {
     required this.attempts,
     required this.expireAt,
     this.externalVerificationRedirectUrl,
+    this.errorMessage,
     this.nonce,
   });
 
@@ -39,6 +40,10 @@ class Verification {
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
   final DateTime expireAt;
 
+  /// error message
+  @JsonKey(readValue: _extractErrorMessage)
+  final String? errorMessage;
+
   /// fromJson
   static Verification fromJson(Map<String, dynamic> json) =>
       _$VerificationFromJson(json);
@@ -46,3 +51,6 @@ class Verification {
   /// toJson
   Map<String, dynamic> toJson() => _$VerificationToJson(this);
 }
+
+String? _extractErrorMessage(Map<dynamic, dynamic> map, String field) =>
+    map['error']?['long_message'] as String?;

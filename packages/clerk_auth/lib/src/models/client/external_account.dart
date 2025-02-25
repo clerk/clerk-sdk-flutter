@@ -78,6 +78,9 @@ class ExternalAccount {
   /// is verified?
   bool get isVerified => verification.status.isVerified;
 
+  /// is in error?
+  bool get isInError => verification.errorMessage is String;
+
   /// is expired?
   bool get isExpired => verification.status.isExpired;
 

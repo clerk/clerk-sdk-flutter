@@ -49,9 +49,9 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
 
   @override
   Map<String, dynamic> get telemetryPayload {
-    final sessionActions = widget.sessionActions ?? _defaultSessionActions();
+    final sessionActions = widget.sessionActions ?? _defaultSessionActions;
     final additionalActions =
-        widget.additionalActions ?? _defaultAdditionalActions();
+        widget.additionalActions ?? _defaultAdditionalActions;
     return {
       'show_name': widget.showName,
       'session_actions': sessionActions.map((a) => a.label).join(';'),
@@ -59,7 +59,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
     };
   }
 
-  List<ClerkUserAction> _defaultSessionActions() {
+  late final List<ClerkUserAction> _defaultSessionActions = () {
     final localizations = ClerkAuth.localizationsOf(context);
     return [
       ClerkUserAction(
@@ -73,9 +73,9 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
         callback: _signOut,
       ),
     ];
-  }
+  }();
 
-  List<ClerkUserAction> _defaultAdditionalActions() {
+  late final List<ClerkUserAction> _defaultAdditionalActions = () {
     final authState = ClerkAuth.of(context);
     final localizations = ClerkAuth.localizationsOf(context);
     return [
@@ -86,7 +86,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
           callback: _addAccount,
         ),
     ];
-  }
+  }();
 
   Future<void> _addAccount(BuildContext context, ClerkAuthState auth) =>
       ClerkPage.show(
@@ -128,9 +128,9 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
           final displaySessions = List<clerk.Session>.from(_sessions);
 
           final sessionActions =
-              widget.sessionActions ?? _defaultSessionActions();
+              widget.sessionActions ?? _defaultSessionActions;
           final additionalActions =
-              widget.additionalActions ?? _defaultAdditionalActions();
+              widget.additionalActions ?? _defaultAdditionalActions;
 
           return ClerkVerticalCard(
             topPortion: Column(

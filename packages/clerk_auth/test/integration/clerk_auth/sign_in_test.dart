@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/clerk_auth/auth.dart';
+import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/status.dart';

@@ -85,11 +85,17 @@ class _UserAndOrgTabs extends StatelessWidget {
                   tabs: [
                     SizedBox(
                       height: 30,
-                      child: Text('Users'),
+                      child: Text(
+                        'Users',
+                        style: TextStyle(color: Colors.blueGrey),
+                      ),
                     ),
                     SizedBox(
                       height: 30,
-                      child: Text('Organizations'),
+                      child: Text(
+                        'Organizations',
+                        style: TextStyle(color: Colors.blueGrey),
+                      ),
                     ),
                   ],
                 ),

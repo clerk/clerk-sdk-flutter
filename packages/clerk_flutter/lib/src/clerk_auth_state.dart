@@ -53,10 +53,6 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     return provider;
   }
 
-  /// The [clerk.AuthError] stream
-  late final errorStream = _errors.stream;
-
-  final _errors = StreamController<clerk.AuthError>.broadcast();
   final OverlayEntry _loadingOverlay;
 
   static const _kRotatingTokenNonce = 'rotating_token_nonce';
@@ -195,7 +191,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   }
 
   void _onError(clerk.AuthError error, ClerkErrorCallback? onError) {
-    _errors.add(error);
+    addError(error);
     onError?.call(error);
   }
 
@@ -268,9 +264,6 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
     return null;
   }
-
-  /// Add an [clerk.AuthError] for [message] to the [errorStream]
-  void addError(clerk.AuthError error) => _errors.add(error);
 }
 
 class _SsoWebViewOverlay extends StatefulWidget {

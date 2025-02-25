@@ -46,13 +46,13 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
 
   @override
   Map<String, dynamic> get telemetryPayload {
-    final actions = widget.actions ?? _defaultActions();
+    final actions = widget.actions ?? _defaultActions;
     return {
       'actions': actions.map((a) => a.label).join(';'),
     };
   }
 
-  List<ClerkUserAction> _defaultActions() {
+  late final List<ClerkUserAction> _defaultActions = () {
     final authState = ClerkAuth.of(context);
     final localizations = ClerkAuth.localizationsOf(context);
     return [
@@ -63,7 +63,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
           callback: _createOrganization,
         ),
     ];
-  }
+  }();
 
   Future<void> _createOrganization(
     BuildContext context,
@@ -114,7 +114,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
 
           final memberships = _user.organizationMemberships ?? [];
 
-          final actions = widget.actions ?? _defaultActions();
+          final actions = widget.actions ?? _defaultActions;
 
           return ClerkVerticalCard(
             topPortion: Column(

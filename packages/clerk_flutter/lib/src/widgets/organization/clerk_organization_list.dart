@@ -39,6 +39,8 @@ class ClerkOrganizationList extends StatefulWidget {
 
 class _ClerkOrganizationListState extends State<ClerkOrganizationList>
     with ClerkTelemetryStateMixin {
+  ClerkAuthState? _authState;
+  ClerkSdkLocalizations? _localizations;
   late clerk.User _user = widget.initialUser;
   clerk.User? _nextUser;
 
@@ -46,24 +48,24 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
 
   @override
   Map<String, dynamic> get telemetryPayload {
-    final actions = widget.actions ?? _defaultActions;
+    final actions = widget.actions ?? _defaultActions();
     return {
       'actions': actions.map((a) => a.label).join(';'),
     };
   }
 
-  late final List<ClerkUserAction> _defaultActions = () {
-    final authState = ClerkAuth.of(context);
-    final localizations = ClerkAuth.localizationsOf(context);
+  List<ClerkUserAction> _defaultActions() {
+    _authState ??= ClerkAuth.of(context);
+    _localizations ??= ClerkAuth.localizationsOf(context);
     return [
-      if (authState.user?.createOrganizationEnabled == true) //
+      if (_authState!.user?.createOrganizationEnabled == true) //
         ClerkUserAction(
           asset: ClerkAssets.addIcon,
-          label: localizations.createOrganization,
+          label: _localizations!.createOrganization,
           callback: _createOrganization,
         ),
     ];
-  }();
+  }
 
   Future<void> _createOrganization(
     BuildContext context,
@@ -114,7 +116,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
 
           final memberships = _user.organizationMemberships ?? [];
 
-          final actions = widget.actions ?? _defaultActions;
+          final actions = widget.actions ?? _defaultActions();
 
           return ClerkVerticalCard(
             topPortion: Column(

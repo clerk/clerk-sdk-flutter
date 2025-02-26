@@ -45,13 +45,15 @@ class ClerkUserButton extends StatefulWidget {
 
 class _ClerkUserButtonState extends State<ClerkUserButton>
     with ClerkTelemetryStateMixin {
+  ClerkAuthState? _authState;
+  ClerkSdkLocalizations? _localizations;
   final _sessions = <clerk.Session>[];
 
   @override
   Map<String, dynamic> get telemetryPayload {
-    final sessionActions = widget.sessionActions ?? _defaultSessionActions;
+    final sessionActions = widget.sessionActions ?? _defaultSessionActions();
     final additionalActions =
-        widget.additionalActions ?? _defaultAdditionalActions;
+        widget.additionalActions ?? _defaultAdditionalActions();
     return {
       'show_name': widget.showName,
       'session_actions': sessionActions.map((a) => a.label).join(';'),
@@ -59,34 +61,34 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
     };
   }
 
-  late final List<ClerkUserAction> _defaultSessionActions = () {
-    final localizations = ClerkAuth.localizationsOf(context);
+  List<ClerkUserAction> _defaultSessionActions() {
+    _localizations ??= ClerkAuth.localizationsOf(context);
     return [
       ClerkUserAction(
         asset: ClerkAssets.gearIcon,
-        label: localizations.profile,
+        label: _localizations!.profile,
         callback: _manageAccount,
       ),
       ClerkUserAction(
         asset: ClerkAssets.signOutIcon,
-        label: localizations.signOut,
+        label: _localizations!.signOut,
         callback: _signOut,
       ),
     ];
-  }();
+  }
 
-  late final List<ClerkUserAction> _defaultAdditionalActions = () {
-    final authState = ClerkAuth.of(context);
-    final localizations = ClerkAuth.localizationsOf(context);
+  List<ClerkUserAction> _defaultAdditionalActions() {
+    _authState ??= ClerkAuth.of(context);
+    _localizations ??= ClerkAuth.localizationsOf(context);
     return [
-      if (authState.env.config.singleSessionMode == false)
+      if (_authState!.env.config.singleSessionMode == false)
         ClerkUserAction(
           asset: ClerkAssets.addIcon,
-          label: localizations.addAccount,
+          label: _localizations!.addAccount,
           callback: _addAccount,
         ),
     ];
-  }();
+  }
 
   Future<void> _addAccount(BuildContext context, ClerkAuthState auth) =>
       ClerkPage.show(
@@ -128,9 +130,9 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
           final displaySessions = List<clerk.Session>.from(_sessions);
 
           final sessionActions =
-              widget.sessionActions ?? _defaultSessionActions;
+              widget.sessionActions ?? _defaultSessionActions();
           final additionalActions =
-              widget.additionalActions ?? _defaultAdditionalActions;
+              widget.additionalActions ?? _defaultAdditionalActions();
 
           return ClerkVerticalCard(
             topPortion: Column(

@@ -71,11 +71,12 @@ class Auth {
 
   static const _codeLength = 6;
 
-  /// The [clerk.AuthError] stream
-  late final errorStream = _errors.stream;
   final _errors = StreamController<AuthError>.broadcast();
 
-  /// Add an [clerk.AuthError] for [message] to the [errorStream]
+  /// Stream of errors reported by the SDK of type [AuthError]
+  Stream<AuthError> get errorStream => _errors.stream;
+
+  /// Adds [error] to [errorStream]
   void addError(AuthError error) => _errors.add(error);
 
   /// The [Environment] object

@@ -44,23 +44,18 @@ class ExampleApp extends StatelessWidget {
     return ClerkAuth(
       config: ClerkAuthConfig(publishableKey: publishableKey),
       child: MaterialApp(
+        theme: ThemeData.light(),
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          backgroundColor: const Color(0xFFf5f5f5),
           body: SafeArea(
-            child: Center(
-              child: ClerkErrorListener(
-                child: ClerkAuthBuilder(
-                  signedInBuilder: (context, auth) {
-                    if (auth.env.organization.isEnabled == false) {
-                      return const ClerkUserButton();
-                    }
-                    return const _UserAndOrgTabs();
-                  },
-                  signedOutBuilder: (context, auth) {
-                    return const ClerkAuthentication();
-                  },
-                ),
+            child: ClerkErrorListener(
+              child: ClerkAuthBuilder(
+                signedInBuilder: (context, authState) {
+                  return const ClerkUserButton();
+                },
+                signedOutBuilder: (context, authState) {
+                  return const ClerkAuthentication();
+                },
               ),
             ),
           ),

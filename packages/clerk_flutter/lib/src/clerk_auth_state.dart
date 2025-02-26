@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/clerk_loading_overlay.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:collection/collection.dart';
@@ -22,9 +23,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     this._config,
     clerk.Persistor persistor,
     clerk.HttpService httpService,
-  )   : _loadingOverlay = OverlayEntry(
-          builder: (context) => _config.loading ?? defaultLoadingWidget,
-        ),
+  )   : _loadingOverlay = ClerkLoadingOverlay(_config),
         super(
           config: _config,
           persistor: persistor,
@@ -63,7 +62,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     return localizations!;
   }
 
-  final OverlayEntry _loadingOverlay;
+  final ClerkLoadingOverlay _loadingOverlay;
 
   static const _kRotatingTokenNonce = 'rotating_token_nonce';
   static const _kSsoRouteName = 'clerk_sso_popup';
@@ -179,25 +178,13 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     ClerkErrorCallback? onError,
   }) async {
     T? result;
-
-    bool showLoading = true;
-    scheduleMicrotask(
-      () {
-        if (showLoading && context.mounted && !_loadingOverlay.mounted) {
-          Overlay.of(context).insert(_loadingOverlay);
-        }
-      },
-    );
-
+    _loadingOverlay.show(context);
     try {
       result = await fn();
     } on clerk.AuthError catch (error) {
       _onError(error, onError);
     } finally {
-      showLoading = false;
-      if (_loadingOverlay.mounted) {
-        _loadingOverlay.remove();
-      }
+      _loadingOverlay.hide();
     }
     return result;
   }

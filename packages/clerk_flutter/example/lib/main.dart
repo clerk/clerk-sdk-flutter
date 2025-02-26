@@ -43,8 +43,8 @@ class ExampleApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData.light(),
         debugShowCheckedModeBanner: false,
-        home: Material(
-          child: SafeArea(
+        home: Scaffold(
+          body: SafeArea(
             child: ClerkErrorListener(
               child: ClerkAuthBuilder(
                 signedInBuilder: (context, authState) {

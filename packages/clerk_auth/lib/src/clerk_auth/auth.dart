@@ -85,6 +85,9 @@ class Auth {
   /// The current [User] object, or null
   User? get user => session?.user;
 
+  /// Are we currently signed in?
+  bool get isSignedIn => user != null;
+
   /// Are we currently signing in?
   bool get isSigningIn => signIn?.status.isActive == true;
 
@@ -247,12 +250,19 @@ class Auth {
     String? token,
     String? redirectUrl,
   }) async {
-    if (client.signIn == null && identifier is String) {
+    if ((client.signIn == null ||
+            client.signIn?.status == Status.needsIdentifier) &&
+        identifier is String) {
       // if a password has been presented, we can immediately attempt a sign in
       // if `password` is null it will be ignored
       await _api
           .createSignIn(identifier: identifier, password: password)
           .then(_housekeeping);
+
+      // Did we just complete sign in with password?
+      if (isSignedIn) {
+        return;
+      }
     }
 
     switch (client.signIn) {
@@ -288,7 +298,7 @@ class Auth {
         return signInCompleter.future;
 
       case SignIn signIn
-          when signIn.status == Status.needsFirstFactor &&
+          when (signIn.status == Status.needsFirstFactor) &&
               strategy == Strategy.password:
         await _api
             .attemptSignIn(
@@ -324,6 +334,14 @@ class Auth {
         await _api
             .attemptSignIn(signIn, stage: stage, strategy: strategy, code: code)
             .then(_housekeeping);
+
+      // No matching sign-in sequence, reset loading state
+      default:
+        addError(AuthError(
+          code: AuthErrorCode.signInError,
+          message: 'Unsupported sign in attempt: {arg}',
+          argument: signIn?.status.toString() ?? '',
+        ));
     }
 
     update();

@@ -25,17 +25,18 @@ enum ClosingAxis {
 /// [Closeable] provides a widget that will animate to closed or open positions depending
 /// on the `open` or `closed` parameter values. One and only one of `open` or `closed` must
 /// be provided.
-class Closeable extends StatelessWidget {
+class Closeable extends StatefulWidget {
   /// Construct a [Closeable] panel
   const Closeable({
     super.key,
     required this.closed,
-    this.child,
+    this.animateToFirstPosition = false,
     this.duration = _defaultDuration,
     this.axis = ClosingAxis.vertical,
     this.alignment = Alignment.topLeft,
     this.curve = Curves.linear,
     this.onEnd,
+    this.child,
   });
 
   /// Animation's [Duration]
@@ -43,9 +44,6 @@ class Closeable extends StatelessWidget {
 
   /// Animation's [Curve]
   final Curve curve;
-
-  /// Child [Widget] to be displayed in the panel
-  final Widget? child;
 
   /// Axis of animation
   final ClosingAxis axis;
@@ -56,9 +54,45 @@ class Closeable extends StatelessWidget {
   /// is the panel closed?
   final bool closed;
 
+  /// Should the panel start closed?
+  final bool animateToFirstPosition;
+
   /// optional function to call when closing or opening has
   /// finished animating
   final ValueChanged<bool>? onEnd;
+
+  /// Child [Widget] to be displayed in the panel
+  final Widget? child;
+
+  @override
+  State<Closeable> createState() => _CloseableState();
+}
+
+class _CloseableState extends State<Closeable> {
+  late bool closed =
+      widget.animateToFirstPosition ? widget.closed == false : widget.closed;
+  late bool _renderChild = closed == false;
+
+  void _update() {
+    if (closed != widget.closed) {
+      _renderChild = true;
+      closed = widget.closed;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (closed != widget.closed) {
+      scheduleMicrotask(() => setState(_update));
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant Closeable oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _update();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,92 +101,20 @@ class Closeable extends StatelessWidget {
       ignoring: closed,
       child: ClipRect(
         child: AnimatedAlign(
-          duration: duration,
-          curve: curve,
-          alignment: alignment,
-          heightFactor: axis.isVertical ? value : null,
-          widthFactor: axis.isHorizontal ? value : null,
-          onEnd: () => onEnd?.call(closed),
-          child: child,
+          duration: widget.duration,
+          curve: widget.curve,
+          alignment: widget.alignment,
+          heightFactor: widget.axis.isVertical ? value : null,
+          widthFactor: widget.axis.isHorizontal ? value : null,
+          onEnd: () {
+            widget.onEnd?.call(closed);
+            if (closed) {
+              setState(() => _renderChild = false);
+            }
+          },
+          child: _renderChild ? widget.child : null,
         ),
       ),
-    );
-  }
-}
-
-/// A version of [Closeable] that will animate to its state
-/// from the other on first render
-///
-class AnimatedCloseable extends StatefulWidget {
-  /// Construct an [AnimatedCloseable]
-  const AnimatedCloseable({
-    super.key,
-    required this.closed,
-    this.child,
-    this.duration = _defaultDuration,
-    this.axis = ClosingAxis.vertical,
-    this.alignment = Alignment.topLeft,
-    this.curve = Curves.linear,
-    this.onEnd,
-  });
-
-  /// Animation's [Duration]
-  final Duration duration;
-
-  /// Animation's [Curve]
-  final Curve curve;
-
-  /// Child [Widget] to be displayed in the panel
-  final Widget? child;
-
-  /// Axis of animation
-  final ClosingAxis axis;
-
-  /// Alignment of child widget within the panel
-  final Alignment alignment;
-
-  /// is the panel closed?
-  final bool closed;
-
-  /// optional function to call when closing or opening has
-  /// finished animating
-  final ValueChanged<bool>? onEnd;
-
-  @override
-  State<AnimatedCloseable> createState() => _AnimatedCloseableState();
-}
-
-class _AnimatedCloseableState extends State<AnimatedCloseable> {
-  late bool closed = widget.closed == false;
-
-  void _update() {
-    if (closed != widget.closed) {
-      setState(() => closed = widget.closed);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    scheduleMicrotask(_update);
-  }
-
-  @override
-  void didUpdateWidget(covariant AnimatedCloseable oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _update();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Closeable(
-      closed: closed,
-      curve: widget.curve,
-      duration: widget.duration,
-      axis: widget.axis,
-      alignment: widget.alignment,
-      onEnd: widget.onEnd,
-      child: widget.child,
     );
   }
 }

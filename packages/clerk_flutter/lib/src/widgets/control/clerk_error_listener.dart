@@ -44,42 +44,45 @@ class _ClerkErrorListenerState extends State<ClerkErrorListener> {
     if (widget.handler case ClerkErrorHandler handler) {
       return handler(context, error);
     }
-
-    final messenger = ScaffoldMessenger.of(context);
-    final localizations = ClerkAuth.localizationsOf(context);
-    final message = error.localizedMessage(localizations);
-    final controller = messenger.showSnackBar(
-      SnackBar(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12.0),
-            topRight: Radius.circular(12.0),
+    try {
+      final messenger = ScaffoldMessenger.of(context);
+      final localizations = ClerkAuth.localizationsOf(context);
+      final message = error.localizedMessage(localizations);
+      final controller = messenger.showSnackBar(
+        SnackBar(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12.0),
+              topRight: Radius.circular(12.0),
+            ),
+          ),
+          content: Text(
+            message,
+            style: ClerkTextStyle.subtitle.copyWith(
+              color: ClerkColors.white,
+            ),
           ),
         ),
-        content: Text(
-          message,
-          style: ClerkTextStyle.subtitle.copyWith(
-            color: ClerkColors.white,
-          ),
-        ),
-      ),
-    );
+      );
 
-    await controller.closed;
+      await controller.closed;
+    } catch (_) {
+      debugPrint(
+        'ClerkErrorListener must be placed beneath a ScaffoldMessenger or MaterialApp '
+        'in the widget tree and the tree must contain a Scaffold to display errors, '
+        'or a handler provided.',
+      );
+      rethrow;
+    }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_errorSub == null) {
-      assert(
-        widget.handler != null || ScaffoldMessenger.maybeOf(context) != null,
-        'ClerkErrorListener must be placed beneath a ScaffoldMessenger '
-        'in the widget tree, or a handler provided',
-      );
-      _errorSub =
-          ClerkAuth.errorStreamOf(context).asyncMap(_errorHandler).listen(null);
-    }
+    _errorSub?.cancel();
+    _errorSub = ClerkAuth.errorStreamOf(context) //
+        .asyncMap(_errorHandler)
+        .listen(null);
   }
 
   @override

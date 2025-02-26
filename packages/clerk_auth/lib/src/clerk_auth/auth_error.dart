@@ -69,4 +69,7 @@ enum AuthErrorCode {
 
   /// Unsupported strategy for second factor
   noSuchSecondFactorStrategy,
+
+  /// Unsupported Sign-in attempt
+  signInError,
 }

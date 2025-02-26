@@ -121,6 +121,7 @@ class _TextFieldState extends State<_TextField> {
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onSubmit,
       obscureText: widget.obscureText,
+      obscuringCharacter: '\u25CF', // Unicode: Black Circle
       validator: (text) {
         if (widget.validator?.call(text) case bool valid) {
           WidgetsBinding.instance.addPostFrameCallback(

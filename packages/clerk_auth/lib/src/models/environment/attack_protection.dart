@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -34,6 +35,13 @@ class AttackProtection {
 
   /// toJson
   Map<String, dynamic> toJson() => _$AttackProtectionToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'userLockout: $userLockout, '
+      'piiEnabled: $piiEnabled, '
+      'emailLinkRequireSameClient: $emailLinkRequireSameClient'
+      '}';
 }
 
 /// [UserLockout] Clerk object
@@ -67,8 +75,14 @@ class UserLockout {
       _$UserLockoutFromJson(json);
 
   /// toJson
-  /// toJson
   Map<String, dynamic> toJson() => _$UserLockoutToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'isEnabled: $isEnabled, '
+      'maxAttempts: $maxAttempts, '
+      'duration: $duration'
+      '}';
 }
 
 Duration _toDuration(dynamic value) =>

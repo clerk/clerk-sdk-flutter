@@ -1,5 +1,6 @@
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/models/environment.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -70,6 +71,21 @@ class UserSettings {
 
   /// toJson
   Map<String, dynamic> toJson() => _$UserSettingsToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'attributes: $attributes, '
+      'signIn: $signIn, '
+      'signUp: $signUp, '
+      'restrictions: $restrictions, '
+      'usernameSettings: $usernameSettings, '
+      'actions: $actions, '
+      'attackProtection: $attackProtection, '
+      'passkeySettings: $passkeySettings, '
+      'passwordSettings: $passwordSettings, '
+      'socialSettings: $socialSettings, '
+      'saml: $saml'
+      '}';
 }
 
 bool _readSamlEnabled(map, _) => map['saml']?['enabled'] == true;

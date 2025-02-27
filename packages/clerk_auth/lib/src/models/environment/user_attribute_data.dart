@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -59,4 +60,16 @@ class UserAttributeData {
 
   /// toJson
   Map<String, dynamic> toJson() => _$UserAttributeDataToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'isEnabled: $isEnabled, '
+      'isRequired: $isRequired, '
+      'usedForFirstFactor: $usedForFirstFactor, '
+      'firstFactors: $firstFactors, '
+      'userForSecondFactor: $userForSecondFactor, '
+      'secondFactors: $secondFactors, '
+      'verifyAtSignUp: $verifyAtSignUp, '
+      'verifications: $verifications'
+      '}';
 }

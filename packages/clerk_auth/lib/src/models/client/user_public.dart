@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -42,4 +43,14 @@ class UserPublic {
 
   /// toJson
   Map<String, dynamic> toJson() => _$UserPublicToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'identifier: $identifier, '
+      'firstName: $firstName, '
+      'lastName: $lastName, '
+      'profileImageUrl: $profileImageUrl, '
+      'imageUrl: $imageUrl, '
+      'hasImage: $hasImage'
+      '}';
 }

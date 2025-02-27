@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -32,4 +33,11 @@ class TelemetricEvent {
 
   /// toJson
   Map<String, dynamic> toJson() => _$TelemetricEventToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'event: $event, '
+      'payload: $payload, '
+      'timestamp: $timestamp'
+      '}';
 }

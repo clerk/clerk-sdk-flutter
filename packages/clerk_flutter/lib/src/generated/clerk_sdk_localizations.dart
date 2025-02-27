@@ -322,6 +322,12 @@ abstract class ClerkSdkLocalizations {
   /// **'NEEDS SECOND FACTOR'**
   String get needsSecondFactor;
 
+  /// No description provided for @noAssociatedCodeRetrievalMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'No code retrieval method associated with {arg}'**
+  String noAssociatedCodeRetrievalMethod(String arg);
+
   /// No description provided for @noAssociatedStrategy.
   ///
   /// In en, this message translates to:

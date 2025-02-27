@@ -140,6 +140,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get needsSecondFactor => 'NEEDS SECOND FACTOR';
 
   @override
+  String noAssociatedCodeRetrievalMethod(String arg) {
+    return 'No code retrieval method associated with $arg';
+  }
+
+  @override
   String noAssociatedStrategy(String arg) {
     return 'No strategy associated with $arg';
   }

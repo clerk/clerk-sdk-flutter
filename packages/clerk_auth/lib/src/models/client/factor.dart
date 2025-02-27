@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -51,4 +52,16 @@ class Factor {
 
   /// toJson
   Map<String, dynamic> toJson() => _$FactorToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'strategy: $strategy, '
+      'safeIdentifier: $safeIdentifier, '
+      'emailAddressId: $emailAddressId, '
+      'phoneNumberId: $phoneNumberId, '
+      'web3WalletId: $web3WalletId, '
+      'passkeyId: $passkeyId, '
+      'isPrimary: $isPrimary, '
+      'isDefault: $isDefault'
+      '}';
 }

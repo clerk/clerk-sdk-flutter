@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -74,6 +75,21 @@ class PasswordSettings {
   /// fromJson
   static PasswordSettings fromJson(Map<String, dynamic> json) =>
       _$PasswordSettingsFromJson(json);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'allowedSpecialCharacters: $allowedSpecialCharacters, '
+      'minZxcvbnStrength: $minZxcvbnStrength, '
+      'minLength: $minLength, '
+      'maxLength: $maxLength, '
+      'disableHibp: $disableHibp, '
+      'requireSpecialChar: $requireSpecialChar, '
+      'requireNumbers: $requireNumbers, '
+      'requireUppercase: $requireUppercase, '
+      'requireLowercase: $requireLowercase, '
+      'showZxcvbn: $showZxcvbn, '
+      'enforceHibpOnSignIn: $enforceHibpOnSignIn'
+      '}';
 
   /// toJson
   Map<String, dynamic> toJson() => _$PasswordSettingsToJson(this);

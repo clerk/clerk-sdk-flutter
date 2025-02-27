@@ -1,6 +1,10 @@
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/models/enums.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+
+import 'field.dart';
 
 /// [Strategy] Clerk object
 ///
@@ -45,11 +49,11 @@ class Strategy {
 
   /// the collected oauth strategies
   static final oauthStrategies = {
-    oauthApple.toString(): oauthApple,
-    oauthGithub.toString(): oauthGithub,
-    oauthGoogle.toString(): oauthGoogle,
+    oauthApple.fullName: oauthApple,
+    oauthGithub.fullName: oauthGithub,
+    oauthGoogle.fullName: oauthGoogle,
     // 'google_one_tap': oauthGoogle, // guessing this is a synonym?
-    oauthTokenApple.toString(): oauthTokenApple,
+    oauthTokenApple.fullName: oauthTokenApple,
   };
 
   // verification strategies
@@ -158,6 +162,9 @@ class Strategy {
   bool get requiresRedirect =>
       name == _oauth || const [emailLink, saml].contains(this);
 
+  /// The [fullName] of the strategy, including provider if appropriate
+  String get fullName => [name, provider].nonNulls.join('_');
+
   /// For a given [name] return the [Strategy] it identifies.
   /// Create one if necessary and possible
   ///
@@ -193,24 +200,41 @@ class Strategy {
     return null;
   }
 
-  /// For a given object, return an appropriate [Strategy], or
+  /// For a given [Field], return an appropriate [Strategy], or
   /// throw an error
   ///
-  static Strategy forObject<T extends Object>(T object) {
-    return switch (object.toString()) {
-      'phone_number' => Strategy.phoneCode,
-      'email_address' => Strategy.emailCode,
-      String name => throw AuthError(
+  static Strategy forField(Field field) {
+    return switch (field) {
+      Field.phoneNumber => Strategy.phoneCode,
+      Field.emailAddress => Strategy.emailCode,
+      _ => throw AuthError(
           message: 'No strategy associated with {arg}',
-          argument: '${T.runtimeType} \'$name\'',
+          argument: field.name,
+          code: AuthErrorCode.noAssociatedStrategy,
+        ),
+    };
+  }
+
+  /// For a given [UserAttribute], return an appropriate [Strategy], or
+  /// throw an error
+  ///
+  static Strategy forUserAttribute(UserAttribute attr) {
+    return switch (attr) {
+      UserAttribute.phoneNumber => Strategy.phoneCode,
+      UserAttribute.emailAddress => Strategy.emailCode,
+      _ => throw AuthError(
+          message: 'No strategy associated with {arg}',
+          argument: attr.name,
           code: AuthErrorCode.noAssociatedStrategy,
         ),
     };
   }
 
   /// toJson
-  String toJson() => toString();
+  String toJson() => fullName;
 
   @override
-  String toString() => [name, provider].nonNulls.join('_');
+  String toString() => '${describeIdentity()}{'
+      'name: $fullName'
+      '}';
 }

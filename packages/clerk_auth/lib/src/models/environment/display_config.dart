@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/models/enums.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -162,4 +163,43 @@ class DisplayConfig {
 
   /// toJson
   Map<String, dynamic> toJson() => _$DisplayConfigToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'id" $id, '
+      'applicationName" $applicationName, '
+      'branded" $branded, '
+      'experimentalForceOauthFirst" $experimentalForceOauthFirst, '
+      'showDevmodeWarning" $showDevmodeWarning, '
+      'afterCreateOrganizationUrl" $afterCreateOrganizationUrl, '
+      'afterLeaveOrganizationUrl" $afterLeaveOrganizationUrl, '
+      'afterSignInUrl" $afterSignInUrl, '
+      'afterSignOutAllUrl" $afterSignOutAllUrl, '
+      'afterSignOutOneUrl" $afterSignOutOneUrl, '
+      'afterSignUpUrl" $afterSignUpUrl, '
+      'afterSwitchSessionUrl" $afterSwitchSessionUrl, '
+      'captchaProvider" $captchaProvider, '
+      'captchaPublicKeyInvisible" $captchaPublicKeyInvisible, '
+      'captchaPublicKey" $captchaPublicKey, '
+      'captchaWidgetType" $captchaWidgetType, '
+      'clerkJsVersion" $clerkJsVersion, '
+      'createOrganizationUrl" $createOrganizationUrl, '
+      'faviconImageUrl" $faviconImageUrl, '
+      'faviconUrl" $faviconUrl, '
+      'googleOneTapClientId" $googleOneTapClientId, '
+      'helpUrl" $helpUrl, '
+      'homeUrl" $homeUrl, '
+      'instanceEnvironmentType" $instanceEnvironmentType, '
+      'logoImageUrl" $logoImageUrl, '
+      'logoLinkUrl" $logoLinkUrl, '
+      'logoUrl" $logoUrl, '
+      'organizationProfileUrl" $organizationProfileUrl, '
+      'preferredSignInStrategy" $preferredSignInStrategy, '
+      'privacyPolicyUrl" $privacyPolicyUrl, '
+      'signInUrl" $signInUrl, '
+      'signUpUrl" $signUpUrl, '
+      'supportEmail" $supportEmail, '
+      'termsUrl" $termsUrl, '
+      'userProfileUrl" $userProfileUrl'
+      '}';
 }

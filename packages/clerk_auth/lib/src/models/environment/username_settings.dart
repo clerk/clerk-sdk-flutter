@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -28,4 +29,10 @@ class UsernameSettings {
 
   /// toJson
   Map<String, dynamic> toJson() => _$UsernameSettingsToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'minLength: $minLength, '
+      'maxLength: $maxLength'
+      '}';
 }

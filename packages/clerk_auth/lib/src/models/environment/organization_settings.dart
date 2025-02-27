@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -43,4 +44,13 @@ class OrganizationSettings {
 
   /// toJson
   Map<String, dynamic> toJson() => _$OrganizationSettingsToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'maxAllowedMemberships: $maxAllowedMemberships, '
+      'creatorRole: $creatorRole, '
+      'actions: $actions, '
+      'domains: $domains, '
+      'isEnabled: $isEnabled'
+      '}';
 }

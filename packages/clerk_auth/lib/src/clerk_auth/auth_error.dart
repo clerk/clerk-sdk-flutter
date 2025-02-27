@@ -52,6 +52,9 @@ enum AuthErrorCode {
   /// No strategy associated with type,
   noAssociatedStrategy,
 
+  /// No code retrieval method associated with the strategy,
+  noAssociatedCodeRetrievalMethod,
+
   /// Password and password confirmation must match
   passwordMatchError,
 

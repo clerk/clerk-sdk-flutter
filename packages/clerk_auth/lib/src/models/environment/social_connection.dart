@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -64,4 +65,17 @@ class SocialConnection {
 
   /// toJson
   Map<String, dynamic> toJson() => _$SocialConnectionToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'isEnabled: $isEnabled, '
+      'isRequired: $isRequired, '
+      'authenticatable: $authenticatable, '
+      'blockEmailSubaddresses: $blockEmailSubaddresses, '
+      'strategy: $strategy, '
+      'notSelectable: $notSelectable, '
+      'deprecated: $deprecated, '
+      'name: $name, '
+      'logoUrl: $logoUrl'
+      '}';
 }

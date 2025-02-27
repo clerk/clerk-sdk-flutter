@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/models/client/verification.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -90,4 +91,25 @@ class ExternalAccount {
 
   /// toJson
   Map<String, dynamic> toJson() => _$ExternalAccountToJson(this);
+
+  @override
+  String toString() {
+    return '${describeIdentity()}{'
+        'id: $id, '
+        'provider: $provider, '
+        'providerUserId: $providerUserId, '
+        'approvedScopes: $approvedScopes, '
+        'emailAddress: $emailAddress, '
+        'username: $username, '
+        'firstName: $firstName, '
+        'lastName: $lastName, '
+        'avatarUrl: $avatarUrl, '
+        'imageUrl: $imageUrl, '
+        'label: $label, '
+        'publicMetadata: $publicMetadata, '
+        'verification: $verification, '
+        'updatedAt: $updatedAt, '
+        'createdAt: $createdAt'
+        '}';
+  }
 }

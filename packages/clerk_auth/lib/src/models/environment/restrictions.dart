@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -45,6 +46,15 @@ class Restrictions {
 
   /// toJson
   Map<String, dynamic> toJson() => _$RestrictionsToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'allowlistEnabled: $allowlistEnabled, '
+      'blocklistEnabled: $blocklistEnabled, '
+      'blockEmailSubaddresses: $blockEmailSubaddresses, '
+      'blockDisposableEmailDomains: $blockDisposableEmailDomains, '
+      'ignoreDotsForEmailAddresses: $ignoreDotsForEmailAddresses'
+      '}';
 }
 
 bool _readStatus(map, name) => map[name]?['enabled'] == true;

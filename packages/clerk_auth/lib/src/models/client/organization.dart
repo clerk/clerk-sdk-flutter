@@ -81,4 +81,21 @@ class Organization {
 
   /// toJson
   Map<String, dynamic> toJson() => _$OrganizationToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'id: $id, '
+      'name: $name, '
+      'maxAllowedMemberships: $maxAllowedMemberships, '
+      'adminDeleteEnabled: $adminDeleteEnabled, '
+      'slug: $slug, '
+      'logoUrl: $logoUrl, '
+      'imageUrl: $imageUrl, '
+      'hasImage: $hasImage, '
+      'membersCount: $membersCount, '
+      'pendingInvitationsCount: $pendingInvitationsCount, '
+      'publicMetadata: $publicMetadata, '
+      'updatedAt: $updatedAt, '
+      'createdAt: $createdAt'
+      '}';
 }

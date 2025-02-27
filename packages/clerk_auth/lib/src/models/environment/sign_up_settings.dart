@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -44,4 +45,14 @@ class SignUpSettings {
 
   /// toJson
   Map<String, dynamic> toJson() => _$SignUpSettingsToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'captchaEnabled: $captchaEnabled, '
+      'captchaWidgetType: $captchaWidgetType, '
+      'customActionRequired: $customActionRequired, '
+      'progressive: $progressive, '
+      'mode: $mode, '
+      'legalConsentEnabled: $legalConsentEnabled'
+      '}';
 }

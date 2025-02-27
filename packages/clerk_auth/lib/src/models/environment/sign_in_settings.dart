@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -27,6 +28,11 @@ class SignInSettings {
 
   /// toJson
   Map<String, dynamic> toJson() => _$SignInSettingsToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'secondFactorRequired: $secondFactorRequired'
+      '}';
 }
 
 bool _readSecondFactorRequired(map, _) =>

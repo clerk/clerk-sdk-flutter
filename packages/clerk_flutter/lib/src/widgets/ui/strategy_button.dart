@@ -68,7 +68,12 @@ class StrategyButton extends StatelessWidget {
                 localizations.signInByEnteringACodeSentToYouByEmail,
               clerk.Strategy.phoneCode =>
                 localizations.signInByEnteringACodeSentToYouByTextMessage,
-              _ => strategy.toString(),
+              _ => throw clerk.AuthError(
+                  code: clerk.AuthErrorCode.noAssociatedStrategy,
+                  message: localizations.noAssociatedCodeRetrievalMethod(
+                    strategy.fullName,
+                  ),
+                ),
             },
             maxLines: 1,
             style: ClerkTextStyle.buttonTitle,

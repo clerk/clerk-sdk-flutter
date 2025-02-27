@@ -104,6 +104,14 @@
   "needsFirstFactor": "NEEDS FIRST FACTOR",
   "needsIdentifier": "NEEDS IDENTIFIER",
   "needsSecondFactor": "NEEDS SECOND FACTOR",
+  "noAssociatedCodeRetrievalMethod": "No code retrieval method associated with {arg}",
+  "@noAssociatedCodeRetrievalMethod": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
   "noAssociatedStrategy": "No strategy associated with {arg}",
   "@noAssociatedStrategy": {
     "placeholders": {

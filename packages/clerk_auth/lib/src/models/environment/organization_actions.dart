@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -25,4 +26,9 @@ class OrganizationActions {
 
   /// toJson
   Map<String, dynamic> toJson() => _$OrganizationActionsToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'adminDelete: $adminDelete'
+      '}';
 }

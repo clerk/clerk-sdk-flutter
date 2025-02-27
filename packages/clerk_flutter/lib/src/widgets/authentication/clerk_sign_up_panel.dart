@@ -144,12 +144,14 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                 signUp?.unverified(attr.relatedField) != true,
             onSubmit: (code) async {
               await _continue(
-                strategy: clerk.Strategy.forObject(attr),
+                strategy: clerk.Strategy.forUserAttribute(attr),
                 code: code,
               );
               return false;
             },
-            onResend: () => _continue(strategy: clerk.Strategy.forObject(attr)),
+            onResend: () => _continue(
+              strategy: clerk.Strategy.forUserAttribute(attr),
+            ),
           ),
         Closeable(
           closed: missingFields.isEmpty &&

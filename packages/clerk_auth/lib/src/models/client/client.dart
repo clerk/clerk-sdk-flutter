@@ -92,4 +92,15 @@ class Client {
 
   /// the current [User] if available
   User? get user => activeSession?.user;
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'id: $id, '
+      'signIn: $signIn, '
+      'signUp: $signUp, '
+      'sessions: ${sessions.join(', ')}, '
+      'lastActiveSessionId: $lastActiveSessionId, '
+      'updatedAt: $updatedAt, '
+      'createdAt: $createdAt'
+      '}';
 }

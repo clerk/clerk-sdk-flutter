@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -35,4 +36,11 @@ class OrganizationDomains {
 
   /// toJson
   Map<String, dynamic> toJson() => _$OrganizationDomainsToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'defaultRole: $defaultRole, '
+      'enrollmentModes: $enrollmentModes, '
+      'isEnabled: $isEnabled'
+      '}';
 }

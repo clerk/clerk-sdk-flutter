@@ -2,6 +2,7 @@ import 'package:clerk_auth/src/models/client/session_token.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/client/user_public.dart';
 import 'package:clerk_auth/src/models/status.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -60,4 +61,16 @@ class Session {
 
   /// toJson
   Map<String, dynamic> toJson() => _$SessionToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'id: $id, '
+      'status: $status, '
+      'lastActiveAt: $lastActiveAt, '
+      'expireAt: $expireAt, '
+      'abandonAt: $abandonAt, '
+      'publicUserData: $publicUserData, '
+      'user: $user, '
+      'lastActiveToken: $lastActiveToken'
+      '}';
 }

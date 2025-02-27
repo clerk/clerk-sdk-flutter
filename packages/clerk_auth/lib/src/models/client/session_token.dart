@@ -69,4 +69,7 @@ class SessionToken {
 
   /// toJson
   Map<String, dynamic> toJson() => _$SessionTokenToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{}';
 }

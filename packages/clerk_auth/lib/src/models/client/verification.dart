@@ -1,5 +1,6 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/status.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -50,6 +51,16 @@ class Verification {
 
   /// toJson
   Map<String, dynamic> toJson() => _$VerificationToJson(this);
+
+  @override
+  String toString() => '${describeIdentity()}{'
+      'status: $status, '
+      'strategy: $strategy, '
+      'expireAt: $expireAt, '
+      'errorMessage: $errorMessage, '
+      'externalVerificationRedirectUrl: $externalVerificationRedirectUrl, '
+      'attempts: $attempts'
+      '}';
 }
 
 String? _extractErrorMessage(Map<dynamic, dynamic> map, String field) =>

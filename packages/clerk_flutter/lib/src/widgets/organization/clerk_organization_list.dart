@@ -128,7 +128,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
                     if (_nextUserIsPending) //
                       Align(
                         alignment: Alignment.topRight,
-                          child: Closeable(
+                        child: Closeable(
                           closed: false,
                           animateToFirstPosition: true,
                           axis: ClosingAxis.horizontal,
@@ -146,7 +146,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
                   onChangeEnabled: sessions.length > 1,
                 ),
               for (final membership in memberships) //
-                  Closeable(
+                Closeable(
                   key: Key(membership.id),
                   closed: _nextUserIsPending,
                   animateToFirstPosition: true,

@@ -337,10 +337,11 @@ class Auth {
 
       // No matching sign-in sequence, reset loading state
       default:
+        final status = signIn?.status ?? Status.unknown;
         addError(AuthError(
           code: AuthErrorCode.signInError,
           message: 'Unsupported sign in attempt: {arg}',
-          argument: signIn?.status.toString() ?? '',
+          argument: status.name,
         ));
     }
 

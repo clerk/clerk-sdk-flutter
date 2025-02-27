@@ -16,6 +16,9 @@ class Status {
   /// fromJson factory for JsonSerializable
   factory Status.fromJson(String name) => Status(name: name);
 
+  /// unknown
+  static const unknown = Status._('unknown');
+
   /// abandoned
   static const abandoned = Status._('abandoned');
 
@@ -53,6 +56,7 @@ class Status {
   static const failed = Status._('failed');
 
   static final _values = <String, Status>{
+    unknown.name: unknown,
     abandoned.name: abandoned,
     active.name: active,
     missingRequirements.name: missingRequirements,

@@ -243,6 +243,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
       'Sign in by entering a code sent to you by text message';
 
   @override
+  String signInError(String arg) {
+    return 'Unsupported sign in attempt: $arg';
+  }
+
+  @override
   String signInTo(String name) {
     return 'Sign in to $name';
   }

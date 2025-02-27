@@ -28,6 +28,8 @@ extension ClerkAuthErrorExtension on clerk.AuthError {
         return localizations.noSuchFirstFactorStrategy(argument.toString());
       case clerk.AuthErrorCode.noSuchSecondFactorStrategy:
         return localizations.noSuchSecondFactorStrategy(argument.toString());
+      case clerk.AuthErrorCode.signInError:
+        return localizations.signInError(argument.toString());
       default:
         return toString();
     }

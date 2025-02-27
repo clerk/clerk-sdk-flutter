@@ -490,6 +490,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Sign in by entering a code sent to you by text message'**
   String get signInByEnteringACodeSentToYouByTextMessage;
 
+  /// No description provided for @signInError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported sign in attempt: {arg}'**
+  String signInError(String arg);
+
   /// No description provided for @signInTo.
   ///
   /// In en, this message translates to:

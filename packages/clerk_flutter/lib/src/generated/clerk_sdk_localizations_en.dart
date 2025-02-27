@@ -56,6 +56,12 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get and => 'and';
 
   @override
+  String get authenticatorApp => 'authenticator app';
+
+  @override
+  String get backupCode => 'backup code';
+
+  @override
   String get cancel => 'Cancel';
 
   @override
@@ -104,6 +110,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get failed => 'FAILED';
 
   @override
+  String get firstName => 'first name';
+
+  @override
   String invalidEmailAddress(String address) {
     return 'Invalid email address: $address';
   }
@@ -117,6 +126,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String jwtPoorlyFormatted(String arg) {
     return 'JWT poorly formatted: $arg';
   }
+
+  @override
+  String get lastName => 'last name';
 
   @override
   String get loading => 'Loading…';
@@ -182,11 +194,17 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get or => 'or';
 
   @override
+  String get passkey => 'passkey';
+
+  @override
   String get password => 'Password';
 
   @override
   String get passwordAndPasswordConfirmationMustMatch =>
       'Password and password confirmation must match';
+
+  @override
+  String get passwordConfirmation => 'password confirmation';
 
   @override
   String get passwordMatchError =>
@@ -297,6 +315,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get verifyYourPhoneNumber => 'Verify your phone number';
+
+  @override
+  String get web3Wallet => 'web3 wallet';
 
   @override
   String get welcomeBackPleaseSignInToContinue =>

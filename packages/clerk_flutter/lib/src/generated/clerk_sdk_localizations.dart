@@ -178,6 +178,18 @@ abstract class ClerkSdkLocalizations {
   /// **'and'**
   String get and;
 
+  /// No description provided for @authenticatorApp.
+  ///
+  /// In en, this message translates to:
+  /// **'authenticator app'**
+  String get authenticatorApp;
+
+  /// No description provided for @backupCode.
+  ///
+  /// In en, this message translates to:
+  /// **'backup code'**
+  String get backupCode;
+
   /// No description provided for @cancel.
   ///
   /// In en, this message translates to:
@@ -262,6 +274,12 @@ abstract class ClerkSdkLocalizations {
   /// **'FAILED'**
   String get failed;
 
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'first name'**
+  String get firstName;
+
   /// No description provided for @invalidEmailAddress.
   ///
   /// In en, this message translates to:
@@ -279,6 +297,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'JWT poorly formatted: {arg}'**
   String jwtPoorlyFormatted(String arg);
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'last name'**
+  String get lastName;
 
   /// No description provided for @loading.
   ///
@@ -382,6 +406,12 @@ abstract class ClerkSdkLocalizations {
   /// **'or'**
   String get or;
 
+  /// No description provided for @passkey.
+  ///
+  /// In en, this message translates to:
+  /// **'passkey'**
+  String get passkey;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
@@ -393,6 +423,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Password and password confirmation must match'**
   String get passwordAndPasswordConfirmationMustMatch;
+
+  /// No description provided for @passwordConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'password confirmation'**
+  String get passwordConfirmation;
 
   /// No description provided for @passwordMatchError.
   ///
@@ -585,6 +621,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Verify your phone number'**
   String get verifyYourPhoneNumber;
+
+  /// No description provided for @web3Wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'web3 wallet'**
+  String get web3Wallet;
 
   /// No description provided for @welcomeBackPleaseSignInToContinue.
   ///

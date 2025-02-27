@@ -38,6 +38,8 @@
   "alreadyHaveAnAccount": "Already have an account?",
   "anUppercaseLetter": "an UPPERCASE letter",
   "and": "and",
+  "authenticatorApp": "authenticator app",
+  "backupCode": "backup code",
   "cancel": "Cancel",
   "clickOnTheLinkThatSBeenSentToAndThenCheckBackHere": "Click on the link that‘s been sent to {identifier} and then check back here",
   "@clickOnTheLinkThatSBeenSentToAndThenCheckBackHere": {
@@ -73,6 +75,7 @@
   "enterTheCodeSentToYou": "Enter the code sent to you",
   "expired": "EXPIRED",
   "failed": "FAILED",
+  "firstName": "first name",
   "invalidEmailAddress": "Invalid email address: {address}",
   "@invalidEmailAddress": {
     "placeholders": {
@@ -97,6 +100,7 @@
       }
     }
   },
+  "lastName": "last name",
   "loading": "Loading…",
   "logo": "Logo",
   "missingRequirements": "MISSING REQUIREMENTS",
@@ -156,8 +160,10 @@
   "ok": "OK",
   "optional": "(optional)",
   "or": "or",
+  "passkey": "passkey",
   "password": "Password",
   "passwordAndPasswordConfirmationMustMatch": "Password and password confirmation must match",
+  "passwordConfirmation": "password confirmation",
   "passwordMatchError": "Password and password confirmation must match",
   "passwordMustBeSupplied": "A password must be supplied",
   "passwordRequires": "Password requires:",
@@ -218,6 +224,7 @@
   "verified": "VERIFIED",
   "verifyYourEmailAddress": "Verify your email address",
   "verifyYourPhoneNumber": "Verify your phone number",
+  "web3Wallet": "web3 wallet",
   "welcomeBackPleaseSignInToContinue": "Welcome back! Please sign in to continue",
   "welcomePleaseFillInTheDetailsToGetStarted": "Welcome! Please fill in the details to get started",
   "youNeedToAdd": "You need to add:"

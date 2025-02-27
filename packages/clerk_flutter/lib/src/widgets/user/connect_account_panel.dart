@@ -32,8 +32,8 @@ class ConnectAccountPanel extends StatelessWidget {
                 child: ClerkChangeObserver<DateTime>(
                   onChange: onDone,
                   accumulateData: () {
-                    final accounts = 
-		        authState.client.user?.externalAccounts ?? const [];
+                    final accounts =
+                        authState.client.user?.externalAccounts ?? const [];
                     return accounts
                         .where((a) => a.isVerified || a.isInError)
                         .map((a) => a.updatedAt);

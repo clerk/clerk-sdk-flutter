@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:clerk_flutter/src/utils/clerk_auth_config.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/widgets.dart';

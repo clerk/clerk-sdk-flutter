@@ -261,6 +261,7 @@ class Auth {
 
       // Did we just complete sign in with password?
       if (isSignedIn) {
+        update();
         return;
       }
     }

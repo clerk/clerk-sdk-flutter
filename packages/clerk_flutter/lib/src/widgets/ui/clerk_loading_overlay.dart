@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clerk_flutter/src/utils/clerk_auth_config.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/widgets.dart';
@@ -10,18 +12,54 @@ class ClerkLoadingOverlay {
           builder: (context) => config.loading ?? defaultLoadingWidget,
         );
 
+  static const _startupDuration = Duration(milliseconds: 300);
+  static const _minimumOnScreenDuration = Duration(milliseconds: 500);
+
+  Timer? _startupTimer;
+  Timer? _cancelTimer;
+  DateTime _cancelAfter = DateTime(0);
+
   final OverlayEntry _overlayEntry;
 
   /// Shows the loading overlay
   void show(BuildContext context) {
-    final overlay = Overlay.of(context);
-    if (overlay.context.mounted && _overlayEntry.mounted == false) {
-      overlay.insert(_overlayEntry);
+    _cancelTimer?.cancel();
+    _cancelTimer = null;
+    if (_overlayEntry.mounted == false && _startupTimer == null) {
+      final overlay = Overlay.of(context);
+      _startupTimer = Timer(
+        _startupDuration,
+        () {
+          if (overlay.context.mounted) {
+            overlay.insert(_overlayEntry);
+            _cancelAfter = DateTime.timestamp().add(_minimumOnScreenDuration);
+          }
+        },
+      );
     }
   }
 
   /// Hides the loading overlay
   void hide() {
-    _overlayEntry.remove();
+    _startupTimer?.cancel();
+    _startupTimer == null;
+
+    _cancelTimer?.cancel();
+    _cancelTimer = null;
+
+    if (_overlayEntry.mounted) {
+      final now = DateTime.timestamp();
+      if (_cancelAfter.isAfter(now)) {
+        _cancelTimer = Timer(
+          _cancelAfter.difference(now),
+          () {
+            _cancelTimer = null;
+            _overlayEntry.remove();
+          },
+        );
+      } else {
+        _overlayEntry.remove();
+      }
+    }
   }
 }

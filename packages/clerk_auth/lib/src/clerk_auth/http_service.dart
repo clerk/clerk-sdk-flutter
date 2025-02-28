@@ -34,6 +34,12 @@ enum HttpMethod {
 /// Clerk back-end over http
 ///
 abstract class HttpService {
+  /// Initialises this instance of the http service
+  void initialise();
+
+  /// Terminates this instance of the http service
+  void terminate();
+
   /// [send] data to the back end, and receive a [Response]
   ///
   Future<Response> send(
@@ -59,7 +65,20 @@ abstract class HttpService {
 ///
 class DefaultHttpService implements HttpService {
   /// Constructor
-  const DefaultHttpService();
+  DefaultHttpService();
+
+  Client? _client;
+
+  @override
+  void initialise() {
+    _client ??= Client();
+  }
+
+  @override
+  void terminate() {
+    _client?.close();
+    _client = null;
+  }
 
   @override
   Future<Response> send(
@@ -83,7 +102,7 @@ class DefaultHttpService implements HttpService {
       request.body = body;
     }
 
-    final streamedResponse = await request.send();
+    final streamedResponse = await _client!.send(request);
     return Response.fromStream(streamedResponse);
   }
 
@@ -106,7 +125,7 @@ class DefaultHttpService implements HttpService {
     );
     request.files.add(multipartFile);
 
-    final streamedResponse = await request.send();
+    final streamedResponse = await _client!.send(request);
     return Response.fromStream(streamedResponse);
   }
 }

@@ -41,7 +41,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           await clerk.DefaultPersistor.create(
             storageDirectory: await getApplicationDocumentsDirectory(),
           ),
-      httpService ?? const clerk.DefaultHttpService(),
+      httpService ?? clerk.DefaultHttpService(),
     );
     await authState.initialize();
     return authState;

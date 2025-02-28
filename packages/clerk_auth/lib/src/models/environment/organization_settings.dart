@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -9,7 +9,7 @@ part 'organization_settings.g.dart';
 /// [OrganizationSettings] Clerk object
 @immutable
 @JsonSerializable()
-class OrganizationSettings with InformativeToString {
+class OrganizationSettings with InformativeToStringMixin {
   /// Constructor
   const OrganizationSettings({
     this.maxAllowedMemberships = 0,

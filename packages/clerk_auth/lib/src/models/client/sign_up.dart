@@ -1,6 +1,6 @@
 import 'package:clerk_auth/src/models/client/field.dart';
 import 'package:clerk_auth/src/models/client/verification.dart';
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -11,7 +11,7 @@ part 'sign_up.g.dart';
 /// [SignUp] Clerk object
 @immutable
 @JsonSerializable()
-class SignUp with InformativeToString {
+class SignUp with InformativeToStringMixin {
   /// Constructor
   const SignUp({
     required this.id,

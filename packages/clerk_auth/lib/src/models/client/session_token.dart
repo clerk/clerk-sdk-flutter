@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
 import 'package:clerk_auth/src/models/client/organization.dart';
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -12,7 +12,7 @@ part 'session_token.g.dart';
 /// [SessionToken] Clerk object
 @immutable
 @JsonSerializable()
-class SessionToken with InformativeToString {
+class SessionToken with InformativeToStringMixin {
   /// Constructor
   SessionToken({required this.jwt});
 
@@ -71,7 +71,4 @@ class SessionToken with InformativeToString {
   /// toJson
   @override
   Map<String, dynamic> toJson() => _$SessionTokenToJson(this);
-
-  @override
-  String toString() => '${describeIdentity()}{}';
 }

@@ -1,6 +1,6 @@
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
 import 'package:clerk_auth/src/models/client.dart';
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -11,7 +11,7 @@ part 'client.g.dart';
 /// [Client] Clerk object
 @immutable
 @JsonSerializable()
-class Client with InformativeToString {
+class Client with InformativeToStringMixin {
   /// Constructor
   const Client({
     this.id,

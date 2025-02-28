@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/client/verification.dart';
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -9,7 +9,7 @@ part 'passkey.g.dart';
 /// [Passkey] Clerk object
 @immutable
 @JsonSerializable()
-class Passkey with InformativeToString {
+class Passkey with InformativeToStringMixin {
   /// Constructor
   const Passkey({
     required this.id,

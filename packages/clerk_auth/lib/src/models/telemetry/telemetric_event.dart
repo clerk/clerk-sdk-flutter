@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -8,7 +8,7 @@ part 'telemetric_event.g.dart';
 ///
 @immutable
 @JsonSerializable()
-class TelemetricEvent with InformativeToString {
+class TelemetricEvent with InformativeToStringMixin {
   /// Create a [TelemetricEvent]
   TelemetricEvent({
     required this.event,

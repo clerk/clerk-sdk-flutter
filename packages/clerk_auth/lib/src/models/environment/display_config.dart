@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/enums.dart';
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -9,7 +9,7 @@ part 'display_config.g.dart';
 ///
 @immutable
 @JsonSerializable()
-class DisplayConfig with InformativeToString {
+class DisplayConfig with InformativeToStringMixin {
   /// Constructs an instance of [DisplayConfig]
   const DisplayConfig({
     this.id = '',

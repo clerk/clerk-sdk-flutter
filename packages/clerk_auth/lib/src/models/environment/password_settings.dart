@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -9,7 +9,7 @@ part 'password_settings.g.dart';
 /// [PasswordSettings] Clerk object
 @immutable
 @JsonSerializable()
-class PasswordSettings with InformativeToString {
+class PasswordSettings with InformativeToStringMixin {
   /// Constructor
   const PasswordSettings({
     this.allowedSpecialCharacters = '',

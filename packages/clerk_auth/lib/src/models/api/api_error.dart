@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -7,7 +7,7 @@ part 'api_error.g.dart';
 /// [ApiError] Clerk object
 @immutable
 @JsonSerializable()
-class ApiError with InformativeToString {
+class ApiError with InformativeToStringMixin {
   /// Constructor
   const ApiError({
     required this.message,
@@ -38,7 +38,4 @@ class ApiError with InformativeToString {
   /// toJson
   @override
   Map<String, dynamic> toJson() => _$ApiErrorToJson(this);
-
-  @override
-  String toString() => longMessage ?? message;
 }

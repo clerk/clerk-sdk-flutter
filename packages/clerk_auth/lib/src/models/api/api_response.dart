@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:clerk_auth/src/models/api/api_error.dart';
 import 'package:clerk_auth/src/models/client/client.dart';
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:meta/meta.dart';
 
 /// [ApiResponse] holds parsed Clerk data from a back-end http response
 @immutable
-class ApiResponse with InformativeToString {
+class ApiResponse with InformativeToStringMixin {
   /// Constructs an instance of [ApiResponse]
   const ApiResponse({
     required this.status,
@@ -56,7 +56,5 @@ class ApiResponse with InformativeToString {
   }
 
   /// formatted error message
-  String get errorMessage => errors?.isNotEmpty == true
-      ? errors!.map((e) => e.fullMessage).join('; ')
-      : 'Unknown error';
+  String get errorMessage => errors?.map((e) => e.fullMessage).join('; ') ?? '';
 }

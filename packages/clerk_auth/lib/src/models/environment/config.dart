@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -9,7 +9,7 @@ part 'config.g.dart';
 /// [Config] Clerk object
 @immutable
 @JsonSerializable()
-class Config with InformativeToString {
+class Config with InformativeToStringMixin {
   /// Constructor
   const Config({
     this.id = '',

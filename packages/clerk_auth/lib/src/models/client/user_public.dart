@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -7,7 +7,7 @@ part 'user_public.g.dart';
 /// [UserPublic] Clerk object
 @immutable
 @JsonSerializable()
-class UserPublic with InformativeToString {
+class UserPublic with InformativeToStringMixin {
   /// Constructor
   const UserPublic({
     required this.identifier,

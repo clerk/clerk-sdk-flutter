@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -8,7 +8,7 @@ part 'factor.g.dart';
 /// [Factor] Clerk object
 @immutable
 @JsonSerializable()
-class Factor with InformativeToString {
+class Factor with InformativeToStringMixin {
   /// Constructor
   const Factor({
     required this.strategy,

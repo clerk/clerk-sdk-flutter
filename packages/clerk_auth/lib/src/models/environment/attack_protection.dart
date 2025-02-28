@@ -1,5 +1,4 @@
-import 'package:clerk_auth/src/models/informative_to_string.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -8,7 +7,7 @@ part 'attack_protection.g.dart';
 /// [AttackProtection] Clerk object
 @immutable
 @JsonSerializable()
-class AttackProtection with InformativeToString {
+class AttackProtection with InformativeToStringMixin {
   /// Constructor
   const AttackProtection({
     this.userLockout = UserLockout.empty,
@@ -37,13 +36,6 @@ class AttackProtection with InformativeToString {
   /// toJson
   @override
   Map<String, dynamic> toJson() => _$AttackProtectionToJson(this);
-
-  @override
-  String toString() => '${describeIdentity()}{'
-      'userLockout: $userLockout, '
-      'piiEnabled: $piiEnabled, '
-      'emailLinkRequireSameClient: $emailLinkRequireSameClient'
-      '}';
 }
 
 /// [UserLockout] Clerk object

@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -7,7 +7,7 @@ part 'actions.g.dart';
 /// [Actions] Clerk object
 @immutable
 @JsonSerializable()
-class Actions with InformativeToString {
+class Actions with InformativeToStringMixin {
   /// Constructor
   const Actions({
     this.deleteSelf = false,

@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/models/informative_to_string.dart';
+import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -7,7 +7,7 @@ part 'username_settings.g.dart';
 /// [UsernameSettings] Clerk object
 @immutable
 @JsonSerializable()
-class UsernameSettings with InformativeToString {
+class UsernameSettings with InformativeToStringMixin {
   /// Constructor
   const UsernameSettings({
     this.minLength = 0,

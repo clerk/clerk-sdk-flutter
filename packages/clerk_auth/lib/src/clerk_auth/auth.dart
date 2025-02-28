@@ -27,7 +27,7 @@ class Auth {
   Auth({
     required this.config,
     required Persistor persistor,
-    required HttpService httpService,
+    this.httpService = const DefaultHttpService(),
   })  : telemetry = Telemetry(
           config: config,
           persistor: persistor,
@@ -44,6 +44,9 @@ class Auth {
 
   /// The service to send telemetry to the back end
   final Telemetry telemetry;
+
+  /// The [HttpService] used to communicate with the backend.
+  final HttpService httpService;
 
   /// The configuration object
   final AuthConfig config;
@@ -106,7 +109,7 @@ class Auth {
   /// object is made
   ///
   Future<void> initialize() async {
-		await _httpService.initialize();
+    await httpService.initialise();
     await _api.initialize();
     final [client, env] = await Future.wait([
       _api.createClient(),
@@ -132,9 +135,9 @@ class Auth {
   ///
   void terminate() {
     _clientTimer?.cancel();
-    telemetry.terminate();
     _api.terminate();
-		await _httpService.terminate();
+    telemetry.terminate();
+    httpService.terminate();
   }
 
   /// Refresh the current [Client]

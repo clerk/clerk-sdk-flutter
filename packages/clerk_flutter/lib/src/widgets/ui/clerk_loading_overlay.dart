@@ -22,11 +22,10 @@ class ClerkLoadingOverlay {
   final OverlayEntry _overlayEntry;
 
   /// Shows the loading overlay
-  void show(BuildContext context) {
+  void insertInto(OverlayState overlay) {
     _cancelTimer?.cancel();
     _cancelTimer = null;
     if (_overlayEntry.mounted == false && _startupTimer == null) {
-      final overlay = Overlay.of(context);
       _startupTimer = Timer(
         _startupDuration,
         () {
@@ -40,7 +39,7 @@ class ClerkLoadingOverlay {
   }
 
   /// Hides the loading overlay
-  void hide() {
+  void remove() {
     _startupTimer?.cancel();
     _startupTimer == null;
 

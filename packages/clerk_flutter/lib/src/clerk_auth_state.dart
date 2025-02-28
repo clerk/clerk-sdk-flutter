@@ -177,13 +177,13 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     ClerkErrorCallback? onError,
   }) async {
     T? result;
-    _loadingOverlay.show(context);
+    _loadingOverlay.insertInto(Overlay.of(context));
     try {
       result = await fn();
     } on clerk.AuthError catch (error) {
       _onError(error, onError);
     } finally {
-      _loadingOverlay.hide();
+      _loadingOverlay.remove();
     }
     return result;
   }

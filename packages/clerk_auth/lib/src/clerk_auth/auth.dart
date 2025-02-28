@@ -250,23 +250,28 @@ class Auth {
     String? token,
     String? redirectUrl,
   }) async {
-    if ((client.signIn == null ||
-            client.signIn?.status == Status.needsIdentifier) &&
-        identifier is String) {
-      // if a password has been presented, we can immediately attempt a sign in
-      // if `password` is null it will be ignored
+    if (client.signIn == null) {
+      // if password and identifier been presented, we can immediately attempt
+      // a sign in;  if null they will be ignored
       await _api
           .createSignIn(identifier: identifier, password: password)
           .then(_housekeeping);
-
-      // Did we just complete sign in with password?
-      if (isSignedIn) {
-        return;
-      }
     }
 
     switch (client.signIn) {
-      case SignIn signIn when strategy.isOauth == true && token is String:
+      case null when client.user is User:
+        // We have signed in - possibly when creating the [SignIn] above
+        break;
+
+      case SignIn signIn
+          when signIn.status == Status.needsIdentifier && identifier is String:
+        // if a password has been presented, we can immediately attempt a
+        // sign in; if `password` is null it will be ignored
+        await _api
+            .createSignIn(identifier: identifier, password: password)
+            .then(_housekeeping);
+
+      case SignIn signIn when strategy.isOauth && token is String:
         await _api
             .sendOauthToken(signIn, strategy: strategy, token: token)
             .then(_housekeeping);
@@ -298,7 +303,7 @@ class Auth {
         return signInCompleter.future;
 
       case SignIn signIn
-          when (signIn.status == Status.needsFirstFactor) &&
+          when signIn.status == Status.needsFirstFactor &&
               strategy == Strategy.password:
         await _api
             .attemptSignIn(
@@ -310,7 +315,7 @@ class Auth {
             .then(_housekeeping);
 
       case SignIn signIn
-          when signIn.status.needsFactor && strategy.requiresCode == true:
+          when signIn.status.needsFactor && strategy.requiresCode:
         final stage = Stage.forStatus(signIn.status);
         if (signIn.verificationFor(stage) is! Verification) {
           await _api
@@ -338,11 +343,13 @@ class Auth {
       // No matching sign-in sequence, reset loading state
       default:
         final status = signIn?.status ?? Status.unknown;
-        addError(AuthError(
-          code: AuthErrorCode.signInError,
-          message: 'Unsupported sign in attempt: {arg}',
-          argument: status.name,
-        ));
+        addError(
+          AuthError(
+            code: AuthErrorCode.signInError,
+            message: 'Unsupported sign in attempt: {arg}',
+            argument: status.name,
+          ),
+        );
     }
 
     update();

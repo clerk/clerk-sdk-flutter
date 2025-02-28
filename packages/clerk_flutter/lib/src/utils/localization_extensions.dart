@@ -9,30 +9,28 @@ typedef LocalizedMessage = String Function(ClerkSdkLocalizations localizations);
 extension ClerkAuthErrorExtension on clerk.AuthError {
   /// Allow localization of an [clerk.AuthError]
   String localizedMessage(ClerkSdkLocalizations localizations) {
-    switch (code) {
-      case clerk.AuthErrorCode.noStageForStatus:
-        return localizations.noStageForStatus(argument.toString());
-      case clerk.AuthErrorCode.noSessionTokenRetrieved:
-        return localizations.noSessionTokenRetrieved;
-      case clerk.AuthErrorCode.noAssociatedStrategy:
-        return localizations.noAssociatedStrategy(argument.toString());
-      case clerk.AuthErrorCode.passwordMatchError:
-        return localizations.passwordAndPasswordConfirmationMustMatch;
-      case clerk.AuthErrorCode.jwtPoorlyFormatted:
-        return localizations.jwtPoorlyFormatted(argument.toString());
-      case clerk.AuthErrorCode.actionNotTimely:
-        return localizations.actionNotTimely;
-      case clerk.AuthErrorCode.noSessionFoundForUser:
-        return localizations.noSessionFoundForUser(argument.toString());
-      case clerk.AuthErrorCode.noSuchFirstFactorStrategy:
-        return localizations.noSuchFirstFactorStrategy(argument.toString());
-      case clerk.AuthErrorCode.noSuchSecondFactorStrategy:
-        return localizations.noSuchSecondFactorStrategy(argument.toString());
-      case clerk.AuthErrorCode.signInError:
-        return localizations.signInError(argument.toString());
-      default:
-        return toString();
-    }
+    return switch (code) {
+      clerk.AuthErrorCode.noStageForStatus =>
+        localizations.noStageForStatus(argument.toString()),
+      clerk.AuthErrorCode.noSessionTokenRetrieved =>
+        localizations.noSessionTokenRetrieved,
+      clerk.AuthErrorCode.noAssociatedStrategy =>
+        localizations.noAssociatedStrategy(argument.toString()),
+      clerk.AuthErrorCode.passwordMatchError =>
+        localizations.passwordAndPasswordConfirmationMustMatch,
+      clerk.AuthErrorCode.jwtPoorlyFormatted =>
+        localizations.jwtPoorlyFormatted(argument.toString()),
+      clerk.AuthErrorCode.actionNotTimely => localizations.actionNotTimely,
+      clerk.AuthErrorCode.noSessionFoundForUser =>
+        localizations.noSessionFoundForUser(argument.toString()),
+      clerk.AuthErrorCode.noSuchFirstFactorStrategy =>
+        localizations.noSuchFirstFactorStrategy(argument.toString()),
+      clerk.AuthErrorCode.noSuchSecondFactorStrategy =>
+        localizations.noSuchSecondFactorStrategy(argument.toString()),
+      clerk.AuthErrorCode.signInError =>
+        localizations.signInError(argument.toString()),
+      _ => toString(),
+    };
   }
 }
 

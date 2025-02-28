@@ -26,8 +26,8 @@ class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
   Auth({
     required this.config,
-    Persistor persistor = Persistor.none,
-    HttpService httpService = const DefaultHttpService(),
+    required Persistor persistor,
+    required HttpService httpService,
   })  : telemetry = Telemetry(
           config: config,
           persistor: persistor,
@@ -106,6 +106,7 @@ class Auth {
   /// object is made
   ///
   Future<void> initialize() async {
+		await _httpService.initialize();
     await _api.initialize();
     final [client, env] = await Future.wait([
       _api.createClient(),
@@ -133,6 +134,7 @@ class Auth {
     _clientTimer?.cancel();
     telemetry.terminate();
     _api.terminate();
+		await _httpService.terminate();
   }
 
   /// Refresh the current [Client]

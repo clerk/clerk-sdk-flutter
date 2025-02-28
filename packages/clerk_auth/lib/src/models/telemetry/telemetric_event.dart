@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -8,7 +8,7 @@ part 'telemetric_event.g.dart';
 ///
 @immutable
 @JsonSerializable()
-class TelemetricEvent {
+class TelemetricEvent with InformativeToString {
   /// Create a [TelemetricEvent]
   TelemetricEvent({
     required this.event,
@@ -32,12 +32,6 @@ class TelemetricEvent {
       _$TelemetricEventFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$TelemetricEventToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'event: $event, '
-      'payload: $payload, '
-      'timestamp: $timestamp'
-      '}';
+  Map<String, dynamic> toJson() => _$TelemetricEventToJson(this);
 }

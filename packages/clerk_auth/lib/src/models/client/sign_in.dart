@@ -4,8 +4,8 @@ import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user_public.dart';
 import 'package:clerk_auth/src/models/client/verification.dart';
 import 'package:clerk_auth/src/models/enums.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:clerk_auth/src/models/status.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -15,7 +15,7 @@ part 'sign_in.g.dart';
 /// [SignIn] Clerk object
 @immutable
 @JsonSerializable()
-class SignIn {
+class SignIn with InformativeToString {
   /// Constructor
   const SignIn({
     required this.id,
@@ -71,22 +71,8 @@ class SignIn {
   static SignIn fromJson(Map<String, dynamic> json) => _$SignInFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$SignInToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'id: $id, '
-      'status: $status, '
-      'supportedIdentifiers: ${supportedIdentifiers.join(', ')}, '
-      'identifier: $identifier, '
-      'userData: $userData, '
-      'supportedFirstFactors: ${supportedFirstFactors.join(', ')}, '
-      'firstFactorVerification: $firstFactorVerification, '
-      'supportedSecondFactors: ${supportedSecondFactors.join(', ')}, '
-      'secondFactorVerification: $secondFactorVerification, '
-      'createdSessionId: $createdSessionId, '
-      'abandonAt: $abandonAt'
-      '}';
+  Map<String, dynamic> toJson() => _$SignInToJson(this);
 
   /// Find a [Verification] if one exists for this [SignIn]
   /// at the giver [Stage]
@@ -115,13 +101,13 @@ class SignIn {
       case Stage.first:
         throw AuthError(
           message: 'Strategy {arg} unsupported for first factor',
-          argument: strategy.fullName,
+          argument: strategy.toString(),
           code: AuthErrorCode.noSuchFirstFactorStrategy,
         );
       case Stage.second:
         throw AuthError(
           message: 'Strategy {arg} unsupported for second factor',
-          argument: strategy.fullName,
+          argument: strategy.toString(),
           code: AuthErrorCode.noSuchSecondFactorStrategy,
         );
     }

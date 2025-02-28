@@ -3,7 +3,7 @@ import 'package:clerk_auth/src/models/environment/config.dart';
 import 'package:clerk_auth/src/models/environment/display_config.dart';
 import 'package:clerk_auth/src/models/environment/organization_settings.dart';
 import 'package:clerk_auth/src/models/environment/user_settings.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -12,7 +12,7 @@ part 'environment.g.dart';
 /// [Environment] Clerk object
 @immutable
 @JsonSerializable()
-class Environment {
+class Environment with InformativeToString {
   /// Construction
   const Environment({
     this.config = Config.empty,
@@ -80,14 +80,6 @@ class Environment {
       _$EnvironmentFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$EnvironmentToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'config: $config, '
-      'display: $display, '
-      'user: $user, '
-      'organization: $organization, '
-      'maintenanceMode: $maintenanceMode'
-      '}';
+  Map<String, dynamic> toJson() => _$EnvironmentToJson(this);
 }

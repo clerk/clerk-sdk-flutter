@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -8,7 +9,7 @@ part 'organization.g.dart';
 /// [Organization] Clerk object
 @immutable
 @JsonSerializable()
-class Organization {
+class Organization with InformativeToString {
   /// Constructor
   const Organization({
     this.id = '',
@@ -80,22 +81,6 @@ class Organization {
       _$OrganizationFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$OrganizationToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'id: $id, '
-      'name: $name, '
-      'maxAllowedMemberships: $maxAllowedMemberships, '
-      'adminDeleteEnabled: $adminDeleteEnabled, '
-      'slug: $slug, '
-      'logoUrl: $logoUrl, '
-      'imageUrl: $imageUrl, '
-      'hasImage: $hasImage, '
-      'membersCount: $membersCount, '
-      'pendingInvitationsCount: $pendingInvitationsCount, '
-      'publicMetadata: $publicMetadata, '
-      'updatedAt: $updatedAt, '
-      'createdAt: $createdAt'
-      '}';
+  Map<String, dynamic> toJson() => _$OrganizationToJson(this);
 }

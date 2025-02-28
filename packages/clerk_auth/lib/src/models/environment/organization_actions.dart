@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -8,7 +8,7 @@ part 'organization_actions.g.dart';
 @JsonSerializable()
 
 /// [OrganizationActions] Clerk object
-class OrganizationActions {
+class OrganizationActions with InformativeToString {
   /// Constructor
   const OrganizationActions({
     this.adminDelete = false,
@@ -25,10 +25,6 @@ class OrganizationActions {
       _$OrganizationActionsFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$OrganizationActionsToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'adminDelete: $adminDelete'
-      '}';
+  Map<String, dynamic> toJson() => _$OrganizationActionsToJson(this);
 }

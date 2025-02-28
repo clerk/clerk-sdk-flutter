@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -9,7 +9,7 @@ part 'sign_in_settings.g.dart';
 /// [SignInSettings] Clerk object
 @immutable
 @JsonSerializable()
-class SignInSettings {
+class SignInSettings with InformativeToString {
   /// Constructor
   const SignInSettings({
     this.secondFactorRequired = false,
@@ -27,12 +27,8 @@ class SignInSettings {
       _$SignInSettingsFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$SignInSettingsToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'secondFactorRequired: $secondFactorRequired'
-      '}';
+  Map<String, dynamic> toJson() => _$SignInSettingsToJson(this);
 }
 
 bool _readSecondFactorRequired(map, _) =>

@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -9,7 +9,7 @@ part 'config.g.dart';
 /// [Config] Clerk object
 @immutable
 @JsonSerializable()
-class Config {
+class Config with InformativeToString {
   /// Constructor
   const Config({
     this.id = '',
@@ -91,25 +91,6 @@ class Config {
   static Config fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$ConfigToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'id: $id, '
-      'singleSessionMode: $singleSessionMode, '
-      'enhancedEmailDeliverability: $enhancedEmailDeliverability, '
-      'testMode: $testMode, '
-      'cookielessDev: $cookielessDev, '
-      'urlBasedSessionSyncing: $urlBasedSessionSyncing, '
-      'identificationStrategies: ${identificationStrategies.join(', ')}, '
-      'firstFactors: ${firstFactors.join(', ')}, '
-      'secondFactors: ${secondFactors.join(', ')}, '
-      'emailAddressVerificationStrategies: ${emailAddressVerificationStrategies.join(', ')}, '
-      'allowsFirstName: $allowsFirstName, '
-      'allowsLastName: $allowsLastName, '
-      'allowsEmailAddress: $allowsEmailAddress, '
-      'allowsPhoneNumber: $allowsPhoneNumber, '
-      'allowsUsername: $allowsUsername, '
-      'allowsPassword: $allowsPassword'
-      '}';
+  Map<String, dynamic> toJson() => _$ConfigToJson(this);
 }

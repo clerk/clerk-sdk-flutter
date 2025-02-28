@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -8,7 +8,7 @@ part 'factor.g.dart';
 /// [Factor] Clerk object
 @immutable
 @JsonSerializable()
-class Factor {
+class Factor with InformativeToString {
   /// Constructor
   const Factor({
     required this.strategy,
@@ -51,17 +51,6 @@ class Factor {
   static Factor fromJson(Map<String, dynamic> json) => _$FactorFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$FactorToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'strategy: $strategy, '
-      'safeIdentifier: $safeIdentifier, '
-      'emailAddressId: $emailAddressId, '
-      'phoneNumberId: $phoneNumberId, '
-      'web3WalletId: $web3WalletId, '
-      'passkeyId: $passkeyId, '
-      'isPrimary: $isPrimary, '
-      'isDefault: $isDefault'
-      '}';
+  Map<String, dynamic> toJson() => _$FactorToJson(this);
 }

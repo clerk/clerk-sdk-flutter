@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -7,7 +7,7 @@ part 'user_public.g.dart';
 /// [UserPublic] Clerk object
 @immutable
 @JsonSerializable()
-class UserPublic {
+class UserPublic with InformativeToString {
   /// Constructor
   const UserPublic({
     required this.identifier,
@@ -42,15 +42,6 @@ class UserPublic {
       _$UserPublicFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$UserPublicToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'identifier: $identifier, '
-      'firstName: $firstName, '
-      'lastName: $lastName, '
-      'profileImageUrl: $profileImageUrl, '
-      'imageUrl: $imageUrl, '
-      'hasImage: $hasImage'
-      '}';
+  Map<String, dynamic> toJson() => _$UserPublicToJson(this);
 }

@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -7,7 +7,7 @@ part 'passkey_settings.g.dart';
 /// [PasskeySettings] Clerk object
 @immutable
 @JsonSerializable()
-class PasskeySettings {
+class PasskeySettings with InformativeToString {
   /// Constructor
   const PasskeySettings({
     this.allowAutofill = false,
@@ -28,11 +28,6 @@ class PasskeySettings {
       _$PasskeySettingsFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$PasskeySettingsToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'allowAutofill: $allowAutofill, '
-      'showSignInButton: $showSignInButton'
-      '}';
+  Map<String, dynamic> toJson() => _$PasskeySettingsToJson(this);
 }

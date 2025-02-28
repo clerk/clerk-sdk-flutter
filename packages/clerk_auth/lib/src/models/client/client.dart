@@ -1,5 +1,6 @@
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
 import 'package:clerk_auth/src/models/client.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -10,7 +11,7 @@ part 'client.g.dart';
 /// [Client] Clerk object
 @immutable
 @JsonSerializable()
-class Client {
+class Client with InformativeToString {
   /// Constructor
   const Client({
     this.id,
@@ -55,6 +56,7 @@ class Client {
   static Client fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
 
   /// toJson
+  @override
   Map<String, dynamic> toJson() => _$ClientToJson(this);
 
   /// iterable of current user ids
@@ -92,15 +94,4 @@ class Client {
 
   /// the current [User] if available
   User? get user => activeSession?.user;
-
-  @override
-  String toString() => '${describeIdentity()}{'
-      'id: $id, '
-      'signIn: $signIn, '
-      'signUp: $signUp, '
-      'sessions: ${sessions.join(', ')}, '
-      'lastActiveSessionId: $lastActiveSessionId, '
-      'updatedAt: $updatedAt, '
-      'createdAt: $createdAt'
-      '}';
 }

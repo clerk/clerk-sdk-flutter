@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:logging/logging.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 

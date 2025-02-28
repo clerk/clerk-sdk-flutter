@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -9,7 +9,7 @@ part 'organization_domains.g.dart';
 /// [OrganizationDomains] Clerk object
 @immutable
 @JsonSerializable()
-class OrganizationDomains {
+class OrganizationDomains with InformativeToString {
   /// Constructor
   const OrganizationDomains({
     this.defaultRole = '',
@@ -35,12 +35,6 @@ class OrganizationDomains {
       _$OrganizationDomainsFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$OrganizationDomainsToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'defaultRole: $defaultRole, '
-      'enrollmentModes: $enrollmentModes, '
-      'isEnabled: $isEnabled'
-      '}';
+  Map<String, dynamic> toJson() => _$OrganizationDomainsToJson(this);
 }

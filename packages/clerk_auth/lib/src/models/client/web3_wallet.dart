@@ -1,6 +1,5 @@
 import 'package:clerk_auth/src/models/client/user_identifying_data.dart';
 import 'package:clerk_auth/src/models/enums.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -39,14 +38,6 @@ class Web3Wallet extends UserIdentifyingData {
       _$Web3WalletFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$Web3WalletToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'id: $id, '
-      'verification: $verification, '
-      'web3Wallet: $web3Wallet, '
-      'updatedAt: $updatedAt, '
-      'createdAt: $createdAt'
-      '}';
+  Map<String, dynamic> toJson() => _$Web3WalletToJson(this);
 }

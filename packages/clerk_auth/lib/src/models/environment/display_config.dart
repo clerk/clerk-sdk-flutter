@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/enums.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -9,7 +9,7 @@ part 'display_config.g.dart';
 ///
 @immutable
 @JsonSerializable()
-class DisplayConfig {
+class DisplayConfig with InformativeToString {
   /// Constructs an instance of [DisplayConfig]
   const DisplayConfig({
     this.id = '',
@@ -162,44 +162,6 @@ class DisplayConfig {
       _$DisplayConfigFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$DisplayConfigToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'id" $id, '
-      'applicationName" $applicationName, '
-      'branded" $branded, '
-      'experimentalForceOauthFirst" $experimentalForceOauthFirst, '
-      'showDevmodeWarning" $showDevmodeWarning, '
-      'afterCreateOrganizationUrl" $afterCreateOrganizationUrl, '
-      'afterLeaveOrganizationUrl" $afterLeaveOrganizationUrl, '
-      'afterSignInUrl" $afterSignInUrl, '
-      'afterSignOutAllUrl" $afterSignOutAllUrl, '
-      'afterSignOutOneUrl" $afterSignOutOneUrl, '
-      'afterSignUpUrl" $afterSignUpUrl, '
-      'afterSwitchSessionUrl" $afterSwitchSessionUrl, '
-      'captchaProvider" $captchaProvider, '
-      'captchaPublicKeyInvisible" $captchaPublicKeyInvisible, '
-      'captchaPublicKey" $captchaPublicKey, '
-      'captchaWidgetType" $captchaWidgetType, '
-      'clerkJsVersion" $clerkJsVersion, '
-      'createOrganizationUrl" $createOrganizationUrl, '
-      'faviconImageUrl" $faviconImageUrl, '
-      'faviconUrl" $faviconUrl, '
-      'googleOneTapClientId" $googleOneTapClientId, '
-      'helpUrl" $helpUrl, '
-      'homeUrl" $homeUrl, '
-      'instanceEnvironmentType" $instanceEnvironmentType, '
-      'logoImageUrl" $logoImageUrl, '
-      'logoLinkUrl" $logoLinkUrl, '
-      'logoUrl" $logoUrl, '
-      'organizationProfileUrl" $organizationProfileUrl, '
-      'preferredSignInStrategy" $preferredSignInStrategy, '
-      'privacyPolicyUrl" $privacyPolicyUrl, '
-      'signInUrl" $signInUrl, '
-      'signUpUrl" $signUpUrl, '
-      'supportEmail" $supportEmail, '
-      'termsUrl" $termsUrl, '
-      'userProfileUrl" $userProfileUrl'
-      '}';
+  Map<String, dynamic> toJson() => _$DisplayConfigToJson(this);
 }

@@ -1,4 +1,3 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -44,11 +43,10 @@ class Field {
   /// toJson
   String toJson() => name;
 
+  /// toJson
+  @override
+  String toString() => name;
+
   /// A display title for this attribute
   String get title => name.replaceAll('_', ' ');
-
-  @override
-  String toString() => '${describeIdentity()}{'
-      'name: $name'
-      '}';
 }

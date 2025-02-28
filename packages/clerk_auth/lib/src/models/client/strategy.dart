@@ -1,6 +1,5 @@
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
 import 'package:clerk_auth/src/models/enums.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -49,11 +48,11 @@ class Strategy {
 
   /// the collected oauth strategies
   static final oauthStrategies = {
-    oauthApple.fullName: oauthApple,
-    oauthGithub.fullName: oauthGithub,
-    oauthGoogle.fullName: oauthGoogle,
+    oauthApple.toString(): oauthApple,
+    oauthGithub.toString(): oauthGithub,
+    oauthGoogle.toString(): oauthGoogle,
     // 'google_one_tap': oauthGoogle, // guessing this is a synonym?
-    oauthTokenApple.fullName: oauthTokenApple,
+    oauthTokenApple.toString(): oauthTokenApple,
   };
 
   // verification strategies
@@ -162,9 +161,6 @@ class Strategy {
   bool get requiresRedirect =>
       name == _oauth || const [emailLink, saml].contains(this);
 
-  /// The [fullName] of the strategy, including provider if appropriate
-  String get fullName => [name, provider].nonNulls.join('_');
-
   /// For a given [name] return the [Strategy] it identifies.
   /// Create one if necessary and possible
   ///
@@ -231,10 +227,9 @@ class Strategy {
   }
 
   /// toJson
-  String toJson() => fullName;
+  String toJson() => toString();
 
+  /// toJson
   @override
-  String toString() => '${describeIdentity()}{'
-      'name: $fullName'
-      '}';
+  String toString() => [name, provider].nonNulls.join('_');
 }

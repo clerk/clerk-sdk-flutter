@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -9,7 +9,7 @@ part 'social_connection.g.dart';
 /// [SocialConnection] Clerk object
 @immutable
 @JsonSerializable()
-class SocialConnection {
+class SocialConnection with InformativeToString {
   /// Constructor
   const SocialConnection({
     this.isEnabled = false,
@@ -64,18 +64,6 @@ class SocialConnection {
       _$SocialConnectionFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$SocialConnectionToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'isEnabled: $isEnabled, '
-      'isRequired: $isRequired, '
-      'authenticatable: $authenticatable, '
-      'blockEmailSubaddresses: $blockEmailSubaddresses, '
-      'strategy: $strategy, '
-      'notSelectable: $notSelectable, '
-      'deprecated: $deprecated, '
-      'name: $name, '
-      'logoUrl: $logoUrl'
-      '}';
+  Map<String, dynamic> toJson() => _$SocialConnectionToJson(this);
 }

@@ -71,7 +71,7 @@ class StrategyButton extends StatelessWidget {
               _ => throw clerk.AuthError(
                   code: clerk.AuthErrorCode.noAssociatedStrategy,
                   message: localizations.noAssociatedCodeRetrievalMethod(
-                    strategy.fullName,
+                    strategy.toString(),
                   ),
                 ),
             },

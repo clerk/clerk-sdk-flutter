@@ -1,7 +1,7 @@
 import 'package:clerk_auth/src/models/client/field.dart';
 import 'package:clerk_auth/src/models/client/verification.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:clerk_auth/src/models/status.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -11,7 +11,7 @@ part 'sign_up.g.dart';
 /// [SignUp] Clerk object
 @immutable
 @JsonSerializable()
-class SignUp {
+class SignUp with InformativeToString {
   /// Constructor
   const SignUp({
     required this.id,
@@ -106,22 +106,8 @@ class SignUp {
   static SignUp fromJson(Map<String, dynamic> json) => _$SignUpFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$SignUpToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'id: $id, '
-      'username: $username, '
-      'emailAddress: $emailAddress, '
-      'phoneNumber: $phoneNumber, '
-      'firstName: $firstName, '
-      'lastName: $lastName, '
-      'requiredFields: ${requiredFields.join(', ')}, '
-      'optionalFields: ${optionalFields.join(', ')}, '
-      'missingFields: ${missingFields.join(', ')}, '
-      'unverifiedFields: ${unverifiedFields.join(', ')}, '
-      'status: $status'
-      '}';
+  Map<String, dynamic> toJson() => _$SignUpToJson(this);
 
   /// is [field] required?
   bool requires(Field? field) => requiredFields.contains(field);

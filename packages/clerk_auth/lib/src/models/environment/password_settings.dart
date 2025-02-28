@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -9,7 +9,7 @@ part 'password_settings.g.dart';
 /// [PasswordSettings] Clerk object
 @immutable
 @JsonSerializable()
-class PasswordSettings {
+class PasswordSettings with InformativeToString {
   /// Constructor
   const PasswordSettings({
     this.allowedSpecialCharacters = '',
@@ -76,22 +76,8 @@ class PasswordSettings {
   static PasswordSettings fromJson(Map<String, dynamic> json) =>
       _$PasswordSettingsFromJson(json);
 
-  @override
-  String toString() => '${describeIdentity()}{'
-      'allowedSpecialCharacters: $allowedSpecialCharacters, '
-      'minZxcvbnStrength: $minZxcvbnStrength, '
-      'minLength: $minLength, '
-      'maxLength: $maxLength, '
-      'disableHibp: $disableHibp, '
-      'requireSpecialChar: $requireSpecialChar, '
-      'requireNumbers: $requireNumbers, '
-      'requireUppercase: $requireUppercase, '
-      'requireLowercase: $requireLowercase, '
-      'showZxcvbn: $showZxcvbn, '
-      'enforceHibpOnSignIn: $enforceHibpOnSignIn'
-      '}';
-
   /// toJson
+  @override
   Map<String, dynamic> toJson() => _$PasswordSettingsToJson(this);
 
   /// is it long enough?

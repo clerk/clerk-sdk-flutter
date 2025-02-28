@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -7,7 +7,7 @@ part 'username_settings.g.dart';
 /// [UsernameSettings] Clerk object
 @immutable
 @JsonSerializable()
-class UsernameSettings {
+class UsernameSettings with InformativeToString {
   /// Constructor
   const UsernameSettings({
     this.minLength = 0,
@@ -28,11 +28,6 @@ class UsernameSettings {
       _$UsernameSettingsFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$UsernameSettingsToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'minLength: $minLength, '
-      'maxLength: $maxLength'
-      '}';
+  Map<String, dynamic> toJson() => _$UsernameSettingsToJson(this);
 }

@@ -191,7 +191,7 @@ class Api with Logging {
     return await _fetchApiResponse(
       '/client/sign_ups',
       params: {
-        'strategy': strategy.fullName,
+        'strategy': strategy,
         'username': username,
         'first_name': firstName,
         'last_name': lastName,
@@ -227,7 +227,7 @@ class Api with Logging {
       '/client/sign_ups/${signUp.id}',
       method: HttpMethod.patch,
       params: {
-        'strategy': strategy?.fullName,
+        'strategy': strategy,
         'username': username,
         'first_name': firstName,
         'last_name': lastName,
@@ -252,7 +252,7 @@ class Api with Logging {
     return await _fetchApiResponse(
       '/client/sign_ups/${signUp.id}/prepare_verification',
       params: {
-        'strategy': strategy.fullName,
+        'strategy': strategy,
       },
     );
   }
@@ -277,7 +277,7 @@ class Api with Logging {
     return await _fetchApiResponse(
       '/client/sign_ups/${signUp.id}/attempt_verification',
       params: {
-        'strategy': strategy.fullName,
+        'strategy': strategy,
         'code': code,
       },
     );
@@ -300,7 +300,7 @@ class Api with Logging {
     return await _fetchApiResponse(
       '/client/sign_ins',
       params: {
-        'strategy': strategy?.fullName,
+        'strategy': strategy,
         'identifier': identifier,
         'password': password,
         'redirect_url': redirectUrl,
@@ -318,7 +318,7 @@ class Api with Logging {
       '/me/external_accounts',
       withSession: true,
       params: {
-        'strategy': strategy?.fullName,
+        'strategy': strategy,
         'redirect_url': redirectUrl,
       },
     );
@@ -346,7 +346,7 @@ class Api with Logging {
     return await _fetchApiResponse(
       '/client/sign_ins/${signIn.id}/prepare_${stage}_factor',
       params: {
-        'strategy': strategy.fullName,
+        'strategy': strategy,
         'email_address_id': factor.emailAddressId,
         'phone_number_id': factor.phoneNumberId,
         'web3_wallet_id': factor.web3WalletId,
@@ -385,7 +385,7 @@ class Api with Logging {
     return await _fetchApiResponse(
       '/client/sign_ins/${signIn.id}/attempt_${stage}_factor',
       params: {
-        'strategy': strategy.fullName,
+        'strategy': strategy,
         'code': code,
         'password': password,
         'redirect_url': redirectUrl,
@@ -405,7 +405,7 @@ class Api with Logging {
       '/me/external_accounts',
       withSession: true,
       params: {
-        'strategy': strategy.fullName,
+        'strategy': strategy,
         'redirect_url': redirectUrl,
       },
     );
@@ -443,7 +443,7 @@ class Api with Logging {
       '/client/sign_ins/${signIn.id}',
       method: HttpMethod.get,
       params: {
-        'strategy': strategy.fullName,
+        'strategy': strategy,
         'rotating_token_nonce': token,
       },
     );
@@ -558,7 +558,7 @@ class Api with Logging {
       '/me/${identifier.type.urlSegment}/${identifier.id}/prepare_verification',
       withSession: true,
       params: {
-        'strategy': identifier.type.verificationStrategy.fullName,
+        'strategy': identifier.type.verificationStrategy,
       },
     );
   }

@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -9,7 +9,7 @@ part 'organization_settings.g.dart';
 /// [OrganizationSettings] Clerk object
 @immutable
 @JsonSerializable()
-class OrganizationSettings {
+class OrganizationSettings with InformativeToString {
   /// Constructor
   const OrganizationSettings({
     this.maxAllowedMemberships = 0,
@@ -43,14 +43,6 @@ class OrganizationSettings {
       _$OrganizationSettingsFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$OrganizationSettingsToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'maxAllowedMemberships: $maxAllowedMemberships, '
-      'creatorRole: $creatorRole, '
-      'actions: $actions, '
-      'domains: $domains, '
-      'isEnabled: $isEnabled'
-      '}';
+  Map<String, dynamic> toJson() => _$OrganizationSettingsToJson(this);
 }

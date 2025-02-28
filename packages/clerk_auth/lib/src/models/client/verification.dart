@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
@@ -10,7 +11,7 @@ part 'verification.g.dart';
 /// [Verification] Clerk object
 @immutable
 @JsonSerializable()
-class Verification {
+class Verification with InformativeToString {
   /// Constructor
   const Verification({
     required this.status,
@@ -50,6 +51,7 @@ class Verification {
       _$VerificationFromJson(json);
 
   /// toJson
+  @override
   Map<String, dynamic> toJson() => _$VerificationToJson(this);
 
   @override

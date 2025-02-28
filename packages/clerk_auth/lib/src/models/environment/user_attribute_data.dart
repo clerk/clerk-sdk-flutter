@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/client/strategy.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -9,7 +9,7 @@ part 'user_attribute_data.g.dart';
 /// [UserAttributeData] Clerk object
 @immutable
 @JsonSerializable()
-class UserAttributeData {
+class UserAttributeData with InformativeToString {
   /// Constructor
   const UserAttributeData({
     this.isEnabled = true,
@@ -59,17 +59,6 @@ class UserAttributeData {
       _$UserAttributeDataFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$UserAttributeDataToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'isEnabled: $isEnabled, '
-      'isRequired: $isRequired, '
-      'usedForFirstFactor: $usedForFirstFactor, '
-      'firstFactors: $firstFactors, '
-      'userForSecondFactor: $userForSecondFactor, '
-      'secondFactors: $secondFactors, '
-      'verifyAtSignUp: $verifyAtSignUp, '
-      'verifications: $verifications'
-      '}';
+  Map<String, dynamic> toJson() => _$UserAttributeDataToJson(this);
 }

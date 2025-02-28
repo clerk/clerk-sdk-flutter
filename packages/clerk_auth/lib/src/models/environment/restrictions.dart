@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -7,7 +7,7 @@ part 'restrictions.g.dart';
 /// [Restrictions] Clerk object
 @immutable
 @JsonSerializable()
-class Restrictions {
+class Restrictions with InformativeToString {
   /// Constructor
   const Restrictions({
     this.allowlistEnabled = false,
@@ -45,16 +45,8 @@ class Restrictions {
       _$RestrictionsFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$RestrictionsToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'allowlistEnabled: $allowlistEnabled, '
-      'blocklistEnabled: $blocklistEnabled, '
-      'blockEmailSubaddresses: $blockEmailSubaddresses, '
-      'blockDisposableEmailDomains: $blockDisposableEmailDomains, '
-      'ignoreDotsForEmailAddresses: $ignoreDotsForEmailAddresses'
-      '}';
+  Map<String, dynamic> toJson() => _$RestrictionsToJson(this);
 }
 
 bool _readStatus(map, name) => map[name]?['enabled'] == true;

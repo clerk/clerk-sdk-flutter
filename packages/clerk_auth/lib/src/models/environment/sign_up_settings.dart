@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -7,7 +7,7 @@ part 'sign_up_settings.g.dart';
 /// [SignUpSettings] Clerk object
 @immutable
 @JsonSerializable()
-class SignUpSettings {
+class SignUpSettings with InformativeToString {
   /// Constructor
   const SignUpSettings({
     this.captchaEnabled = false,
@@ -44,15 +44,6 @@ class SignUpSettings {
       _$SignUpSettingsFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$SignUpSettingsToJson(this);
-
   @override
-  String toString() => '${describeIdentity()}{'
-      'captchaEnabled: $captchaEnabled, '
-      'captchaWidgetType: $captchaWidgetType, '
-      'customActionRequired: $customActionRequired, '
-      'progressive: $progressive, '
-      'mode: $mode, '
-      'legalConsentEnabled: $legalConsentEnabled'
-      '}';
+  Map<String, dynamic> toJson() => _$SignUpSettingsToJson(this);
 }

@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -7,7 +8,7 @@ part 'attack_protection.g.dart';
 /// [AttackProtection] Clerk object
 @immutable
 @JsonSerializable()
-class AttackProtection {
+class AttackProtection with InformativeToString {
   /// Constructor
   const AttackProtection({
     this.userLockout = UserLockout.empty,
@@ -34,6 +35,7 @@ class AttackProtection {
       _$AttackProtectionFromJson(json);
 
   /// toJson
+  @override
   Map<String, dynamic> toJson() => _$AttackProtectionToJson(this);
 
   @override
@@ -76,13 +78,6 @@ class UserLockout {
 
   /// toJson
   Map<String, dynamic> toJson() => _$UserLockoutToJson(this);
-
-  @override
-  String toString() => '${describeIdentity()}{'
-      'isEnabled: $isEnabled, '
-      'maxAttempts: $maxAttempts, '
-      'duration: $duration'
-      '}';
 }
 
 Duration _toDuration(dynamic value) =>

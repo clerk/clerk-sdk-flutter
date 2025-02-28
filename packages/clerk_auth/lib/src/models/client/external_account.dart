@@ -1,5 +1,5 @@
 import 'package:clerk_auth/src/models/client/verification.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
+import 'package:clerk_auth/src/models/informative_to_string.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -9,7 +9,7 @@ part 'external_account.g.dart';
 /// [ExternalAccount] Clerk object
 @immutable
 @JsonSerializable()
-class ExternalAccount {
+class ExternalAccount with InformativeToString {
   /// Constructor
   const ExternalAccount({
     required this.id,
@@ -90,26 +90,6 @@ class ExternalAccount {
       _$ExternalAccountFromJson(json);
 
   /// toJson
-  Map<String, dynamic> toJson() => _$ExternalAccountToJson(this);
-
   @override
-  String toString() {
-    return '${describeIdentity()}{'
-        'id: $id, '
-        'provider: $provider, '
-        'providerUserId: $providerUserId, '
-        'approvedScopes: $approvedScopes, '
-        'emailAddress: $emailAddress, '
-        'username: $username, '
-        'firstName: $firstName, '
-        'lastName: $lastName, '
-        'avatarUrl: $avatarUrl, '
-        'imageUrl: $imageUrl, '
-        'label: $label, '
-        'publicMetadata: $publicMetadata, '
-        'verification: $verification, '
-        'updatedAt: $updatedAt, '
-        'createdAt: $createdAt'
-        '}';
-  }
+  Map<String, dynamic> toJson() => _$ExternalAccountToJson(this);
 }

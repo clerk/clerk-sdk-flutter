@@ -13,15 +13,14 @@ class TokenCache {
   /// Create a [TokenCache] instance
   ///
   TokenCache({
-    required Persistor persistor,
+    required this.persistor,
     required String publishableKey,
-  })   //
-  : _persistor = persistor,
-        _cacheId = publishableKey.hashCode;
+  }) : _cacheId = publishableKey.hashCode;
 
-  final Persistor _persistor;
+  /// The [Persistor] used to store session and client data
+  final Persistor persistor;
+
   final int _cacheId;
-
   final _sessionTokens = <String, SessionToken>{};
 
   String _sessionId = '';
@@ -51,10 +50,10 @@ class TokenCache {
   /// Initialise the cache
   Future<void> initialize() async {
     // Read all stored variables first before assignment
-    final sessionId = await _persistor.read(_sessionIdKey) ?? '';
+    final sessionId = await persistor.read(_sessionIdKey) ?? '';
     _sessionId = sessionId;
 
-    final sessionTokens = await _persistor.read(_sessionTokenKey);
+    final sessionTokens = await persistor.read(_sessionTokenKey);
     if (sessionTokens case String sessionTokens) {
       final sessionTokenData =
           json.decode(sessionTokens) as Map<String, dynamic>;
@@ -67,10 +66,10 @@ class TokenCache {
       }
     }
 
-    final clientToken = await _persistor.read(_clientTokenKey) ?? '';
+    final clientToken = await persistor.read(_clientTokenKey) ?? '';
     _clientToken = clientToken;
 
-    final clientId = await _persistor.read(_clientIdKey) ?? '';
+    final clientId = await persistor.read(_clientIdKey) ?? '';
     _clientId = clientId;
   }
 
@@ -82,7 +81,7 @@ class TokenCache {
     _clientId = '';
     _sessionTokens.clear();
     for (final key in _persistorKeys) {
-      _persistor.delete(key);
+      persistor.delete(key);
     }
   }
 
@@ -93,7 +92,7 @@ class TokenCache {
     if (_sessionId == id) return;
 
     _sessionId = id;
-    _persistor.write(_sessionIdKey, id);
+    persistor.write(_sessionIdKey, id);
   }
 
   /// Get the [clientToken]
@@ -103,7 +102,7 @@ class TokenCache {
     if (token == _clientToken) return;
 
     _clientToken = token;
-    _persistor.write(_clientTokenKey, token);
+    persistor.write(_clientTokenKey, token);
   }
 
   /// Get the [clientId]
@@ -113,7 +112,7 @@ class TokenCache {
     if (_clientId == id) return;
 
     _clientId = id;
-    _persistor.write(_clientIdKey, id);
+    persistor.write(_clientIdKey, id);
   }
 
   /// Get the [sessionTokenFor] for a [orgId]
@@ -137,7 +136,7 @@ class TokenCache {
     final id = _sessionTokenId(sessionToken.orgId, templateName);
     if (token != _sessionTokens[id]?.jwt) {
       _sessionTokens[id] = sessionToken;
-      _persistor.write(_sessionTokenKey, json.encode(_sessionTokens));
+      persistor.write(_sessionTokenKey, json.encode(_sessionTokens));
     }
 
     return _sessionTokens[id]!;

@@ -34,7 +34,7 @@ class TestLogPrinter extends Printer {
   }
 }
 
-class TestHttpService implements HttpService {
+class TestHttpService extends HttpService {
   final _expectations = <String, List<Response>>{};
 
   @override
@@ -128,7 +128,7 @@ List<String> testLocalesLookup() => <String>['en'];
 
 const noneHttpService = NoneHttpService();
 
-class NoneHttpService implements HttpService {
+class NoneHttpService extends HttpService {
   const NoneHttpService();
 
   @override

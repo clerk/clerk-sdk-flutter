@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:clerk_auth/src/utils/extensions.dart';
@@ -34,6 +35,21 @@ enum HttpMethod {
 /// Clerk back-end over http
 ///
 abstract class HttpService {
+  /// Construct a [HttpService]
+  const HttpService();
+
+  /// Initialises this instance of the http service
+  ///
+  /// It is possible that [initialise] will be called
+  /// multiple times, and must be prepared for that to happen
+  Future<void> initialise() async {}
+
+  /// Terminates this instance of the http service
+  ///
+  /// It is possible that [terminate] will be called
+  /// multiple times, and must be prepared for that to happen
+  void terminate() {}
+
   /// [send] data to the back end, and receive a [Response]
   ///
   Future<Response> send(
@@ -57,9 +73,19 @@ abstract class HttpService {
 
 /// Default implementation of [HttpService]
 ///
-class DefaultHttpService implements HttpService {
+class DefaultHttpService extends HttpService {
   /// Constructor
   const DefaultHttpService();
+
+  static Client? __client;
+
+  Client get _client => __client ??= Client();
+
+  @override
+  void terminate() {
+    __client?.close();
+    __client = null;
+  }
 
   @override
   Future<Response> send(
@@ -83,7 +109,7 @@ class DefaultHttpService implements HttpService {
       request.body = body;
     }
 
-    final streamedResponse = await request.send();
+    final streamedResponse = await _client.send(request);
     return Response.fromStream(streamedResponse);
   }
 
@@ -106,7 +132,7 @@ class DefaultHttpService implements HttpService {
     );
     request.files.add(multipartFile);
 
-    final streamedResponse = await request.send();
+    final streamedResponse = await _client.send(request);
     return Response.fromStream(streamedResponse);
   }
 }

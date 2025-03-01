@@ -22,21 +22,23 @@ class Api with Logging {
   /// Create an [Api] object
   ///
   Api({
-    required AuthConfig config,
+    required this.config,
+    required this.httpService,
     required Persistor persistor,
-    required HttpService httpService,
-  })  : _config = config,
-        _tokenCache = TokenCache(
+  })  : _tokenCache = TokenCache(
           persistor: persistor,
           publishableKey: config.publishableKey,
         ),
-        _httpService = httpService,
         _domain = _deriveDomainFrom(config.publishableKey),
         _testMode = config.isTestMode;
 
-  final AuthConfig _config;
+  /// The config used to initialise this api instance.
+  final AuthConfig config;
+
+  /// The [HttpService] used to send the server requests.
+  final HttpService httpService;
+
   final TokenCache _tokenCache;
-  final HttpService _httpService;
   final String _domain;
 
   bool _testMode;
@@ -62,13 +64,14 @@ class Api with Logging {
   /// Initialise the API
   Future<void> initialize() async {
     await _tokenCache.initialize();
-    if (_config.sessionTokenPollMode == SessionTokenPollMode.hungry) {
+    if (config.sessionTokenPollMode == SessionTokenPollMode.hungry) {
       await _pollForSessionToken();
     }
   }
 
   /// Dispose of the API
   void terminate() {
+    httpService.terminate();
     _pollTimer?.cancel();
   }
 
@@ -86,7 +89,7 @@ class Api with Logging {
       final body = json.decode(resp.body) as Map<String, dynamic>;
       final env = Environment.fromJson(body);
 
-      _testMode = env.config.testMode && _config.isTestMode;
+      _testMode = env.config.testMode && config.isTestMode;
       _multiSessionMode = env.config.singleSessionMode == false;
 
       return env;
@@ -727,7 +730,7 @@ class Api with Logging {
     try {
       final length = await file.length();
       final stream = http.ByteStream(file.openRead());
-      final resp = await _httpService.sendByteStream(
+      final resp = await httpService.sendByteStream(
         method,
         uri,
         stream,
@@ -818,7 +821,7 @@ class Api with Logging {
         _queryParams(method, withSession: withSession, params: parsedParams);
     final uri = _uri(path, params: queryParams);
 
-    final resp = await _httpService.send(
+    final resp = await httpService.send(
       method,
       uri,
       headers: headers,
@@ -873,7 +876,7 @@ class Api with Logging {
   }) {
     return {
       HttpHeaders.acceptHeader: 'application/json',
-      HttpHeaders.acceptLanguageHeader: _config.localesLookup().join(', '),
+      HttpHeaders.acceptLanguageHeader: config.localesLookup().join(', '),
       HttpHeaders.contentTypeHeader: method.isGet
           ? 'application/json'
           : 'application/x-www-form-urlencoded',

@@ -34,8 +34,14 @@ class TestLogPrinter extends Printer {
   }
 }
 
-class TestHttpService extends HttpService {
+class TestHttpService implements HttpService {
   final _expectations = <String, List<Response>>{};
+
+  @override
+  Future<void> initialise() async {}
+
+  @override
+  void terminate() {}
 
   @override
   Future<Response> send(
@@ -128,8 +134,14 @@ List<String> testLocalesLookup() => <String>['en'];
 
 const noneHttpService = NoneHttpService();
 
-class NoneHttpService extends HttpService {
+class NoneHttpService implements HttpService {
   const NoneHttpService();
+
+  @override
+  Future<void> initialise() async {}
+
+  @override
+  void terminate() {}
 
   @override
   Future<Response> send(

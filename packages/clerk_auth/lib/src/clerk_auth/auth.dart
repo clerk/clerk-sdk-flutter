@@ -27,31 +27,34 @@ class Auth {
   Auth({
     required this.config,
     required Persistor persistor,
-    this.httpService = const DefaultHttpService(),
-  })  : telemetry = Telemetry(
-          config: config,
-          persistor: persistor,
-          httpService: httpService,
-        ),
-        _api = Api(
-          config: config,
-          persistor: persistor,
-          httpService: httpService,
-        );
+    HttpService? httpService,
+  }) {
+    this.httpService = httpService ?? DefaultHttpService();
+    telemetry = Telemetry(
+      config: config,
+      persistor: persistor,
+      httpService: this.httpService,
+    );
+    _api = Api(
+      config: config,
+      persistor: persistor,
+      httpService: this.httpService,
+    );
+  }
 
   /// Use 'English' as the default locale
   static List<String> defaultLocalesLookup() => <String>['en'];
 
-  /// The service to send telemetry to the back end
-  final Telemetry telemetry;
-
-  /// The [HttpService] used to communicate with the backend.
-  final HttpService httpService;
-
   /// The configuration object
   final AuthConfig config;
 
-  final Api _api;
+  /// The [HttpService] used to communicate with the backend.
+  late final HttpService httpService;
+
+  /// The service to send telemetry to the back end
+  late final Telemetry telemetry;
+
+  late final Api _api;
   Timer? _clientTimer;
 
   static const _codeLength = 6;

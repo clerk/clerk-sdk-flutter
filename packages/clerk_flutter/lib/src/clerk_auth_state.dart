@@ -21,7 +21,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   ClerkAuthState._(
     this._config,
     clerk.Persistor persistor,
-    clerk.HttpService httpService,
+    clerk.HttpService? httpService,
   )   : _loadingOverlay = ClerkLoadingOverlay(_config),
         super(
           config: _config,
@@ -41,7 +41,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           await clerk.DefaultPersistor.create(
             storageDirectory: await getApplicationDocumentsDirectory(),
           ),
-      httpService ?? const clerk.DefaultHttpService(),
+      httpService,
     );
     await authState.initialize();
     return authState;

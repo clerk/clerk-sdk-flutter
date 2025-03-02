@@ -71,7 +71,6 @@ class Api with Logging {
 
   /// Dispose of the API
   void terminate() {
-    httpService.terminate();
     _pollTimer?.cancel();
   }
 

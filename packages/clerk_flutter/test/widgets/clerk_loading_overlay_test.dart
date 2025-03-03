@@ -47,13 +47,15 @@ void main() {
       final expectedHideTime = displayTime.add(minOnScreenTime);
 
       expectThat(
-        displayTime.isAfter(expectedDisplayTime),
-        reason: 'Displayed too early: ${expectedDisplayTime - displayTime}ms',
+        displayTime.isRoundAbout(expectedDisplayTime),
+        reason:
+            'Not displayed at right time: ${expectedDisplayTime - displayTime}ms out',
       );
 
       expectThat(
-        hideTime.isAfter(expectedHideTime),
-        reason: 'Hidden too early: ${expectedHideTime - hideTime}ms',
+        hideTime.isRoundAbout(expectedHideTime),
+        reason:
+            'Not hidden at right time: ${expectedHideTime - hideTime}ms out',
       );
     });
 
@@ -139,7 +141,7 @@ void main() {
       final now = DateTime.timestamp();
       expectThat(
         hideTime!.isRoundAbout(now),
-        reason: 'Not removed at right time: ${now - hideTime!}ms',
+        reason: 'Not hidden at right time: ${now - hideTime!}ms out',
       );
     });
   });

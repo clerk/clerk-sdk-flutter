@@ -58,40 +58,46 @@ class ClerkLoadingOverlay {
   /// on screen for
   static const minimumOnScreenDuration = Duration(milliseconds: 500);
 
-  int _count = 0;
-  Timer? _timer;
+  /// The number of [ClerkLoadingOverlay] requests that are currently
+  /// pending
+  int count = 0;
+
+  Timer? _displayTimer;
+  Timer? _hideTimer;
   DateTime _hideAfter = DateTime(0);
 
   final OverlayEntry _overlayEntry;
 
   /// Shows the loading overlay
   void insertInto(AbstractClerkOverlayState overlay) {
-    _count++;
-    _timer ??= Timer(
-      startupDuration,
-      () {
-        if (overlay.mounted && overlay.isDisplaying(_overlayEntry) == false) {
-          _hideAfter = DateTime.timestamp().add(minimumOnScreenDuration);
-          overlay.insert(_overlayEntry);
-        }
-      },
-    );
+    if (++count == 1) {
+      _hideTimer?.cancel();
+      _hideTimer = null;
+      _displayTimer ??= Timer(
+        startupDuration,
+        () {
+          if (overlay.mounted && overlay.isDisplaying(_overlayEntry) == false) {
+            _hideAfter = DateTime.timestamp().add(minimumOnScreenDuration);
+            overlay.insert(_overlayEntry);
+          }
+        },
+      );
+    }
   }
 
   /// Hides the loading overlay
   void removeFrom(AbstractClerkOverlayState overlay) {
-    _count--;
-    if (_count == 0) {
-      _timer?.cancel();
-      _timer = null;
+    if (count > 0 && --count == 0) {
+      _displayTimer?.cancel();
+      _displayTimer = null;
 
-      if (overlay.isDisplaying(_overlayEntry)) {
+      if (_hideTimer == null && overlay.isDisplaying(_overlayEntry)) {
         final now = DateTime.timestamp();
         if (_hideAfter.isAfter(now)) {
-          _timer = Timer(
+          _hideTimer = Timer(
             _hideAfter.difference(now),
             () {
-              _timer = null;
+              _hideTimer = null;
               overlay.remove(_overlayEntry);
             },
           );

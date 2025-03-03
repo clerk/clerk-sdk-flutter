@@ -1,0 +1,445 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.12
+
+// ignore_for_file: unused_element, unused_import
+// ignore_for_file: always_put_required_named_parameters_first
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: lines_longer_than_80_chars
+
+part of openapi.api;
+
+class UpdateUserRequest {
+  /// Returns a new [UpdateUserRequest] instance.
+  UpdateUserRequest({
+    this.externalId,
+    this.firstName,
+    this.lastName,
+    this.primaryEmailAddressId,
+    this.notifyPrimaryEmailAddressChanged = false,
+    this.primaryPhoneNumberId,
+    this.primaryWeb3WalletId,
+    this.username,
+    this.profileImageId,
+    this.password,
+    this.passwordDigest,
+    this.passwordHasher,
+    this.skipPasswordChecks,
+    this.signOutOfOtherSessions,
+    this.totpSecret,
+    this.backupCodes = const [],
+    this.publicMetadata = const {},
+    this.privateMetadata = const {},
+    this.unsafeMetadata = const {},
+    this.deleteSelfEnabled,
+    this.createOrganizationEnabled,
+    this.legalAcceptedAt,
+    this.skipLegalChecks,
+    this.createOrganizationsLimit,
+    this.createdAt,
+  });
+
+  /// The ID of the user as used in your external systems or your previous authentication solution. Must be unique across your instance.
+  String? externalId;
+
+  /// The first name to assign to the user
+  String? firstName;
+
+  /// The last name to assign to the user
+  String? lastName;
+
+  /// The ID of the email address to set as primary. It must be verified, and present on the current user.
+  String? primaryEmailAddressId;
+
+  /// If set to `true`, the user will be notified that their primary email address has changed. By default, no notification is sent.
+  bool? notifyPrimaryEmailAddressChanged;
+
+  /// The ID of the phone number to set as primary. It must be verified, and present on the current user.
+  String? primaryPhoneNumberId;
+
+  /// The ID of the web3 wallets to set as primary. It must be verified, and present on the current user.
+  String? primaryWeb3WalletId;
+
+  /// The username to give to the user. It must be unique across your instance.
+  String? username;
+
+  /// The ID of the image to set as the user's profile image
+  String? profileImageId;
+
+  /// The plaintext password to give the user. Must be at least 8 characters long, and can not be in any list of hacked passwords.
+  String? password;
+
+  /// In case you already have the password digests and not the passwords, you can use them for the newly created user via this property. The digests should be generated with one of the supported algorithms. The hashing algorithm can be specified using the `password_hasher` property.
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? passwordDigest;
+
+  /// The hashing algorithm that was used to generate the password digest.  The algorithms we support at the moment are [`bcrypt`](https://en.wikipedia.org/wiki/Bcrypt), [`bcrypt_sha256_django`](https://docs.djangoproject.com/en/4.0/topics/auth/passwords/), [`md5`](https://en.wikipedia.org/wiki/MD5), `pbkdf2_sha1`, `pbkdf2_sha256`, [`pbkdf2_sha256_django`](https://docs.djangoproject.com/en/4.0/topics/auth/passwords/), [`phpass`](https://www.openwall.com/phpass/), [`scrypt_firebase`](https://firebaseopensource.com/projects/firebase/scrypt/), [`scrypt_werkzeug`](https://werkzeug.palletsprojects.com/en/3.0.x/utils/#werkzeug.security.generate_password_hash), [`sha256`](https://en.wikipedia.org/wiki/SHA-2), and the [`argon2`](https://argon2.online/) variants: `argon2i` and `argon2id`.  Each of the supported hashers expects the incoming digest to be in a particular format. See the [Clerk docs](https://clerk.com/docs/references/backend/user/create-user) for more information.
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? passwordHasher;
+
+  /// Set it to `true` if you're updating the user's password and want to skip any password policy settings check. This parameter can only be used when providing a `password`.
+  bool? skipPasswordChecks;
+
+  /// Set to `true` to sign out the user from all their active sessions once their password is updated. This parameter can only be used when providing a `password`.
+  bool? signOutOfOtherSessions;
+
+  /// In case TOTP is configured on the instance, you can provide the secret to enable it on the specific user without the need to reset it. Please note that currently the supported options are: * Period: 30 seconds * Code length: 6 digits * Algorithm: SHA1
+  String? totpSecret;
+
+  /// If Backup Codes are configured on the instance, you can provide them to enable it on the specific user without the need to reset them. You must provide the backup codes in plain format or the corresponding bcrypt digest.
+  List<String> backupCodes;
+
+  /// Metadata saved on the user, that is visible to both your Frontend and Backend APIs
+  Map<String, Object>? publicMetadata;
+
+  /// Metadata saved on the user, that is only visible to your Backend API
+  Map<String, Object>? privateMetadata;
+
+  /// Metadata saved on the user, that can be updated from both the Frontend and Backend APIs. Note: Since this data can be modified from the frontend, it is not guaranteed to be safe.
+  Map<String, Object>? unsafeMetadata;
+
+  /// If true, the user can delete themselves with the Frontend API.
+  bool? deleteSelfEnabled;
+
+  /// If true, the user can create organizations with the Frontend API.
+  bool? createOrganizationEnabled;
+
+  /// A custom timestamps denoting _when_ the user accepted legal requirements, specified in RFC3339 format (e.g. `2012-10-20T07:15:20.902Z`).
+  String? legalAcceptedAt;
+
+  /// When set to `true` all legal checks are skipped. It is not recommended to skip legal checks unless you are migrating a user to Clerk.
+  bool? skipLegalChecks;
+
+  /// The maximum number of organizations the user can create. 0 means unlimited.
+  int? createOrganizationsLimit;
+
+  /// A custom date/time denoting _when_ the user signed up to the application, specified in RFC3339 format (e.g. `2012-10-20T07:15:20.902Z`).
+  String? createdAt;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdateUserRequest &&
+          other.externalId == externalId &&
+          other.firstName == firstName &&
+          other.lastName == lastName &&
+          other.primaryEmailAddressId == primaryEmailAddressId &&
+          other.notifyPrimaryEmailAddressChanged ==
+              notifyPrimaryEmailAddressChanged &&
+          other.primaryPhoneNumberId == primaryPhoneNumberId &&
+          other.primaryWeb3WalletId == primaryWeb3WalletId &&
+          other.username == username &&
+          other.profileImageId == profileImageId &&
+          other.password == password &&
+          other.passwordDigest == passwordDigest &&
+          other.passwordHasher == passwordHasher &&
+          other.skipPasswordChecks == skipPasswordChecks &&
+          other.signOutOfOtherSessions == signOutOfOtherSessions &&
+          other.totpSecret == totpSecret &&
+          _deepEquality.equals(other.backupCodes, backupCodes) &&
+          _deepEquality.equals(other.publicMetadata, publicMetadata) &&
+          _deepEquality.equals(other.privateMetadata, privateMetadata) &&
+          _deepEquality.equals(other.unsafeMetadata, unsafeMetadata) &&
+          other.deleteSelfEnabled == deleteSelfEnabled &&
+          other.createOrganizationEnabled == createOrganizationEnabled &&
+          other.legalAcceptedAt == legalAcceptedAt &&
+          other.skipLegalChecks == skipLegalChecks &&
+          other.createOrganizationsLimit == createOrganizationsLimit &&
+          other.createdAt == createdAt;
+
+  @override
+  int get hashCode =>
+      // ignore: unnecessary_parenthesis
+      (externalId == null ? 0 : externalId!.hashCode) +
+      (firstName == null ? 0 : firstName!.hashCode) +
+      (lastName == null ? 0 : lastName!.hashCode) +
+      (primaryEmailAddressId == null ? 0 : primaryEmailAddressId!.hashCode) +
+      (notifyPrimaryEmailAddressChanged == null
+          ? 0
+          : notifyPrimaryEmailAddressChanged!.hashCode) +
+      (primaryPhoneNumberId == null ? 0 : primaryPhoneNumberId!.hashCode) +
+      (primaryWeb3WalletId == null ? 0 : primaryWeb3WalletId!.hashCode) +
+      (username == null ? 0 : username!.hashCode) +
+      (profileImageId == null ? 0 : profileImageId!.hashCode) +
+      (password == null ? 0 : password!.hashCode) +
+      (passwordDigest == null ? 0 : passwordDigest!.hashCode) +
+      (passwordHasher == null ? 0 : passwordHasher!.hashCode) +
+      (skipPasswordChecks == null ? 0 : skipPasswordChecks!.hashCode) +
+      (signOutOfOtherSessions == null ? 0 : signOutOfOtherSessions!.hashCode) +
+      (totpSecret == null ? 0 : totpSecret!.hashCode) +
+      (backupCodes.hashCode) +
+      (publicMetadata == null ? 0 : publicMetadata!.hashCode) +
+      (privateMetadata == null ? 0 : privateMetadata!.hashCode) +
+      (unsafeMetadata == null ? 0 : unsafeMetadata!.hashCode) +
+      (deleteSelfEnabled == null ? 0 : deleteSelfEnabled!.hashCode) +
+      (createOrganizationEnabled == null
+          ? 0
+          : createOrganizationEnabled!.hashCode) +
+      (legalAcceptedAt == null ? 0 : legalAcceptedAt!.hashCode) +
+      (skipLegalChecks == null ? 0 : skipLegalChecks!.hashCode) +
+      (createOrganizationsLimit == null
+          ? 0
+          : createOrganizationsLimit!.hashCode) +
+      (createdAt == null ? 0 : createdAt!.hashCode);
+
+  @override
+  String toString() =>
+      'UpdateUserRequest[externalId=$externalId, firstName=$firstName, lastName=$lastName, primaryEmailAddressId=$primaryEmailAddressId, notifyPrimaryEmailAddressChanged=$notifyPrimaryEmailAddressChanged, primaryPhoneNumberId=$primaryPhoneNumberId, primaryWeb3WalletId=$primaryWeb3WalletId, username=$username, profileImageId=$profileImageId, password=$password, passwordDigest=$passwordDigest, passwordHasher=$passwordHasher, skipPasswordChecks=$skipPasswordChecks, signOutOfOtherSessions=$signOutOfOtherSessions, totpSecret=$totpSecret, backupCodes=$backupCodes, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, unsafeMetadata=$unsafeMetadata, deleteSelfEnabled=$deleteSelfEnabled, createOrganizationEnabled=$createOrganizationEnabled, legalAcceptedAt=$legalAcceptedAt, skipLegalChecks=$skipLegalChecks, createOrganizationsLimit=$createOrganizationsLimit, createdAt=$createdAt]';
+
+  Map<String, dynamic> toJson() {
+    final json = <String, dynamic>{};
+    if (this.externalId != null) {
+      json[r'external_id'] = this.externalId;
+    } else {
+      json[r'external_id'] = null;
+    }
+    if (this.firstName != null) {
+      json[r'first_name'] = this.firstName;
+    } else {
+      json[r'first_name'] = null;
+    }
+    if (this.lastName != null) {
+      json[r'last_name'] = this.lastName;
+    } else {
+      json[r'last_name'] = null;
+    }
+    if (this.primaryEmailAddressId != null) {
+      json[r'primary_email_address_id'] = this.primaryEmailAddressId;
+    } else {
+      json[r'primary_email_address_id'] = null;
+    }
+    if (this.notifyPrimaryEmailAddressChanged != null) {
+      json[r'notify_primary_email_address_changed'] =
+          this.notifyPrimaryEmailAddressChanged;
+    } else {
+      json[r'notify_primary_email_address_changed'] = null;
+    }
+    if (this.primaryPhoneNumberId != null) {
+      json[r'primary_phone_number_id'] = this.primaryPhoneNumberId;
+    } else {
+      json[r'primary_phone_number_id'] = null;
+    }
+    if (this.primaryWeb3WalletId != null) {
+      json[r'primary_web3_wallet_id'] = this.primaryWeb3WalletId;
+    } else {
+      json[r'primary_web3_wallet_id'] = null;
+    }
+    if (this.username != null) {
+      json[r'username'] = this.username;
+    } else {
+      json[r'username'] = null;
+    }
+    if (this.profileImageId != null) {
+      json[r'profile_image_id'] = this.profileImageId;
+    } else {
+      json[r'profile_image_id'] = null;
+    }
+    if (this.password != null) {
+      json[r'password'] = this.password;
+    } else {
+      json[r'password'] = null;
+    }
+    if (this.passwordDigest != null) {
+      json[r'password_digest'] = this.passwordDigest;
+    } else {
+      json[r'password_digest'] = null;
+    }
+    if (this.passwordHasher != null) {
+      json[r'password_hasher'] = this.passwordHasher;
+    } else {
+      json[r'password_hasher'] = null;
+    }
+    if (this.skipPasswordChecks != null) {
+      json[r'skip_password_checks'] = this.skipPasswordChecks;
+    } else {
+      json[r'skip_password_checks'] = null;
+    }
+    if (this.signOutOfOtherSessions != null) {
+      json[r'sign_out_of_other_sessions'] = this.signOutOfOtherSessions;
+    } else {
+      json[r'sign_out_of_other_sessions'] = null;
+    }
+    if (this.totpSecret != null) {
+      json[r'totp_secret'] = this.totpSecret;
+    } else {
+      json[r'totp_secret'] = null;
+    }
+    json[r'backup_codes'] = this.backupCodes;
+    if (this.publicMetadata != null) {
+      json[r'public_metadata'] = this.publicMetadata;
+    } else {
+      json[r'public_metadata'] = null;
+    }
+    if (this.privateMetadata != null) {
+      json[r'private_metadata'] = this.privateMetadata;
+    } else {
+      json[r'private_metadata'] = null;
+    }
+    if (this.unsafeMetadata != null) {
+      json[r'unsafe_metadata'] = this.unsafeMetadata;
+    } else {
+      json[r'unsafe_metadata'] = null;
+    }
+    if (this.deleteSelfEnabled != null) {
+      json[r'delete_self_enabled'] = this.deleteSelfEnabled;
+    } else {
+      json[r'delete_self_enabled'] = null;
+    }
+    if (this.createOrganizationEnabled != null) {
+      json[r'create_organization_enabled'] = this.createOrganizationEnabled;
+    } else {
+      json[r'create_organization_enabled'] = null;
+    }
+    if (this.legalAcceptedAt != null) {
+      json[r'legal_accepted_at'] = this.legalAcceptedAt;
+    } else {
+      json[r'legal_accepted_at'] = null;
+    }
+    if (this.skipLegalChecks != null) {
+      json[r'skip_legal_checks'] = this.skipLegalChecks;
+    } else {
+      json[r'skip_legal_checks'] = null;
+    }
+    if (this.createOrganizationsLimit != null) {
+      json[r'create_organizations_limit'] = this.createOrganizationsLimit;
+    } else {
+      json[r'create_organizations_limit'] = null;
+    }
+    if (this.createdAt != null) {
+      json[r'created_at'] = this.createdAt;
+    } else {
+      json[r'created_at'] = null;
+    }
+    return json;
+  }
+
+  /// Returns a new [UpdateUserRequest] instance and imports its values from
+  /// [value] if it's a [Map], null otherwise.
+  // ignore: prefer_constructors_over_static_methods
+  static UpdateUserRequest? fromJson(dynamic value) {
+    if (value is Map) {
+      final json = value.cast<String, dynamic>();
+
+      // Ensure that the map contains the required keys.
+      // Note 1: the values aren't checked for validity beyond being non-null.
+      // Note 2: this code is stripped in release mode!
+      assert(() {
+        requiredKeys.forEach((key) {
+          assert(json.containsKey(key),
+              'Required key "UpdateUserRequest[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "UpdateUserRequest[$key]" has a null value in JSON.');
+        });
+        return true;
+      }());
+
+      return UpdateUserRequest(
+        externalId: mapValueOfType<String>(json, r'external_id'),
+        firstName: mapValueOfType<String>(json, r'first_name'),
+        lastName: mapValueOfType<String>(json, r'last_name'),
+        primaryEmailAddressId:
+            mapValueOfType<String>(json, r'primary_email_address_id'),
+        notifyPrimaryEmailAddressChanged: mapValueOfType<bool>(
+                json, r'notify_primary_email_address_changed') ??
+            false,
+        primaryPhoneNumberId:
+            mapValueOfType<String>(json, r'primary_phone_number_id'),
+        primaryWeb3WalletId:
+            mapValueOfType<String>(json, r'primary_web3_wallet_id'),
+        username: mapValueOfType<String>(json, r'username'),
+        profileImageId: mapValueOfType<String>(json, r'profile_image_id'),
+        password: mapValueOfType<String>(json, r'password'),
+        passwordDigest: mapValueOfType<String>(json, r'password_digest'),
+        passwordHasher: mapValueOfType<String>(json, r'password_hasher'),
+        skipPasswordChecks: mapValueOfType<bool>(json, r'skip_password_checks'),
+        signOutOfOtherSessions:
+            mapValueOfType<bool>(json, r'sign_out_of_other_sessions'),
+        totpSecret: mapValueOfType<String>(json, r'totp_secret'),
+        backupCodes: json[r'backup_codes'] is Iterable
+            ? (json[r'backup_codes'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
+            : const [],
+        publicMetadata:
+            mapCastOfType<String, Object>(json, r'public_metadata') ?? const {},
+        privateMetadata:
+            mapCastOfType<String, Object>(json, r'private_metadata') ??
+                const {},
+        unsafeMetadata:
+            mapCastOfType<String, Object>(json, r'unsafe_metadata') ?? const {},
+        deleteSelfEnabled: mapValueOfType<bool>(json, r'delete_self_enabled'),
+        createOrganizationEnabled:
+            mapValueOfType<bool>(json, r'create_organization_enabled'),
+        legalAcceptedAt: mapValueOfType<String>(json, r'legal_accepted_at'),
+        skipLegalChecks: mapValueOfType<bool>(json, r'skip_legal_checks'),
+        createOrganizationsLimit:
+            mapValueOfType<int>(json, r'create_organizations_limit'),
+        createdAt: mapValueOfType<String>(json, r'created_at'),
+      );
+    }
+    return null;
+  }
+
+  static List<UpdateUserRequest> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
+    final result = <UpdateUserRequest>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = UpdateUserRequest.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+
+  static Map<String, UpdateUserRequest> mapFromJson(dynamic json) {
+    final map = <String, UpdateUserRequest>{};
+    if (json is Map && json.isNotEmpty) {
+      json = json.cast<String, dynamic>(); // ignore: parameter_assignments
+      for (final entry in json.entries) {
+        final value = UpdateUserRequest.fromJson(entry.value);
+        if (value != null) {
+          map[entry.key] = value;
+        }
+      }
+    }
+    return map;
+  }
+
+  // maps a json object with a list of UpdateUserRequest-objects as value to a dart map
+  static Map<String, List<UpdateUserRequest>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
+    final map = <String, List<UpdateUserRequest>>{};
+    if (json is Map && json.isNotEmpty) {
+      // ignore: parameter_assignments
+      json = json.cast<String, dynamic>();
+      for (final entry in json.entries) {
+        map[entry.key] = UpdateUserRequest.listFromJson(
+          entry.value,
+          growable: growable,
+        );
+      }
+    }
+    return map;
+  }
+
+  /// The list of required keys that must be present in a JSON.
+  static const requiredKeys = <String>{};
+}

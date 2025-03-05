@@ -15,9 +15,7 @@ final defaultOrgLogo = SvgPicture.asset(
   package: 'clerk_flutter',
 );
 
-const defaultLoadingWidget = SizedBox(
-  width: double.infinity,
-  height: double.infinity,
+const defaultLoadingWidget = Positioned.fill(
   child: ColoredBox(
     color: Colors.black26,
     child: Center(child: CircularProgressIndicator()),

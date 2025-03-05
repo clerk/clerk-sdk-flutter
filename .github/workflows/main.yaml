@@ -54,3 +54,7 @@ jobs:
       - name: Run tests in clerk_auth
         run: dart test
         working-directory: packages/clerk_auth
+
+      - name: Run tests in clerk_flutter
+        run: dart test
+        working-directory: packages/clerk_flutter

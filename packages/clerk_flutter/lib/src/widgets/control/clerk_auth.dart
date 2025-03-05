@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/material.dart';
 
@@ -132,7 +133,9 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
         builder: (BuildContext context, Widget? child) {
           return _ClerkAuthData(
             authState: authState,
-            child: widget.child,
+            child: ClerkOverlayHost(
+              child: widget.child,
+            ),
           );
         },
       );

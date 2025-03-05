@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:clerk_flutter/src/utils/clerk_auth_config.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_loading_overlay.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-typedef EntryList = List<OverlayEntry>;
 
 const startupDuration = ClerkLoadingOverlay.startupDuration;
 const minOnScreenTime = ClerkLoadingOverlay.minimumOnScreenDuration;
@@ -32,7 +31,7 @@ void main() {
       final displayCompleter = Completer<DateTime>();
       final hideCompleter = Completer<DateTime>();
 
-      final overlay = _TestOverlay(
+      final overlay = _TestOverlayHostState(
         onDisplay: (entries) => displayCompleter.complete(DateTime.timestamp()),
         onHide: (entries) => hideCompleter.complete(DateTime.timestamp()),
       );
@@ -63,7 +62,7 @@ void main() {
       bool displayAttempted = false;
       bool hideAttempted = false;
 
-      final overlay = _TestOverlay(
+      final overlay = _TestOverlayHostState(
         onDisplay: (entries) => displayAttempted = true,
         onHide: (entries) => hideAttempted = true,
       );
@@ -88,7 +87,7 @@ void main() {
 
       DateTime? hideTime;
 
-      final overlay = _TestOverlay(
+      final overlay = _TestOverlayHostState(
         onDisplay: (entries) {
           displayCount++;
           expectThat(
@@ -147,29 +146,39 @@ void main() {
   });
 }
 
-class _TestOverlay extends AbstractClerkOverlayState {
-  _TestOverlay({this.onDisplay, this.onHide});
-
-  final EntryList entries = [];
-
-  final ValueChanged<EntryList>? onDisplay;
-  final ValueChanged<EntryList>? onHide;
+class _TestOverlayHost extends StatefulWidget {
+  const _TestOverlayHost();
 
   @override
-  void insert(OverlayEntry entry) {
-    entries.add(entry);
-    onDisplay?.call(entries);
+  State<_TestOverlayHost> createState() => _TestOverlayHostState();
+}
+
+class _TestOverlayHostState extends State<_TestOverlayHost>
+    implements ClerkOverlay<_TestOverlayHost> {
+  _TestOverlayHostState({this.onDisplay, this.onHide});
+
+  final overlays = <Widget>[];
+
+  final ValueChanged<List<Widget>>? onDisplay;
+  final ValueChanged<List<Widget>>? onHide;
+
+  @override
+  void insert(Widget overlay) {
+    overlays.add(overlay);
+    onDisplay?.call(overlays.toList());
   }
 
   @override
-  void remove(OverlayEntry entry) {
-    entries.remove(entry);
-    onHide?.call(entries);
+  void remove(Widget overlay) {
+    overlays.remove(overlay);
+    onHide?.call(overlays.toList());
   }
 
   @override
-  bool isDisplaying(OverlayEntry entry) => entries.contains(entry);
+  bool isDisplaying(Widget overlay) => overlays.contains(overlay);
 
   @override
-  bool get mounted => true;
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }

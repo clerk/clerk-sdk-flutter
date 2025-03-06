@@ -14,6 +14,7 @@ Session _$SessionFromJson(Map<String, dynamic> json) => Session(
       abandonAt: intToDateTime(json['abandon_at']),
       publicUserData:
           UserPublic.fromJson(json['public_user_data'] as Map<String, dynamic>),
+      lastActiveOrganizationId: json['last_active_organization_id'] as String?,
       user: User.fromJson(json['user'] as Map<String, dynamic>),
       lastActiveToken: json['last_active_token'] == null
           ? null
@@ -35,6 +36,8 @@ Map<String, dynamic> _$SessionToJson(Session instance) {
   }
 
   writeNotNull('last_active_token', instance.lastActiveToken?.toJson());
+  writeNotNull(
+      'last_active_organization_id', instance.lastActiveOrganizationId);
   val['user'] = instance.user.toJson();
   val['last_active_at'] = dateTimeToInt(instance.lastActiveAt);
   val['expire_at'] = dateTimeToInt(instance.expireAt);

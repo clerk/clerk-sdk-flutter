@@ -464,29 +464,66 @@ class Auth {
 
   /// Create a new [Organization]
   ///
-  Future<void> createOrganizationFor(
-    User user, {
+  Future<void> createOrganization({
     required String name,
     String? slug,
     File? image,
   }) async {
-    final session = client.sessionFor(user);
-    await _api.createOrganization(name, session: session).then(_housekeeping);
+    if (session is Session) {
+      await _api.createOrganization(name, session: session).then(_housekeeping);
 
-    user = client.refreshUser(user);
-    if (user.organizationNamed(name) case Organization org) {
-      if (slug?.isNotEmpty == true) {
-        await _api
-            .updateOrganization(org, slug: slug, session: session)
-            .then(_housekeeping);
+      if (user?.organizationNamed(name) case Organization org) {
+        if (slug?.isNotEmpty == true) {
+          await _api
+              .updateOrganization(org, slug: slug, session: session)
+              .then(_housekeeping);
+        }
+        if (image case File image) {
+          await _api
+              .updateOrganizationLogo(org, image: image, session: session)
+              .then(_housekeeping);
+        }
       }
-      if (image case File image) {
-        await _api
-            .updateOrganizationLogo(org, image: image, session: session)
-            .then(_housekeeping);
-      }
+
       update();
     }
+  }
+
+  static const _page = 20;
+
+  /// Get all the [Organization] invitations awaiting the user
+  ///
+  Future<List<OrganizationInvitation>> fetchOrganizationInvitations() async {
+    final invitations = <OrganizationInvitation>[];
+
+    for (int offset = 0; true; offset += _page) {
+      final response = await _api.fetchOrganizationInvitations(offset, _page);
+      if (response.response?['data'] == null) {
+        break;
+      }
+
+      final responseInvitations = response.response?['data'] as List<dynamic>;
+      invitations.addAll(
+        responseInvitations.map(OrganizationInvitation.fromJson),
+      );
+
+      if (responseInvitations.length < _page) {
+        break;
+      }
+    }
+
+    update();
+    return invitations;
+  }
+
+  /// Accept an invitation to join an [Organization]
+  ///
+  Future<ApiResponse> acceptOrganizationInvitation(
+    OrganizationInvitation invitation,
+  ) async {
+    return await _api
+        .acceptOrganizationInvitation(invitation)
+        .then(_housekeeping);
   }
 
   /// Activate the given [Session]

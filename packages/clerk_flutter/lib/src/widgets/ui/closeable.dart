@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-const _defaultDuration = Duration(milliseconds: 250);
-
 /// Enum defining the axis or axes along which the panel will close
 enum ClosingAxis {
   /// both horizontal and vertical
@@ -30,8 +28,8 @@ class Closeable extends StatefulWidget {
   const Closeable({
     super.key,
     required this.closed,
-    this.animateToFirstPosition = false,
-    this.duration = _defaultDuration,
+    this.startsClosed,
+    this.duration = defaultDuration,
     this.axis = ClosingAxis.vertical,
     this.alignment = Alignment.topLeft,
     this.curve = Curves.linear,
@@ -54,8 +52,10 @@ class Closeable extends StatefulWidget {
   /// is the panel closed?
   final bool closed;
 
-  /// Should the panel start closed?
-  final bool animateToFirstPosition;
+  /// initial closed state on first draw. If [startsClosed] is `false` and
+  /// [closed] is `true` then the widget will be created in an open state and
+  /// immediately animate closed; and vice versa
+  final bool? startsClosed;
 
   /// optional function to call when closing or opening has
   /// finished animating
@@ -64,13 +64,15 @@ class Closeable extends StatefulWidget {
   /// Child [Widget] to be displayed in the panel
   final Widget? child;
 
+  /// The default [Duration]
+  static const defaultDuration = Duration(milliseconds: 250);
+
   @override
   State<Closeable> createState() => _CloseableState();
 }
 
 class _CloseableState extends State<Closeable> {
-  late bool closed =
-      widget.animateToFirstPosition ? widget.closed == false : widget.closed;
+  late bool closed = widget.startsClosed ?? widget.closed;
   late bool _renderChild = closed == false;
 
   void _update() {

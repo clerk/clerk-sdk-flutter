@@ -12,6 +12,7 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_input_dialog.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_page.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_row_label.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
@@ -291,9 +292,10 @@ class _ExternalAccountList extends StatelessWidget {
                       ),
                     ),
                     if (account.isVerified == false) //
-                      _RowLabel(
+                      ClerkRowLabel(
                         label: account.verification.status
-                            .localizedMessage(localizations),
+                            .localizedMessage(localizations)
+                            .toUpperCase(),
                       ),
                   ],
                 ),
@@ -353,13 +355,13 @@ class _IdentifierList extends StatelessWidget {
                     ),
                   ),
                   if (uid.isUnverified) //
-                    _RowLabel(
+                    ClerkRowLabel(
                       label: localizations.unverified,
                       color: ClerkColors.incarnadine,
                       onTap: () => onIdentifierUnverified.call(uid.identifier),
                     ),
                   if (user.isPrimary(uid)) //
-                    _RowLabel(label: localizations.primary),
+                    ClerkRowLabel(label: localizations.primary),
                 ],
               ),
             ),
@@ -376,42 +378,6 @@ class _IdentifierList extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _RowLabel extends StatelessWidget {
-  const _RowLabel({
-    this.color = ClerkColors.charcoalGrey,
-    required this.label,
-    this.onTap,
-  });
-
-  final Color color;
-  final String label;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: topPadding2,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: DecoratedBox(
-          decoration:
-              BoxDecoration(border: Border.all(color: color, width: 0.5)),
-          child: Center(
-            child: Padding(
-              padding: horizontalPadding4 + verticalPadding2,
-              child: Text(
-                label,
-                style: ClerkTextStyle.rowLabel.copyWith(color: color),
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

@@ -26,7 +26,10 @@ class ClerkActionRow extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ClerkIcon(action.asset, size: 16),
+            if (action.asset case String asset) //
+              ClerkIcon(asset, size: 16),
+            if (action.icon case IconData icon) //
+              Icon(icon, size: 16),
             horizontalMargin32,
             Text(action.label, style: ClerkTextStyle.buttonTitleDark),
           ],

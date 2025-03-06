@@ -45,9 +45,10 @@ class ClerkUserButton extends StatefulWidget {
 
 class _ClerkUserButtonState extends State<ClerkUserButton>
     with ClerkTelemetryStateMixin {
-  ClerkAuthState? _authState;
-  ClerkSdkLocalizations? _localizations;
   final _sessions = <clerk.Session>[];
+
+  late final _authState = ClerkAuth.of(context);
+  late final _localizations = ClerkAuth.localizationsOf(context);
 
   @override
   Map<String, dynamic> get telemetryPayload {
@@ -62,29 +63,32 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
   }
 
   List<ClerkUserAction> _defaultSessionActions() {
-    _localizations ??= ClerkAuth.localizationsOf(context);
     return [
       ClerkUserAction(
         asset: ClerkAssets.gearIcon,
-        label: _localizations!.profile,
+        label: _localizations.profile,
         callback: _manageAccount,
       ),
       ClerkUserAction(
         asset: ClerkAssets.signOutIcon,
-        label: _localizations!.signOut,
+        label: _localizations.signOut,
         callback: _signOut,
       ),
+      if (_authState.env.organization.isEnabled) //
+        ClerkUserAction(
+          icon: Icons.group,
+          label: _localizations.organizations,
+          callback: _listOrganizations,
+        ),
     ];
   }
 
   List<ClerkUserAction> _defaultAdditionalActions() {
-    _authState ??= ClerkAuth.of(context);
-    _localizations ??= ClerkAuth.localizationsOf(context);
     return [
-      if (_authState!.env.config.singleSessionMode == false)
+      if (_authState.env.config.singleSessionMode == false)
         ClerkUserAction(
           asset: ClerkAssets.addIcon,
-          label: _localizations!.addAccount,
+          label: _localizations.addAccount,
           callback: _addAccount,
         ),
     ];
@@ -102,6 +106,13 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
       ClerkPage.show(
         context,
         builder: (context) => const ClerkUserProfile(),
+      );
+
+  Future<void> _listOrganizations(
+          BuildContext context, ClerkAuthState authState) =>
+      ClerkPage.show(
+        context,
+        builder: (context) => const ClerkOrganizationList(),
       );
 
   Future<void> _signOut<T>(
@@ -160,7 +171,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ClerkIcon(action.asset, size: 16),
+                        _Icon(action: action, size: 16),
                         horizontalMargin32,
                         Text(
                           action.label,
@@ -202,6 +213,24 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
         );
       },
     );
+  }
+}
+
+class _Icon extends StatelessWidget {
+  const _Icon({required this.action, required this.size});
+
+  final ClerkUserAction action;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    if (action.asset case String asset) {
+      return ClerkIcon(asset, size: size);
+    }
+    if (action.icon case IconData icon) {
+      return Icon(icon, size: size + 4);
+    }
+    return emptyWidget;
   }
 }
 
@@ -283,24 +312,23 @@ class _SessionRow extends StatelessWidget {
                             child: ClerkMaterialButton(
                               onPressed: () =>
                                   action.callback(context, authState),
-                              label: FittedBox(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    ClerkIcon(action.asset, size: 10),
-                                    horizontalMargin8,
-                                    Text(
+                              label: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  _Icon(action: action, size: 10),
+                                  horizontalMargin4,
+                                  Padding(
+                                    padding: topPadding2,
+                                    child: Text(
                                       action.label,
-                                      style: ClerkTextStyle.buttonSubtitle
-                                          .copyWith(
-                                        fontSize: 7,
-                                        color: ClerkColors.charcoalGrey,
-                                      ),
+                                      style: ClerkTextStyle.buttonTitleDark
+                                          .copyWith(fontSize: 8),
                                       maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                               style: ClerkMaterialButtonStyle.light,
                               height: 16,

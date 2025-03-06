@@ -610,6 +610,34 @@ class Api with Logging {
     );
   }
 
+  /// Fetch invitations to new [Organization]s for the current user
+  ///
+  Future<ApiResponse> fetchOrganizationInvitations(
+    int offset, [
+    int limit = 20,
+  ]) async {
+    return await _fetchApiResponse(
+      '/me/organization_invitations',
+      method: HttpMethod.get,
+      withSession: true,
+      params: {
+        'offset': offset,
+        'limit': limit,
+      },
+    );
+  }
+
+  /// Accept an invitation to join an [Organization]
+  ///
+  Future<ApiResponse> acceptOrganizationInvitation(
+    OrganizationInvitation invitation,
+  ) async {
+    return await _fetchApiResponse(
+      '/me/organization_invitations/${invitation.id}/accept',
+      withSession: true,
+    );
+  }
+
   /// Update an [Organization]
   ///
   Future<ApiResponse> updateOrganization(

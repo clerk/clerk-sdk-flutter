@@ -6,6 +6,7 @@ export 'client/external_account.dart';
 export 'client/factor.dart';
 export 'client/field.dart';
 export 'client/organization.dart';
+export 'client/organization_invitation.dart';
 export 'client/organization_membership.dart';
 export 'client/passkey.dart';
 export 'client/phone_number.dart';

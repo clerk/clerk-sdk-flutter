@@ -60,11 +60,9 @@ class ClerkMaterialButton extends StatelessWidget {
       ),
       child: IconTheme(
         data: IconThemeData(color: textColor, size: 16.0),
-        child: Center(
-          child: Padding(
-            padding: horizontalPadding12,
-            child: label,
-          ),
+        child: Padding(
+          padding: horizontalPadding4,
+          child: label,
         ),
       ),
     );

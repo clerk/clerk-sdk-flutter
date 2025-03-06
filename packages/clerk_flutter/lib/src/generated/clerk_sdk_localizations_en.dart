@@ -28,14 +28,14 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
-  String get abandoned => 'ABANDONED';
+  String get abandoned => 'abandoned';
 
   @override
   String get actionNotTimely =>
       'Awaited user action not completed in required timeframe';
 
   @override
-  String get active => 'ACTIVE';
+  String get active => 'active';
 
   @override
   String get addAccount => 'Add account';
@@ -70,7 +70,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
-  String get complete => 'COMPLETE';
+  String get complete => 'complete';
 
   @override
   String get connectAccount => 'Connect account';
@@ -104,10 +104,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get enterTheCodeSentToYou => 'Enter the code sent to you';
 
   @override
-  String get expired => 'EXPIRED';
+  String get expired => 'expired';
 
   @override
-  String get failed => 'FAILED';
+  String get failed => 'failed';
 
   @override
   String get firstName => 'first name';
@@ -121,6 +121,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String invalidPhoneNumber(String number) {
     return 'Invalid phone number: $number';
   }
+
+  @override
+  String get join => 'JOIN';
 
   @override
   String jwtPoorlyFormatted(String arg) {
@@ -137,19 +140,19 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get logo => 'Logo';
 
   @override
-  String get missingRequirements => 'MISSING REQUIREMENTS';
+  String get missingRequirements => 'missing requirements';
 
   @override
   String get name => 'Name';
 
   @override
-  String get needsFirstFactor => 'NEEDS FIRST FACTOR';
+  String get needsFirstFactor => 'needs first factor';
 
   @override
-  String get needsIdentifier => 'NEEDS IDENTIFIER';
+  String get needsIdentifier => 'needs identifier';
 
   @override
-  String get needsSecondFactor => 'NEEDS SECOND FACTOR';
+  String get needsSecondFactor => 'needs second factor';
 
   @override
   String noAssociatedCodeRetrievalMethod(String arg) {
@@ -199,6 +202,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get or => 'or';
 
   @override
+  String get organizations => 'Organizations';
+
+  @override
   String get passkey => 'passkey';
 
   @override
@@ -220,6 +226,12 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get passwordRequires => 'Password requires:';
+
+  @override
+  String get pending => 'pending';
+
+  @override
+  String get personalAccount => 'Personal account';
 
   @override
   String get phoneNumber => 'phone number';
@@ -293,7 +305,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get slugUrl => 'Slug URL';
 
   @override
-  String get transferable => 'TRANSFERABLE';
+  String get transferable => 'transferable';
 
   @override
   String typeTypeInvalid(String type) {
@@ -301,7 +313,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
-  String get unverified => 'UNVERIFIED';
+  String get unverified => 'unverified';
 
   @override
   String get username => 'username';
@@ -313,7 +325,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get verificationPhoneNumber => 'Phone number verification';
 
   @override
-  String get verified => 'VERIFIED';
+  String get verified => 'verified';
 
   @override
   String get verifyYourEmailAddress => 'Verify your email address';

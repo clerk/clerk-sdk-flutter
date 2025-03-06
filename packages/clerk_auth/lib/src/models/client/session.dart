@@ -21,6 +21,7 @@ class Session with InformativeToStringMixin {
     required this.expireAt,
     required this.abandonAt,
     required this.publicUserData,
+    required this.lastActiveOrganizationId,
     required this.user,
     this.lastActiveToken,
   });
@@ -36,6 +37,9 @@ class Session with InformativeToStringMixin {
 
   /// last active token
   final SessionToken? lastActiveToken;
+
+  /// last active org id
+  final String? lastActiveOrganizationId;
 
   /// user
   final User user;

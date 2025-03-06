@@ -46,62 +46,17 @@ class ExampleApp extends StatelessWidget {
         home: Scaffold(
           body: SafeArea(
             child: ClerkErrorListener(
-              child: ClerkAuthBuilder(
-                signedInBuilder: (context, authState) {
-                  if (authState.env.organization.isEnabled == false) {
-                    return const ClerkUserButton();
-                  }
-                  return const _UserAndOrgTabs();
-                },
-                signedOutBuilder: (context, authState) {
-                  return const ClerkAuthentication();
-                },
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _UserAndOrgTabs extends StatelessWidget {
-  const _UserAndOrgTabs();
-
-  @override
-  Widget build(BuildContext context) {
-    final authState = ClerkAuth.of(context);
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Example App'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(child: Text('Users')),
-              Tab(child: Text('Organizations')),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ClerkUserButton(),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ClerkOrganizationList(
-                  initialUser: authState.user!,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: ClerkAuthBuilder(
+                  signedInBuilder: (context, authState) =>
+                      const ClerkUserButton(),
+                  signedOutBuilder: (context, authState) =>
+                      const ClerkAuthentication(),
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

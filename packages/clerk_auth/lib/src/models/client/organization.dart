@@ -73,7 +73,7 @@ class Organization with InformativeToStringMixin {
 
   static const _personalOrgId = r'$PERSONAL$';
 
-  /// The id used internally for the personal organization
+  /// A dummy personal [Organization] used internally
   static const personal = Organization(id: _personalOrgId);
 
   /// fromJson

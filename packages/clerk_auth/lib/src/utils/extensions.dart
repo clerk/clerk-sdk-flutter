@@ -81,6 +81,9 @@ extension ListExtension<T> on List<T> {
       }
     }
   }
+
+  /// Do we contain a thing?
+  bool doesNotContain(T t) => contains(t) == false;
 }
 
 /// Extension class for [Duration]

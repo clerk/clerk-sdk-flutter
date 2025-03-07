@@ -4,6 +4,9 @@ import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter_example/pages/clerk_sign_in_example.dart';
+import 'package:clerk_flutter_example/pages/custom_sign_in_example.dart';
+import 'package:clerk_flutter_example/pages/examples_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -43,66 +46,12 @@ class ExampleApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData.light(),
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: SafeArea(
-            child: ClerkErrorListener(
-              child: ClerkAuthBuilder(
-                signedInBuilder: (context, authState) {
-                  if (authState.env.organization.isEnabled == false) {
-                    return const ClerkUserButton();
-                  }
-                  return const _UserAndOrgTabs();
-                },
-                signedOutBuilder: (context, authState) {
-                  return const ClerkAuthentication();
-                },
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _UserAndOrgTabs extends StatelessWidget {
-  const _UserAndOrgTabs();
-
-  @override
-  Widget build(BuildContext context) {
-    final authState = ClerkAuth.of(context);
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Example App'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(child: Text('Users')),
-              Tab(child: Text('Organizations')),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ClerkUserButton(),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ClerkOrganizationList(
-                  initialUser: authState.user!,
-                ),
-              ),
-            ),
-          ],
-        ),
+        initialRoute: ExamplesList.path,
+        routes: {
+          ExamplesList.path: (context) => const ExamplesList(),
+          ClerkSignInExample.path: (context) => const ClerkSignInExample(),
+          CustomSignInExample.path: (context) => const CustomSignInExample(),
+        },
       ),
     );
   }

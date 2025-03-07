@@ -88,6 +88,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get dontHaveAnAccount => 'Don’t have an account?';
 
   @override
+  String get edit => 'edit';
+
+  @override
   String get emailAddress => 'email address';
 
   @override
@@ -113,6 +116,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get firstName => 'first name';
 
   @override
+  String get generalDetails => 'General details';
+
+  @override
   String invalidEmailAddress(String address) {
     return 'Invalid email address: $address';
   }
@@ -132,6 +138,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get lastName => 'last name';
+
+  @override
+  String get leaveOrganization => 'Leave organization';
 
   @override
   String get loading => 'Loading…';
@@ -200,6 +209,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get or => 'or';
+
+  @override
+  String get organizationProfile => 'Organization profile';
 
   @override
   String get organizations => 'Organizations';
@@ -326,6 +338,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get verified => 'verified';
+
+  @override
+  String get verifiedDomains => 'Verfied domains';
 
   @override
   String get verifyYourEmailAddress => 'Verify your email address';

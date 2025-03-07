@@ -39,6 +39,14 @@ class ClerkTextStyle {
     color: ClerkColors.midGrey,
   );
 
+  /// The Clerk-branded text style for avatar initials.
+  static const avatar = TextStyle(
+    fontSize: 14.0,
+    color: ClerkColors.whiteSmoke,
+    letterSpacing: 1,
+    height: 1.2,
+  );
+
   /// The Clerk-branded text style for subheadings in the user profile widget.
   static const subtitleDark = TextStyle(
     fontSize: 14.0,

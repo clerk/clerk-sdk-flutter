@@ -238,6 +238,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Don’t have an account?'**
   String get dontHaveAnAccount;
 
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'edit'**
+  String get edit;
+
   /// No description provided for @emailAddress.
   ///
   /// In en, this message translates to:
@@ -280,6 +286,12 @@ abstract class ClerkSdkLocalizations {
   /// **'first name'**
   String get firstName;
 
+  /// No description provided for @generalDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'General details'**
+  String get generalDetails;
+
   /// No description provided for @invalidEmailAddress.
   ///
   /// In en, this message translates to:
@@ -309,6 +321,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'last name'**
   String get lastName;
+
+  /// No description provided for @leaveOrganization.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave organization'**
+  String get leaveOrganization;
 
   /// No description provided for @loading.
   ///
@@ -417,6 +435,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'or'**
   String get or;
+
+  /// No description provided for @organizationProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization profile'**
+  String get organizationProfile;
 
   /// No description provided for @organizations.
   ///
@@ -639,6 +663,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'verified'**
   String get verified;
+
+  /// No description provided for @verifiedDomains.
+  ///
+  /// In en, this message translates to:
+  /// **'Verfied domains'**
+  String get verifiedDomains;
 
   /// No description provided for @verifyYourEmailAddress.
   ///

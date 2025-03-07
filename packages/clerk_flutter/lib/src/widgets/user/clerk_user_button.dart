@@ -273,7 +273,7 @@ class _SessionRow extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClerkAvatar(user: user),
+                    ClerkAvatar(name: user.name, imageUrl: user.imageUrl),
                     horizontalMargin16,
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,

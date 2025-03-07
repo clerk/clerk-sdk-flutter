@@ -89,7 +89,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
             () => authState.createOrganization(
               name: name,
               slug: slug,
-              image: image,
+              logo: image,
             ),
           );
         },
@@ -97,7 +97,15 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
     );
   }
 
-  Future<void> _editCurrentOrg() async {}
+  Future<void> _editCurrentOrg() async {
+    final membership = _authState.user!.organizationMemberships!.firstWhere(
+      (o) => o.id == _currentOrg?.id,
+    );
+    await ClerkPage.show(
+      context,
+      builder: (context) => ClerkOrganizationProfile(membership: membership),
+    );
+  }
 
   void _selectOrg([_Organization? org]) {
     setState(() {
@@ -150,19 +158,20 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
   @override
   Widget build(BuildContext context) {
     return ClerkAuthBuilder(
-      builder: (context, authState) {
-        if (authState.user is! clerk.User) {
-          return emptyWidget;
-        }
-
+      builder: (_, __) => emptyWidget,
+      signedInBuilder: (context, authState) {
         final user = authState.user!;
         final orgs = user.organizationMemberships
                 ?.map(_Organization.fromMembership)
                 .toList() ??
             [];
+        _currentOrg = _currentOrg is _Organization
+            ? orgs.firstWhereOrNull((o) => o.id == _currentOrg?.id)
+            : null;
         final currentIsPersonal = _currentOrg == null;
 
         _organizations.addOrReplaceAll(orgs, by: (m) => m.orgId);
+        _organizations.sortBy((a) => a.name);
 
         final actions = widget.actions ?? _defaultActions();
 

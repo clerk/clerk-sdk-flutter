@@ -9,9 +9,7 @@ part of 'api_error.dart';
 ApiError _$ApiErrorFromJson(Map<String, dynamic> json) => ApiError(
       message: json['message'] as String,
       code: json['code'] as String?,
-      meta: (json['meta'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
-      ),
+      meta: json['meta'] as Map<String, dynamic>?,
       longMessage: json['long_message'] as String?,
     );
 

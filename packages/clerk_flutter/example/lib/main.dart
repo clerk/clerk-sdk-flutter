@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter_example/pages/clerk_sign_in_example.dart';
+import 'package:clerk_flutter_example/pages/custom_email_sign_in_example.dart';
 import 'package:clerk_flutter_example/pages/custom_sign_in_example.dart';
 import 'package:clerk_flutter_example/pages/examples_list.dart';
 import 'package:flutter/foundation.dart';
@@ -50,7 +51,10 @@ class ExampleApp extends StatelessWidget {
         routes: {
           ExamplesList.path: (context) => const ExamplesList(),
           ClerkSignInExample.path: (context) => const ClerkSignInExample(),
-          CustomSignInExample.path: (context) => const CustomSignInExample(),
+          CustomOAuthSignInExample.path: (context) =>
+              const CustomOAuthSignInExample(),
+          CustomEmailSignInExample.path: (context) =>
+              const CustomEmailSignInExample(),
         },
       ),
     );

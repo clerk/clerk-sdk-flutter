@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
+import 'package:flutter/material.dart';
 
 /// Example of how to use clerk auth with custom ui.
 ///
@@ -17,23 +17,26 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 /// Feel free to use this as a starting point for your own custom
 /// sign in flow.
 @immutable
-class CustomOAuthSignInExample extends StatefulWidget {
-  /// Constructs an instance of [CustomOAuthSignInExample].
-  const CustomOAuthSignInExample({super.key});
+class CustomEmailSignInExample extends StatefulWidget {
+  /// Constructs an instance of [CustomEmailSignInExample].
+  const CustomEmailSignInExample({super.key});
 
   /// Path to this page.
-  static const path = '/custom-oauth-sign-in-example';
+  static const path = '/custom-email-sign-in-example';
 
   @override
-  State<CustomOAuthSignInExample> createState() =>
-      _CustomOAuthSignInExampleState();
+  State<CustomEmailSignInExample> createState() =>
+      _CustomEmailSignInExampleState();
 }
 
-class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
+class _CustomEmailSignInExampleState extends State<CustomEmailSignInExample> {
   final _initalized = ValueNotifier<bool>(false);
   final _loading = ValueNotifier<bool>(false);
   final _user = ValueNotifier<clerk.User?>(null);
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   late final StreamSubscription<clerk.AuthError> _errorSubscription;
   late final ClerkAuthState _authState;
@@ -63,10 +66,14 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     );
   }
 
-  Future<void> _signIn(clerk.Strategy strategy) async {
+  Future<void> _signIn() async {
     _loading.value = true;
     try {
-      await _authState.ssoSignIn(context, strategy);
+      await _authState.attemptSignIn(
+        strategy: clerk.Strategy.password,
+        identifier: _emailController.text,
+        password: _passwordController.text,
+      );
     } finally {
       _loading.value = false;
     }
@@ -76,6 +83,8 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
   @override
   void dispose() {
     super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     _authState.removeListener(_clerkAuthListener);
     _errorSubscription.cancel();
   }
@@ -86,7 +95,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Custom OAuth Sign In'),
+        title: const Text('Custom Email Sign In'),
       ),
       body: ListenableBuilder(
         listenable: _initalized,
@@ -141,18 +150,36 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text('Sign in with:'),
+                        const Text('Sign in with email and password:'),
                         spacer,
-                        Wrap(
-                          spacing: 16.0,
-                          runSpacing: 16.0,
-                          children: [
-                            for (final strategy in _authState.env.strategies) //
-                              ElevatedButton(
-                                onPressed: () => _signIn(strategy),
-                                child: Text(strategy.provider ?? strategy.name),
-                              ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: TextField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            onSubmitted: (_) => _signIn(),
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                            ),
+                          ),
+                        ),
+                        spacer,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: TextField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            onSubmitted: (_) => _signIn(),
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                            ),
+                          ),
+                        ),
+                        spacer,
+                        ElevatedButton(
+                          onPressed: () => _signIn(),
+                          child: const Text('Sign In'),
                         ),
                       ],
                     ),

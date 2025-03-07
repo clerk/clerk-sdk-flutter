@@ -27,29 +27,40 @@ enum EnrollmentMode {
   String toString() => _$EnrollmentModeEnumMap[this]!;
 }
 
-/// [IdentificationStrategy] Clerk object
-@JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
-enum IdentificationStrategy {
-  /// email address
-  emailAddress,
+/// [Permissions] Clerk object
+enum Permission {
+  /// profile manage
+  profileManage("org:sys_profile:manage"),
 
-  /// oauth apple
-  oauthApple,
+  /// profile delete
+  profileDelete("org:sys_profile:delete"),
 
-  /// oauth github
-  oauthGithub,
+  /// memberships read
+  membershipsRead("org:sys_memberships:read"),
 
-  /// oauth google
-  oauthGoogle,
+  /// memberships manage
+  membershipsManage("org:sys_memberships:manage"),
 
-  /// phone number
-  phoneNumber,
+  /// domains read
+  domainsRead("org:sys_domains:read"),
 
-  /// username
-  username;
+  /// domains manage
+  domainsManage("org:sys_domains:manage"),
+
+  /// unknown
+  unknown("un:kno:wn");
+
+  const Permission(this.name);
+
+  /// The inbound string representation of the permission
+  final String name;
+
+  /// Return the permission from the given [String]
+  static Permission fromJson(dynamic name) =>
+      values.firstWhereOrNull((p) => p.name == name) ?? unknown;
 
   @override
-  String toString() => _$IdentificationStrategyEnumMap[this]!;
+  String toString() => name;
 }
 
 /// [UserAttribute] Clerk object

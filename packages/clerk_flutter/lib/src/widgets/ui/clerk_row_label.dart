@@ -37,7 +37,7 @@ class ClerkRowLabel extends StatelessWidget {
             child: Padding(
               padding: horizontalPadding4 + verticalPadding2,
               child: Text(
-                label,
+                label.toUpperCase(),
                 style: ClerkTextStyle.rowLabel.copyWith(color: color),
               ),
             ),

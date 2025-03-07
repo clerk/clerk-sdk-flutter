@@ -55,6 +55,7 @@
   "cont": "Continue",
   "createOrganization": "Create organization",
   "dontHaveAnAccount": "Don’t have an account?",
+  "edit": "edit",
   "emailAddress": "email address",
   "enterCodeSentTo": "Enter code sent to {identifier}",
   "@enterCodeSentTo": {
@@ -76,6 +77,7 @@
   "expired": "expired",
   "failed": "failed",
   "firstName": "first name",
+  "generalDetails": "General details",
   "invalidEmailAddress": "Invalid email address: {address}",
   "@invalidEmailAddress": {
     "placeholders": {
@@ -102,6 +104,7 @@
     }
   },
   "lastName": "last name",
+  "leaveOrganization": "Leave organization",
   "loading": "Loading…",
   "logo": "Logo",
   "missingRequirements": "missing requirements",
@@ -169,6 +172,7 @@
   "ok": "OK",
   "optional": "(optional)",
   "or": "or",
+  "organizationProfile": "Organization profile",
   "organizations": "Organizations",
   "passkey": "passkey",
   "password": "Password",
@@ -234,6 +238,7 @@
   "verificationEmailAddress": "Email address verification",
   "verificationPhoneNumber": "Phone number verification",
   "verified": "verified",
+  "verifiedDomains": "Verfied domains",
   "verifyYourEmailAddress": "Verify your email address",
   "verifyYourPhoneNumber": "Verify your phone number",
   "web3Wallet": "web3 wallet",

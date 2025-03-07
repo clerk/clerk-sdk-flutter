@@ -678,14 +678,14 @@ class Api with Logging {
   ///
   Future<ApiResponse> updateOrganizationLogo(
     Organization org, {
-    required File image,
+    required File logo,
     Session? session,
   }) async {
     final params = _multiSessionMode && session is Session
         ? {_kClerkSessionId: session.id}
         : null;
     final uri = _uri('/organizations/${org.id}/logo', params: params);
-    return await _uploadFile(HttpMethod.put, uri, image);
+    return await _uploadFile(HttpMethod.put, uri, logo);
   }
 
   /// Delete an [Organization]'s logo

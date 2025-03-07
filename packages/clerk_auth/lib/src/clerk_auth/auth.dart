@@ -467,24 +467,45 @@ class Auth {
   Future<void> createOrganization({
     required String name,
     String? slug,
-    File? image,
+    File? logo,
   }) async {
-    if (session is Session) {
-      await _api.createOrganization(name, session: session).then(_housekeeping);
+    await _api.createOrganization(name).then(_housekeeping);
 
-      if (user?.organizationNamed(name) case Organization org) {
-        if (slug?.isNotEmpty == true) {
-          await _api
-              .updateOrganization(org, slug: slug, session: session)
-              .then(_housekeeping);
-        }
-        if (image case File image) {
-          await _api
-              .updateOrganizationLogo(org, image: image, session: session)
-              .then(_housekeeping);
-        }
+    if (user?.organizationNamed(name) case Organization org) {
+      if (slug?.isNotEmpty == true) {
+        await _api
+            .updateOrganization(org, slug: slug, session: session)
+            .then(_housekeeping);
       }
+      if (logo case File logo) {
+        await _api
+            .updateOrganizationLogo(org, logo: logo, session: session)
+            .then(_housekeeping);
+      }
+    }
 
+    update();
+  }
+
+  /// Update an [Organization]
+  ///
+  Future<void> updateOrganization({
+    required Organization org,
+    String? name,
+    File? logo,
+  }) async {
+    final hasName = name is String && name.isNotEmpty && name != org.name;
+    if (hasName || logo is File) {
+      if (hasName) {
+        await _api
+            .updateOrganization(org, name: name, session: session)
+            .then(_housekeeping);
+      }
+      if (logo case File logo) {
+        await _api
+            .updateOrganizationLogo(org, logo: logo, session: session)
+            .then(_housekeeping);
+      }
       update();
     }
   }
@@ -540,16 +561,28 @@ class Auth {
     String? firstName,
     String? lastName,
     Map<String, dynamic>? metadata,
+    File? avatar,
   }) async {
     if (user case User user) {
-      final newUser = user.copyWith(
-        username: username,
-        firstName: firstName,
-        lastName: lastName,
-        unsafeMetadata: metadata,
-      );
-      await _api.updateUser(newUser, env.config).then(_housekeeping);
-      update();
+      final needsUpdate = username != user.username ||
+          firstName != user.username ||
+          lastName != user.lastName ||
+          metadata?.isNotEmpty == true;
+      if (needsUpdate || avatar is File) {
+        if (needsUpdate) {
+          final newUser = user.copyWith(
+            username: username,
+            firstName: firstName,
+            lastName: lastName,
+            unsafeMetadata: metadata,
+          );
+          await _api.updateUser(newUser, env.config).then(_housekeeping);
+        }
+        if (avatar case File avatar) {
+          await _api.updateAvatar(avatar).then(_housekeeping);
+        }
+        update();
+      }
     }
   }
 

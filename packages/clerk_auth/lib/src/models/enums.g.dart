@@ -10,15 +10,6 @@ const _$EnrollmentModeEnumMap = {
   EnrollmentMode.manualInvitation: 'manual_invitation',
 };
 
-const _$IdentificationStrategyEnumMap = {
-  IdentificationStrategy.emailAddress: 'email_address',
-  IdentificationStrategy.oauthApple: 'oauth_apple',
-  IdentificationStrategy.oauthGithub: 'oauth_github',
-  IdentificationStrategy.oauthGoogle: 'oauth_google',
-  IdentificationStrategy.phoneNumber: 'phone_number',
-  IdentificationStrategy.username: 'username',
-};
-
 const _$UserAttributeEnumMap = {
   UserAttribute.username: 'username',
   UserAttribute.emailAddress: 'email_address',

@@ -17,9 +17,8 @@ OrganizationSettings _$OrganizationSettingsFromJson(
           : OrganizationActions.fromJson(
               json['actions'] as Map<String, dynamic>),
       domains: json['domains'] == null
-          ? OrganizationDomains.empty
-          : OrganizationDomains.fromJson(
-              json['domains'] as Map<String, dynamic>),
+          ? DomainSettings.empty
+          : DomainSettings.fromJson(json['domains'] as Map<String, dynamic>),
       isEnabled: json['enabled'] as bool? ?? false,
     );
 

@@ -41,6 +41,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get addAccount => 'Add account';
 
   @override
+  String get addDomain => 'Add domain';
+
+  @override
   String get addEmailAddress => 'Add email address';
 
   @override
@@ -54,6 +57,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get and => 'and';
+
+  @override
+  String get areYouSure => 'Are you sure?';
 
   @override
   String get authenticatorApp => 'authenticator app';
@@ -85,6 +91,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get createOrganization => 'Create organization';
 
   @override
+  String get domainName => 'Domain name';
+
+  @override
   String get dontHaveAnAccount => 'Don’t have an account?';
 
   @override
@@ -92,6 +101,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get emailAddress => 'email address';
+
+  @override
+  String get enrollment => 'Enrollment';
 
   @override
   String enterCodeSentTo(String identifier) {
@@ -138,6 +150,14 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get lastName => 'last name';
+
+  @override
+  String get leave => 'Leave';
+
+  @override
+  String leaveOrg(String organization) {
+    return 'Leave $organization';
+  }
 
   @override
   String get leaveOrganization => 'Leave organization';
@@ -303,6 +323,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get signOut => 'Sign out';
 
   @override
+  String signOutIdentifier(String identifier) {
+    return 'Sign out $identifier';
+  }
+
+  @override
   String get signOutOfAllAccounts => 'Sign out of all accounts';
 
   @override
@@ -340,13 +365,22 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get verified => 'verified';
 
   @override
-  String get verifiedDomains => 'Verfied domains';
+  String get verifiedDomains => 'Verified domains';
 
   @override
   String get verifyYourEmailAddress => 'Verify your email address';
 
   @override
   String get verifyYourPhoneNumber => 'Verify your phone number';
+
+  @override
+  String get viaAutomaticInvitation => 'via automatic invitation';
+
+  @override
+  String get viaAutomaticSuggestion => 'via automatic suggestion';
+
+  @override
+  String get viaManualInvitation => 'via manual invitation';
 
   @override
   String get web3Wallet => 'web3 wallet';

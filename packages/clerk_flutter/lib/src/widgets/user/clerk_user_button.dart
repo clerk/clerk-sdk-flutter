@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
@@ -109,7 +110,9 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
       );
 
   Future<void> _listOrganizations(
-          BuildContext context, ClerkAuthState authState) =>
+    BuildContext context,
+    ClerkAuthState authState,
+  ) =>
       ClerkPage.show(
         context,
         builder: (context) => const ClerkOrganizationList(),
@@ -119,11 +122,36 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
     BuildContext context,
     ClerkAuthState authState,
   ) async {
-    if (authState.client.sessions.length == 1) {
-      await authState.safelyCall(context, () => authState.signOut());
-    } else {
-      await authState.safelyCall(
-          context, () => authState.signOutOf(authState.client.activeSession!));
+    final user = authState.user!;
+    final result = await showOkCancelAlertDialog(
+      context: context,
+      title: _localizations.signOutIdentifier(user.name),
+      message: _localizations.areYouSure,
+      okLabel: _localizations.ok,
+      cancelLabel: _localizations.cancel,
+    );
+    if (result == OkCancelResult.ok && context.mounted) {
+      if (authState.client.sessions.length == 1) {
+        await authState.safelyCall(context, () => authState.signOut());
+      } else {
+        await authState.safelyCall(
+          context,
+          () => authState.signOutOf(authState.client.activeSession!),
+        );
+      }
+    }
+  }
+
+  Future<void> _signOutOfAllAccounts() async {
+    final result = await showOkCancelAlertDialog(
+      context: context,
+      title: _localizations.signOutOfAllAccounts,
+      message: _localizations.areYouSure,
+      okLabel: _localizations.ok,
+      cancelLabel: _localizations.cancel,
+    );
+    if (result == OkCancelResult.ok && context.mounted) {
+      await _authState.safelyCall(context, () => _authState.signOut());
     }
   }
 
@@ -189,10 +217,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
               padding: horizontalPadding16 + verticalPadding12,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => authState.safelyCall(
-                  context,
-                  () => authState.signOut(),
-                ),
+                onTap: _signOutOfAllAccounts,
                 child: Row(
                   children: [
                     const Icon(

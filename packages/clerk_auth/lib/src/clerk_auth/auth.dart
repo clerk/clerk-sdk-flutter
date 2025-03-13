@@ -490,24 +490,38 @@ class Auth {
   /// Update an [Organization]
   ///
   Future<void> updateOrganization({
-    required Organization org,
+    required Organization organization,
     String? name,
     File? logo,
   }) async {
-    final hasName = name is String && name.isNotEmpty && name != org.name;
+    final hasName =
+        name is String && name.isNotEmpty && name != organization.name;
     if (hasName || logo is File) {
       if (hasName) {
         await _api
-            .updateOrganization(org, name: name, session: session)
+            .updateOrganization(organization, name: name, session: session)
             .then(_housekeeping);
       }
       if (logo case File logo) {
         await _api
-            .updateOrganizationLogo(org, logo: logo, session: session)
+            .updateOrganizationLogo(organization, logo: logo, session: session)
             .then(_housekeeping);
       }
       update();
     }
+  }
+
+  /// Leave an [Organization]
+  ///
+  Future<bool> leaveOrganization({
+    required Organization organization,
+    Session? session,
+  }) async {
+    final result = await _api
+        .leaveOrganization(organization, session: session)
+        .then(_housekeeping);
+    update();
+    return result.isOkay;
   }
 
   static const _page = 20;
@@ -537,6 +551,37 @@ class Auth {
     return invitations;
   }
 
+  /// Get all the [Organization]'s [Domain]s
+  ///
+  Future<List<OrganizationDomain>> fetchOrganizationDomains({
+    required Organization organization,
+  }) async {
+    final domains = <OrganizationDomain>[];
+
+    for (int offset = 0; true; offset += _page) {
+      final response = await _api.fetchOrganizationDomains(
+        organization,
+        offset,
+        _page,
+      );
+      if (response.response?['data'] == null) {
+        break;
+      }
+
+      final responseDomains = response.response?['data'] as List<dynamic>;
+      domains.addAll(
+        responseDomains.map(OrganizationDomain.fromJson),
+      );
+
+      if (responseDomains.length < _page) {
+        break;
+      }
+    }
+
+    update();
+    return domains;
+  }
+
   /// Accept an invitation to join an [Organization]
   ///
   Future<ApiResponse> acceptOrganizationInvitation(
@@ -545,6 +590,15 @@ class Auth {
     return await _api
         .acceptOrganizationInvitation(invitation)
         .then(_housekeeping);
+  }
+
+  /// Create a new [Domain] within an [Organization]
+  ///
+  Future<ApiResponse> createDomain({
+    required Organization organization,
+    required String name,
+  }) async {
+    return await _api.createDomain(organization, name).then(_housekeeping);
   }
 
   /// Activate the given [Session]

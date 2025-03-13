@@ -345,7 +345,7 @@ class _Organization {
         orgId: membership.organization.id,
         name: membership.organization.name,
         roleName: membership.roleName,
-        imageUrl: membership.organization.logoUrl,
+        imageUrl: membership.organization.imageUrl,
       );
 
   static _Organization fromInvitation(

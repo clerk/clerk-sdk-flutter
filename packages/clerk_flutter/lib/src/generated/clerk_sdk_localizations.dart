@@ -148,6 +148,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Add account'**
   String get addAccount;
 
+  /// No description provided for @addDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Add domain'**
+  String get addDomain;
+
   /// No description provided for @addEmailAddress.
   ///
   /// In en, this message translates to:
@@ -177,6 +183,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'and'**
   String get and;
+
+  /// No description provided for @areYouSure.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure?'**
+  String get areYouSure;
 
   /// No description provided for @authenticatorApp.
   ///
@@ -232,6 +244,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Create organization'**
   String get createOrganization;
 
+  /// No description provided for @domainName.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain name'**
+  String get domainName;
+
   /// No description provided for @dontHaveAnAccount.
   ///
   /// In en, this message translates to:
@@ -249,6 +267,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'email address'**
   String get emailAddress;
+
+  /// No description provided for @enrollment.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrollment'**
+  String get enrollment;
 
   /// No description provided for @enterCodeSentTo.
   ///
@@ -321,6 +345,18 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'last name'**
   String get lastName;
+
+  /// No description provided for @leave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get leave;
+
+  /// No description provided for @leaveOrg.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave {organization}'**
+  String leaveOrg(String organization);
 
   /// No description provided for @leaveOrganization.
   ///
@@ -598,6 +634,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Sign out'**
   String get signOut;
 
+  /// No description provided for @signOutIdentifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out {identifier}'**
+  String signOutIdentifier(String identifier);
+
   /// No description provided for @signOutOfAllAccounts.
   ///
   /// In en, this message translates to:
@@ -667,7 +709,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @verifiedDomains.
   ///
   /// In en, this message translates to:
-  /// **'Verfied domains'**
+  /// **'Verified domains'**
   String get verifiedDomains;
 
   /// No description provided for @verifyYourEmailAddress.
@@ -681,6 +723,24 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Verify your phone number'**
   String get verifyYourPhoneNumber;
+
+  /// No description provided for @viaAutomaticInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'via automatic invitation'**
+  String get viaAutomaticInvitation;
+
+  /// No description provided for @viaAutomaticSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'via automatic suggestion'**
+  String get viaAutomaticSuggestion;
+
+  /// No description provided for @viaManualInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'via manual invitation'**
+  String get viaManualInvitation;
 
   /// No description provided for @web3Wallet.
   ///

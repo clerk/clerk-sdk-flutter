@@ -612,12 +612,30 @@ class Api with Logging {
 
   /// Fetch invitations to new [Organization]s for the current user
   ///
-  Future<ApiResponse> fetchOrganizationInvitations(
-    int offset, [
+  Future<ApiResponse> fetchOrganizationInvitations([
+    int offset = 0,
     int limit = 20,
   ]) async {
     return await _fetchApiResponse(
       '/me/organization_invitations',
+      method: HttpMethod.get,
+      withSession: true,
+      params: {
+        'offset': offset,
+        'limit': limit,
+      },
+    );
+  }
+
+  /// Fetch an [Organization]'s [Domain]s
+  ///
+  Future<ApiResponse> fetchOrganizationDomains(
+    Organization org, [
+    int offset = 0,
+    int limit = 20,
+  ]) async {
+    return await _fetchApiResponse(
+      '/organizations/${org.id}/domains',
       method: HttpMethod.get,
       withSession: true,
       params: {
@@ -635,6 +653,21 @@ class Api with Logging {
     return await _fetchApiResponse(
       '/me/organization_invitations/${invitation.id}/accept',
       withSession: true,
+    );
+  }
+
+  /// Add a [Domain] to an [Organization]
+  ///
+  Future<ApiResponse> createDomain(
+    Organization org,
+    String name,
+  ) async {
+    return await _fetchApiResponse(
+      '/organizations/${org.id}/domains',
+      withSession: true,
+      params: {
+        'name': name,
+      },
     );
   }
 
@@ -688,6 +721,22 @@ class Api with Logging {
     return await _uploadFile(HttpMethod.put, uri, logo);
   }
 
+  /// Leave an [Organization]
+  ///
+  Future<ApiResponse> leaveOrganization(
+    Organization org, {
+    Session? session,
+  }) async {
+    return await _fetchApiResponse(
+      '/me/organization_memberships/${org.id}',
+      method: HttpMethod.delete,
+      withSession: true,
+      params: {
+        _kClerkSessionId: session?.id, // An explict session ID, if supplied
+      },
+    );
+  }
+
   /// Delete an [Organization]'s logo
   ///
   Future<ApiResponse> deleteOrganizationLogo(Organization org) async {
@@ -699,7 +748,7 @@ class Api with Logging {
 
   // Session
 
-  /// Return the [sessionToken] for the current active [Session], refreshing it
+  /// Return the [SessionToken] for the current active [Session], refreshing it
   /// if required
   ///
   Future<SessionToken?> sessionToken([

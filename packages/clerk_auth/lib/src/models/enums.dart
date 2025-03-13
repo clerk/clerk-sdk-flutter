@@ -20,47 +20,17 @@ enum SessionTokenPollMode {
 /// [EnrollmentMode] Clerk object
 @JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
 enum EnrollmentMode {
+  /// automatic suggestion
+  automaticSuggestion,
+
+  /// automatic invitation
+  automaticInvitation,
+
   /// manual invitation
   manualInvitation;
 
   @override
   String toString() => _$EnrollmentModeEnumMap[this]!;
-}
-
-/// [Permissions] Clerk object
-enum Permission {
-  /// profile manage
-  profileManage("org:sys_profile:manage"),
-
-  /// profile delete
-  profileDelete("org:sys_profile:delete"),
-
-  /// memberships read
-  membershipsRead("org:sys_memberships:read"),
-
-  /// memberships manage
-  membershipsManage("org:sys_memberships:manage"),
-
-  /// domains read
-  domainsRead("org:sys_domains:read"),
-
-  /// domains manage
-  domainsManage("org:sys_domains:manage"),
-
-  /// unknown
-  unknown("un:kno:wn");
-
-  const Permission(this.name);
-
-  /// The inbound string representation of the permission
-  final String name;
-
-  /// Return the permission from the given [String]
-  static Permission fromJson(dynamic name) =>
-      values.firstWhereOrNull((p) => p.name == name) ?? unknown;
-
-  @override
-  String toString() => name;
 }
 
 /// [UserAttribute] Clerk object

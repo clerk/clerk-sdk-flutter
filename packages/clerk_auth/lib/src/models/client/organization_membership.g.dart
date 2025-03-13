@@ -39,19 +39,8 @@ Map<String, dynamic> _$OrganizationMembershipToJson(
   }
 
   writeNotNull('public_user_data', instance.publicUserData?.toJson());
-  val['permissions'] =
-      instance.permissions.map((e) => _$PermissionEnumMap[e]!).toList();
+  val['permissions'] = instance.permissions.map((e) => e.toJson()).toList();
   val['updated_at'] = dateTimeToInt(instance.updatedAt);
   val['created_at'] = dateTimeToInt(instance.createdAt);
   return val;
 }
-
-const _$PermissionEnumMap = {
-  Permission.profileManage: 'profileManage',
-  Permission.profileDelete: 'profileDelete',
-  Permission.membershipsRead: 'membershipsRead',
-  Permission.membershipsManage: 'membershipsManage',
-  Permission.domainsRead: 'domainsRead',
-  Permission.domainsManage: 'domainsManage',
-  Permission.unknown: 'unknown',
-};

@@ -33,11 +33,13 @@
   "actionNotTimely": "Awaited user action not completed in required timeframe",
   "active": "active",
   "addAccount": "Add account",
+  "addDomain": "Add domain",
   "addEmailAddress": "Add email address",
   "addPhoneNumber": "Add phone number",
   "alreadyHaveAnAccount": "Already have an account?",
   "anUppercaseLetter": "an UPPERCASE letter",
   "and": "and",
+  "areYouSure": "Are you sure?",
   "authenticatorApp": "authenticator app",
   "backupCode": "backup code",
   "cancel": "Cancel",
@@ -54,9 +56,11 @@
   "connectedAccounts": "Connected accounts",
   "cont": "Continue",
   "createOrganization": "Create organization",
+  "domainName": "Domain name",
   "dontHaveAnAccount": "Don’t have an account?",
   "edit": "edit",
   "emailAddress": "email address",
+  "enrollment": "Enrollment",
   "enterCodeSentTo": "Enter code sent to {identifier}",
   "@enterCodeSentTo": {
     "placeholders": {
@@ -104,6 +108,15 @@
     }
   },
   "lastName": "last name",
+  "leave": "Leave",
+  "leaveOrg": "Leave {organization}",
+  "@leaveOrg": {
+    "placeholders": {
+      "organization": {
+        "type": "String"
+      }
+    }
+  },
   "leaveOrganization": "Leave organization",
   "loading": "Loading…",
   "logo": "Logo",
@@ -213,6 +226,14 @@
     }
   },
   "signOut": "Sign out",
+  "signOutIdentifier": "Sign out {identifier}",
+  "@signOutIdentifier": {
+    "placeholders": {
+      "identifier": {
+        "type": "String"
+      }
+    }
+  },
   "signOutOfAllAccounts": "Sign out of all accounts",
   "signUp": "Sign up",
   "signUpTo": "Sign up to {name}",
@@ -238,9 +259,12 @@
   "verificationEmailAddress": "Email address verification",
   "verificationPhoneNumber": "Phone number verification",
   "verified": "verified",
-  "verifiedDomains": "Verfied domains",
+  "verifiedDomains": "Verified domains",
   "verifyYourEmailAddress": "Verify your email address",
   "verifyYourPhoneNumber": "Verify your phone number",
+  "viaAutomaticInvitation": "via automatic invitation",
+  "viaAutomaticSuggestion": "via automatic suggestion",
+  "viaManualInvitation": "via manual invitation",
   "web3Wallet": "web3 wallet",
   "welcomeBackPleaseSignInToContinue": "Welcome back! Please sign in to continue",
   "welcomePleaseFillInTheDetailsToGetStarted": "Welcome! Please fill in the details to get started",

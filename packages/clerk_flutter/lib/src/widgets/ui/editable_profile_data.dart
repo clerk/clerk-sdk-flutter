@@ -63,9 +63,9 @@ class _EditableProfileDataState extends State<EditableProfileData> {
     super.dispose();
   }
 
-  Future<void> _chooseImage(BuildContext context) async {
+  Future<void> _chooseImage(BuildContext context, ImageSource source) async {
     final picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.camera);
+    final image = await picker.pickImage(source: source);
     if (context.mounted && image != null) {
       setState(() => this.image = File(image.path));
     }
@@ -96,29 +96,28 @@ class _EditableProfileDataState extends State<EditableProfileData> {
                 borderRadius: widget.avatarBorderRadius,
                 file: image,
               ),
-              if (isEditing)
+              if (isEditing) ...[
                 Positioned(
                   bottom: -4,
                   right: -4,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => _chooseImage(context),
-                    child: const DecoratedBox(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: ClerkColors.dawnPink,
-                      ),
-                      child: SizedBox.square(
-                        dimension: 15,
-                        child: Icon(
-                          Icons.camera_alt,
-                          size: 12,
-                          color: ClerkColors.charcoalGrey,
-                        ),
-                      ),
-                    ),
+                  child: _ImageUploadButton(
+                    icon: Icons.camera_alt,
+                    onChooseImage: () {
+                      _chooseImage(context, ImageSource.camera);
+                    },
                   ),
                 ),
+                Positioned(
+                  bottom: -4,
+                  left: -4,
+                  child: _ImageUploadButton(
+                    icon: Icons.image,
+                    onChooseImage: () {
+                      _chooseImage(context, ImageSource.gallery);
+                    },
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -167,6 +166,38 @@ class _EditableProfileDataState extends State<EditableProfileData> {
             ),
         ],
       ],
+    );
+  }
+}
+
+class _ImageUploadButton extends StatelessWidget {
+  const _ImageUploadButton({
+    required this.onChooseImage,
+    required this.icon,
+  });
+
+  final VoidCallback onChooseImage;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onChooseImage,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: ClerkColors.dawnPink,
+        ),
+        child: SizedBox.square(
+          dimension: 15,
+          child: Icon(
+            icon,
+            size: 12,
+            color: ClerkColors.charcoalGrey,
+          ),
+        ),
+      ),
     );
   }
 }

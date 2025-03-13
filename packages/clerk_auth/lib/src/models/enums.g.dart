@@ -7,6 +7,8 @@ part of 'enums.dart';
 // **************************************************************************
 
 const _$EnrollmentModeEnumMap = {
+  EnrollmentMode.automaticSuggestion: 'automatic_suggestion',
+  EnrollmentMode.automaticInvitation: 'automatic_invitation',
   EnrollmentMode.manualInvitation: 'manual_invitation',
 };
 

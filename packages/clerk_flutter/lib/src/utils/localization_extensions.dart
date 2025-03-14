@@ -37,8 +37,8 @@ extension ClerkAuthErrorExtension on clerk.AuthError {
 /// An extension class to enable localization of [clerk.EnrollmentMode]
 ///
 extension ClerkEnrollmentTypeExtension on clerk.EnrollmentMode {
-  /// Allow localization of an [clerk.AuthError]
-  String localizedMessage(ClerkSdkLocalizations localizations) {
+  /// Allow localization of a "via [clerk.EnrollmentMode]" message
+  String viaInvitationMessage(ClerkSdkLocalizations localizations) {
     return switch (this) {
       clerk.EnrollmentMode.manualInvitation =>
         localizations.viaManualInvitation,
@@ -46,6 +46,17 @@ extension ClerkEnrollmentTypeExtension on clerk.EnrollmentMode {
         localizations.viaAutomaticInvitation,
       clerk.EnrollmentMode.automaticSuggestion =>
         localizations.viaAutomaticSuggestion,
+    };
+  }
+
+  /// Allow localization of a [clerk.EnrollmentMode]
+  String localizedName(ClerkSdkLocalizations localizations) {
+    return switch (this) {
+      clerk.EnrollmentMode.manualInvitation => localizations.manualInvitation,
+      clerk.EnrollmentMode.automaticInvitation =>
+        localizations.automaticInvitation,
+      clerk.EnrollmentMode.automaticSuggestion =>
+        localizations.automaticSuggestion,
     };
   }
 }

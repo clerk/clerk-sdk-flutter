@@ -65,6 +65,12 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get authenticatorApp => 'authenticator app';
 
   @override
+  String get automaticInvitation => 'Automatic invitation';
+
+  @override
+  String get automaticSuggestion => 'Automatic suggestion';
+
+  @override
   String get backupCode => 'backup code';
 
   @override
@@ -104,6 +110,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get enrollment => 'Enrollment';
+
+  @override
+  String get enrollmentMode => 'Enrollment mode:';
 
   @override
   String enterCodeSentTo(String identifier) {
@@ -167,6 +176,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get logo => 'Logo';
+
+  @override
+  String get manualInvitation => 'Manual invitation';
 
   @override
   String get missingRequirements => 'missing requirements';

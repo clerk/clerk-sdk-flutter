@@ -203,21 +203,54 @@ class _DomainsListState extends State<_DomainsList> {
     final localizations = authState.localizationsOf(context);
 
     String domainName = '';
+    clerk.EnrollmentMode mode = clerk.EnrollmentMode.manualInvitation;
+
+    final modes = clerk.EnrollmentMode.values.toList();
+    if (_org.hasUnlimitedMembership == false) {
+      modes.remove(clerk.EnrollmentMode.automaticInvitation);
+    }
 
     final submitted = await ClerkInputDialog.show(
       context,
-      child: ClerkTextFormField(
-        label: localizations.domainName,
-        autofocus: true,
-        onChanged: (text) => domainName = text,
-        onSubmit: (_) => Navigator.of(context).pop(true),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClerkTextFormField(
+            label: localizations.domainName,
+            autofocus: true,
+            onChanged: (text) => domainName = text,
+            onSubmit: (_) => Navigator.of(context).pop(true),
+          ),
+          verticalMargin4,
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  localizations.enrollmentMode,
+                  style: ClerkTextStyle.subtitleDark,
+                  maxLines: 4,
+                ),
+              ),
+              horizontalMargin4,
+              _ModeSelector(
+                mode: mode,
+                modes: modes,
+                onChange: (newMode) => mode = newMode,
+              ),
+            ],
+          ),
+        ],
       ),
     );
 
     if (submitted && context.mounted) {
       domainName = domainName.trim().toLowerCase();
       await authState.safelyCall(context, () async {
-        await authState.createDomain(organization: _org, name: domainName);
+        await authState.createDomain(
+          organization: _org,
+          name: domainName,
+          mode: mode,
+        );
         await _fetchDomains();
       });
     }
@@ -277,11 +310,52 @@ class _DomainRow extends StatelessWidget {
         ),
         verticalMargin2,
         Text(
-          domain.enrollmentMode.localizedMessage(localizations),
+          domain.enrollmentMode.viaInvitationMessage(localizations),
           style: ClerkTextStyle.buttonSubtitle,
         ),
         verticalMargin8,
       ],
+    );
+  }
+}
+
+class _ModeSelector extends StatefulWidget {
+  const _ModeSelector({
+    required this.mode,
+    required this.modes,
+    required this.onChange,
+  });
+
+  final clerk.EnrollmentMode mode;
+  final List<clerk.EnrollmentMode> modes;
+  final ValueChanged<clerk.EnrollmentMode> onChange;
+
+  @override
+  State<_ModeSelector> createState() => _ModeSelectorState();
+}
+
+class _ModeSelectorState extends State<_ModeSelector> {
+  late clerk.EnrollmentMode mode = widget.mode;
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = ClerkAuth.localizationsOf(context);
+    return DropdownButton<clerk.EnrollmentMode>(
+      value: mode,
+      items: [
+        for (final mode in widget.modes) //
+          DropdownMenuItem(
+            value: mode,
+            child: Text(mode.localizedName(localizations)),
+          ),
+      ],
+      style: ClerkTextStyle.subtitleDark,
+      onChanged: (mode) {
+        if (mode is clerk.EnrollmentMode) {
+          widget.onChange(mode);
+          setState(() => this.mode = mode);
+        }
+      },
     );
   }
 }

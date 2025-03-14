@@ -196,6 +196,18 @@ abstract class ClerkSdkLocalizations {
   /// **'authenticator app'**
   String get authenticatorApp;
 
+  /// No description provided for @automaticInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic invitation'**
+  String get automaticInvitation;
+
+  /// No description provided for @automaticSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic suggestion'**
+  String get automaticSuggestion;
+
   /// No description provided for @backupCode.
   ///
   /// In en, this message translates to:
@@ -273,6 +285,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Enrollment'**
   String get enrollment;
+
+  /// No description provided for @enrollmentMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrollment mode:'**
+  String get enrollmentMode;
 
   /// No description provided for @enterCodeSentTo.
   ///
@@ -375,6 +393,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Logo'**
   String get logo;
+
+  /// No description provided for @manualInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual invitation'**
+  String get manualInvitation;
 
   /// No description provided for @missingRequirements.
   ///

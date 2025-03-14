@@ -594,11 +594,19 @@ class Auth {
 
   /// Create a new [Domain] within an [Organization]
   ///
-  Future<ApiResponse> createDomain({
+  Future<void> createDomain({
     required Organization organization,
     required String name,
+    required EnrollmentMode mode,
   }) async {
-    return await _api.createDomain(organization, name).then(_housekeeping);
+    final response =
+        await _api.createDomain(organization, name).then(_housekeeping);
+    if (mode != EnrollmentMode.manualInvitation) {
+      final domainId = response.response!['id'];
+      await _api
+          .updateDomainEnrollmentMode(organization, domainId, mode)
+          .then(_housekeeping);
+    }
   }
 
   /// Activate the given [Session]

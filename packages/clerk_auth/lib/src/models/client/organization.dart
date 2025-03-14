@@ -83,4 +83,7 @@ class Organization with InformativeToStringMixin {
   /// toJson
   @override
   Map<String, dynamic> toJson() => _$OrganizationToJson(this);
+
+  /// Do we have unlimited membership?
+  bool get hasUnlimitedMembership => maxAllowedMemberships == 0;
 }

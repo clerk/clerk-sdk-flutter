@@ -671,6 +671,22 @@ class Api with Logging {
     );
   }
 
+  /// Update the enrollment mode for a [Domain]
+  ///
+  Future<ApiResponse> updateDomainEnrollmentMode(
+    Organization org,
+    String domainId,
+    EnrollmentMode mode,
+  ) async {
+    return await _fetchApiResponse(
+      '/organizations/${org.id}/domains/$domainId/update_enrollment_mode',
+      withSession: true,
+      params: {
+        'enrollment_mode': mode,
+      },
+    );
+  }
+
   /// Update an [Organization]
   ///
   Future<ApiResponse> updateOrganization(

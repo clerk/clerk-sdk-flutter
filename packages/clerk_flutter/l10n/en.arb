@@ -41,6 +41,8 @@
   "and": "and",
   "areYouSure": "Are you sure?",
   "authenticatorApp": "authenticator app",
+  "automaticInvitation": "Automatic invitation",
+  "automaticSuggestion": "Automatic suggestion",
   "backupCode": "backup code",
   "cancel": "Cancel",
   "clickOnTheLinkThatSBeenSentToAndThenCheckBackHere": "Click on the link that‘s been sent to {identifier} and then check back here",
@@ -61,6 +63,7 @@
   "edit": "edit",
   "emailAddress": "email address",
   "enrollment": "Enrollment",
+  "enrollmentMode": "Enrollment mode:",
   "enterCodeSentTo": "Enter code sent to {identifier}",
   "@enterCodeSentTo": {
     "placeholders": {
@@ -120,6 +123,7 @@
   "leaveOrganization": "Leave organization",
   "loading": "Loading…",
   "logo": "Logo",
+  "manualInvitation": "Manual invitation",
   "missingRequirements": "missing requirements",
   "name": "Name",
   "needsFirstFactor": "needs first factor",

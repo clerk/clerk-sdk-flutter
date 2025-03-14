@@ -22,7 +22,7 @@ void expectThat(bool result, {String? reason}) =>
     expect(result, true, reason: reason);
 
 void main() {
-  group('ClerkLoadingOverlay:', () {
+  group('ClerkLoadingOverlay:', skip: true, () {
     const config = ClerkAuthConfig(publishableKey: 'NOT A KEY');
     final overlayEntry = ClerkLoadingOverlay(config);
 

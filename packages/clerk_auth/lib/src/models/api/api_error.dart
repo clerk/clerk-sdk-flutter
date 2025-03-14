@@ -23,7 +23,7 @@ class ApiError with InformativeToStringMixin {
   final String? code;
 
   /// meta data
-  final Map<String, String>? meta;
+  final Map<String, dynamic>? meta;
 
   /// long message
   final String? longMessage;

@@ -7,16 +7,9 @@ part of 'enums.dart';
 // **************************************************************************
 
 const _$EnrollmentModeEnumMap = {
+  EnrollmentMode.automaticSuggestion: 'automatic_suggestion',
+  EnrollmentMode.automaticInvitation: 'automatic_invitation',
   EnrollmentMode.manualInvitation: 'manual_invitation',
-};
-
-const _$IdentificationStrategyEnumMap = {
-  IdentificationStrategy.emailAddress: 'email_address',
-  IdentificationStrategy.oauthApple: 'oauth_apple',
-  IdentificationStrategy.oauthGithub: 'oauth_github',
-  IdentificationStrategy.oauthGoogle: 'oauth_google',
-  IdentificationStrategy.phoneNumber: 'phone_number',
-  IdentificationStrategy.username: 'username',
 };
 
 const _$UserAttributeEnumMap = {

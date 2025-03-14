@@ -28,17 +28,20 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
-  String get abandoned => 'ABANDONED';
+  String get abandoned => 'abandoned';
 
   @override
   String get actionNotTimely =>
       'Awaited user action not completed in required timeframe';
 
   @override
-  String get active => 'ACTIVE';
+  String get active => 'active';
 
   @override
   String get addAccount => 'Add account';
+
+  @override
+  String get addDomain => 'Add domain';
 
   @override
   String get addEmailAddress => 'Add email address';
@@ -56,7 +59,16 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get and => 'and';
 
   @override
+  String get areYouSure => 'Are you sure?';
+
+  @override
   String get authenticatorApp => 'authenticator app';
+
+  @override
+  String get automaticInvitation => 'Automatic invitation';
+
+  @override
+  String get automaticSuggestion => 'Automatic suggestion';
 
   @override
   String get backupCode => 'backup code';
@@ -70,7 +82,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
-  String get complete => 'COMPLETE';
+  String get complete => 'complete';
 
   @override
   String get connectAccount => 'Connect account';
@@ -85,10 +97,22 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get createOrganization => 'Create organization';
 
   @override
+  String get domainName => 'Domain name';
+
+  @override
   String get dontHaveAnAccount => 'Don’t have an account?';
 
   @override
+  String get edit => 'edit';
+
+  @override
   String get emailAddress => 'email address';
+
+  @override
+  String get enrollment => 'Enrollment';
+
+  @override
+  String get enrollmentMode => 'Enrollment mode:';
 
   @override
   String enterCodeSentTo(String identifier) {
@@ -104,13 +128,16 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get enterTheCodeSentToYou => 'Enter the code sent to you';
 
   @override
-  String get expired => 'EXPIRED';
+  String get expired => 'expired';
 
   @override
-  String get failed => 'FAILED';
+  String get failed => 'failed';
 
   @override
   String get firstName => 'first name';
+
+  @override
+  String get generalDetails => 'General details';
 
   @override
   String invalidEmailAddress(String address) {
@@ -123,6 +150,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
+  String get join => 'JOIN';
+
+  @override
   String jwtPoorlyFormatted(String arg) {
     return 'JWT poorly formatted: $arg';
   }
@@ -131,25 +161,39 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get lastName => 'last name';
 
   @override
+  String get leave => 'Leave';
+
+  @override
+  String leaveOrg(String organization) {
+    return 'Leave $organization';
+  }
+
+  @override
+  String get leaveOrganization => 'Leave organization';
+
+  @override
   String get loading => 'Loading…';
 
   @override
   String get logo => 'Logo';
 
   @override
-  String get missingRequirements => 'MISSING REQUIREMENTS';
+  String get manualInvitation => 'Manual invitation';
+
+  @override
+  String get missingRequirements => 'missing requirements';
 
   @override
   String get name => 'Name';
 
   @override
-  String get needsFirstFactor => 'NEEDS FIRST FACTOR';
+  String get needsFirstFactor => 'needs first factor';
 
   @override
-  String get needsIdentifier => 'NEEDS IDENTIFIER';
+  String get needsIdentifier => 'needs identifier';
 
   @override
-  String get needsSecondFactor => 'NEEDS SECOND FACTOR';
+  String get needsSecondFactor => 'needs second factor';
 
   @override
   String noAssociatedCodeRetrievalMethod(String arg) {
@@ -199,6 +243,12 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get or => 'or';
 
   @override
+  String get organizationProfile => 'Organization profile';
+
+  @override
+  String get organizations => 'Organizations';
+
+  @override
   String get passkey => 'passkey';
 
   @override
@@ -220,6 +270,12 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get passwordRequires => 'Password requires:';
+
+  @override
+  String get pending => 'pending';
+
+  @override
+  String get personalAccount => 'Personal account';
 
   @override
   String get phoneNumber => 'phone number';
@@ -279,6 +335,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get signOut => 'Sign out';
 
   @override
+  String signOutIdentifier(String identifier) {
+    return 'Sign out $identifier';
+  }
+
+  @override
   String get signOutOfAllAccounts => 'Sign out of all accounts';
 
   @override
@@ -293,7 +354,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get slugUrl => 'Slug URL';
 
   @override
-  String get transferable => 'TRANSFERABLE';
+  String get transferable => 'transferable';
 
   @override
   String typeTypeInvalid(String type) {
@@ -301,7 +362,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
-  String get unverified => 'UNVERIFIED';
+  String get unverified => 'unverified';
 
   @override
   String get username => 'username';
@@ -313,13 +374,25 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get verificationPhoneNumber => 'Phone number verification';
 
   @override
-  String get verified => 'VERIFIED';
+  String get verified => 'verified';
+
+  @override
+  String get verifiedDomains => 'Verified domains';
 
   @override
   String get verifyYourEmailAddress => 'Verify your email address';
 
   @override
   String get verifyYourPhoneNumber => 'Verify your phone number';
+
+  @override
+  String get viaAutomaticInvitation => 'via automatic invitation';
+
+  @override
+  String get viaAutomaticSuggestion => 'via automatic suggestion';
+
+  @override
+  String get viaManualInvitation => 'via manual invitation';
 
   @override
   String get web3Wallet => 'web3 wallet';

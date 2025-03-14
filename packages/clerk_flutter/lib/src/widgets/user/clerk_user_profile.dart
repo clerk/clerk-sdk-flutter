@@ -5,21 +5,21 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
-import 'package:clerk_flutter/src/widgets/ui/clerk_avatar.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_input_dialog.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_page.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_row_label.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/editable_profile_data.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:clerk_flutter/src/widgets/user/connect_account_panel.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:phone_input/phone_input_package.dart';
 
 /// [ClerkUserProfile] displays user details
@@ -134,6 +134,23 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
     }
   }
 
+  Future<void> _update(String name, File? image) async {
+    final authState = ClerkAuth.of(context, listen: false);
+    await authState.safelyCall(context, () async {
+      final user = authState.user!;
+      if (name.isNotEmpty && name != user.name) {
+        final names = name.split(' ').where((s) => s.isNotEmpty).toList();
+        final lastName = names.length > 1 ? names.removeLast() : null;
+        final firstName = names.join(' ');
+        await authState.updateUser(
+          firstName: firstName,
+          lastName: lastName,
+          avatar: image,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
@@ -160,7 +177,11 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                   children: [
                     _ProfileRow(
                       title: localizations.profile,
-                      child: _EditableUserData(user: user),
+                      child: EditableProfileData(
+                        name: user.name,
+                        imageUrl: user.imageUrl,
+                        onSubmit: _update,
+                      ),
                     ),
                     if (authState.env.config.allowsEmailAddress) ...[
                       const Padding(padding: topPadding16, child: divider),
@@ -291,9 +312,10 @@ class _ExternalAccountList extends StatelessWidget {
                       ),
                     ),
                     if (account.isVerified == false) //
-                      _RowLabel(
+                      ClerkRowLabel(
                         label: account.verification.status
-                            .localizedMessage(localizations),
+                            .localizedMessage(localizations)
+                            .toUpperCase(),
                       ),
                   ],
                 ),
@@ -353,13 +375,13 @@ class _IdentifierList extends StatelessWidget {
                     ),
                   ),
                   if (uid.isUnverified) //
-                    _RowLabel(
+                    ClerkRowLabel(
                       label: localizations.unverified,
                       color: ClerkColors.incarnadine,
                       onTap: () => onIdentifierUnverified.call(uid.identifier),
                     ),
                   if (user.isPrimary(uid)) //
-                    _RowLabel(label: localizations.primary),
+                    ClerkRowLabel(label: localizations.primary),
                 ],
               ),
             ),
@@ -376,42 +398,6 @@ class _IdentifierList extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _RowLabel extends StatelessWidget {
-  const _RowLabel({
-    this.color = ClerkColors.charcoalGrey,
-    required this.label,
-    this.onTap,
-  });
-
-  final Color color;
-  final String label;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: topPadding2,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: DecoratedBox(
-          decoration:
-              BoxDecoration(border: Border.all(color: color, width: 0.5)),
-          child: Center(
-            child: Padding(
-              padding: horizontalPadding4 + verticalPadding2,
-              child: Text(
-                label,
-                style: ClerkTextStyle.rowLabel.copyWith(color: color),
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -440,139 +426,6 @@ class _ProfileRow extends StatelessWidget {
           Expanded(child: child),
         ],
       ),
-    );
-  }
-}
-
-class _EditableUserData extends StatefulWidget {
-  const _EditableUserData({required this.user});
-
-  final clerk.User user;
-
-  @override
-  State<_EditableUserData> createState() => _EditableUserDataState();
-}
-
-class _EditableUserDataState extends State<_EditableUserData> {
-  bool isEditing = false;
-
-  late final TextEditingController _controller;
-  File? image;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.user.name);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Future<void> _chooseImage(BuildContext context) async {
-    final picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.camera);
-    if (context.mounted && image != null) {
-      setState(() => this.image = File(image.path));
-    }
-  }
-
-  Future<void> _update([_]) async {
-    if (isEditing) {
-      final authState = ClerkAuth.of(context, listen: false);
-      final name = _controller.text;
-      if (name != widget.user.name && name.isNotEmpty) {
-        final names = name.split(' ').where((s) => s.isNotEmpty).toList();
-        final lastName = names.length > 1 ? names.removeLast() : '';
-        final firstName = names.join(' ');
-        await authState.updateUser(firstName: firstName, lastName: lastName);
-      }
-      if (image case File image) {
-        await authState.updateUserImage(image);
-      }
-    }
-    if (context.mounted) {
-      setState(() => isEditing = !isEditing);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox.square(
-          dimension: 32,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              ClerkAvatar(user: widget.user, file: image),
-              if (isEditing)
-                Positioned(
-                  bottom: -4,
-                  right: -4,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => _chooseImage(context),
-                    child: const DecoratedBox(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: ClerkColors.dawnPink,
-                      ),
-                      child: SizedBox.square(
-                        dimension: 15,
-                        child: Icon(
-                          Icons.camera_alt,
-                          size: 12,
-                          color: ClerkColors.charcoalGrey,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-        if (isEditing) //
-          horizontalMargin4
-        else //
-          horizontalMargin12,
-        Expanded(
-          child: isEditing
-              ? TextFormField(
-                  controller: _controller,
-                  style: ClerkTextStyle.inputLabel,
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    isCollapsed: true,
-                    border: outlineInputBorder,
-                    contentPadding: horizontalPadding8,
-                  ),
-                  onFieldSubmitted: _update,
-                )
-              : Text(
-                  widget.user.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: ClerkTextStyle.inputLabel,
-                ),
-        ),
-        horizontalMargin8,
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: _update,
-          child: Icon(isEditing ? Icons.check : Icons.edit, size: 16),
-        ),
-        if (isEditing)
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => setState(() => isEditing = false),
-            child: const Icon(Icons.close, size: 16),
-          ),
-      ],
     );
   }
 }

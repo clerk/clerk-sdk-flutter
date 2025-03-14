@@ -1,12 +1,12 @@
 library;
 
+export 'client/organization_domain.dart';
 export 'environment/actions.dart';
 export 'environment/attack_protection.dart';
 export 'environment/config.dart';
 export 'environment/display_config.dart';
 export 'environment/environment.dart';
 export 'environment/organization_actions.dart';
-export 'environment/organization_domains.dart';
 export 'environment/organization_settings.dart';
 export 'environment/passkey_settings.dart';
 export 'environment/password_settings.dart';

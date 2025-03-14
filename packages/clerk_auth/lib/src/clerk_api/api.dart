@@ -610,6 +610,83 @@ class Api with Logging {
     );
   }
 
+  /// Fetch invitations to new [Organization]s for the current user
+  ///
+  Future<ApiResponse> fetchOrganizationInvitations([
+    int offset = 0,
+    int limit = 20,
+  ]) async {
+    return await _fetchApiResponse(
+      '/me/organization_invitations',
+      method: HttpMethod.get,
+      withSession: true,
+      params: {
+        'offset': offset,
+        'limit': limit,
+      },
+    );
+  }
+
+  /// Fetch an [Organization]'s [Domain]s
+  ///
+  Future<ApiResponse> fetchOrganizationDomains(
+    Organization org, [
+    int offset = 0,
+    int limit = 20,
+  ]) async {
+    return await _fetchApiResponse(
+      '/organizations/${org.id}/domains',
+      method: HttpMethod.get,
+      withSession: true,
+      params: {
+        'offset': offset,
+        'limit': limit,
+      },
+    );
+  }
+
+  /// Accept an invitation to join an [Organization]
+  ///
+  Future<ApiResponse> acceptOrganizationInvitation(
+    OrganizationInvitation invitation,
+  ) async {
+    return await _fetchApiResponse(
+      '/me/organization_invitations/${invitation.id}/accept',
+      withSession: true,
+    );
+  }
+
+  /// Add a [Domain] to an [Organization]
+  ///
+  Future<ApiResponse> createDomain(
+    Organization org,
+    String name,
+  ) async {
+    return await _fetchApiResponse(
+      '/organizations/${org.id}/domains',
+      withSession: true,
+      params: {
+        'name': name,
+      },
+    );
+  }
+
+  /// Update the enrollment mode for a [Domain]
+  ///
+  Future<ApiResponse> updateDomainEnrollmentMode(
+    Organization org,
+    String domainId,
+    EnrollmentMode mode,
+  ) async {
+    return await _fetchApiResponse(
+      '/organizations/${org.id}/domains/$domainId/update_enrollment_mode',
+      withSession: true,
+      params: {
+        'enrollment_mode': mode,
+      },
+    );
+  }
+
   /// Update an [Organization]
   ///
   Future<ApiResponse> updateOrganization(
@@ -650,14 +727,30 @@ class Api with Logging {
   ///
   Future<ApiResponse> updateOrganizationLogo(
     Organization org, {
-    required File image,
+    required File logo,
     Session? session,
   }) async {
     final params = _multiSessionMode && session is Session
         ? {_kClerkSessionId: session.id}
         : null;
     final uri = _uri('/organizations/${org.id}/logo', params: params);
-    return await _uploadFile(HttpMethod.put, uri, image);
+    return await _uploadFile(HttpMethod.put, uri, logo);
+  }
+
+  /// Leave an [Organization]
+  ///
+  Future<ApiResponse> leaveOrganization(
+    Organization org, {
+    Session? session,
+  }) async {
+    return await _fetchApiResponse(
+      '/me/organization_memberships/${org.id}',
+      method: HttpMethod.delete,
+      withSession: true,
+      params: {
+        _kClerkSessionId: session?.id, // An explict session ID, if supplied
+      },
+    );
   }
 
   /// Delete an [Organization]'s logo
@@ -671,7 +764,7 @@ class Api with Logging {
 
   // Session
 
-  /// Return the [sessionToken] for the current active [Session], refreshing it
+  /// Return the [SessionToken] for the current active [Session], refreshing it
   /// if required
   ///
   Future<SessionToken?> sessionToken([

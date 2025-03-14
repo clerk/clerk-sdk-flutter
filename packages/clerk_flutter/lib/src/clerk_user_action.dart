@@ -9,13 +9,17 @@ import 'package:flutter/material.dart';
 class ClerkUserAction {
   /// Construct a [ClerkUserAction]
   const ClerkUserAction({
-    required this.asset,
     required this.label,
     required this.callback,
+    this.icon,
+    this.asset,
   });
 
-  /// The icon for this action
-  final String asset;
+  /// The icon for this action as an SVG asset
+  final String? asset;
+
+  /// The icon for this action as an [IconData]
+  final IconData? icon;
 
   /// The label for this action
   final String label;

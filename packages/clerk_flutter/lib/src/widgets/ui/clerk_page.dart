@@ -43,6 +43,7 @@ class ClerkPage extends StatelessWidget {
         backgroundColor: ClerkColors.whiteSmoke,
         appBar: AppBar(
           forceMaterialTransparency: true,
+          foregroundColor: ClerkColors.stormGrey,
         ),
         body: Padding(
           padding: hor24bottom16,

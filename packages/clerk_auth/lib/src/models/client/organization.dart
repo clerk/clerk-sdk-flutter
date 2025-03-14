@@ -73,7 +73,7 @@ class Organization with InformativeToStringMixin {
 
   static const _personalOrgId = r'$PERSONAL$';
 
-  /// The id used internally for the personal organization
+  /// A dummy personal [Organization] used internally
   static const personal = Organization(id: _personalOrgId);
 
   /// fromJson
@@ -83,4 +83,7 @@ class Organization with InformativeToStringMixin {
   /// toJson
   @override
   Map<String, dynamic> toJson() => _$OrganizationToJson(this);
+
+  /// Do we have unlimited membership?
+  bool get hasUnlimitedMembership => maxAllowedMemberships == 0;
 }

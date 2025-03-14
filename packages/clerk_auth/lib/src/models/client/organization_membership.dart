@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/models/client/organization.dart';
+import 'package:clerk_auth/src/models/client/permission.dart';
 import 'package:clerk_auth/src/models/client/user_public.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
@@ -20,6 +21,7 @@ class OrganizationMembership with InformativeToStringMixin {
     required this.createdAt,
     required this.organization,
     required this.publicUserData,
+    required this.permissions,
   });
 
   /// id
@@ -37,6 +39,10 @@ class OrganizationMembership with InformativeToStringMixin {
   /// public user data
   final UserPublic? publicUserData;
 
+  /// permissions
+  @JsonKey(fromJson: _fromPermissionsList)
+  final List<Permission> permissions;
+
   /// updated at
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
   final DateTime updatedAt;
@@ -52,4 +58,14 @@ class OrganizationMembership with InformativeToStringMixin {
   /// toJson
   @override
   Map<String, dynamic> toJson() => _$OrganizationMembershipToJson(this);
+
+  /// Do we have a [Permission]?
+  bool hasPermission(Permission permission) => permissions.contains(permission);
+}
+
+List<Permission> _fromPermissionsList(dynamic data) {
+  if (data case List<dynamic> data) {
+    return data.map(Permission.fromJson).toList(growable: false);
+  }
+  return const [];
 }

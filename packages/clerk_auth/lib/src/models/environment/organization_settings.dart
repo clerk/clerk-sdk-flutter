@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/models/environment/domain_settings.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -15,7 +16,7 @@ class OrganizationSettings with InformativeToStringMixin {
     this.maxAllowedMemberships = 0,
     this.creatorRole = '',
     this.actions = OrganizationActions.empty,
-    this.domains = OrganizationDomains.empty,
+    this.domains = DomainSettings.empty,
     this.isEnabled = false,
   });
 
@@ -26,7 +27,7 @@ class OrganizationSettings with InformativeToStringMixin {
   final String creatorRole;
 
   /// organization domains
-  final OrganizationDomains domains;
+  final DomainSettings domains;
 
   /// organization actions
   final OrganizationActions actions;

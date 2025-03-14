@@ -127,7 +127,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @abandoned.
   ///
   /// In en, this message translates to:
-  /// **'ABANDONED'**
+  /// **'abandoned'**
   String get abandoned;
 
   /// No description provided for @actionNotTimely.
@@ -139,7 +139,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @active.
   ///
   /// In en, this message translates to:
-  /// **'ACTIVE'**
+  /// **'active'**
   String get active;
 
   /// No description provided for @addAccount.
@@ -147,6 +147,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Add account'**
   String get addAccount;
+
+  /// No description provided for @addDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Add domain'**
+  String get addDomain;
 
   /// No description provided for @addEmailAddress.
   ///
@@ -178,11 +184,29 @@ abstract class ClerkSdkLocalizations {
   /// **'and'**
   String get and;
 
+  /// No description provided for @areYouSure.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure?'**
+  String get areYouSure;
+
   /// No description provided for @authenticatorApp.
   ///
   /// In en, this message translates to:
   /// **'authenticator app'**
   String get authenticatorApp;
+
+  /// No description provided for @automaticInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic invitation'**
+  String get automaticInvitation;
+
+  /// No description provided for @automaticSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic suggestion'**
+  String get automaticSuggestion;
 
   /// No description provided for @backupCode.
   ///
@@ -205,7 +229,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @complete.
   ///
   /// In en, this message translates to:
-  /// **'COMPLETE'**
+  /// **'complete'**
   String get complete;
 
   /// No description provided for @connectAccount.
@@ -232,17 +256,41 @@ abstract class ClerkSdkLocalizations {
   /// **'Create organization'**
   String get createOrganization;
 
+  /// No description provided for @domainName.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain name'**
+  String get domainName;
+
   /// No description provided for @dontHaveAnAccount.
   ///
   /// In en, this message translates to:
   /// **'Don’t have an account?'**
   String get dontHaveAnAccount;
 
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'edit'**
+  String get edit;
+
   /// No description provided for @emailAddress.
   ///
   /// In en, this message translates to:
   /// **'email address'**
   String get emailAddress;
+
+  /// No description provided for @enrollment.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrollment'**
+  String get enrollment;
+
+  /// No description provided for @enrollmentMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrollment mode:'**
+  String get enrollmentMode;
 
   /// No description provided for @enterCodeSentTo.
   ///
@@ -265,13 +313,13 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @expired.
   ///
   /// In en, this message translates to:
-  /// **'EXPIRED'**
+  /// **'expired'**
   String get expired;
 
   /// No description provided for @failed.
   ///
   /// In en, this message translates to:
-  /// **'FAILED'**
+  /// **'failed'**
   String get failed;
 
   /// No description provided for @firstName.
@@ -279,6 +327,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'first name'**
   String get firstName;
+
+  /// No description provided for @generalDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'General details'**
+  String get generalDetails;
 
   /// No description provided for @invalidEmailAddress.
   ///
@@ -292,6 +346,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Invalid phone number: {number}'**
   String invalidPhoneNumber(String number);
 
+  /// No description provided for @join.
+  ///
+  /// In en, this message translates to:
+  /// **'JOIN'**
+  String get join;
+
   /// No description provided for @jwtPoorlyFormatted.
   ///
   /// In en, this message translates to:
@@ -303,6 +363,24 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'last name'**
   String get lastName;
+
+  /// No description provided for @leave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get leave;
+
+  /// No description provided for @leaveOrg.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave {organization}'**
+  String leaveOrg(String organization);
+
+  /// No description provided for @leaveOrganization.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave organization'**
+  String get leaveOrganization;
 
   /// No description provided for @loading.
   ///
@@ -316,10 +394,16 @@ abstract class ClerkSdkLocalizations {
   /// **'Logo'**
   String get logo;
 
+  /// No description provided for @manualInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual invitation'**
+  String get manualInvitation;
+
   /// No description provided for @missingRequirements.
   ///
   /// In en, this message translates to:
-  /// **'MISSING REQUIREMENTS'**
+  /// **'missing requirements'**
   String get missingRequirements;
 
   /// No description provided for @name.
@@ -331,19 +415,19 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @needsFirstFactor.
   ///
   /// In en, this message translates to:
-  /// **'NEEDS FIRST FACTOR'**
+  /// **'needs first factor'**
   String get needsFirstFactor;
 
   /// No description provided for @needsIdentifier.
   ///
   /// In en, this message translates to:
-  /// **'NEEDS IDENTIFIER'**
+  /// **'needs identifier'**
   String get needsIdentifier;
 
   /// No description provided for @needsSecondFactor.
   ///
   /// In en, this message translates to:
-  /// **'NEEDS SECOND FACTOR'**
+  /// **'needs second factor'**
   String get needsSecondFactor;
 
   /// No description provided for @noAssociatedCodeRetrievalMethod.
@@ -412,6 +496,18 @@ abstract class ClerkSdkLocalizations {
   /// **'or'**
   String get or;
 
+  /// No description provided for @organizationProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization profile'**
+  String get organizationProfile;
+
+  /// No description provided for @organizations.
+  ///
+  /// In en, this message translates to:
+  /// **'Organizations'**
+  String get organizations;
+
   /// No description provided for @passkey.
   ///
   /// In en, this message translates to:
@@ -453,6 +549,18 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Password requires:'**
   String get passwordRequires;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'pending'**
+  String get pending;
+
+  /// No description provided for @personalAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal account'**
+  String get personalAccount;
 
   /// No description provided for @phoneNumber.
   ///
@@ -550,6 +658,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Sign out'**
   String get signOut;
 
+  /// No description provided for @signOutIdentifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out {identifier}'**
+  String signOutIdentifier(String identifier);
+
   /// No description provided for @signOutOfAllAccounts.
   ///
   /// In en, this message translates to:
@@ -577,7 +691,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @transferable.
   ///
   /// In en, this message translates to:
-  /// **'TRANSFERABLE'**
+  /// **'transferable'**
   String get transferable;
 
   /// No description provided for @typeTypeInvalid.
@@ -589,7 +703,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @unverified.
   ///
   /// In en, this message translates to:
-  /// **'UNVERIFIED'**
+  /// **'unverified'**
   String get unverified;
 
   /// No description provided for @username.
@@ -613,8 +727,14 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @verified.
   ///
   /// In en, this message translates to:
-  /// **'VERIFIED'**
+  /// **'verified'**
   String get verified;
+
+  /// No description provided for @verifiedDomains.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified domains'**
+  String get verifiedDomains;
 
   /// No description provided for @verifyYourEmailAddress.
   ///
@@ -627,6 +747,24 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Verify your phone number'**
   String get verifyYourPhoneNumber;
+
+  /// No description provided for @viaAutomaticInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'via automatic invitation'**
+  String get viaAutomaticInvitation;
+
+  /// No description provided for @viaAutomaticSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'via automatic suggestion'**
+  String get viaAutomaticSuggestion;
+
+  /// No description provided for @viaManualInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'via manual invitation'**
+  String get viaManualInvitation;
 
   /// No description provided for @web3Wallet.
   ///

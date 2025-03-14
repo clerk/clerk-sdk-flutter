@@ -20,36 +20,17 @@ enum SessionTokenPollMode {
 /// [EnrollmentMode] Clerk object
 @JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
 enum EnrollmentMode {
+  /// automatic suggestion
+  automaticSuggestion,
+
+  /// automatic invitation
+  automaticInvitation,
+
   /// manual invitation
   manualInvitation;
 
   @override
   String toString() => _$EnrollmentModeEnumMap[this]!;
-}
-
-/// [IdentificationStrategy] Clerk object
-@JsonEnum(fieldRename: FieldRename.snake, alwaysCreate: true)
-enum IdentificationStrategy {
-  /// email address
-  emailAddress,
-
-  /// oauth apple
-  oauthApple,
-
-  /// oauth github
-  oauthGithub,
-
-  /// oauth google
-  oauthGoogle,
-
-  /// phone number
-  phoneNumber,
-
-  /// username
-  username;
-
-  @override
-  String toString() => _$IdentificationStrategyEnumMap[this]!;
 }
 
 /// [UserAttribute] Clerk object

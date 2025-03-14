@@ -1,16 +1,22 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_action_row.dart';
-import 'package:clerk_flutter/src/widgets/ui/clerk_avatar.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_page.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_row_label.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 const _borderSide = BorderSide(width: 0.5, color: ClerkColors.dawnPink);
@@ -24,14 +30,10 @@ class ClerkOrganizationList extends StatefulWidget {
   const ClerkOrganizationList({
     super.key,
     this.actions,
-    required this.initialUser,
   });
 
   /// Actions to be taken around organizations
   final List<ClerkUserAction>? actions;
-
-  /// The initial user whose orgs will be listed
-  final clerk.User initialUser;
 
   @override
   State<ClerkOrganizationList> createState() => _ClerkOrganizationListState();
@@ -39,12 +41,21 @@ class ClerkOrganizationList extends StatefulWidget {
 
 class _ClerkOrganizationListState extends State<ClerkOrganizationList>
     with ClerkTelemetryStateMixin {
-  ClerkAuthState? _authState;
-  ClerkSdkLocalizations? _localizations;
-  late clerk.User _user = widget.initialUser;
-  clerk.User? _nextUser;
+  late final ClerkAuthState _authState = ClerkAuth.of(context);
+  late final ClerkSdkLocalizations _localizations =
+      ClerkAuth.localizationsOf(context);
 
-  bool get _nextUserIsPending => _nextUser is clerk.User;
+  final _organizations = <_Organization>[];
+  final _invitations = <clerk.OrganizationInvitation>[];
+  _Organization? _currentOrg;
+  _Organization? _previousOrg;
+  _Organization? _currentlyAccepting;
+  Timer? _invitationsRefreshTimer;
+
+  static const _editArrow = Padding(
+    padding: allPadding8,
+    child: ClerkIcon(ClerkAssets.arrowRightIcon, size: 10.0),
+  );
 
   @override
   Map<String, dynamic> get telemetryPayload {
@@ -55,13 +66,11 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
   }
 
   List<ClerkUserAction> _defaultActions() {
-    _authState ??= ClerkAuth.of(context);
-    _localizations ??= ClerkAuth.localizationsOf(context);
     return [
-      if (_authState!.user?.createOrganizationEnabled == true) //
+      if (_authState.user?.createOrganizationEnabled == true) //
         ClerkUserAction(
           asset: ClerkAssets.addIcon,
-          label: _localizations!.createOrganization,
+          label: _localizations.createOrganization,
           callback: _createOrganization,
         ),
     ];
@@ -71,86 +80,164 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
     BuildContext context,
     ClerkAuthState authState,
   ) async {
-    final orgData = await CreateOrganizationPanel.show(context);
-    if (orgData case OrganizationData orgData) {
-      await authState.createOrganizationFor(
-        _user,
-        name: orgData.name,
-        slug: orgData.slug,
-        image: orgData.image,
+    await ClerkPage.show(
+      context,
+      builder: (context) => CreateOrganizationPanel(
+        onSubmit: (String name, String? slug, File? image) async {
+          await authState.safelyCall(
+            context,
+            () => authState.createOrganization(
+              name: name,
+              slug: slug,
+              logo: image,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Future<void> _editCurrentOrg() async {
+    final membership = _authState.user!.organizationMemberships!.firstWhere(
+      (o) => o.id == _currentOrg?.id,
+    );
+    await ClerkPage.show(
+      context,
+      builder: (context) => ClerkOrganizationProfile(membership: membership),
+    );
+  }
+
+  void _selectOrg([_Organization? org]) {
+    setState(() {
+      _previousOrg = _currentOrg;
+      _currentOrg = org;
+    });
+  }
+
+  bool get _shouldRefreshInvitation =>
+      _authState.config.clientRefreshPeriod.isNotZero;
+
+  Future<void> _fetchInvitations() async {
+    _invitationsRefreshTimer?.cancel();
+    if (_shouldRefreshInvitation) {
+      final invitations = await _authState.fetchOrganizationInvitations();
+      _invitations.addOrReplaceAll(invitations, by: (i) => i.id);
+      setState(() {});
+      _invitationsRefreshTimer = Timer(
+        _authState.config.clientRefreshPeriod,
+        _fetchInvitations,
       );
     }
   }
 
-  void _setNextUser(List<clerk.Session> sessions) {
-    if (_nextUserIsPending == false) {
-      final idx = sessions.indexWhere((s) => s.user == _user);
-      final user = sessions[(idx + 1) % sessions.length].user;
-      setState(() => _nextUser = user);
+  Future<void> _acceptInvitation(_Organization org) async {
+    final invitation = _invitations.firstWhereOrNull((i) => i.id == org.id);
+    if (invitation case clerk.OrganizationInvitation invitation) {
+      setState(() => _currentlyAccepting = org);
+      await _authState.acceptOrganizationInvitation(invitation);
     }
   }
 
-  void _transitionUser() {
-    if (_nextUser case clerk.User nextUser) {
-      setState(() {
-        _user = nextUser;
-        _nextUser = null;
-      });
+  _Organization _invToOrg(clerk.OrganizationInvitation inv) =>
+      _Organization.fromInvitation(inv, _localizations);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_shouldRefreshInvitation && _invitationsRefreshTimer == null) {
+      _fetchInvitations();
     }
   }
 
   @override
+  void dispose() {
+    _invitationsRefreshTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final localizations = ClerkAuth.localizationsOf(context);
     return ClerkAuthBuilder(
-      builder: (context, authState) {
-        final sessions = authState.client.sessions;
+      builder: (_, __) => emptyWidget,
+      signedInBuilder: (context, authState) {
+        final user = authState.user!;
+        final orgs = user.organizationMemberships
+                ?.map(_Organization.fromMembership)
+                .toList() ??
+            [];
+        _currentOrg = _currentOrg is _Organization
+            ? orgs.firstWhereOrNull((o) => o.id == _currentOrg?.id)
+            : null;
+        final currentIsPersonal = _currentOrg == null;
 
-        _user = authState.client.refreshUser(_user); // ensure latest version
-
-        final memberships = _user.organizationMemberships ?? [];
+        _organizations.addOrReplaceAll(orgs, by: (m) => m.orgId);
+        _organizations.sortBy((a) => a.name);
 
         final actions = widget.actions ?? _defaultActions();
+
+        /// Tidy up once all the widgets have closed
+        Future.delayed(
+          Closeable.defaultDuration,
+          () => _organizations.removeWhere(orgs.doesNotContain),
+        );
 
         return ClerkVerticalCard(
           topPortion: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ClerkPanelHeader(subtitle: localizations.selectAccount),
-              if (_nextUserIsPending) //
-                Stack(
-                  children: [
-                    _UserRow(
-                      key: Key(_user.id),
-                      user: _user,
-                      onChange: () => _setNextUser(sessions),
-                    ),
-                    if (_nextUserIsPending) //
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Closeable(
-                          closed: false,
-                          animateToFirstPosition: true,
-                          axis: ClosingAxis.horizontal,
-                          onEnd: (_) => _transitionUser(),
-                          child: _UserRow(user: _nextUser!, bordered: true),
-                        ),
-                      ),
-                  ],
-                )
-              else
-                _UserRow(
-                  key: Key(_user.id),
-                  user: _user,
-                  onChange: () => _setNextUser(sessions),
-                  onChangeEnabled: sessions.length > 1,
-                ),
-              for (final membership in memberships) //
+              ClerkPanelHeader(subtitle: _localizations.selectAccount),
+              narrowDivider,
+              if (_currentOrg case _Organization current) //
                 Closeable(
-                  key: Key(membership.id),
-                  closed: _nextUserIsPending,
-                  animateToFirstPosition: true,
-                  child: _MembershipRow(membership: membership),
+                  key: Key('current:${current.orgId}'),
+                  closed: false,
+                  startsClosed: true,
+                  child: _OrganizationRow(
+                    organization: current,
+                    onTap: _editCurrentOrg,
+                    trailing: _editArrow,
+                  ),
+                ),
+              if (_previousOrg case _Organization previous) //
+                Closeable(
+                  key: Key('previous:${previous.orgId}'),
+                  closed: true,
+                  startsClosed: false,
+                  child: _OrganizationRow(organization: previous),
+                ),
+              _OrganizationRow(
+                key: const Key('personal'),
+                organization: _Organization(
+                  name: _localizations.personalAccount,
+                  imageUrl: user.imageUrl,
+                ),
+                onTap: currentIsPersonal ? null : _selectOrg,
+              ),
+              for (final org in _organizations) //
+                Closeable(
+                  key: Key(org.id),
+                  closed: org == _currentOrg || orgs.doesNotContain(org),
+                  child: _OrganizationRow(
+                    key: Key(org.orgId),
+                    organization: org,
+                    onTap: () => _selectOrg(org),
+                  ),
+                ),
+              for (final invitation in _invitations.map(_invToOrg)) //
+                Closeable(
+                  key: Key(invitation.id),
+                  closed: invitation == _currentlyAccepting ||
+                      invitation.status != clerk.Status.pending ||
+                      orgs.contains(invitation),
+                  startsClosed: true,
+                  child: _OrganizationRow(
+                    key: Key(invitation.orgId),
+                    organization: invitation,
+                    trailing: ClerkRowLabel(
+                      label: _localizations.join,
+                      onTap: () => _acceptInvitation(invitation),
+                    ),
+                  ),
                 ),
               for (final action in actions) ...[
                 ClerkActionRow(action: action),
@@ -164,58 +251,67 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
   }
 }
 
-class _UserRow extends StatelessWidget {
-  const _UserRow({
+class _OrganizationRow extends StatelessWidget {
+  const _OrganizationRow({
     super.key,
-    required this.user,
-    this.onChange,
-    this.bordered = false,
-    this.onChangeEnabled = true,
+    required this.organization,
+    this.onTap,
+    this.trailing,
   });
 
-  final clerk.User user;
-
-  final VoidCallback? onChange;
-
-  final bool bordered;
-
-  final bool onChangeEnabled;
+  final _Organization organization;
+  final VoidCallback? onTap;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: ClerkColors.alabaster,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
       child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border(
-            left: bordered ? _borderSide : BorderSide.none,
-            bottom: _borderSide,
-            top: _borderSide,
-          ),
+        decoration: const BoxDecoration(
+          border: Border(bottom: _borderSide),
         ),
         child: Padding(
           padding: verticalPadding12 + horizontalPadding16,
           child: Row(
             children: [
-              ClerkAvatar(
-                user: user,
-                borderRadius: BorderRadius.circular(6),
+              SizedBox.square(
+                dimension: 32,
+                child: organization.imageUrl?.isNotEmpty == true
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: Image.network(
+                          organization.imageUrl!,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : defaultOrgLogo,
               ),
               horizontalMargin16,
               Expanded(
-                child: Text(
-                  user.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: ClerkTextStyle.buttonTitleDark,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      organization.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: ClerkTextStyle.buttonTitleDark,
+                    ),
+                    if (organization.roleName case String roleName) //
+                      Text(
+                        roleName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: ClerkTextStyle.buttonTitle,
+                      ),
+                  ],
                 ),
               ),
-              if (onChangeEnabled) //
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: onChange,
-                  child: const ClerkIcon(ClerkAssets.arrowRightIcon, size: 8),
-                ),
+              if (trailing case Widget trailing) //
+                trailing,
             ],
           ),
         ),
@@ -224,53 +320,51 @@ class _UserRow extends StatelessWidget {
   }
 }
 
-class _MembershipRow extends StatelessWidget {
-  const _MembershipRow({required this.membership});
+class _Organization {
+  const _Organization({
+    required this.name,
+    this.status = clerk.Status.complete,
+    this.id = '',
+    this.orgId = '',
+    this.imageUrl,
+    this.roleName,
+  });
 
-  final clerk.OrganizationMembership membership;
+  final String id;
+  final String orgId;
+  final String name;
+  final String? imageUrl;
+  final String? roleName;
+  final clerk.Status status;
 
-  clerk.Organization get org => membership.organization;
+  static _Organization fromMembership(
+    clerk.OrganizationMembership membership,
+  ) =>
+      _Organization(
+        id: membership.id,
+        orgId: membership.organization.id,
+        name: membership.organization.name,
+        roleName: membership.roleName,
+        imageUrl: membership.organization.imageUrl,
+      );
+
+  static _Organization fromInvitation(
+    clerk.OrganizationInvitation invitation,
+    ClerkSdkLocalizations localizations,
+  ) =>
+      _Organization(
+        id: invitation.id,
+        orgId: invitation.orgId,
+        name: invitation.name,
+        roleName:
+            '${invitation.roleName} (${invitation.status.localizedMessage(localizations)})',
+        imageUrl: invitation.hasImage ? invitation.imageUrl : null,
+        status: invitation.status,
+      );
 
   @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        border: Border(bottom: _borderSide),
-      ),
-      child: Padding(
-        padding: verticalPadding12 + horizontalPadding16,
-        child: Row(
-          children: [
-            SizedBox.square(
-              dimension: 32,
-              child: org.logoUrl.isNotEmpty
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: Image.network(org.logoUrl, fit: BoxFit.cover),
-                    )
-                  : defaultOrgLogo,
-            ),
-            horizontalMargin16,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  org.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: ClerkTextStyle.buttonTitleDark,
-                ),
-                Text(
-                  membership.roleName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: ClerkTextStyle.buttonTitle,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  int get hashCode => orgId.hashCode;
+
+  @override
+  operator ==(dynamic other) => other is _Organization && orgId == other.orgId;
 }

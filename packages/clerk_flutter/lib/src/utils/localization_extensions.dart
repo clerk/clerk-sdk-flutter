@@ -34,6 +34,33 @@ extension ClerkAuthErrorExtension on clerk.AuthError {
   }
 }
 
+/// An extension class to enable localization of [clerk.EnrollmentMode]
+///
+extension ClerkEnrollmentTypeExtension on clerk.EnrollmentMode {
+  /// Allow localization of a "via [clerk.EnrollmentMode]" message
+  String viaInvitationMessage(ClerkSdkLocalizations localizations) {
+    return switch (this) {
+      clerk.EnrollmentMode.manualInvitation =>
+        localizations.viaManualInvitation,
+      clerk.EnrollmentMode.automaticInvitation =>
+        localizations.viaAutomaticInvitation,
+      clerk.EnrollmentMode.automaticSuggestion =>
+        localizations.viaAutomaticSuggestion,
+    };
+  }
+
+  /// Allow localization of a [clerk.EnrollmentMode]
+  String localizedName(ClerkSdkLocalizations localizations) {
+    return switch (this) {
+      clerk.EnrollmentMode.manualInvitation => localizations.manualInvitation,
+      clerk.EnrollmentMode.automaticInvitation =>
+        localizations.automaticInvitation,
+      clerk.EnrollmentMode.automaticSuggestion =>
+        localizations.automaticSuggestion,
+    };
+  }
+}
+
 /// An extension class to enable localization of [clerk.Status]
 ///
 extension ClerkStatusLocalization on clerk.Status {
@@ -42,16 +69,17 @@ extension ClerkStatusLocalization on clerk.Status {
     return switch (this) {
       clerk.Status.abandoned => localizations.abandoned,
       clerk.Status.active => localizations.active,
-      clerk.Status.missingRequirements => localizations.missingRequirements,
-      clerk.Status.needsIdentifier => localizations.needsIdentifier,
-      clerk.Status.needsFirstFactor => localizations.needsFirstFactor,
-      clerk.Status.needsSecondFactor => localizations.needsSecondFactor,
-      clerk.Status.transferable => localizations.transferable,
-      clerk.Status.unverified => localizations.unverified,
-      clerk.Status.verified => localizations.verified,
       clerk.Status.complete => localizations.complete,
       clerk.Status.expired => localizations.expired,
       clerk.Status.failed => localizations.failed,
+      clerk.Status.missingRequirements => localizations.missingRequirements,
+      clerk.Status.needsFirstFactor => localizations.needsFirstFactor,
+      clerk.Status.needsIdentifier => localizations.needsIdentifier,
+      clerk.Status.needsSecondFactor => localizations.needsSecondFactor,
+      clerk.Status.pending => localizations.pending,
+      clerk.Status.transferable => localizations.transferable,
+      clerk.Status.unverified => localizations.unverified,
+      clerk.Status.verified => localizations.verified,
       _ => title,
     };
   }

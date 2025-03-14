@@ -40,7 +40,6 @@ class _UserAndOrgTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ClerkAuth.of(context);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -53,9 +52,9 @@ class _UserAndOrgTabs extends StatelessWidget {
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(16),
               child: Align(
                 alignment: Alignment.topCenter,
@@ -63,12 +62,10 @@ class _UserAndOrgTabs extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               child: Align(
                 alignment: Alignment.topCenter,
-                child: ClerkOrganizationList(
-                  initialUser: authState.user!,
-                ),
+                child: ClerkOrganizationList(),
               ),
             ),
           ],

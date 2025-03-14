@@ -464,28 +464,148 @@ class Auth {
 
   /// Create a new [Organization]
   ///
-  Future<void> createOrganizationFor(
-    User user, {
+  Future<void> createOrganization({
     required String name,
     String? slug,
-    File? image,
+    File? logo,
   }) async {
-    final session = client.sessionFor(user);
-    await _api.createOrganization(name, session: session).then(_housekeeping);
+    await _api.createOrganization(name).then(_housekeeping);
 
-    user = client.refreshUser(user);
-    if (user.organizationNamed(name) case Organization org) {
+    if (user?.organizationNamed(name) case Organization org) {
       if (slug?.isNotEmpty == true) {
         await _api
             .updateOrganization(org, slug: slug, session: session)
             .then(_housekeeping);
       }
-      if (image case File image) {
+      if (logo case File logo) {
         await _api
-            .updateOrganizationLogo(org, image: image, session: session)
+            .updateOrganizationLogo(org, logo: logo, session: session)
+            .then(_housekeeping);
+      }
+    }
+
+    update();
+  }
+
+  /// Update an [Organization]
+  ///
+  Future<void> updateOrganization({
+    required Organization organization,
+    String? name,
+    File? logo,
+  }) async {
+    final hasName =
+        name is String && name.isNotEmpty && name != organization.name;
+    if (hasName || logo is File) {
+      if (hasName) {
+        await _api
+            .updateOrganization(organization, name: name, session: session)
+            .then(_housekeeping);
+      }
+      if (logo case File logo) {
+        await _api
+            .updateOrganizationLogo(organization, logo: logo, session: session)
             .then(_housekeeping);
       }
       update();
+    }
+  }
+
+  /// Leave an [Organization]
+  ///
+  Future<bool> leaveOrganization({
+    required Organization organization,
+    Session? session,
+  }) async {
+    final result = await _api
+        .leaveOrganization(organization, session: session)
+        .then(_housekeeping);
+    update();
+    return result.isOkay;
+  }
+
+  static const _page = 20;
+
+  /// Get all the [Organization] invitations awaiting the user
+  ///
+  Future<List<OrganizationInvitation>> fetchOrganizationInvitations() async {
+    final invitations = <OrganizationInvitation>[];
+
+    for (int offset = 0; true; offset += _page) {
+      final response = await _api.fetchOrganizationInvitations(offset, _page);
+      if (response.response?['data'] == null) {
+        break;
+      }
+
+      final responseInvitations = response.response?['data'] as List<dynamic>;
+      invitations.addAll(
+        responseInvitations.map(OrganizationInvitation.fromJson),
+      );
+
+      if (responseInvitations.length < _page) {
+        break;
+      }
+    }
+
+    update();
+    return invitations;
+  }
+
+  /// Get all the [Organization]'s [Domain]s
+  ///
+  Future<List<OrganizationDomain>> fetchOrganizationDomains({
+    required Organization organization,
+  }) async {
+    final domains = <OrganizationDomain>[];
+
+    for (int offset = 0; true; offset += _page) {
+      final response = await _api.fetchOrganizationDomains(
+        organization,
+        offset,
+        _page,
+      );
+      if (response.response?['data'] == null) {
+        break;
+      }
+
+      final responseDomains = response.response?['data'] as List<dynamic>;
+      domains.addAll(
+        responseDomains.map(OrganizationDomain.fromJson),
+      );
+
+      if (responseDomains.length < _page) {
+        break;
+      }
+    }
+
+    update();
+    return domains;
+  }
+
+  /// Accept an invitation to join an [Organization]
+  ///
+  Future<ApiResponse> acceptOrganizationInvitation(
+    OrganizationInvitation invitation,
+  ) async {
+    return await _api
+        .acceptOrganizationInvitation(invitation)
+        .then(_housekeeping);
+  }
+
+  /// Create a new [Domain] within an [Organization]
+  ///
+  Future<void> createDomain({
+    required Organization organization,
+    required String name,
+    required EnrollmentMode mode,
+  }) async {
+    final response =
+        await _api.createDomain(organization, name).then(_housekeeping);
+    if (mode != EnrollmentMode.manualInvitation) {
+      final domainId = response.response!['id'];
+      await _api
+          .updateDomainEnrollmentMode(organization, domainId, mode)
+          .then(_housekeeping);
     }
   }
 
@@ -503,16 +623,28 @@ class Auth {
     String? firstName,
     String? lastName,
     Map<String, dynamic>? metadata,
+    File? avatar,
   }) async {
     if (user case User user) {
-      final newUser = user.copyWith(
-        username: username,
-        firstName: firstName,
-        lastName: lastName,
-        unsafeMetadata: metadata,
-      );
-      await _api.updateUser(newUser, env.config).then(_housekeeping);
-      update();
+      final needsUpdate = username != user.username ||
+          firstName != user.username ||
+          lastName != user.lastName ||
+          metadata?.isNotEmpty == true;
+      if (needsUpdate || avatar is File) {
+        if (needsUpdate) {
+          final newUser = user.copyWith(
+            username: username,
+            firstName: firstName,
+            lastName: lastName,
+            unsafeMetadata: metadata,
+          );
+          await _api.updateUser(newUser, env.config).then(_housekeeping);
+        }
+        if (avatar case File avatar) {
+          await _api.updateAvatar(avatar).then(_housekeeping);
+        }
+        update();
+      }
     }
   }
 

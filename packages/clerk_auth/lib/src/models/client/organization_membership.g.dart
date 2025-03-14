@@ -20,6 +20,7 @@ OrganizationMembership _$OrganizationMembershipFromJson(
           ? null
           : UserPublic.fromJson(
               json['public_user_data'] as Map<String, dynamic>),
+      permissions: _fromPermissionsList(json['permissions']),
     );
 
 Map<String, dynamic> _$OrganizationMembershipToJson(
@@ -38,6 +39,7 @@ Map<String, dynamic> _$OrganizationMembershipToJson(
   }
 
   writeNotNull('public_user_data', instance.publicUserData?.toJson());
+  val['permissions'] = instance.permissions.map((e) => e.toJson()).toList();
   val['updated_at'] = dateTimeToInt(instance.updatedAt);
   val['created_at'] = dateTimeToInt(instance.createdAt);
   return val;

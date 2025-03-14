@@ -69,7 +69,9 @@ class ClerkLoadingOverlay {
             _hideAfter.difference(now),
             () {
               _hideTimer = null;
-              overlay.remove(_loadingWidget!);
+              if (overlay.mounted) {
+                overlay.remove(_loadingWidget!);
+              }
             },
           );
         }

@@ -29,16 +29,20 @@
       }
     }
   },
-  "abandoned": "ABANDONED",
+  "abandoned": "abandoned",
   "actionNotTimely": "Awaited user action not completed in required timeframe",
-  "active": "ACTIVE",
+  "active": "active",
   "addAccount": "Add account",
+  "addDomain": "Add domain",
   "addEmailAddress": "Add email address",
   "addPhoneNumber": "Add phone number",
   "alreadyHaveAnAccount": "Already have an account?",
   "anUppercaseLetter": "an UPPERCASE letter",
   "and": "and",
+  "areYouSure": "Are you sure?",
   "authenticatorApp": "authenticator app",
+  "automaticInvitation": "Automatic invitation",
+  "automaticSuggestion": "Automatic suggestion",
   "backupCode": "backup code",
   "cancel": "Cancel",
   "clickOnTheLinkThatSBeenSentToAndThenCheckBackHere": "Click on the link that‘s been sent to {identifier} and then check back here",
@@ -49,13 +53,17 @@
       }
     }
   },
-  "complete": "COMPLETE",
+  "complete": "complete",
   "connectAccount": "Connect account",
   "connectedAccounts": "Connected accounts",
   "cont": "Continue",
   "createOrganization": "Create organization",
+  "domainName": "Domain name",
   "dontHaveAnAccount": "Don’t have an account?",
+  "edit": "edit",
   "emailAddress": "email address",
+  "enrollment": "Enrollment",
+  "enrollmentMode": "Enrollment mode:",
   "enterCodeSentTo": "Enter code sent to {identifier}",
   "@enterCodeSentTo": {
     "placeholders": {
@@ -73,9 +81,10 @@
     }
   },
   "enterTheCodeSentToYou": "Enter the code sent to you",
-  "expired": "EXPIRED",
-  "failed": "FAILED",
+  "expired": "expired",
+  "failed": "failed",
   "firstName": "first name",
+  "generalDetails": "General details",
   "invalidEmailAddress": "Invalid email address: {address}",
   "@invalidEmailAddress": {
     "placeholders": {
@@ -92,6 +101,7 @@
       }
     }
   },
+  "join": "JOIN",
   "jwtPoorlyFormatted": "JWT poorly formatted: {arg}",
   "@jwtPoorlyFormatted": {
     "placeholders": {
@@ -101,13 +111,24 @@
     }
   },
   "lastName": "last name",
+  "leave": "Leave",
+  "leaveOrg": "Leave {organization}",
+  "@leaveOrg": {
+    "placeholders": {
+      "organization": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveOrganization": "Leave organization",
   "loading": "Loading…",
   "logo": "Logo",
-  "missingRequirements": "MISSING REQUIREMENTS",
+  "manualInvitation": "Manual invitation",
+  "missingRequirements": "missing requirements",
   "name": "Name",
-  "needsFirstFactor": "NEEDS FIRST FACTOR",
-  "needsIdentifier": "NEEDS IDENTIFIER",
-  "needsSecondFactor": "NEEDS SECOND FACTOR",
+  "needsFirstFactor": "needs first factor",
+  "needsIdentifier": "needs identifier",
+  "needsSecondFactor": "needs second factor",
   "noAssociatedCodeRetrievalMethod": "No code retrieval method associated with {arg}",
   "@noAssociatedCodeRetrievalMethod": {
     "placeholders": {
@@ -168,6 +189,8 @@
   "ok": "OK",
   "optional": "(optional)",
   "or": "or",
+  "organizationProfile": "Organization profile",
+  "organizations": "Organizations",
   "passkey": "passkey",
   "password": "Password",
   "passwordAndPasswordConfirmationMustMatch": "Password and password confirmation must match",
@@ -175,6 +198,8 @@
   "passwordMatchError": "Password and password confirmation must match",
   "passwordMustBeSupplied": "A password must be supplied",
   "passwordRequires": "Password requires:",
+  "pending": "pending",
+  "personalAccount": "Personal account",
   "phoneNumber": "phone number",
   "pleaseChooseAnAccountToConnect": "Please choose an account to connect",
   "primary": "PRIMARY",
@@ -205,6 +230,14 @@
     }
   },
   "signOut": "Sign out",
+  "signOutIdentifier": "Sign out {identifier}",
+  "@signOutIdentifier": {
+    "placeholders": {
+      "identifier": {
+        "type": "String"
+      }
+    }
+  },
   "signOutOfAllAccounts": "Sign out of all accounts",
   "signUp": "Sign up",
   "signUpTo": "Sign up to {name}",
@@ -216,7 +249,7 @@
     }
   },
   "slugUrl": "Slug URL",
-  "transferable": "TRANSFERABLE",
+  "transferable": "transferable",
   "typeTypeInvalid": "Type '{type}' is invalid",
   "@typeTypeInvalid": {
     "placeholders": {
@@ -225,13 +258,17 @@
       }
     }
   },
-  "unverified": "UNVERIFIED",
+  "unverified": "unverified",
   "username": "username",
   "verificationEmailAddress": "Email address verification",
   "verificationPhoneNumber": "Phone number verification",
-  "verified": "VERIFIED",
+  "verified": "verified",
+  "verifiedDomains": "Verified domains",
   "verifyYourEmailAddress": "Verify your email address",
   "verifyYourPhoneNumber": "Verify your phone number",
+  "viaAutomaticInvitation": "via automatic invitation",
+  "viaAutomaticSuggestion": "via automatic suggestion",
+  "viaManualInvitation": "via manual invitation",
   "web3Wallet": "web3 wallet",
   "welcomeBackPleaseSignInToContinue": "Welcome back! Please sign in to continue",
   "welcomePleaseFillInTheDetailsToGetStarted": "Welcome! Please fill in the details to get started",

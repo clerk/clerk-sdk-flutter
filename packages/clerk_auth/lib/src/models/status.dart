@@ -55,6 +55,9 @@ class Status {
   /// failed
   static const failed = Status._('failed');
 
+  /// pending
+  static const pending = Status._('pending');
+
   static final _values = <String, Status>{
     unknown.name: unknown,
     abandoned.name: abandoned,
@@ -69,6 +72,7 @@ class Status {
     complete.name: complete,
     expired.name: expired,
     failed.name: failed,
+    pending.name: pending,
   };
 
   /// The [values] of the [Status]es

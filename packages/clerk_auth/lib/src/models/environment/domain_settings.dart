@@ -4,14 +4,14 @@ import 'package:meta/meta.dart';
 
 import '../enums.dart';
 
-part 'organization_domains.g.dart';
+part 'domain_settings.g.dart';
 
-/// [OrganizationDomains] Clerk object
+/// [DomainSettings] Clerk object
 @immutable
 @JsonSerializable()
-class OrganizationDomains with InformativeToStringMixin {
+class DomainSettings with InformativeToStringMixin {
   /// Constructor
-  const OrganizationDomains({
+  const DomainSettings({
     this.defaultRole = '',
     this.enrollmentModes = const [],
     this.isEnabled = false,
@@ -23,18 +23,18 @@ class OrganizationDomains with InformativeToStringMixin {
   /// enrollment modes
   final List<EnrollmentMode> enrollmentModes;
 
-  /// empty [OrganizationDomains]
-  static const empty = OrganizationDomains();
+  /// empty [DomainSettings]
+  static const empty = DomainSettings();
 
   /// is enabled?
   @JsonKey(name: 'enabled')
   final bool isEnabled;
 
   /// fromJson
-  static OrganizationDomains fromJson(Map<String, dynamic> json) =>
-      _$OrganizationDomainsFromJson(json);
+  static DomainSettings fromJson(Map<String, dynamic> json) =>
+      _$DomainSettingsFromJson(json);
 
   /// toJson
   @override
-  Map<String, dynamic> toJson() => _$OrganizationDomainsToJson(this);
+  Map<String, dynamic> toJson() => _$DomainSettingsToJson(this);
 }

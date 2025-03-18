@@ -1,3 +1,8 @@
+## 0.0.8-beta
+
+* feat: add generated clerk_backend_api package [#82]
+* feat: implement organizations [#150] 
+
 ## 0.0.7-dev
 
 * fix: rationalise clerk auth exports [#105]

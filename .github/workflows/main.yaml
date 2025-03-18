@@ -36,6 +36,10 @@ jobs:
         run: dart format --output=none --set-exit-if-changed .
         working-directory: packages/clerk_auth
 
+      - name: Verify formatting of clerk_backend_api
+        run: dart format --output=none --set-exit-if-changed .
+        working-directory: packages/clerk_backend_api
+
       - name: Verify formatting of clerk_flutter
         run: dart format --output=none --set-exit-if-changed .
         working-directory: packages/clerk_flutter
@@ -43,6 +47,10 @@ jobs:
       - name: Analyze clerk_auth
         run: dart analyze
         working-directory: packages/clerk_auth
+
+      - name: Analyze clerk_backend_api
+        run: dart analyze
+        working-directory: packages/clerk_backend_api
 
       - name: Analyze clerk_flutter
         run: flutter analyze
@@ -57,6 +65,10 @@ jobs:
       - name: Run tests in clerk_auth
         run: dart test --file-reporter=json:../../reports/clerk_auth.json
         working-directory: packages/clerk_auth
+
+      - name: Run tests in clerk_backend_api
+        run: dart test --file-reporter=json:../../reports/clerk_backend_api.json
+        working-directory: packages/clerk_backend_api
 
       - name: Run tests in clerk_flutter
         run: flutter test --file-reporter=json:../../reports/clerk_flutter.json

@@ -16,4 +16,7 @@ sealed class ClerkConstants {
 
   /// The url used to catch oauth redirects
   static const oauthRedirect = 'com.clerk.flutter://callback';
+
+  /// The user agent to use for oauth
+  static const userAgent = 'ClerkFlutterSDK/$flutterSdkVersion';
 }

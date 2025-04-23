@@ -97,6 +97,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           routeSettings: const RouteSettings(name: _kSsoRouteName),
           builder: (BuildContext context) {
             return _SsoWebViewOverlay(
+              strategy: strategy,
               url: url,
               oauthRedirect: clerk.ClerkConstants.oauthRedirect,
               onError: (error) => _onError(error, onError),
@@ -138,6 +139,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
         useRootNavigator: true,
         routeSettings: const RouteSettings(name: _kSsoRouteName),
         builder: (context) => _SsoWebViewOverlay(
+          strategy: strategy,
           url: url,
           oauthRedirect: clerk.ClerkConstants.oauthRedirect,
           onError: (error) => _onError(error, onError),
@@ -265,11 +267,13 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
 class _SsoWebViewOverlay extends StatefulWidget {
   const _SsoWebViewOverlay({
+    required this.strategy,
     required this.url,
     required this.oauthRedirect,
     required this.onError,
   });
 
+  final clerk.Strategy strategy;
   final String url;
   final String oauthRedirect;
   final ClerkErrorCallback onError;
@@ -287,9 +291,6 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
     super.initState();
 
     controller = WebViewController()
-      ..setUserAgent(
-        'Clerk Flutter SDK v${clerk.ClerkConstants.flutterSdkVersion}',
-      )
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.white)
       ..setNavigationDelegate(
@@ -319,7 +320,23 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
           },
         ),
       );
-    controller.loadRequest(Uri.parse(widget.url));
+
+    // For google authentication we use a custom user-agent
+    if (widget.strategy.provider == clerk.Strategy.oauthGoogle.provider) {
+      controller.setUserAgent(clerk.ClerkConstants.userAgent);
+      controller.loadRequest(Uri.parse(widget.url));
+    } else {
+      controller.getUserAgent().then((String? userAgent) {
+        if (mounted) {
+          if (userAgent != null) {
+            controller.setUserAgent(
+              '$userAgent ${clerk.ClerkConstants.userAgent}',
+            );
+          }
+          controller.loadRequest(Uri.parse(widget.url));
+        }
+      });
+    }
   }
 
   @override

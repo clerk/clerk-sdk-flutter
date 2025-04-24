@@ -17,7 +17,7 @@ typedef ClerkSdkLocalizationsCollection = Map<String, ClerkSdkLocalizations>;
 @immutable
 class ClerkAuthConfig extends clerk.AuthConfig {
   /// Construct a [ClerkAuthConfig]
-  const ClerkAuthConfig({
+  ClerkAuthConfig({
     required super.publishableKey,
     super.sessionTokenPollMode,
     super.isTestMode,
@@ -25,22 +25,33 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     super.telemetryPeriod,
     super.clientRefreshPeriod,
     ClerkSdkLocalizationsCollection? localizations,
+    ClerkSdkLocalizations? fallbackLocalization,
     this.loading = defaultLoadingWidget,
-  }) : _localizations = localizations;
+  })  : localizations = localizations ?? {'en': _englishLocalizations},
+        fallbackLocalization = fallbackLocalization ?? _englishLocalizations;
 
-  static ClerkSdkLocalizationsCollection get _defaultLocalizations =>
-      {'en': ClerkSdkLocalizationsEn()};
+  static final _englishLocalizations = ClerkSdkLocalizationsEn();
 
   /// [localizations] for translation within the UI
-  ClerkSdkLocalizationsCollection get localizations =>
-      _localizations ?? _defaultLocalizations;
-  final ClerkSdkLocalizationsCollection? _localizations;
+  final ClerkSdkLocalizationsCollection localizations;
+
+  /// [fallbackLocalization] for when a locale cannot be found
+  final ClerkSdkLocalizations fallbackLocalization;
 
   /// The [Widget] to display while loading data, override with null
   /// to disable the loading overlay or use your own widget.
   final Widget? loading;
 
+  /// Retrieves the localization for the specified local falling back
+  /// to the [fallbackLocalization]
+  ClerkSdkLocalizations localizationsForLocale(Locale locale) {
+    return localizations[locale.toLanguageTag()] ?? // full tag e.g. en_GB
+        localizations[locale.languageCode] ?? // just the language e.g. en
+        fallbackLocalization;
+  }
+
   @override
-  clerk.LocalesLookup get localesLookup =>
-      () => localizations.keys.toList(growable: false);
+  clerk.LocalesLookup get localesLookup {
+    return () => {...localizations.keys, 'en'}.toList(growable: false);
+  }
 }

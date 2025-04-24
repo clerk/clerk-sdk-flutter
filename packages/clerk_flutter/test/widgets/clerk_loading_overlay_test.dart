@@ -23,7 +23,7 @@ void expectThat(bool result, {String? reason}) =>
 
 void main() {
   group('ClerkLoadingOverlay:', skip: true, () {
-    const config = ClerkAuthConfig(publishableKey: 'NOT A KEY');
+    final config = ClerkAuthConfig(publishableKey: 'NOT A KEY');
     final overlayEntry = ClerkLoadingOverlay(config);
 
     test('can show and hide a loading overlay in a timely fashion', () async {

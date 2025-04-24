@@ -56,10 +56,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   /// Localizations for the current [ClerkAuthState] and [Locale]
   ClerkSdkLocalizations localizationsOf(BuildContext context) {
     final locale = View.of(context).platformDispatcher.locale;
-    final localizations = config.localizations[locale.toLanguageTag()] ??
-        config.localizations[locale.languageCode];
-    assert(localizations != null, 'No localizations found for $locale');
-    return localizations!;
+    return config.localizationsForLocale(locale);
   }
 
   final ClerkLoadingOverlay _loadingOverlay;

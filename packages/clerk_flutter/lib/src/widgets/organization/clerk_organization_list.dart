@@ -366,5 +366,5 @@ class _Organization {
   int get hashCode => orgId.hashCode;
 
   @override
-  operator ==(dynamic other) => other is _Organization && orgId == other.orgId;
+  operator ==(Object other) => other is _Organization && orgId == other.orgId;
 }

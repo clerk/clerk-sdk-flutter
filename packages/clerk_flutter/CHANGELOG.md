@@ -1,3 +1,8 @@
+## 0.0.9-beta
+
+* feat: support fall-back localization default English [#163]
+* fix: update user agent to support desktop/mobile modes [#166]
+
 ## 0.0.8-beta
 
 * feat: add generated clerk_backend_api package [#82]

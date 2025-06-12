@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
@@ -12,6 +11,7 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_page.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/platform_styled_dialog.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:clerk_flutter/src/widgets/user/add_account_panel.dart';
@@ -123,14 +123,17 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
     ClerkAuthState authState,
   ) async {
     final user = authState.user!;
-    final result = await showOkCancelAlertDialog(
+    final result = await PlatformStyledDialog.show(
       context: context,
       title: _localizations.signOutIdentifier(user.name),
-      message: _localizations.areYouSure,
-      okLabel: _localizations.ok,
-      cancelLabel: _localizations.cancel,
+      content: _localizations.areYouSure,
+      defaultAction: DialogChoice.ok,
+      actions: {
+        DialogChoice.cancel: _localizations.cancel,
+        DialogChoice.ok: _localizations.ok,
+      },
     );
-    if (result == OkCancelResult.ok && context.mounted) {
+    if (result == DialogChoice.ok && context.mounted) {
       if (authState.client.sessions.length == 1) {
         await authState.safelyCall(context, () => authState.signOut());
       } else {
@@ -143,14 +146,17 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
   }
 
   Future<void> _signOutOfAllAccounts() async {
-    final result = await showOkCancelAlertDialog(
+    final result = await PlatformStyledDialog.show(
       context: context,
       title: _localizations.signOutOfAllAccounts,
-      message: _localizations.areYouSure,
-      okLabel: _localizations.ok,
-      cancelLabel: _localizations.cancel,
+      content: _localizations.areYouSure,
+      defaultAction: DialogChoice.cancel,
+      actions: {
+        DialogChoice.cancel: _localizations.cancel,
+        DialogChoice.ok: _localizations.ok,
+      },
     );
-    if (result == OkCancelResult.ok && context.mounted) {
+    if (result == DialogChoice.ok && context.mounted) {
       await _authState.safelyCall(context, () => _authState.signOut());
     }
   }

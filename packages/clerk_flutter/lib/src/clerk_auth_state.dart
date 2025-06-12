@@ -8,6 +8,7 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 /// Function type used to report [clerk.AuthError]s
@@ -38,14 +39,16 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   }) async {
     final authState = ClerkAuthState._(
       config,
-      persistor ??
-          await clerk.DefaultPersistor.create(
-            storageDirectory: await getApplicationDocumentsDirectory(),
-          ),
+      persistor ?? await _defaultPersistor,
       httpService,
     );
     await authState.initialize();
     return authState;
+  }
+
+  static Future<clerk.Persistor> get _defaultPersistor async {
+    final dir = await getApplicationDocumentsDirectory();
+    return await clerk.DefaultPersistor.create(storageDirectory: dir);
   }
 
   /// The [ClerkAuthConfig] object
@@ -78,18 +81,22 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     BuildContext context,
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
+    String redirect = clerk.ClerkConstants.oauthRedirect,
   }) async {
     await safelyCall(
       context,
-      () => oauthConnect(strategy: strategy),
+      () => oauthConnect(strategy: strategy, redirect: redirect),
       onError: onError,
     );
     final accounts = client.user?.externalAccounts?.toSet() ?? {};
     final acc = accounts.firstWhereOrNull(
       (m) => m.verification.strategy == strategy && m.isVerified == false,
     );
-    if (acc?.verification.externalVerificationRedirectUrl case String url) {
-      if (context.mounted) {
+    final url = acc?.verification.externalVerificationRedirectUrl;
+    if (url != null && context.mounted) {
+      final uri = Uri.parse(url);
+      if (redirect == clerk.ClerkConstants.oauthRedirect) {
+        // The default redirect: we handle this in-app
         final responseUrl = await showDialog<String>(
           context: context,
           useSafeArea: false,
@@ -98,7 +105,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           builder: (BuildContext context) {
             return _SsoWebViewOverlay(
               strategy: strategy,
-              url: url,
+              uri: uri,
               oauthRedirect: clerk.ClerkConstants.oauthRedirect,
               onError: (error) => _onError(error, onError),
             );
@@ -115,6 +122,10 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
             );
           }
         }
+      } else {
+        // a bespoke redirect: we handle externally, and assume a deep link
+        // will complete sign-in
+        await launchUrl(uri);
       }
     }
   }
@@ -124,49 +135,79 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     BuildContext context,
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
+    String redirect = clerk.ClerkConstants.oauthRedirect,
   }) async {
     await safelyCall(
       context,
-      () => oauthSignIn(strategy: strategy),
+      () => oauthSignIn(strategy: strategy, redirect: redirect),
       onError: onError,
     );
     final url =
         client.signIn?.firstFactorVerification?.externalVerificationRedirectUrl;
     if (url != null && context.mounted) {
-      final redirectUrl = await showDialog<String>(
-        context: context,
-        useSafeArea: false,
-        useRootNavigator: true,
-        routeSettings: const RouteSettings(name: _kSsoRouteName),
-        builder: (context) => _SsoWebViewOverlay(
-          strategy: strategy,
-          url: url,
-          oauthRedirect: clerk.ClerkConstants.oauthRedirect,
-          onError: (error) => _onError(error, onError),
-        ),
-      );
-      if (redirectUrl != null && context.mounted) {
-        final uri = Uri.parse(redirectUrl);
-        final token = uri.queryParameters[_kRotatingTokenNonce];
-        if (token case String token) {
+      final uri = Uri.parse(url);
+      if (redirect == clerk.ClerkConstants.oauthRedirect) {
+        // The default redirect: we handle this in-app
+        final redirectUrl = await showDialog<String>(
+          context: context,
+          useSafeArea: false,
+          useRootNavigator: true,
+          routeSettings: const RouteSettings(name: _kSsoRouteName),
+          builder: (context) => _SsoWebViewOverlay(
+            strategy: strategy,
+            uri: uri,
+            oauthRedirect: clerk.ClerkConstants.oauthRedirect,
+            onError: (error) => _onError(error, onError),
+          ),
+        );
+        if (redirectUrl != null && context.mounted) {
+          final uri = Uri.parse(redirectUrl);
           await safelyCall(
             context,
-            () => attemptSignIn(strategy: strategy, token: token),
+            () => parseDeepUri(strategy: strategy, uri: uri),
             onError: onError,
           );
-        } else {
-          await refreshClient();
           if (context.mounted) {
-            await safelyCall(context, () => transfer(), onError: onError);
+            Navigator.of(context).popUntil(
+              (route) => route.settings.name != _kSsoRouteName,
+            );
           }
         }
-        if (context.mounted) {
-          Navigator.of(context).popUntil(
-            (route) => route.settings.name != _kSsoRouteName,
-          );
-        }
+      } else {
+        // a bespoke redirect: we handle externally, and assume a deep link
+        // will complete sign-in
+        await launchUrl(uri);
       }
     }
+  }
+
+  /// Parse a [Uri] played into the app by a deep link, and complete
+  /// sign in accordingly. Returns [true] if parsing was successful,
+  /// else [false]
+  ///
+  /// If no [clerk.Strategy] is provided, it is assumed that the [uri.path]
+  /// (minus the leading slash) will be the name of the strategy to use
+  Future<bool> parseDeepUri({
+    required Uri uri,
+    clerk.Strategy strategy = clerk.Strategy.unknown,
+  }) async {
+    final token = uri.queryParameters[_kRotatingTokenNonce];
+    if (token case String token) {
+      if (strategy.isUnknown && uri.path.startsWith('/')) {
+        final strategyName = uri.path.substring(1);
+        strategy = clerk.Strategy.fromJson(strategyName);
+      }
+      if (strategy.isUnknown) {
+        return false;
+      }
+
+      await attemptSignIn(strategy: strategy, token: token);
+    } else {
+      await refreshClient();
+      await transfer();
+    }
+
+    return true;
   }
 
   /// Convenience method to make an auth call to the backend via ClerkAuth
@@ -268,13 +309,13 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 class _SsoWebViewOverlay extends StatefulWidget {
   const _SsoWebViewOverlay({
     required this.strategy,
-    required this.url,
+    required this.uri,
     required this.oauthRedirect,
     required this.onError,
   });
 
   final clerk.Strategy strategy;
-  final String url;
+  final Uri uri;
   final String oauthRedirect;
   final ClerkErrorCallback onError;
 
@@ -324,7 +365,7 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
     // For google authentication we use a custom user-agent
     if (widget.strategy.provider == clerk.Strategy.oauthGoogle.provider) {
       controller.setUserAgent(clerk.ClerkConstants.userAgent);
-      controller.loadRequest(Uri.parse(widget.url));
+      controller.loadRequest(widget.uri);
     } else {
       controller.getUserAgent().then((String? userAgent) {
         if (mounted) {
@@ -333,7 +374,7 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
               '$userAgent ${clerk.ClerkConstants.userAgent}',
             );
           }
-          controller.loadRequest(Uri.parse(widget.url));
+          controller.loadRequest(widget.uri);
         }
       });
     }

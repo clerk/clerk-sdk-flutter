@@ -27,16 +27,16 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     ClerkSdkLocalizationsCollection? localizations,
     ClerkSdkLocalizations? fallbackLocalization,
     this.loading = defaultLoadingWidget,
-  })  : localizations = localizations ?? {'en': _englishLocalizations},
-        fallbackLocalization = fallbackLocalization ?? _englishLocalizations;
+  })  : _localizations = localizations ?? {'en': _englishLocalizations},
+        _fallbackLocalization = fallbackLocalization ?? _englishLocalizations;
 
   static final _englishLocalizations = ClerkSdkLocalizationsEn();
 
-  /// [localizations] for translation within the UI
-  final ClerkSdkLocalizationsCollection localizations;
+  /// [ClerkSdkLocalizationsCollection] for translation within the UI
+  final ClerkSdkLocalizationsCollection _localizations;
 
-  /// [fallbackLocalization] for when a locale cannot be found
-  final ClerkSdkLocalizations fallbackLocalization;
+  /// [ClerkSdkLocalizations] for when a locale cannot be found
+  final ClerkSdkLocalizations _fallbackLocalization;
 
   /// The [Widget] to display while loading data, override with null
   /// to disable the loading overlay or use your own widget.
@@ -45,13 +45,13 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   /// Retrieves the localization for the specified local falling back
   /// to the [fallbackLocalization]
   ClerkSdkLocalizations localizationsForLocale(Locale locale) {
-    return localizations[locale.toLanguageTag()] ?? // full tag e.g. en_GB
-        localizations[locale.languageCode] ?? // just the language e.g. en
-        fallbackLocalization;
+    return _localizations[locale.toLanguageTag()] ?? // full tag e.g. en_GB
+        _localizations[locale.languageCode] ?? // just the language e.g. en
+        _fallbackLocalization;
   }
 
   @override
   clerk.LocalesLookup get localesLookup {
-    return () => {...localizations.keys, 'en'}.toList(growable: false);
+    return () => {..._localizations.keys, 'en'}.toList(growable: false);
   }
 }

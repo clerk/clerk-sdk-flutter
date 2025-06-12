@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
@@ -15,6 +14,7 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/editable_profile_data.dart';
+import 'package:clerk_flutter/src/widgets/ui/platform_styled_dialog.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
@@ -51,15 +51,18 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
 
   Future<void> _leaveOrganization(clerk.Organization org) async {
     final authState = ClerkAuth.of(context);
-    final localizations = ClerkAuth.localizationsOf(context);
-    final result = await showOkCancelAlertDialog(
+    final result = await PlatformStyledDialog.show(
       context: context,
-      title: localizations.leaveOrg(org.name),
-      message: localizations.areYouSure,
-      okLabel: localizations.ok,
-      cancelLabel: localizations.cancel,
+      title: _localizations.leaveOrg(org.name),
+      content: _localizations.areYouSure,
+      defaultAction: DialogChoice.ok,
+      actions: {
+        DialogChoice.cancel: _localizations.cancel,
+        DialogChoice.ok: _localizations.ok,
+      },
     );
-    if (result == OkCancelResult.ok && context.mounted) {
+
+    if (result == DialogChoice.ok && context.mounted) {
       final hasLeftSuccessfully = await authState.safelyCall(
         context,
         () => authState.leaveOrganization(organization: org),

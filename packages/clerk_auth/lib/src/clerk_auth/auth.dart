@@ -7,7 +7,6 @@ import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
-import 'package:clerk_auth/src/clerk_constants.dart';
 import 'package:clerk_auth/src/models/api/api_response.dart';
 import 'package:clerk_auth/src/models/models.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
@@ -207,12 +206,12 @@ class Auth {
 
   /// Prepare for sign in via an oAuth provider
   ///
-  Future<void> oauthSignIn({required Strategy strategy}) async {
+  Future<void> oauthSignIn({
+    required Strategy strategy,
+    required String redirect,
+  }) async {
     await _api
-        .createSignIn(
-          strategy: strategy,
-          redirectUrl: ClerkConstants.oauthRedirect,
-        )
+        .createSignIn(strategy: strategy, redirectUrl: redirect)
         .then(_housekeeping);
     if (client.signIn case SignIn signIn) {
       await _api
@@ -220,7 +219,7 @@ class Auth {
             signIn,
             stage: Stage.first,
             strategy: strategy,
-            redirectUrl: ClerkConstants.oauthRedirect,
+            redirectUrl: redirect,
           )
           .then(_housekeeping);
     }
@@ -229,11 +228,14 @@ class Auth {
 
   /// Prepare to connect an account via an oAuth provider
   ///
-  Future<void> oauthConnect({required Strategy strategy}) async {
+  Future<void> oauthConnect({
+    required Strategy strategy,
+    required String redirect,
+  }) async {
     await _api
         .addExternalAccount(
           strategy: strategy,
-          redirectUrl: ClerkConstants.oauthRedirect,
+          redirectUrl: redirect,
         )
         .then(_housekeeping);
     update();

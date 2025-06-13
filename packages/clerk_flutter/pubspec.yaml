@@ -7,6 +7,7 @@ issue_tracker: https://github.com/clerk/clerk-sdk-flutter/labels/clerk_flutter
 topics:
   - authentication
 
+
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.10.0'
@@ -24,7 +25,7 @@ dependencies:
   intl: '>=0.18.0 <1.0.0'
   path_provider: ^2.1.2
   phone_input: ^1.0.0
-  url_launcher: ^6.1.14
+  url_launcher: 6.1.14
   webview_flutter: ^4.4.3
 
 dev_dependencies:

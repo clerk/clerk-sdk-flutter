@@ -93,7 +93,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       (m) => m.verification.strategy == strategy && m.isVerified == false,
     );
     final url = acc?.verification.externalVerificationRedirectUrl;
-    if (url != null && context.mounted) {
+    if (url is String && context.mounted) {
       final uri = Uri.parse(url);
       if (redirect == clerk.ClerkConstants.oauthRedirect) {
         // The default redirect: we handle this in-app
@@ -125,7 +125,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       } else {
         // a bespoke redirect: we handle externally, and assume a deep link
         // will complete sign-in
-        await launchUrl(uri);
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
       }
     }
   }
@@ -144,7 +144,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     );
     final url =
         client.signIn?.firstFactorVerification?.externalVerificationRedirectUrl;
-    if (url != null && context.mounted) {
+    if (url is String && context.mounted) {
       final uri = Uri.parse(url);
       if (redirect == clerk.ClerkConstants.oauthRedirect) {
         // The default redirect: we handle this in-app
@@ -164,7 +164,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           final uri = Uri.parse(redirectUrl);
           await safelyCall(
             context,
-            () => parseDeepUri(strategy: strategy, uri: uri),
+            () => parseDeepLink(ClerkDeepLink(strategy: strategy, uri: uri)),
             onError: onError,
           );
           if (context.mounted) {
@@ -176,7 +176,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       } else {
         // a bespoke redirect: we handle externally, and assume a deep link
         // will complete sign-in
-        await launchUrl(uri);
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
       }
     }
   }
@@ -185,18 +185,16 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   /// sign in accordingly. Returns [true] if parsing was successful,
   /// else [false]
   ///
-  /// If no [clerk.Strategy] is provided, it is assumed that the [uri.path]
-  /// (minus the leading slash) will be the name of the strategy to use
-  Future<bool> parseDeepUri({
-    required Uri uri,
-    clerk.Strategy strategy = clerk.Strategy.unknown,
-  }) async {
+  /// If the link contains no known [clerk.Strategy], it is assumed that the
+  /// final element of the [uri.path] will be the name of the strategy to use
+  Future<bool> parseDeepLink(ClerkDeepLink link) async {
+    final uri = link.uri;
     final token = uri.queryParameters[_kRotatingTokenNonce];
     if (token case String token) {
-      if (strategy.isUnknown && uri.path.startsWith('/')) {
-        final strategyName = uri.path.substring(1);
-        strategy = clerk.Strategy.fromJson(strategyName);
-      }
+      final strategy = switch (link.strategy) {
+        clerk.Strategy strategy when strategy.isUnknown == false => strategy,
+        _ => clerk.Strategy.fromJson(uri.pathSegments.last),
+      };
       if (strategy.isUnknown) {
         return false;
       }

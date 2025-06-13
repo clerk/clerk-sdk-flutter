@@ -2,8 +2,6 @@
 
 import 'clerk_sdk_localizations.dart';
 
-// ignore_for_file: type=lint
-
 /// The translations for English (`en`).
 class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   ClerkSdkLocalizationsEn([String locale = 'en']) : super(locale);
@@ -354,6 +352,12 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get slugUrl => 'Slug URL';
+
+  @override
+  String get ssoInApp => 'SSO in-app:';
+
+  @override
+  String get ssoViaDeepLink => 'SSO via external browser/deep link:';
 
   @override
   String get transferable => 'transferable';

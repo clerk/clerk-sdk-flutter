@@ -53,6 +53,7 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
           ClerkAuthBuilder(
             builder: (context, authState) {
               final env = authState.env;
+              final localizations = authState.localizationsOf(context);
               return Padding(
                 padding: horizontalPadding32,
                 child: Column(
@@ -60,9 +61,28 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
                     if (env.hasOauthStrategies) //
                       Closeable(
                         closed: authState.isSigningIn || authState.isSigningUp,
-                        child: ClerkSSOPanel(
-                          onStrategyChosen: (strategy) =>
-                              authState.ssoSignIn(context, strategy),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(localizations.ssoInApp),
+                            ClerkSSOPanel(
+                              onStrategyChosen: (strategy) =>
+                                  authState.ssoSignIn(context, strategy),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(localizations.ssoViaDeepLink),
+                            ClerkSSOPanel(
+                              onStrategyChosen: (strategy) {
+                                final redirect =
+                                    'clerk://example.com/sign_in/$strategy';
+                                authState.ssoSignIn(
+                                  context,
+                                  strategy,
+                                  redirect: redirect,
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     if (env.hasIdentificationStrategies) ...[

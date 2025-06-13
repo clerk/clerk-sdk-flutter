@@ -15,6 +15,7 @@ dependencies:
   clerk_auth:
     path: ../../clerk_auth/
   app_links: ^3.5.1
+  url_launcher_ios: 6.2.0
 
 dev_dependencies:
   flutter_lints: ^3.0.1

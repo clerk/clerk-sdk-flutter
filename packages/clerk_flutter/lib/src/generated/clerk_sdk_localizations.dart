@@ -8,8 +8,6 @@ import 'package:intl/intl.dart' as intl;
 
 import 'clerk_sdk_localizations_en.dart';
 
-// ignore_for_file: type=lint
-
 /// Callers can lookup localized strings with an instance of ClerkSdkLocalizations
 /// returned by `ClerkSdkLocalizations.of(context)`.
 ///
@@ -689,6 +687,18 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Slug URL'**
   String get slugUrl;
+
+  /// No description provided for @ssoInApp.
+  ///
+  /// In en, this message translates to:
+  /// **'SSO in-app:'**
+  String get ssoInApp;
+
+  /// No description provided for @ssoViaDeepLink.
+  ///
+  /// In en, this message translates to:
+  /// **'SSO via external browser/deep link:'**
+  String get ssoViaDeepLink;
 
   /// No description provided for @transferable.
   ///

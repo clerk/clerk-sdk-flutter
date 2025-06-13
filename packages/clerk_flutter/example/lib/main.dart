@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
+import 'package:app_links/app_links.dart';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter_example/pages/clerk_sign_in_example.dart';
@@ -40,10 +41,25 @@ class ExampleApp extends StatelessWidget {
   /// Publishable Key
   final String publishableKey;
 
+  /// This function maps a [Uri] into a [ClerkDeepLink], which is essentially
+  /// just a container for the [Uri]. The [ClerkDeepLink] can also
+  /// contain a [clerk.Strategy], used in place of the strategy that the Clerk
+  /// SDK would otherwise attempt to itself infer from the [Uri]
+  ClerkDeepLink? createClerkLink(Uri uri) {
+    if (uri.pathSegments.first == 'sign_in') {
+      return ClerkDeepLink(uri: uri);
+    }
+
+    // If the host app deems the deep link to be not relevant to the Clerk SDK,
+    // we return [null] instead of a [ClerkDeepLink] to inhibit its processing.
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClerkAuth(
       config: ClerkAuthConfig(publishableKey: publishableKey),
+      deepLinkStream: AppLinks().allUriLinkStream.map(createClerkLink),
       child: MaterialApp(
         theme: ThemeData.light(),
         debugShowCheckedModeBanner: false,

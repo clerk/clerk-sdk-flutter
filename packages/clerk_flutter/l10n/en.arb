@@ -249,6 +249,8 @@
     }
   },
   "slugUrl": "Slug URL",
+  "ssoInApp": "SSO in-app:",
+  "ssoViaDeepLink": "SSO via external browser/deep link:",
   "transferable": "transferable",
   "typeTypeInvalid": "Type '{type}' is invalid",
   "@typeTypeInvalid": {

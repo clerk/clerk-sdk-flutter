@@ -7,6 +7,19 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/material.dart';
 
+/// A class to transport [Uri]s from deep links into the app into the Clerk
+/// SDK, potentially with a [clerk.Strategy] imposed by the host app
+class ClerkDeepLink {
+  /// construct a [ClerkDeepLink]
+  const ClerkDeepLink({required this.uri, this.strategy});
+
+  /// The [Uri]
+  final Uri uri;
+
+  /// The [clerk.Strategy]
+  final clerk.Strategy? strategy;
+}
+
 /// Control widget initialising Clerk Auth system
 class ClerkAuth extends StatefulWidget {
   /// Construct a [ClerkAuth]
@@ -15,6 +28,7 @@ class ClerkAuth extends StatefulWidget {
     required this.child,
     ClerkAuthConfig? config,
     this.authState,
+    this.deepLinkStream,
   })  : assert(
           (config == null) != (authState == null),
           'Requires one and only one of `authState` or `config`',
@@ -24,10 +38,12 @@ class ClerkAuth extends StatefulWidget {
   /// Constructor to use when using [MaterialApp] for your project.
   static TransitionBuilder materialAppBuilder({
     required ClerkAuthConfig config,
+    Stream<ClerkDeepLink>? deepLinkStream,
   }) {
     return (BuildContext context, Widget? child) {
       return ClerkAuth(
         config: config,
+        deepLinkStream: deepLinkStream,
         child: ClerkErrorListener(child: child!),
       );
     };
@@ -40,6 +56,10 @@ class ClerkAuth extends StatefulWidget {
 
   /// auth instance from elsewhere
   final ClerkAuthState? authState;
+
+  /// A stream of deep links that the host app thinks the Clerk
+  /// SDK might be interested in
+  final Stream<ClerkDeepLink?>? deepLinkStream;
 
   /// child widget tree
   final Widget child;
@@ -90,6 +110,8 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
 
   ClerkAuthState? get effectiveAuthState => widget.authState ?? _clerkAuthState;
 
+  StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
+
   @override
   clerk.Telemetry? get telemetry => effectiveAuthState?.telemetry;
 
@@ -117,12 +139,20 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
         }
       });
     }
+    _deepLinkSub = widget.deepLinkStream?.listen(_processDeepLink);
   }
 
   @override
   void dispose() {
     super.dispose();
+    _deepLinkSub?.cancel();
     _clerkAuthState?.terminate();
+  }
+
+  void _processDeepLink(ClerkDeepLink? link) {
+    if (link case ClerkDeepLink link) {
+      effectiveAuthState?.parseDeepLink(link);
+    }
   }
 
   @override

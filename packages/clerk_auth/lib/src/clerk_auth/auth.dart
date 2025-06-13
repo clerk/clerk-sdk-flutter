@@ -202,12 +202,11 @@ class Auth {
   ///
   Future<void> oauthSignIn({
     required Strategy strategy,
-    required String? redirect,
+    required Uri? redirect,
   }) async {
-    redirect ??= ClerkConstants.oauthRedirect;
-
+    final redirectUrl = redirect?.toString() ?? ClerkConstants.oauthRedirect;
     await _api
-        .createSignIn(strategy: strategy, redirectUrl: redirect)
+        .createSignIn(strategy: strategy, redirectUrl: redirectUrl)
         .then(_housekeeping);
     if (client.signIn case SignIn signIn) {
       await _api
@@ -215,7 +214,7 @@ class Auth {
             signIn,
             stage: Stage.first,
             strategy: strategy,
-            redirectUrl: redirect,
+            redirectUrl: redirectUrl,
           )
           .then(_housekeeping);
     }
@@ -226,12 +225,11 @@ class Auth {
   ///
   Future<void> oauthConnect({
     required Strategy strategy,
-    required String? redirect,
+    required Uri? redirect,
   }) async {
-    redirect ??= ClerkConstants.oauthRedirect;
-
+    final redirectUrl = redirect?.toString() ?? ClerkConstants.oauthRedirect;
     await _api
-        .addExternalAccount(strategy: strategy, redirectUrl: redirect)
+        .addExternalAccount(strategy: strategy, redirectUrl: redirectUrl)
         .then(_housekeeping);
     update();
   }

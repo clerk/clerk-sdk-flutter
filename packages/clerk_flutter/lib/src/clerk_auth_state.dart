@@ -85,7 +85,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     final redirect = config.redirectionGenerator?.call(strategy);
     await safelyCall(
       context,
-      () => oauthConnect(strategy: strategy, redirect: redirect?.toString()),
+      () => oauthConnect(strategy: strategy, redirect: redirect),
       onError: onError,
     );
     final accounts = client.user?.externalAccounts?.toSet() ?? {};
@@ -106,7 +106,6 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
             return _SsoWebViewOverlay(
               strategy: strategy,
               uri: uri,
-              oauthRedirect: clerk.ClerkConstants.oauthRedirect,
               onError: (error) => _onError(error, onError),
             );
           },
@@ -139,7 +138,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     final redirect = config.redirectionGenerator?.call(strategy);
     await safelyCall(
       context,
-      () => oauthSignIn(strategy: strategy, redirect: redirect?.toString()),
+      () => oauthSignIn(strategy: strategy, redirect: redirect),
       onError: onError,
     );
     final url =
@@ -156,7 +155,6 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           builder: (context) => _SsoWebViewOverlay(
             strategy: strategy,
             uri: uri,
-            oauthRedirect: clerk.ClerkConstants.oauthRedirect,
             onError: (error) => _onError(error, onError),
           ),
         );
@@ -308,13 +306,11 @@ class _SsoWebViewOverlay extends StatefulWidget {
   const _SsoWebViewOverlay({
     required this.strategy,
     required this.uri,
-    required this.oauthRedirect,
     required this.onError,
   });
 
   final clerk.Strategy strategy;
   final Uri uri;
-  final String oauthRedirect;
   final ClerkErrorCallback onError;
 
   @override
@@ -343,7 +339,7 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
           ),
           onNavigationRequest: (NavigationRequest request) async {
             try {
-              if (request.url.startsWith(widget.oauthRedirect)) {
+              if (request.url.startsWith(clerk.ClerkConstants.oauthRedirect)) {
                 scheduleMicrotask(() {
                   if (mounted) {
                     Navigator.of(context).pop(request.url);

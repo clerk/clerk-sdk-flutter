@@ -132,7 +132,7 @@ class TokenCache {
 
   /// Set a [sessionToken] for an organization
   SessionToken makeAndCacheSessionToken(String token, [String? templateName]) {
-    final sessionToken = SessionToken(jwt: token);
+    final sessionToken = SessionToken(jwt: token, templateName: templateName);
     final id = _sessionTokenId(sessionToken.orgId, templateName);
     if (token != _sessionTokens[id]?.jwt) {
       _sessionTokens[id] = sessionToken;

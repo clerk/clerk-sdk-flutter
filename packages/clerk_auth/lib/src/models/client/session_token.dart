@@ -14,15 +14,20 @@ part 'session_token.g.dart';
 @JsonSerializable()
 class SessionToken with InformativeToStringMixin {
   /// Constructor
-  SessionToken({required this.jwt});
+  SessionToken({required this.jwt, this.templateName});
 
   /// json web token
   final String jwt;
+
+  /// The template name, if known
+  final String? templateName;
 
   static const _tokenExpiryBuffer = Duration(seconds: 10);
   static const _kJwtExpiryKey = 'exp';
   static const _kJwtNotBeforeKey = 'nbf';
   static const _kJwtOrgIdKey = 'org_id';
+  static const _kJwtOrgKey = 'o';
+  static const _kJwtIdKey = 'id';
 
   late final _parts = switch (jwt.split('.')) {
     List<String> parts when parts.length == 3 => parts,
@@ -53,7 +58,9 @@ class SessionToken with InformativeToStringMixin {
   );
 
   /// The organization id associated with this token
-  late final orgId = body[_kJwtOrgIdKey] ?? Organization.personal.id;
+  late final orgId = body[_kJwtOrgIdKey] ?? // v1
+      body[_kJwtOrgKey]?[_kJwtIdKey] ?? // v2
+      Organization.personal.id; // default
 
   /// Has this token expired?
   bool get isExpired {

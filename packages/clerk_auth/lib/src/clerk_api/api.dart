@@ -24,8 +24,8 @@ class Api with Logging {
   Api({
     required this.config,
     required this.httpService,
-    required this.sessionTokenSink,
     required Persistor persistor,
+    this.sessionTokenSink,
   })  : _tokenCache = TokenCache(
           persistor: persistor,
           publishableKey: config.publishableKey,
@@ -40,7 +40,7 @@ class Api with Logging {
   final HttpService httpService;
 
   /// The [Sink] for session tokens
-  final Sink<SessionToken> sessionTokenSink;
+  final Sink<SessionToken>? sessionTokenSink;
 
   final TokenCache _tokenCache;
   final String _domain;
@@ -804,7 +804,7 @@ class Api with Logging {
         final token = body[_kJwtKey] as String;
         final sessionToken =
             _tokenCache.makeAndCacheSessionToken(token, templateName);
-        sessionTokenSink.add(sessionToken);
+        sessionTokenSink?.add(sessionToken);
         return sessionToken;
       }
     }

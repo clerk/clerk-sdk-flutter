@@ -81,11 +81,12 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     BuildContext context,
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
-    String redirect = clerk.ClerkConstants.oauthRedirect,
   }) async {
+    final authState = ClerkAuth.of(context, listen: false);
+    final redirect = authState.config.redirectionGenerator?.call(strategy);
     await safelyCall(
       context,
-      () => oauthConnect(strategy: strategy, redirect: redirect),
+      () => oauthConnect(strategy: strategy, redirect: redirect?.toString()),
       onError: onError,
     );
     final accounts = client.user?.externalAccounts?.toSet() ?? {};
@@ -95,7 +96,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     final url = acc?.verification.externalVerificationRedirectUrl;
     if (url is String && context.mounted) {
       final uri = Uri.parse(url);
-      if (redirect == clerk.ClerkConstants.oauthRedirect) {
+      if (redirect == null) {
         // The default redirect: we handle this in-app
         final responseUrl = await showDialog<String>(
           context: context,
@@ -135,18 +136,19 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     BuildContext context,
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
-    String redirect = clerk.ClerkConstants.oauthRedirect,
   }) async {
+    final authState = ClerkAuth.of(context, listen: false);
+    final redirect = authState.config.redirectionGenerator?.call(strategy);
     await safelyCall(
       context,
-      () => oauthSignIn(strategy: strategy, redirect: redirect),
+      () => oauthSignIn(strategy: strategy, redirect: redirect?.toString()),
       onError: onError,
     );
     final url =
         client.signIn?.firstFactorVerification?.externalVerificationRedirectUrl;
     if (url is String && context.mounted) {
       final uri = Uri.parse(url);
-      if (redirect == clerk.ClerkConstants.oauthRedirect) {
+      if (redirect == null) {
         // The default redirect: we handle this in-app
         final redirectUrl = await showDialog<String>(
           context: context,

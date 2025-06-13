@@ -354,12 +354,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get slugUrl => 'Slug URL';
 
   @override
-  String get ssoInApp => 'SSO in-app:';
-
-  @override
-  String get ssoViaDeepLink => 'SSO via external browser/deep link:';
-
-  @override
   String get transferable => 'transferable';
 
   @override

@@ -9,6 +9,10 @@ import 'package:flutter/material.dart';
 ///
 typedef ClerkSdkLocalizationsCollection = Map<String, ClerkSdkLocalizations>;
 
+/// A function that generates a redirect url for a given strategy
+///
+typedef ClerkRedirectUriGenerator = Uri? Function(clerk.Strategy);
+
 /// An extended [clerk.AuthConfig] to allow the addition of:
 ///
 /// [localizations] for l10n needs
@@ -27,16 +31,21 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     ClerkSdkLocalizationsCollection? localizations,
     ClerkSdkLocalizations? fallbackLocalization,
     this.loading = defaultLoadingWidget,
-  })  : _localizations = localizations ?? {'en': _englishLocalizations},
-        _fallbackLocalization = fallbackLocalization ?? _englishLocalizations;
+    this.redirectionGenerator,
+  })  : localizations = localizations ?? {'en': _englishLocalizations},
+        fallbackLocalization = fallbackLocalization ?? _englishLocalizations;
 
   static final _englishLocalizations = ClerkSdkLocalizationsEn();
 
   /// [ClerkSdkLocalizationsCollection] for translation within the UI
-  final ClerkSdkLocalizationsCollection _localizations;
+  final ClerkSdkLocalizationsCollection localizations;
 
   /// [ClerkSdkLocalizations] for when a locale cannot be found
-  final ClerkSdkLocalizations _fallbackLocalization;
+  final ClerkSdkLocalizations fallbackLocalization;
+
+  /// A function to generate a [Uri] for deep link redirection
+  /// back into the host app following oauth authentication
+  final ClerkRedirectUriGenerator? redirectionGenerator;
 
   /// The [Widget] to display while loading data, override with null
   /// to disable the loading overlay or use your own widget.
@@ -45,13 +54,13 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   /// Retrieves the localization for the specified local falling back
   /// to the [fallbackLocalization]
   ClerkSdkLocalizations localizationsForLocale(Locale locale) {
-    return _localizations[locale.toLanguageTag()] ?? // full tag e.g. en_GB
-        _localizations[locale.languageCode] ?? // just the language e.g. en
-        _fallbackLocalization;
+    return localizations[locale.toLanguageTag()] ?? // full tag e.g. en_GB
+        localizations[locale.languageCode] ?? // just the language e.g. en
+        fallbackLocalization;
   }
 
   @override
   clerk.LocalesLookup get localesLookup {
-    return () => {..._localizations.keys, 'en'}.toList(growable: false);
+    return () => {...localizations.keys, 'en'}.toList(growable: false);
   }
 }

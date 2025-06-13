@@ -149,6 +149,15 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
     _clerkAuthState?.terminate();
   }
 
+  @override
+  void didUpdateWidget(covariant ClerkAuth oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.deepLinkStream != oldWidget.deepLinkStream) {
+      _deepLinkSub?.cancel();
+      _deepLinkSub = widget.deepLinkStream?.listen(_processDeepLink);
+    }
+  }
+
   void _processDeepLink(ClerkDeepLink? link) {
     if (link case ClerkDeepLink link) {
       effectiveAuthState?.parseDeepLink(link);

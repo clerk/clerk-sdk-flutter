@@ -688,18 +688,6 @@ abstract class ClerkSdkLocalizations {
   /// **'Slug URL'**
   String get slugUrl;
 
-  /// No description provided for @ssoInApp.
-  ///
-  /// In en, this message translates to:
-  /// **'SSO in-app:'**
-  String get ssoInApp;
-
-  /// No description provided for @ssoViaDeepLink.
-  ///
-  /// In en, this message translates to:
-  /// **'SSO via external browser/deep link:'**
-  String get ssoViaDeepLink;
-
   /// No description provided for @transferable.
   ///
   /// In en, this message translates to:

@@ -1,15 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/clerk_api/api.dart';
-import 'package:clerk_auth/src/clerk_api/telemetry.dart';
-import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
-import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
-import 'package:clerk_auth/src/clerk_auth/http_service.dart';
-import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/models/api/api_response.dart';
-import 'package:clerk_auth/src/models/models.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
 
 /// [Auth] provides more abstracted access to the Clerk API.
 ///
@@ -208,8 +202,10 @@ class Auth {
   ///
   Future<void> oauthSignIn({
     required Strategy strategy,
-    required String redirect,
+    required String? redirect,
   }) async {
+    redirect ??= ClerkConstants.oauthRedirect;
+
     await _api
         .createSignIn(strategy: strategy, redirectUrl: redirect)
         .then(_housekeeping);
@@ -230,13 +226,12 @@ class Auth {
   ///
   Future<void> oauthConnect({
     required Strategy strategy,
-    required String redirect,
+    required String? redirect,
   }) async {
+    redirect ??= ClerkConstants.oauthRedirect;
+
     await _api
-        .addExternalAccount(
-          strategy: strategy,
-          redirectUrl: redirect,
-        )
+        .addExternalAccount(strategy: strategy, redirectUrl: redirect)
         .then(_housekeeping);
     update();
   }

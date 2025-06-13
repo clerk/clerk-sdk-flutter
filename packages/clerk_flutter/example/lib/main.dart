@@ -43,8 +43,8 @@ class ExampleApp extends StatelessWidget {
 
   /// This function maps a [Uri] into a [ClerkDeepLink], which is essentially
   /// just a container for the [Uri]. The [ClerkDeepLink] can also
-  /// contain a [clerk.Strategy], used in place of the strategy that the Clerk
-  /// SDK would otherwise attempt to itself infer from the [Uri]
+  /// contain a [clerk.Strategy], to use in preference to a strategy
+  /// inferred from the [Uri]
   ClerkDeepLink? createClerkLink(Uri uri) {
     if (uri.pathSegments.first == 'sign_in') {
       return ClerkDeepLink(uri: uri);
@@ -55,10 +55,25 @@ class ExampleApp extends StatelessWidget {
     return null;
   }
 
+  /// A function that returns an appropriate deep link [Uri] for the oauth
+  /// redirect for a given [clerk.Strategy], or [null] if redirection should
+  /// be handled in-app
+  Uri? generateDeepLink(clerk.Strategy strategy) {
+    return Uri.parse('clerk://example.com/sign_in/$strategy');
+
+    // if you want to use the default in-app SSO, just remove this parameter
+    // from the [ClerkAuthConfig] object below, or...
+
+    // return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClerkAuth(
-      config: ClerkAuthConfig(publishableKey: publishableKey),
+      config: ClerkAuthConfig(
+        publishableKey: publishableKey,
+        redirectionGenerator: generateDeepLink,
+      ),
       deepLinkStream: AppLinks().allUriLinkStream.map(createClerkLink),
       child: MaterialApp(
         theme: ThemeData.light(),

@@ -23,6 +23,8 @@ class Auth {
     HttpService? httpService,
   }) {
     this.httpService = httpService ?? DefaultHttpService();
+    _errors = StreamController<AuthError>.broadcast();
+    _sessionTokenStreamController = StreamController<SessionToken>.broadcast();
     telemetry = Telemetry(
       config: config,
       persistor: persistor,
@@ -32,6 +34,7 @@ class Auth {
       config: config,
       persistor: persistor,
       httpService: this.httpService,
+      sessionTokenSink: _sessionTokenStreamController.sink,
     );
   }
 
@@ -52,10 +55,16 @@ class Auth {
 
   static const _codeLength = 6;
 
-  final _errors = StreamController<AuthError>.broadcast();
+  late final StreamController<AuthError> _errors;
 
   /// Stream of errors reported by the SDK of type [AuthError]
   Stream<AuthError> get errorStream => _errors.stream;
+
+  late final StreamController<SessionToken> _sessionTokenStreamController;
+
+  /// Stream of [SessionToken]s as they renew
+  Stream<SessionToken> get sessionTokenStream =>
+      _sessionTokenStreamController.stream;
 
   /// Adds [error] to [errorStream]
   void addError(AuthError error) => _errors.add(error);
@@ -132,6 +141,7 @@ class Auth {
   void terminate() {
     _clientTimer?.cancel();
     _api.terminate();
+    _sessionTokenStreamController.close();
     telemetry.terminate();
     httpService.terminate();
   }

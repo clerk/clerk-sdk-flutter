@@ -6,11 +6,9 @@ import 'package:clerk_auth/clerk_auth.dart';
 
 Future<void> main() async {
   final auth = Auth(
-    config: const AuthConfig(
+    config: AuthConfig(
       publishableKey: '<YOUR-PUBLISHABLE-KEY>',
-    ),
-    persistor: await DefaultPersistor.create(
-      storageDirectory: Directory.current,
+      persistor: DefaultPersistor(directoryGetter: () => Directory.current),
     ),
   );
 

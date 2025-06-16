@@ -32,9 +32,9 @@ void main() {
       config: AuthConfig(
         publishableKey: env.publishableKey,
         localesLookup: testLocalesLookup,
+        persistor: Persistor.none,
+        httpService: httpService,
       ),
-      persistor: Persistor.none,
-      httpService: httpService,
     );
     await api.initialize();
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);

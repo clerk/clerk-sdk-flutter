@@ -40,36 +40,42 @@ class _UserAndOrgTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return const DefaultTabController(
       length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Example App'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(child: Text('Users')),
-              Tab(child: Text('Organizations')),
-            ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ColoredBox(
+            color: Colors.blue,
+            child: TabBar(
+              indicatorColor: Colors.white,
+              tabs: [
+                Tab(child: Text('Users')),
+                Tab(child: Text('Organizations')),
+              ],
+            ),
           ),
-        ),
-        body: const TabBarView(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ClerkUserButton(),
-              ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: ClerkUserButton(),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: ClerkOrganizationList(),
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ClerkOrganizationList(),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

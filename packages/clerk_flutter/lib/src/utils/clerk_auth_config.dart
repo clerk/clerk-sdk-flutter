@@ -4,6 +4,7 @@ import 'package:clerk_flutter/src/generated/clerk_sdk_localizations_en.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart'
     show defaultLoadingWidget;
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// A map of [Locale] strings to [ClerkSdkLocalizations] instances
 ///
@@ -28,13 +29,16 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     super.telemetryEndpoint,
     super.telemetryPeriod,
     super.clientRefreshPeriod,
-    ClerkSdkLocalizationsCollection? localizations,
-    ClerkSdkLocalizations? fallbackLocalization,
+    super.httpService,
     this.loading = defaultLoadingWidget,
     this.redirectionGenerator,
+    ClerkSdkLocalizationsCollection? localizations,
+    ClerkSdkLocalizations? fallbackLocalization,
+    clerk.Persistor? persistor,
     this.clearCookiesOnSignOut = false,
   })  : localizations = localizations ?? {'en': _englishLocalizations},
-        fallbackLocalization = fallbackLocalization ?? _englishLocalizations;
+        fallbackLocalization = fallbackLocalization ?? _englishLocalizations,
+        super(persistor: persistor ?? _defaultPersistor);
 
   static final _englishLocalizations = ClerkSdkLocalizationsEn();
 
@@ -69,4 +73,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   clerk.LocalesLookup get localesLookup {
     return () => {...localizations.keys, 'en'}.toList(growable: false);
   }
+
+  static get _defaultPersistor =>
+      clerk.DefaultPersistor(directoryGetter: getApplicationDocumentsDirectory);
 }

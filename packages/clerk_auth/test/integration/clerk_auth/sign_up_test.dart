@@ -38,9 +38,9 @@ void main() {
       config: AuthConfig(
         publishableKey: env.publishableKey,
         localesLookup: testLocalesLookup,
+        persistor: Persistor.none,
+        httpService: httpService,
       ),
-      persistor: Persistor.none,
-      httpService: httpService,
     );
 
     httpService.expect(

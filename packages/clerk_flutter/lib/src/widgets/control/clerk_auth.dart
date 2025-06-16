@@ -27,6 +27,8 @@ class ClerkAuth extends StatefulWidget {
     super.key,
     required this.child,
     ClerkAuthConfig? config,
+    this.persistor,
+    this.httpService,
     this.authState,
     this.deepLinkStream,
   })  : assert(
@@ -60,6 +62,12 @@ class ClerkAuth extends StatefulWidget {
   /// A stream of deep links that the host app thinks the Clerk
   /// SDK might be interested in
   final Stream<ClerkDeepLink?>? deepLinkStream;
+
+  /// An override for the default [clerk.Persistor]
+  final clerk.Persistor? persistor;
+
+  /// An override for the default [clerk.HttpService]
+  final clerk.HttpService? httpService;
 
   /// child widget tree
   final Widget child;

@@ -17,35 +17,15 @@ import 'package:clerk_auth/src/models/api/api_response.dart';
 ///
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
-  Auth({
-    required this.config,
-    required Persistor persistor,
-    HttpService? httpService,
-  }) {
-    this.httpService = httpService ?? DefaultHttpService();
-    _errors = StreamController<AuthError>.broadcast();
-    _sessionTokenStreamController = StreamController<SessionToken>.broadcast();
-    telemetry = Telemetry(
-      config: config,
-      persistor: persistor,
-      httpService: this.httpService,
-    );
-    _api = Api(
-      config: config,
-      persistor: persistor,
-      httpService: this.httpService,
-      sessionTokenSink: _sessionTokenStreamController.sink,
-    );
-  }
+  Auth({required this.config})
+      : telemetry = Telemetry(config: config),
+        _api = Api(config: config);
 
   /// Use 'English' as the default locale
   static List<String> defaultLocalesLookup() => <String>['en'];
 
   /// The configuration object
   final AuthConfig config;
-
-  /// The [HttpService] used to communicate with the backend.
-  late final HttpService httpService;
 
   /// The service to send telemetry to the back end
   late final Telemetry telemetry;
@@ -114,7 +94,7 @@ class Auth {
   /// object is made
   ///
   Future<void> initialize() async {
-    await httpService.initialise();
+    await config.initialize();
     await _api.initialize();
     final [client, env] = await Future.wait([
       _api.createClient(),
@@ -143,7 +123,7 @@ class Auth {
     _api.terminate();
     _sessionTokenStreamController.close();
     telemetry.terminate();
-    httpService.terminate();
+    config.terminate();
   }
 
   /// Refresh the current [Client]

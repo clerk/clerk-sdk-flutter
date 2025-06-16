@@ -40,9 +40,9 @@ abstract interface class HttpService {
 
   /// Initialises this instance of the http service
   ///
-  /// It is possible that [initialise] will be called
+  /// It is possible that [initialize] will be called
   /// multiple times, and must be prepared for that to happen
-  Future<void> initialise();
+  Future<void> initialize();
 
   /// Terminates this instance of the http service
   ///
@@ -74,13 +74,10 @@ abstract interface class HttpService {
 /// Default implementation of [HttpService]
 ///
 class DefaultHttpService extends HttpService {
-  /// Constructor
-  DefaultHttpService();
-
   http.Client? _client;
 
   @override
-  Future<void> initialise() async {
+  Future<void> initialize() async {
     _client ??= http.Client();
   }
 

@@ -38,7 +38,7 @@ class TestHttpService implements HttpService {
   final _expectations = <String, List<Response>>{};
 
   @override
-  Future<void> initialise() async {}
+  Future<void> initialize() async {}
 
   @override
   void terminate() {}
@@ -138,7 +138,7 @@ class NoneHttpService implements HttpService {
   const NoneHttpService();
 
   @override
-  Future<void> initialise() async {}
+  Future<void> initialize() async {}
 
   @override
   void terminate() {}

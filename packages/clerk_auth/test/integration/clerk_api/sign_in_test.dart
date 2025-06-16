@@ -4,7 +4,6 @@ import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/models/api/api_response.dart';
 import 'package:clerk_auth/src/models/models.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-
 import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
@@ -23,9 +22,9 @@ void main() {
       config: AuthConfig(
         publishableKey: env.publishableKey,
         localesLookup: testLocalesLookup,
+        persistor: Persistor.none,
+        httpService: httpService,
       ),
-      persistor: Persistor.none,
-      httpService: httpService,
     );
     await api.initialize();
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);

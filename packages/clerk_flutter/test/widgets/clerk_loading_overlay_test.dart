@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clerk_auth/clerk_auth.dart' show Persistor;
 import 'package:clerk_flutter/src/utils/clerk_auth_config.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_loading_overlay.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
@@ -23,7 +24,10 @@ void expectThat(bool result, {String? reason}) =>
 
 void main() {
   group('ClerkLoadingOverlay:', skip: true, () {
-    final config = ClerkAuthConfig(publishableKey: 'NOT A KEY');
+    final config = ClerkAuthConfig(
+      publishableKey: 'NOT A KEY',
+      persistor: Persistor.none,
+    );
     final overlayEntry = ClerkLoadingOverlay(config);
 
     test('can show and hide a loading overlay in a timely fashion', () async {

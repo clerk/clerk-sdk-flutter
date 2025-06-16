@@ -9,20 +9,10 @@ import 'package:clerk_auth/src/models/telemetry/telemetric_event.dart';
 ///
 class Telemetry with Logging {
   /// Create a [Telemetry] object
-  Telemetry({
-    required this.config,
-    required this.persistor,
-    required this.httpService,
-  });
+  Telemetry({required this.config});
 
-  /// The config used to initialise this telemetry instance.
+  /// The config used to initialize this telemetry instance.
   final AuthConfig config;
-
-  /// The [Persistor] used for Telemetry to store its event queue.
-  final Persistor persistor;
-
-  /// The [HttpService] used to send the telemetry events.
-  final HttpService httpService;
 
   late final InstanceType _instanceType;
   late final _telemetryEndpoint = Uri.parse(config.telemetryEndpoint);
@@ -40,7 +30,8 @@ class Telemetry with Logging {
   Future<void> initialize({required InstanceType instanceType}) async {
     _instanceType = instanceType;
     if (isEnabled) {
-      final data = await persistor.read<String>(_kTelemetricEventQueueKey);
+      final data =
+          await config.persistor.read<String>(_kTelemetricEventQueueKey);
       if (data case String data) {
         final jsonList = json.decode(data) as List<dynamic>;
         final eventList = jsonList.map(
@@ -80,7 +71,7 @@ class Telemetry with Logging {
     if (excess > 0) {
       _telemetricEventsQueue.removeRange(0, excess);
     }
-    persistor.write(
+    config.persistor.write(
       _kTelemetricEventQueueKey,
       json.encode(_telemetricEventsQueue),
     );
@@ -105,7 +96,7 @@ class Telemetry with Logging {
     final events = [..._telemetricEventsQueue];
     if (events.isNotEmpty) {
       _telemetricEventsQueue.clear();
-      final resp = await httpService.send(
+      final resp = await config.httpService.send(
         HttpMethod.post,
         _telemetryEndpoint,
         body: json.encode({

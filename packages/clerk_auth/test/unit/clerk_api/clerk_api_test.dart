@@ -20,12 +20,12 @@ void main() {
     test('will fail unless encoded part follows underscore', () {
       expect(
         () => Api(
-          config: const AuthConfig(
+          config: AuthConfig(
             publishableKey: 'NOT A PUBLISHABLE KEY',
             localesLookup: testLocalesLookup,
+            persistor: Persistor.none,
+            httpService: noneHttpService,
           ),
-          persistor: Persistor.none,
-          httpService: noneHttpService,
         ),
         throwsA(const TypeMatcher<FormatException>()),
       );
@@ -36,9 +36,9 @@ void main() {
         config: AuthConfig(
           publishableKey: publishableKey,
           localesLookup: testLocalesLookup,
+          persistor: Persistor.none,
+          httpService: noneHttpService,
         ),
-        persistor: Persistor.none,
-        httpService: noneHttpService,
       );
       expect(result.domain, isA<String>());
     });
@@ -48,9 +48,9 @@ void main() {
         config: AuthConfig(
           publishableKey: publishableKey,
           localesLookup: testLocalesLookup,
+          persistor: Persistor.none,
+          httpService: noneHttpService,
         ),
-        persistor: Persistor.none,
-        httpService: noneHttpService,
       );
       expect(result.domain, domain);
     });

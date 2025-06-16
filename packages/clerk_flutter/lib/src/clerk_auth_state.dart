@@ -7,7 +7,6 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_loading_overlay.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -20,35 +19,17 @@ typedef ClerkErrorCallback = void Function(clerk.AuthError);
 ///
 class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   /// Construct a [ClerkAuthState]
-  ClerkAuthState._(
-    this._config,
-    clerk.Persistor persistor,
-    clerk.HttpService? httpService,
-  )   : _loadingOverlay = ClerkLoadingOverlay(_config),
-        super(
-          config: _config,
-          persistor: persistor,
-          httpService: httpService,
-        );
+  ClerkAuthState._(this._config)
+      : _loadingOverlay = ClerkLoadingOverlay(_config),
+        super(config: _config);
 
   /// Create an [ClerkAuthState] object using appropriate Clerk credentials
   static Future<ClerkAuthState> create({
     required ClerkAuthConfig config,
-    clerk.Persistor? persistor,
-    clerk.HttpService? httpService,
   }) async {
-    final authState = ClerkAuthState._(
-      config,
-      persistor ?? await _defaultPersistor,
-      httpService,
-    );
+    final authState = ClerkAuthState._(config);
     await authState.initialize();
     return authState;
-  }
-
-  static Future<clerk.Persistor> get _defaultPersistor async {
-    final dir = await getApplicationDocumentsDirectory();
-    return await clerk.DefaultPersistor.create(storageDirectory: dir);
   }
 
   /// The [ClerkAuthConfig] object

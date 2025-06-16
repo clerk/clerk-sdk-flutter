@@ -11,7 +11,7 @@ typedef ClerkSdkLocalizationsCollection = Map<String, ClerkSdkLocalizations>;
 
 /// A function that generates a redirect url for a given strategy
 ///
-typedef ClerkRedirectUriGenerator = Uri? Function(clerk.Strategy);
+typedef ClerkRedirectUriGenerator = Uri? Function(BuildContext, clerk.Strategy);
 
 /// An extended [clerk.AuthConfig] to allow the addition of:
 ///

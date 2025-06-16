@@ -58,11 +58,12 @@ class ExampleApp extends StatelessWidget {
   /// A function that returns an appropriate deep link [Uri] for the oauth
   /// redirect for a given [clerk.Strategy], or [null] if redirection should
   /// be handled in-app
-  Uri? generateDeepLink(clerk.Strategy strategy) {
+  Uri? generateDeepLink(BuildContext context, clerk.Strategy strategy) {
     return Uri.parse('clerk://example.com/sign_in/$strategy');
 
-    // if you want to use the default in-app SSO, just remove this parameter
-    // from the [ClerkAuthConfig] object below, or...
+    // if you want to use the default in-app SSO, just remove the
+    // [redirectionGenerator] parameter from the [ClerkAuthConfig] object
+    // below, or...
 
     // return null;
   }

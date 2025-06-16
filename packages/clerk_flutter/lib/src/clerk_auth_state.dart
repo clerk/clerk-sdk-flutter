@@ -82,7 +82,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
   }) async {
-    final redirect = config.redirectionGenerator?.call(strategy);
+    final redirect = config.redirectionGenerator?.call(context, strategy);
     await safelyCall(
       context,
       () => oauthConnect(strategy: strategy, redirect: redirect),
@@ -135,7 +135,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
   }) async {
-    final redirect = config.redirectionGenerator?.call(strategy);
+    final redirect = config.redirectionGenerator?.call(context, strategy);
     await safelyCall(
       context,
       () => oauthSignIn(strategy: strategy, redirect: redirect),
@@ -190,7 +190,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     final token = uri.queryParameters[_kRotatingTokenNonce];
     if (token case String token) {
       final strategy = switch (link.strategy) {
-        clerk.Strategy strategy when strategy.isUnknown == false => strategy,
+        clerk.Strategy strategy when strategy.isKnown => strategy,
         _ => clerk.Strategy.fromJson(uri.pathSegments.last),
       };
       if (strategy.isUnknown) {

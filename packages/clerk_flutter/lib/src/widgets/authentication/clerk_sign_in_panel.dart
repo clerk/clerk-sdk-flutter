@@ -5,6 +5,7 @@ import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_forgotten_password_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
@@ -12,7 +13,6 @@ import 'package:clerk_flutter/src/widgets/ui/or_divider.dart';
 import 'package:clerk_flutter/src/widgets/ui/strategy_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 /// The [ClerkSignInPanel] renders a UI for signing in users.
@@ -40,7 +40,18 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   String _password = '';
   String _code = '';
 
+  bool _showPhoneInput = false;
+
   bool get _hasIdent => _identifier.isNotEmpty;
+
+  static final _buttonStyle = ButtonStyle(
+    padding: MaterialStateProperty.all(
+      horizontalPadding8,
+    ),
+    textStyle: MaterialStateProperty.all(
+      ClerkTextStyle.userButtonSubtitle,
+    ),
+  );
 
   void _onError(clerk.AuthError _) {
     setState(() {
@@ -48,6 +59,9 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
       _strategy = clerk.Strategy.password;
     });
   }
+
+  void _togglePhoneInput() =>
+      setState(() => _showPhoneInput = !_showPhoneInput);
 
   Future<void> _continue(
     ClerkAuthState authState, {
@@ -89,12 +103,17 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final identifiers = env.identificationStrategies
         .map((s) => s.localizedMessage(localizations))
         .toList(growable: false);
+    final phoneIdentifiers = env.phoneIdentificationStrategies
+        .map((s) => s.localizedMessage(localizations))
+        .toList(growable: false);
     final factor = authState.client.signIn?.supportedFirstFactors
         .firstWhereOrNull((f) => f.strategy == _strategy);
     final safeIdentifier = factor?.safeIdentifier;
     final otherStrategies = env.otherStrategies.where(StrategyButton.supports);
+    final canResetPassword =
+        env.config.firstFactors.any((f) => f.isPasswordResetter);
 
-    if (identifiers.isEmpty) {
+    if (identifiers.isEmpty && phoneIdentifiers.isEmpty) {
       return emptyWidget;
     }
 
@@ -107,37 +126,96 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClerkTextFormField(
-                key: const Key('identifier'),
-                label: StringExt.alternatives(
-                  identifiers,
-                  connector: localizations.or,
-                ).capitalized,
-                onChanged: (text) {
-                  if (text.isEmpty != _identifier.isEmpty) {
-                    // only rebuild if we need the password box to animate
-                    // i.e. when going from '' -> '<a character>' or vice versa
-                    setState(() => _identifier = text);
-                  } else {
-                    _identifier = text;
-                  }
-                },
-              ),
-              verticalMargin8,
-              RichText(
-                text: TextSpan(
-                  text: '${localizations.forgottenPassword} ',
-                  style: ClerkTextStyle.userButtonSubtitle,
-                  children: [
-                    TextSpan(
-                      text: localizations.clickHere,
-                      style: ClerkTextStyle.buttonTitleDark,
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = _openPasswordResetFlow,
-                    )
-                  ],
+              if (identifiers.isNotEmpty) //
+                Closeable(
+                  closed: _showPhoneInput,
+                  child: Column(
+                    children: [
+                      ClerkTextFormField(
+                        key: const Key('identifier'),
+                        label: StringExt.alternatives(
+                          identifiers,
+                          connector: localizations.or,
+                        ).capitalized,
+                        onChanged: (text) {
+                          if (text.isEmpty != _identifier.isEmpty) {
+                            // only rebuild if we need the password box to animate
+                            // i.e. when going from '' -> '<a character>' or vice versa
+                            setState(() => _identifier = text);
+                          } else {
+                            _identifier = text;
+                          }
+                        },
+                      ),
+                      if (phoneIdentifiers.isNotEmpty) //
+                        Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: TextButton(
+                            onPressed: _togglePhoneInput,
+                            style: _buttonStyle,
+                            child: Text(
+                              StringExt.alternatives(
+                                phoneIdentifiers,
+                                connector: localizations.or,
+                                prefix: localizations.switchTo,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
+              if (phoneIdentifiers.isNotEmpty) //
+                Closeable(
+                  closed: _showPhoneInput == false,
+                  child: Column(
+                    children: [
+                      ClerkPhoneNumberFormField(
+                        key: const Key('phoneIdentifier'),
+                        label: StringExt.alternatives(
+                          phoneIdentifiers,
+                          connector: localizations.or,
+                        ).capitalized,
+                        onChanged: (text) {
+                          if (text.isEmpty != _identifier.isEmpty) {
+                            // only rebuild if we need the password box to animate
+                            // i.e. when going from '' -> '<a character>' or vice versa
+                            setState(() => _identifier = text);
+                          } else {
+                            _identifier = text;
+                          }
+                        },
+                      ),
+                      if (identifiers.isNotEmpty) //
+                        Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: TextButton(
+                            onPressed: _togglePhoneInput,
+                            style: _buttonStyle,
+                            child: Text(
+                              StringExt.alternatives(
+                                identifiers,
+                                connector: localizations.or,
+                                prefix: localizations.switchTo,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              if (canResetPassword) //
+                Padding(
+                  padding: topPadding8,
+                  child: ClerkMaterialButton(
+                    label: Padding(
+                      padding: horizontalPadding8,
+                      child: Text(localizations.forgottenPassword),
+                    ),
+                    style: ClerkMaterialButtonStyle.light,
+                    onPressed: _openPasswordResetFlow,
+                  ),
+                ),
             ],
           ),
         ),

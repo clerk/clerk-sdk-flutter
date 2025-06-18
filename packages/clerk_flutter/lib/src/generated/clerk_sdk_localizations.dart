@@ -220,11 +220,11 @@ abstract class ClerkSdkLocalizations {
   /// **'Cancel'**
   String get cancel;
 
-  /// No description provided for @clickHere.
+  /// No description provided for @cannotDeleteSelf.
   ///
   /// In en, this message translates to:
-  /// **'Click here'**
-  String get clickHere;
+  /// **'You are not authorized to delete your user'**
+  String get cannotDeleteSelf;
 
   /// No description provided for @clickOnTheLinkThatSBeenSentToAndThenCheckBackHere.
   ///
@@ -730,6 +730,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Slug URL'**
   String get slugUrl;
 
+  /// No description provided for @switchTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to'**
+  String get switchTo;
+
   /// No description provided for @transferable.
   ///
   /// In en, this message translates to:
@@ -741,6 +747,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Type \'{type}\' is invalid'**
   String typeTypeInvalid(String type);
+
+  /// No description provided for @unsupportedPasswordResetStrategy.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported password reset strategy: {arg}'**
+  String unsupportedPasswordResetStrategy(String arg);
 
   /// No description provided for @unverified.
   ///

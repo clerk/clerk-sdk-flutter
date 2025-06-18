@@ -7,8 +7,6 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 enum _ResetFlowState {
@@ -155,19 +153,10 @@ class _ClerkForgottenPasswordPanelState
                 verticalMargin8,
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: RichText(
-                    text: TextSpan(
-                      text: '${l10ns.didntReceiveCode} ',
-                      style: ClerkTextStyle.userButtonSubtitle,
-                      children: [
-                        TextSpan(
-                          text: l10ns.clickHere,
-                          style: ClerkTextStyle.buttonTitleDark,
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = _restartFlow,
-                        )
-                      ],
-                    ),
+                  child: ClerkMaterialButton(
+                    label: Text(l10ns.didntReceiveCode),
+                    style: ClerkMaterialButtonStyle.light,
+                    onPressed: _restartFlow,
                   ),
                 ),
                 Closeable(
@@ -226,21 +215,18 @@ class _ActionButton extends StatelessWidget {
       return const Padding(
         padding: allPadding4,
         child: SizedBox.square(
-          dimension: 16,
+          dimension: 20,
           child: CircularProgressIndicator(strokeWidth: 2),
         ),
       );
     }
 
-    return SizedBox(
-      height: 20,
-      child: ClerkMaterialButton(
-        style: ClerkMaterialButtonStyle.light,
-        onPressed: onPressed,
-        label: Padding(
-          padding: horizontalPadding8,
-          child: Text(label),
-        ),
+    return ClerkMaterialButton(
+      style: ClerkMaterialButtonStyle.light,
+      onPressed: onPressed,
+      label: Padding(
+        padding: horizontalPadding8,
+        child: Text(label),
       ),
     );
   }

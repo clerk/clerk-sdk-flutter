@@ -29,6 +29,9 @@ extension ClerkAuthErrorExtension on clerk.AuthError {
         localizations.noSuchSecondFactorStrategy(argument.toString()),
       clerk.AuthErrorCode.signInError =>
         localizations.signInError(argument.toString()),
+      clerk.AuthErrorCode.passwordResetStrategyError =>
+        localizations.unsupportedPasswordResetStrategy(argument.toString()),
+      clerk.AuthErrorCode.cannotDeleteSelf => localizations.cannotDeleteSelf,
       _ => toString(),
     };
   }

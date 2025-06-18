@@ -77,7 +77,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get cancel => 'Cancel';
 
   @override
-  String get clickHere => 'Click here';
+  String get cannotDeleteSelf => 'You are not authorized to delete your user';
 
   @override
   String clickOnTheLinkThatSBeenSentToAndThenCheckBackHere(String identifier) {
@@ -376,11 +376,19 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get slugUrl => 'Slug URL';
 
   @override
+  String get switchTo => 'Switch to';
+
+  @override
   String get transferable => 'transferable';
 
   @override
   String typeTypeInvalid(String type) {
     return 'Type \'$type\' is invalid';
+  }
+
+  @override
+  String unsupportedPasswordResetStrategy(String arg) {
+    return 'Unsupported password reset strategy: $arg';
   }
 
   @override

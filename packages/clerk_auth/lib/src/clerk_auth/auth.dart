@@ -255,9 +255,19 @@ class Auth {
     required String identifier,
     required Strategy strategy,
   }) async {
-    await _api
-        .createSignIn(identifier: identifier, strategy: strategy)
-        .then(_housekeeping);
+    if (strategy.isPasswordResetter) {
+      await _api
+          .createSignIn(identifier: identifier, strategy: strategy)
+          .then(_housekeeping);
+    } else {
+      addError(
+        AuthError(
+          code: AuthErrorCode.passwordResetStrategyError,
+          message: 'Unsupported password reset strategy: {arg}',
+          argument: strategy.toString(),
+        ),
+      );
+    }
   }
 
   /// Progressively attempt sign in
@@ -702,6 +712,13 @@ class Auth {
       await _api.deleteUser();
       client = await _api.currentClient();
       update();
+    } else {
+      addError(
+        const AuthError(
+          code: AuthErrorCode.cannotDeleteSelf,
+          message: 'You are not authorized to delete your user',
+        ),
+      );
     }
   }
 

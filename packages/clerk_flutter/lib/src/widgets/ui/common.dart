@@ -29,12 +29,14 @@ const outlineInputBorder = OutlineInputBorder(
   borderSide: BorderSide.none,
 );
 
+const inputBoxBorder = RoundedRectangleBorder(
+  side: BorderSide(color: ClerkColors.dawnPink, width: 0.5),
+  borderRadius: borderRadius4,
+);
+
 const inputBoxBorderDecoration = ShapeDecoration(
   color: ClerkColors.white,
-  shape: RoundedRectangleBorder(
-    side: BorderSide(color: ClerkColors.dawnPink, width: 0.5),
-    borderRadius: borderRadius4,
-  ),
+  shape: inputBoxBorder,
 );
 
 const firstColumnWidth = 215.0;

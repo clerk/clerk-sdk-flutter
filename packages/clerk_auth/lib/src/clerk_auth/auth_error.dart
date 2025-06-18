@@ -75,4 +75,10 @@ enum AuthErrorCode {
 
   /// Unsupported Sign-in attempt
   signInError,
+
+  /// Password reset error
+  passwordResetStrategyError,
+
+  /// You are not authorized to delete your user
+  cannotDeleteSelf,
 }

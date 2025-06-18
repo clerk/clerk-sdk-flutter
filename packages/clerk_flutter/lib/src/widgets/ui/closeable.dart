@@ -31,7 +31,8 @@ class Closeable extends StatefulWidget {
     this.startsClosed,
     this.duration = defaultDuration,
     this.axis = ClosingAxis.vertical,
-    this.alignment = Alignment.topLeft,
+    this.alignment = Alignment.topCenter,
+    this.closingAlignment,
     this.curve = Curves.linear,
     this.onEnd,
     this.child,
@@ -48,6 +49,9 @@ class Closeable extends StatefulWidget {
 
   /// Alignment of child widget within the panel
   final Alignment alignment;
+
+  /// Alignment of child widget within the panel when closing
+  final Alignment? closingAlignment;
 
   /// is the panel closed?
   final bool closed;
@@ -105,7 +109,9 @@ class _CloseableState extends State<Closeable> {
         child: AnimatedAlign(
           duration: widget.duration,
           curve: widget.curve,
-          alignment: widget.alignment,
+          alignment: closed
+              ? widget.closingAlignment ?? widget.alignment.reverse
+              : widget.alignment,
           heightFactor: widget.axis.isVertical ? value : null,
           widthFactor: widget.axis.isHorizontal ? value : null,
           onEnd: () {
@@ -119,4 +125,8 @@ class _CloseableState extends State<Closeable> {
       ),
     );
   }
+}
+
+extension on Alignment {
+  Alignment get reverse => Alignment(-x, -y);
 }

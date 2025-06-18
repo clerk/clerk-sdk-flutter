@@ -65,8 +65,10 @@ class ClerkTextFormField extends StatelessWidget {
           height: 32.0,
           child: DecoratedBox(
             decoration: inputBoxBorderDecoration,
+            position: DecorationPosition.foreground,
             child: Material(
               color: Colors.transparent,
+              shape: inputBoxBorder,
               child: _TextField(
                 optional: isOptional,
                 obscureText: obscureText,

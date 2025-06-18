@@ -74,7 +74,8 @@ class AuthConfig {
 
   /// Initialise
   Future<void> initialize() async {
-    await Future.wait([httpService.initialize(), persistor.initialize()]);
+    await persistor.initialize();
+    await httpService.initialize();
   }
 
   /// Terminate

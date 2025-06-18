@@ -76,6 +76,14 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     dispose();
   }
 
+  @override
+  Future<void> signOut() async {
+    if (config.clearCookiesOnSignOut) {
+      await WebViewCookieManager().clearCookies();
+    }
+    await super.signOut();
+  }
+
   /// Performs SSO account connection according to the [strategy]
   Future<void> ssoConnect(
     BuildContext context,

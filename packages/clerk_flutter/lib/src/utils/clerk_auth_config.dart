@@ -32,6 +32,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     ClerkSdkLocalizations? fallbackLocalization,
     this.loading = defaultLoadingWidget,
     this.redirectionGenerator,
+    this.clearCookiesOnSignOut = false,
   })  : localizations = localizations ?? {'en': _englishLocalizations},
         fallbackLocalization = fallbackLocalization ?? _englishLocalizations;
 
@@ -50,6 +51,11 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   /// The [Widget] to display while loading data, override with null
   /// to disable the loading overlay or use your own widget.
   final Widget? loading;
+
+  /// Should cookies be cleared from the internal webview when
+  /// signing out of the last account, so that next oauth sign in
+  /// will require password again?
+  final bool clearCookiesOnSignOut;
 
   /// Retrieves the localization for the specified local falling back
   /// to the [fallbackLocalization]

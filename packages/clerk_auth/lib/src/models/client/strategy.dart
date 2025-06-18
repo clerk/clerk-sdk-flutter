@@ -49,14 +49,22 @@ class Strategy {
   /// oauth token apple strategy
   static const oauthTokenApple = Strategy(name: _oauthToken, provider: 'apple');
 
+  /// oauth token google strategy
+  static const oauthTokenGoogle =
+      Strategy(name: _oauthToken, provider: 'google');
+
+  /// google one tap strategy
+  static const googleOneTap = Strategy(name: 'google_one_tap');
+
   /// the collected oauth strategies
   static final oauthStrategies = {
     oauthApple.toString(): oauthApple,
     oauthGithub.toString(): oauthGithub,
     oauthGoogle.toString(): oauthGoogle,
     oauthFacebook.toString(): oauthFacebook,
-    // 'google_one_tap': oauthGoogle, // guessing this is a synonym?
     oauthTokenApple.toString(): oauthTokenApple,
+    oauthTokenGoogle.toString(): oauthTokenGoogle,
+    googleOneTap.toString(): googleOneTap,
   };
 
   // verification strategies
@@ -146,6 +154,9 @@ class Strategy {
 
   /// is oauth?
   bool get isOauth => const [_oauthToken, _oauthCustom, _oauth].contains(name);
+
+  /// is oauth token?
+  bool get isOauthToken => name == _oauthToken;
 
   /// is other strategy?
   bool get isOtherStrategy => isOauth == false && requiresPassword == false;

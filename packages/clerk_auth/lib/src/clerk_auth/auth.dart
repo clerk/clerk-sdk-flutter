@@ -253,6 +253,22 @@ class Auth {
     String? token,
     String? redirectUrl,
   }) async {
+    // oAuthToken
+    if (strategy.isOauthToken && (token is String || code is String)) {
+      await _api
+          .oauthTokenSignIn(strategy, token: token, code: code)
+          .then(_housekeeping);
+      return;
+    }
+
+    // google one tap
+    if (strategy == Strategy.googleOneTap && token is String) {
+      await _api
+          .oauthTokenSignIn(Strategy.googleOneTap, token: token)
+          .then(_housekeeping);
+      return;
+    }
+
     if (client.signIn == null) {
       // if password and identifier been presented, we can immediately attempt
       // a sign in;  if null they will be ignored
@@ -272,11 +288,6 @@ class Auth {
         // sign in; if `password` is null it will be ignored
         await _api
             .createSignIn(identifier: identifier, password: password)
-            .then(_housekeeping);
-
-      case SignIn signIn when strategy.isOauth && token is String:
-        await _api
-            .sendOauthToken(signIn, strategy: strategy, token: token)
             .then(_housekeeping);
 
       case SignIn signIn
@@ -307,7 +318,8 @@ class Auth {
 
       case SignIn signIn
           when signIn.status == Status.needsFirstFactor &&
-              strategy == Strategy.password:
+              strategy == Strategy.password &&
+              password is String:
         await _api
             .attemptSignIn(
               signIn,

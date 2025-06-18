@@ -436,17 +436,17 @@ class Api with Logging {
 
   /// Send a token received from an oAuth provider to the back end
   ///
-  Future<ApiResponse> sendOauthToken(
-    SignIn signIn, {
-    required Strategy strategy,
-    required String token,
+  Future<ApiResponse> oauthTokenSignIn(
+    Strategy strategy, {
+    String? token,
+    String? code,
   }) async {
     return await _fetchApiResponse(
-      '/client/sign_ins/${signIn.id}',
-      method: HttpMethod.get,
+      '/client/sign_ins',
       params: {
         'strategy': strategy,
-        'rotating_token_nonce': token,
+        'token': token,
+        'code': code,
       },
     );
   }

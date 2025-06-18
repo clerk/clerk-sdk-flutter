@@ -77,6 +77,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get clickHere => 'Click here';
+
+  @override
   String clickOnTheLinkThatSBeenSentToAndThenCheckBackHere(String identifier) {
     return 'Click on the link that‘s been sent to $identifier and then check back here';
   }
@@ -95,6 +98,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get createOrganization => 'Create organization';
+
+  @override
+  String get didntReceiveCode => 'Didn\'t receive the code?';
 
   @override
   String get domainName => 'Domain name';
@@ -135,6 +141,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get firstName => 'first name';
+
+  @override
+  String get forgottenPassword => 'Forgotten password?';
 
   @override
   String get generalDetails => 'General details';
@@ -285,6 +294,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
       'Please choose an account to connect';
 
   @override
+  String get pleaseEnterYourIdentifier => 'Please enter your identifier';
+
+  @override
   String get primary => 'PRIMARY';
 
   @override
@@ -297,10 +309,20 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get recommendSize => 'Recommend size 1:1, up to 5MB.';
 
   @override
+  String get requestPasswordResetCode => 'Request a password reset code';
+
+  @override
   String get requiredField => '(required)';
 
   @override
   String get resend => 'Resend';
+
+  @override
+  String get resetFailed =>
+      'That password reset attempt failed. A new code has been sent.';
+
+  @override
+  String get resetPassword => 'Reset password and sign in';
 
   @override
   String get selectAccount =>

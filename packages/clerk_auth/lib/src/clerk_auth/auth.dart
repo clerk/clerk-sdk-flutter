@@ -250,6 +250,16 @@ class Auth {
     update();
   }
 
+  /// Initiate a password reset
+  Future<void> initiatePasswordReset({
+    required String identifier,
+    required Strategy strategy,
+  }) async {
+    await _api
+        .createSignIn(identifier: identifier, strategy: strategy)
+        .then(_housekeeping);
+  }
+
   /// Progressively attempt sign in
   ///
   /// Can be repeatedly called with updated parameters
@@ -303,6 +313,21 @@ class Auth {
       case SignIn signIn when strategy.isOauth && token is String:
         await _api
             .sendOauthToken(signIn, strategy: strategy, token: token)
+            .then(_housekeeping);
+
+      case SignIn signIn
+          when strategy.requiresCode &&
+              code is String &&
+              strategy.requiresPassword &&
+              password is String:
+        await _api
+            .attemptSignIn(
+              signIn,
+              stage: Stage.first,
+              strategy: strategy,
+              password: password,
+              code: code,
+            )
             .then(_housekeeping);
 
       case SignIn signIn
@@ -667,6 +692,16 @@ class Auth {
         }
         update();
       }
+    }
+  }
+
+  /// Delete the current [User]
+  ///
+  Future<void> deleteUser() async {
+    if (env.user.actions.deleteSelf) {
+      await _api.deleteUser();
+      client = await _api.currentClient();
+      update();
     }
   }
 

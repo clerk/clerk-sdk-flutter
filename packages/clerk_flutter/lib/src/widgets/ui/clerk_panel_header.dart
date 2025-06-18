@@ -8,13 +8,21 @@ import 'package:flutter/material.dart';
 @immutable
 class ClerkPanelHeader extends StatelessWidget {
   /// Constructor for [ClerkPanelHeader]
-  const ClerkPanelHeader({super.key, this.subtitle, this.title});
+  const ClerkPanelHeader({
+    super.key,
+    this.subtitle,
+    this.title,
+    this.padding = horizontalPadding48,
+  });
 
   /// The title, if other than the app title
   final String? title;
 
   /// Subtitle if required
   final String? subtitle;
+
+  /// Padding around the content
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +44,7 @@ class ClerkPanelHeader extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: horizontalPadding48,
+          padding: padding,
           child: Text(
             title ?? display.applicationName,
             textAlign: TextAlign.center,
@@ -46,7 +54,7 @@ class ClerkPanelHeader extends StatelessWidget {
         ),
         if (subtitle case String subtitle) //
           Padding(
-            padding: horizontalPadding48,
+            padding: padding,
             child: Text(
               subtitle,
               textAlign: TextAlign.center,

@@ -65,15 +65,18 @@ class ClerkTextFormField extends StatelessWidget {
           height: 32.0,
           child: DecoratedBox(
             decoration: inputBoxBorderDecoration,
-            child: _TextField(
-              optional: isOptional,
-              obscureText: obscureText,
-              onChanged: onChanged,
-              onSubmit: onSubmit,
-              initial: initial,
-              onObscure: onObscure,
-              validator: validator,
-              autofocus: autofocus,
+            child: Material(
+              color: Colors.transparent,
+              child: _TextField(
+                optional: isOptional,
+                obscureText: obscureText,
+                onChanged: onChanged,
+                onSubmit: onSubmit,
+                initial: initial,
+                onObscure: onObscure,
+                validator: validator,
+                autofocus: autofocus,
+              ),
             ),
           ),
         ),
@@ -121,7 +124,8 @@ class _TextFieldState extends State<_TextField> {
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onSubmit,
       obscureText: widget.obscureText,
-      obscuringCharacter: '\u25CF', // Unicode: Black Circle
+      obscuringCharacter: '\u25CF',
+      // Unicode: Black Circle
       validator: (text) {
         if (widget.validator?.call(text) case bool valid) {
           WidgetsBinding.instance.addPostFrameCallback(

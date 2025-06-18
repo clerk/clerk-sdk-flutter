@@ -35,11 +35,6 @@ extension StringExtension on String {
 
   bool _isAlphaNumeric(int c) => _isUpper(c) || _isNumeric(c);
 
-  /// Return a version of this string with the first
-  /// character capitalised
-  ///
-  String get capitalized => this[0].toUpperCase() + substring(1);
-
   /// Return a [String] comprising all alphanumeric first characters
   /// of space-delimited words in the string, upper cased
   ///

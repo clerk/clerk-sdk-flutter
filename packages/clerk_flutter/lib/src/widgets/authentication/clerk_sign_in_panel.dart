@@ -2,6 +2,7 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
+import 'package:clerk_flutter/src/widgets/authentication/clerk_forgotten_password_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
@@ -11,6 +12,7 @@ import 'package:clerk_flutter/src/widgets/ui/or_divider.dart';
 import 'package:clerk_flutter/src/widgets/ui/strategy_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 /// The [ClerkSignInPanel] renders a UI for signing in users.
@@ -75,6 +77,10 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     }
   }
 
+  Future<void> _openPasswordResetFlow() async {
+    await ClerkForgottenPasswordPanel.show(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
@@ -98,21 +104,41 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
       children: [
         Padding(
           padding: bottomPadding8,
-          child: ClerkTextFormField(
-            key: const Key('identifier'),
-            label: StringExt.alternatives(
-              identifiers,
-              connector: localizations.or,
-            ).capitalized,
-            onChanged: (text) {
-              if (text.isEmpty != _identifier.isEmpty) {
-                // only rebuild if we need the password box to animate
-                // i.e. when going from '' -> '<a character>' or vice versa
-                setState(() => _identifier = text);
-              } else {
-                _identifier = text;
-              }
-            },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClerkTextFormField(
+                key: const Key('identifier'),
+                label: StringExt.alternatives(
+                  identifiers,
+                  connector: localizations.or,
+                ).capitalized,
+                onChanged: (text) {
+                  if (text.isEmpty != _identifier.isEmpty) {
+                    // only rebuild if we need the password box to animate
+                    // i.e. when going from '' -> '<a character>' or vice versa
+                    setState(() => _identifier = text);
+                  } else {
+                    _identifier = text;
+                  }
+                },
+              ),
+              verticalMargin8,
+              RichText(
+                text: TextSpan(
+                  text: '${localizations.forgottenPassword} ',
+                  style: ClerkTextStyle.userButtonSubtitle,
+                  children: [
+                    TextSpan(
+                      text: localizations.clickHere,
+                      style: ClerkTextStyle.buttonTitleDark,
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = _openPasswordResetFlow,
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         Closeable(

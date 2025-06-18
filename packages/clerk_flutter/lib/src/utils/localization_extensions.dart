@@ -178,4 +178,9 @@ extension StringExt on String {
 
     return buf.toString();
   }
+
+  /// Return a version of this string with the first
+  /// character capitalised
+  ///
+  String get capitalized => this[0].toUpperCase() + substring(1);
 }

@@ -14,6 +14,7 @@ class ClerkCodeInput extends StatelessWidget {
     this.title,
     this.subtitle,
     this.isSmall = false,
+    this.code = '',
   });
 
   /// Title for the input
@@ -30,6 +31,9 @@ class ClerkCodeInput extends StatelessWidget {
 
   /// focus node
   final FocusNode? focusNode;
+
+  /// Kicker to update the code from outside
+  final String code;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +63,7 @@ class ClerkCodeInput extends StatelessWidget {
           onSubmit: onSubmit,
           isSmall: isSmall,
           focusNode: focusNode,
+          code: code,
         ),
       ],
     );

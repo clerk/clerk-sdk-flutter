@@ -16,6 +16,7 @@ class MultiDigitCodeInput extends StatefulWidget {
     this.length = 6,
     this.isSmall = false,
     this.focusNode,
+    this.code = '',
   });
 
   /// Function to call once all digits have been entered
@@ -29,6 +30,9 @@ class MultiDigitCodeInput extends StatefulWidget {
 
   /// Focus node
   final FocusNode? focusNode;
+
+  /// Kicker to update the code from outside
+  final String code;
 
   @override
   State<MultiDigitCodeInput> createState() => _MultiDigitCodeInputState();
@@ -92,7 +96,7 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
           text: text.substring(0, text.length - 1),
           selection: TextSelection.collapsed(offset: text.length - 1),
         );
-        _connection!.setEditingState(newEditingValue);
+        _connection?.setEditingState(newEditingValue);
         setState(() => _editingValue = newEditingValue);
         return true;
       }
@@ -109,6 +113,18 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
       _currentAutofillScope?.unregister(autofillId);
       _currentAutofillScope = newAutofillGroup;
       _currentAutofillScope?.register(this);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant MultiDigitCodeInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final code = widget.code;
+    if (oldWidget.code != code && code != _editingValue.text) {
+      _editingValue = TextEditingValue(
+        text: code,
+        selection: TextSelection.collapsed(offset: code.length - 1),
+      );
     }
   }
 
@@ -146,6 +162,16 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
     }
   }
 
+  bool _hasCursor(int i) {
+    if (_focusNode.hasFocus == false) return false;
+
+    final length = _editingValue.text.length;
+    if (i == length) return true;
+    if (length == widget.length && i == length - 1) return true;
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (loading) {
@@ -153,12 +179,6 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
     }
 
     final text = _editingValue.text;
-    const color = ClerkColors.midGrey;
-
-    bool isSmall = widget.isSmall;
-
-    final boxSize = isSmall ? 18.0 : 38.0;
-    final cursorHeight = isSmall ? 1.0 : 2.0;
 
     return Focus(
       focusNode: _focusNode,
@@ -167,32 +187,14 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
         onTap: requestKeyboard,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(widget.length, (int index) {
-            return DecoratedBox(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: ClerkColors.dawnPink),
+          children: [
+            for (int i = 0; i < widget.length; ++i) //
+              _CodeDigit(
+                isSmall: widget.isSmall,
+                hasCursor: _hasCursor(i),
+                label: i < text.length ? text[i] : null,
               ),
-              child: SizedBox.square(
-                dimension: boxSize,
-                child: index < text.length
-                    ? Align(
-                        alignment: AlignmentDirectional.center,
-                        child: Text(
-                          text[index],
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: color,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
-                    : _focusNode.hasFocus && index == text.length
-                        ? _PulsingCursor(height: cursorHeight)
-                        : null,
-              ),
-            );
-          }),
+          ],
         ),
       ),
     );
@@ -228,10 +230,12 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
 
   @override
   Future<void> updateEditingValue(TextEditingValue value) async {
+    setState(() => _editingValue = value);
     if (value.text.length == widget.length) {
       setState(() => loading = true);
       final succeeded = await widget.onSubmit(value.text);
       if (context.mounted) {
+        _focusNode.nextFocus();
         if (succeeded == false) {
           _editingValue = const TextEditingValue(
             text: '',
@@ -241,8 +245,6 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
         }
         setState(() => loading = false);
       }
-    } else {
-      _editingValue = value;
     }
     if (context.mounted) {
       _openInputConnection();
@@ -348,6 +350,51 @@ class _PulsingCursorState extends State<_PulsingCursor>
             color: Colors.black.withOpacity(_curve.value * 0.5),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CodeDigit extends StatelessWidget {
+  const _CodeDigit({
+    required this.isSmall,
+    required this.hasCursor,
+    this.label,
+  });
+
+  final bool isSmall;
+  final bool hasCursor;
+  final String? label;
+
+  static const _decoration = BoxDecoration(
+    borderRadius: BorderRadius.all(Radius.circular(4)),
+    border: Border.fromBorderSide(
+      BorderSide(color: ClerkColors.dawnPink),
+    ),
+  );
+  static const _textStyle = TextStyle(
+    color: ClerkColors.midGrey,
+    fontWeight: FontWeight.bold,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final children = [
+      if (label case String label) //
+        Align(child: Text(label, style: _textStyle)),
+      if (hasCursor) //
+        _PulsingCursor(height: isSmall ? 1.0 : 2.0),
+    ];
+
+    return DecoratedBox(
+      decoration: _decoration,
+      child: SizedBox.square(
+        dimension: isSmall ? 18.0 : 38.0,
+        child: switch (children.length) {
+          2 => Stack(children: children),
+          1 => children.first,
+          _ => null,
+        },
       ),
     );
   }

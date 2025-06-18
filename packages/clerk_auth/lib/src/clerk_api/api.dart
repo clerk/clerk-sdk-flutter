@@ -33,9 +33,6 @@ class Api with Logging {
   /// The config used to initialize this api instance.
   final AuthConfig config;
 
-  /// The [HttpService] used to send the server requests.
-  final HttpService httpService;
-
   /// The [Sink] for session tokens
   final Sink<SessionToken>? sessionTokenSink;
 

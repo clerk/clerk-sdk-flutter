@@ -434,7 +434,7 @@ class Api with Logging {
     );
   }
 
-  /// Send a token received from an oAuth provider to the back end
+  /// Send a token and code supplied by an oAuth provider to the back end
   ///
   Future<ApiResponse> oauthTokenSignIn(
     Strategy strategy, {
@@ -447,6 +447,23 @@ class Api with Logging {
         'strategy': strategy,
         'token': token,
         'code': code,
+      },
+    );
+  }
+
+  /// Send a token received from an oAuth provider to the back end
+  ///
+  Future<ApiResponse> sendOauthToken(
+    SignIn signIn, {
+    required Strategy strategy,
+    required String token,
+  }) async {
+    return await _fetchApiResponse(
+      '/client/sign_ins/${signIn.id}',
+      method: HttpMethod.get,
+      params: {
+        'strategy': strategy,
+        'rotating_token_nonce': token,
       },
     );
   }

@@ -290,6 +290,11 @@ class Auth {
             .createSignIn(identifier: identifier, password: password)
             .then(_housekeeping);
 
+      case SignIn signIn when strategy.isOauth && token is String:
+        await _api
+            .sendOauthToken(signIn, strategy: strategy, token: token)
+            .then(_housekeeping);
+
       case SignIn signIn
           when strategy == Strategy.emailLink && redirectUrl is String:
         await _api

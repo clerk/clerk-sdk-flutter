@@ -34,7 +34,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     super.httpService,
     this.loading = defaultLoadingWidget,
     this.redirectionGenerator,
-    this.grammar = const ClerkSdkGrammar(),
+    this.grammar = const DefaultClerkSdkGrammar(),
     ClerkSdkFlags flags = const ClerkSdkFlags(),
     ClerkSdkLocalizationsCollection? localizations,
     ClerkSdkLocalizations? fallbackLocalization,

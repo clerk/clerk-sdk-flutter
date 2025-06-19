@@ -20,7 +20,7 @@ void main() {
     test('will fail unless encoded part follows underscore', () {
       expect(
         () => Api(
-          config: AuthConfig(
+          config: const AuthConfig(
             publishableKey: 'NOT A PUBLISHABLE KEY',
             localesLookup: testLocalesLookup,
             persistor: Persistor.none,

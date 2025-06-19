@@ -9,6 +9,12 @@ Future<void> main() async {
     config: AuthConfig(
       publishableKey: '<YOUR-PUBLISHABLE-KEY>',
       persistor: DefaultPersistor(directoryGetter: () => Directory.current),
+
+      // To enable running of the example in e.g. Flutter environments where
+      // [Directory.current] causes problems, implement a bespoke [Persistor]
+      // for your environment, or replace the above line with...
+      //
+      // persistor: Persistor.none,
     ),
   );
 

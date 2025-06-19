@@ -77,6 +77,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get cannotDeleteSelf => 'You are not authorized to delete your user';
+
+  @override
   String clickOnTheLinkThatSBeenSentToAndThenCheckBackHere(String identifier) {
     return 'Click on the link that‘s been sent to $identifier and then check back here';
   }

@@ -78,4 +78,7 @@ enum AuthErrorCode {
 
   /// Password reset error
   passwordResetStrategyError,
+
+  /// You are not authorized to delete your user
+  cannotDeleteSelf,
 }

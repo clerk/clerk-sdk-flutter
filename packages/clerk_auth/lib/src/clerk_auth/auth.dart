@@ -705,6 +705,23 @@ class Auth {
     }
   }
 
+  /// Delete the current [User]
+  ///
+  Future<void> deleteUser() async {
+    if (env.user.actions.deleteSelf) {
+      await _api.deleteUser();
+      client = await _api.currentClient();
+      update();
+    } else {
+      addError(
+        const AuthError(
+          code: AuthErrorCode.cannotDeleteSelf,
+          message: 'You are not authorized to delete your user',
+        ),
+      );
+    }
+  }
+
   /// Add an [identifier] address to the current [User]
   ///
   Future<void> addIdentifyingData(

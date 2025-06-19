@@ -92,7 +92,19 @@ extension ClerkStatusLocalization on clerk.Status {
 ///
 extension ClerkStrategyLocalization on clerk.Strategy {
   /// Allow localization of an [clerk.Strategy]
-  String localizedMessage(ClerkSdkLocalizations localizations) {
+  String localizedMessage(
+    ClerkSdkLocalizations localizations, {
+    bool concise = false,
+  }) {
+    if (concise) {
+      return switch (this) {
+        clerk.Strategy.emailAddress => localizations.emailAddressConcise,
+        clerk.Strategy.phoneNumber => localizations.phoneNumberConcise,
+        clerk.Strategy.username => localizations.username,
+        _ => toString(),
+      };
+    }
+
     return switch (this) {
       clerk.Strategy.emailAddress => localizations.emailAddress,
       clerk.Strategy.phoneNumber => localizations.phoneNumber,
@@ -136,54 +148,4 @@ extension ClerkUserAttributeLocalization on clerk.UserAttribute {
       clerk.UserAttribute.passkey => localizations.passkey,
     };
   }
-}
-
-/// An extension class for [String]
-///
-extension StringExt on String {
-  /// A method that takes a list of pre-translated [items] e.g.
-  /// \['first', 'second', 'third'\] and returns a textual representation
-  /// of its contents as alternatives e.g. "first, second or third"
-  ///
-  /// [connector] can be overridden, and a [prefix] can be prepended. Both
-  /// should already be translated as required.
-  ///
-  /// This method should be overridden for languages where this format does not
-  /// provide the correct representation for alternates
-  ///
-  static String alternatives(
-    List<String> items, {
-    required String connector,
-    String? prefix,
-  }) {
-    if (items.isEmpty) {
-      return '';
-    }
-
-    final buf = StringBuffer();
-
-    if (prefix case String prefix) {
-      buf.write(prefix);
-      buf.writeCharCode(0x20);
-    }
-
-    buf.write(items.first);
-
-    for (int i = 1; i < items.length - 1; i++) {
-      buf.write(', ');
-      buf.write(items[i]);
-    }
-
-    if (items.length > 1) {
-      buf.write(' $connector ');
-      buf.write(items.last);
-    }
-
-    return buf.toString();
-  }
-
-  /// Return a version of this string with the first
-  /// character capitalised
-  ///
-  String get capitalized => this[0].toUpperCase() + substring(1);
 }

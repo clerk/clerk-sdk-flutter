@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/utils/localization_extensions.dart';
+import 'package:clerk_flutter/src/utils/clerk_sdk_grammar.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_loading_overlay.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:collection/collection.dart';
@@ -43,6 +43,10 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     return config.localizationsForLocale(locale);
   }
 
+  /// Return a [ClerkSdkGrammar] relevant to a specific [BuildContext]
+  /// and therefore [Locale]
+  ClerkSdkGrammar grammarOf(BuildContext context) => config.grammar.of(context);
+
   final ClerkLoadingOverlay _loadingOverlay;
 
   static const _kRotatingTokenNonce = 'rotating_token_nonce';
@@ -59,7 +63,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   @override
   Future<void> signOut() async {
-    if (config.clearCookiesOnSignOut) {
+    if (config.flags.clearCookiesOnSignOut) {
       await WebViewCookieManager().clearCookies();
     }
     await super.signOut();
@@ -229,10 +233,13 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   /// Checks the password according to the criteria required by the `env`
   String? checkPassword(
+    BuildContext context,
     String? password,
     String? confirmation,
-    ClerkSdkLocalizations localizations,
   ) {
+    final localizations = ClerkAuth.localizationsOf(context);
+    final grammar = ClerkAuth.grammarOf(context);
+
     if (password?.isNotEmpty != true) {
       return localizations.passwordMustBeSupplied;
     }
@@ -279,11 +286,8 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       }
 
       if (missing.isNotEmpty) {
-        return StringExt.alternatives(
-          missing,
-          connector: localizations.and,
-          prefix: localizations.passwordRequires,
-        );
+        final options = grammar.toListAsText(missing, inclusive: true);
+        return '${localizations.passwordRequires} $options';
       }
     }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/utils/clerk_sdk_grammar.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
@@ -111,6 +112,10 @@ class ClerkAuth extends StatefulWidget {
   /// get the stream of [clerk.AuthError]
   static Stream<clerk.AuthError> errorStreamOf(BuildContext context) =>
       of(context, listen: false).errorStream;
+
+  /// get the [ClerkSdkGrammar]
+  static ClerkSdkGrammar grammarOf(BuildContext context) =>
+      of(context, listen: false).grammarOf(context);
 }
 
 class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {

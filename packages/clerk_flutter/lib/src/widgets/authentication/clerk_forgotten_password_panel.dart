@@ -1,6 +1,5 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
@@ -75,7 +74,7 @@ class _ClerkForgottenPasswordPanelState
     ClerkAuthState authState,
     ClerkSdkLocalizations localizations,
   ) async {
-    if (authState.checkPassword(_password, _confirmation, localizations)
+    if (authState.checkPassword(context, _password, _confirmation)
         case String errorMessage) {
       authState.addError(
         clerk.AuthError(
@@ -111,7 +110,8 @@ class _ClerkForgottenPasswordPanelState
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
-    final l10ns = ClerkAuth.localizationsOf(context);
+    final l10ns = authState.localizationsOf(context);
+    final grammar = authState.grammarOf(context);
 
     return AlertDialog(
       content: Column(
@@ -127,7 +127,7 @@ class _ClerkForgottenPasswordPanelState
               children: [
                 ClerkTextFormField(
                   key: const Key('email'),
-                  label: l10ns.emailAddress.capitalized,
+                  label: grammar.toSentence(l10ns.emailAddress),
                   onChanged: (identifier) => _identifier = identifier,
                   onSubmit: (_) => _initiatePasswordReset(authState),
                 ),
@@ -165,7 +165,7 @@ class _ClerkForgottenPasswordPanelState
                     children: [
                       verticalMargin16,
                       ClerkTextFormField(
-                        label: l10ns.password.capitalized,
+                        label: grammar.toSentence(l10ns.password),
                         obscureText: _obscured,
                         onObscure: _toggleObscurePassword,
                         onChanged: (password) => _password = password,
@@ -173,7 +173,7 @@ class _ClerkForgottenPasswordPanelState
                       ),
                       verticalMargin8,
                       ClerkTextFormField(
-                        label: l10ns.passwordConfirmation.capitalized,
+                        label: grammar.toSentence(l10ns.passwordConfirmation),
                         obscureText: _obscured,
                         onObscure: _toggleObscurePassword,
                         onChanged: (conf) => _confirmation = conf,

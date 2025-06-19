@@ -18,6 +18,7 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
     this.isMissing = false,
     this.initial,
     this.defaultCountry = IsoCode.US,
+    this.trailing,
   });
 
   /// Report changes back to calling widget
@@ -41,13 +42,21 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
   /// default country
   final IsoCode defaultCountry;
 
+  /// A widget for the end of the label
+  final Widget? trailing;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        InputLabel(label: label, isRequired: isMissing, isOptional: isOptional),
+        InputLabel(
+          label: label,
+          isRequired: isMissing,
+          isOptional: isOptional,
+          trailing: trailing,
+        ),
         verticalMargin4,
         DecoratedBox(
           decoration: inputBoxBorderDecoration,

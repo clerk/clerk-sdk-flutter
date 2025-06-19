@@ -53,9 +53,16 @@ class ClerkTextStyle {
     color: ClerkColors.darkJungleGreen,
   );
 
+  /// The Clerk-branded text style for clickable text.
+  static const clickable = TextStyle(
+    fontSize: 12.0,
+    fontWeight: FontWeight.w500,
+    color: ClerkColors.azure,
+  );
+
   /// The Clerk-branded text style for input field labels.
   static const inputLabel = TextStyle(
-    fontSize: 14.0,
+    fontSize: 13.0,
     color: ClerkColors.darkJungleGreen,
     letterSpacing: 0.1,
     height: 1.2,

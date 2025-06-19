@@ -2,6 +2,7 @@ import 'package:clerk_auth/src/clerk_auth/auth.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/models/enums.dart';
+import 'package:clerk_auth/src/utils/sdk_flags.dart';
 import 'package:meta/meta.dart';
 
 /// Used by [Api] to locate the current user locale preference.
@@ -16,6 +17,7 @@ class AuthConfig {
   const AuthConfig({
     required this.publishableKey,
     required this.persistor,
+    this.flags = const SdkFlags(),
     SessionTokenPollMode? sessionTokenPollMode,
     LocalesLookup? localesLookup,
     bool? isTestMode,
@@ -71,6 +73,9 @@ class AuthConfig {
 
   /// The [HttpService] used to communicate with the backend.
   final HttpService httpService;
+
+  /// Various flags that control SDK behaviour
+  final SdkFlags flags;
 
   /// Initialise
   Future<void> initialize() async {

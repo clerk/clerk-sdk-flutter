@@ -13,7 +13,7 @@ typedef LocalesLookup = List<String> Function();
 @immutable
 class AuthConfig {
   /// Construct an [AuthConfig]
-  AuthConfig({
+  const AuthConfig({
     required this.publishableKey,
     required this.persistor,
     SessionTokenPollMode? sessionTokenPollMode,
@@ -33,7 +33,7 @@ class AuthConfig {
             telemetryPeriod ?? const Duration(milliseconds: 29300),
         clientRefreshPeriod =
             clientRefreshPeriod ?? const Duration(milliseconds: 9700),
-        httpService = httpService ?? DefaultHttpService();
+        httpService = httpService ?? const DefaultHttpService();
 
   /// Key from the Clerk dashboard identifying the auth service account
   final String publishableKey;

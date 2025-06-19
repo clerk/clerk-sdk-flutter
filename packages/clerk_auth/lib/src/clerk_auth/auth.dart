@@ -35,16 +35,13 @@ class Auth {
 
   static const _codeLength = 6;
 
-  late final StreamController<AuthError> _errors;
-
   /// Stream of errors reported by the SDK of type [AuthError]
   Stream<AuthError> get errorStream => _errors.stream;
-
-  late final StreamController<SessionToken> _sessionTokenStreamController;
+  final _errors = StreamController<AuthError>.broadcast();
 
   /// Stream of [SessionToken]s as they renew
-  Stream<SessionToken> get sessionTokenStream =>
-      _sessionTokenStreamController.stream;
+  Stream<SessionToken> get sessionTokenStream => _sessionTokens.stream;
+  final _sessionTokens = StreamController<SessionToken>.broadcast();
 
   /// Adds [error] to [errorStream]
   void addError(AuthError error) => _errors.add(error);
@@ -121,7 +118,8 @@ class Auth {
   void terminate() {
     _clientTimer?.cancel();
     _api.terminate();
-    _sessionTokenStreamController.close();
+    _errors.close();
+    _sessionTokens.close();
     telemetry.terminate();
     config.terminate();
   }

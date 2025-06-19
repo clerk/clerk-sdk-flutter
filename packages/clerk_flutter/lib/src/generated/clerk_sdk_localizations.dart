@@ -220,12 +220,6 @@ abstract class ClerkSdkLocalizations {
   /// **'Cancel'**
   String get cancel;
 
-  /// No description provided for @cannotDeleteSelf.
-  ///
-  /// In en, this message translates to:
-  /// **'You are not authorized to delete your user'**
-  String get cannotDeleteSelf;
-
   /// No description provided for @clickOnTheLinkThatSBeenSentToAndThenCheckBackHere.
   ///
   /// In en, this message translates to:

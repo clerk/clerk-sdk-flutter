@@ -69,4 +69,7 @@ class ClerkColors {
 
   /// Incarnadine (error colour)
   static const incarnadine = Color(0xFFff3333);
+
+  /// Azure (link colour)
+  static const azure = Color(0xFF0066ff);
 }

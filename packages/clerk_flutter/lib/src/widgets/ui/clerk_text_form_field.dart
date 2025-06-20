@@ -20,6 +20,7 @@ class ClerkTextFormField extends StatelessWidget {
     this.initial,
     this.onObscure,
     this.validator,
+    this.trailing,
   });
 
   /// Report changes back to calling widget
@@ -53,13 +54,21 @@ class ClerkTextFormField extends StatelessWidget {
   /// initial value
   final String? initial;
 
+  /// A widget for the end of the label
+  final Widget? trailing;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       // crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        InputLabel(label: label, isRequired: isMissing, isOptional: isOptional),
+        InputLabel(
+          label: label,
+          isRequired: isMissing,
+          isOptional: isOptional,
+          trailing: trailing,
+        ),
         verticalMargin4,
         SizedBox(
           height: 32.0,

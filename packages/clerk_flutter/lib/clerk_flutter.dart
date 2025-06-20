@@ -3,8 +3,8 @@ library;
 
 export 'src/clerk_auth_state.dart';
 export 'src/clerk_user_action.dart';
-export 'src/generated/clerk_sdk_localizations.dart';
 export 'src/utils/clerk_auth_config.dart';
+export 'src/utils/clerk_sdk_localizations.dart';
 export 'src/widgets/authentication/clerk_authentication.dart';
 export 'src/widgets/authentication/clerk_sign_in_panel.dart';
 export 'src/widgets/authentication/clerk_sign_out_panel.dart';

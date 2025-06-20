@@ -6,21 +6,21 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'clerk_sdk_localizations_en.dart';
+import 'clerk_sdk_localizations_base_en.dart';
 
-/// Callers can lookup localized strings with an instance of ClerkSdkLocalizations
-/// returned by `ClerkSdkLocalizations.of(context)`.
+/// Callers can lookup localized strings with an instance of ClerkSdkLocalizationsBase
+/// returned by `ClerkSdkLocalizationsBase.of(context)`.
 ///
-/// Applications need to include `ClerkSdkLocalizations.delegate()` in their app's
+/// Applications need to include `ClerkSdkLocalizationsBase.delegate()` in their app's
 /// `localizationDelegates` list, and the locales they support in the app's
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'generated/clerk_sdk_localizations.dart';
+/// import 'generated/clerk_sdk_localizations_base.dart';
 ///
 /// return MaterialApp(
-///   localizationsDelegates: ClerkSdkLocalizations.localizationsDelegates,
-///   supportedLocales: ClerkSdkLocalizations.supportedLocales,
+///   localizationsDelegates: ClerkSdkLocalizationsBase.localizationsDelegates,
+///   supportedLocales: ClerkSdkLocalizationsBase.supportedLocales,
 ///   home: MyApplicationHome(),
 /// );
 /// ```
@@ -57,21 +57,21 @@ import 'clerk_sdk_localizations_en.dart';
 /// Select and expand the newly-created Localizations item then, for each
 /// locale your application supports, add a new item and select the locale
 /// you wish to add from the pop-up menu in the Value field. This list should
-/// be consistent with the languages listed in the ClerkSdkLocalizations.supportedLocales
+/// be consistent with the languages listed in the ClerkSdkLocalizationsBase.supportedLocales
 /// property.
-abstract class ClerkSdkLocalizations {
-  ClerkSdkLocalizations(String locale)
+abstract class ClerkSdkLocalizationsBase {
+  ClerkSdkLocalizationsBase(String locale)
       : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
-  static ClerkSdkLocalizations? of(BuildContext context) {
-    return Localizations.of<ClerkSdkLocalizations>(
-        context, ClerkSdkLocalizations);
+  static ClerkSdkLocalizationsBase? of(BuildContext context) {
+    return Localizations.of<ClerkSdkLocalizationsBase>(
+        context, ClerkSdkLocalizationsBase);
   }
 
-  static const LocalizationsDelegate<ClerkSdkLocalizations> delegate =
-      _ClerkSdkLocalizationsDelegate();
+  static const LocalizationsDelegate<ClerkSdkLocalizationsBase> delegate =
+      _ClerkSdkLocalizationsBaseDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -845,14 +845,14 @@ abstract class ClerkSdkLocalizations {
   String get youNeedToAdd;
 }
 
-class _ClerkSdkLocalizationsDelegate
-    extends LocalizationsDelegate<ClerkSdkLocalizations> {
-  const _ClerkSdkLocalizationsDelegate();
+class _ClerkSdkLocalizationsBaseDelegate
+    extends LocalizationsDelegate<ClerkSdkLocalizationsBase> {
+  const _ClerkSdkLocalizationsBaseDelegate();
 
   @override
-  Future<ClerkSdkLocalizations> load(Locale locale) {
-    return SynchronousFuture<ClerkSdkLocalizations>(
-        lookupClerkSdkLocalizations(locale));
+  Future<ClerkSdkLocalizationsBase> load(Locale locale) {
+    return SynchronousFuture<ClerkSdkLocalizationsBase>(
+        lookupClerkSdkLocalizationsBase(locale));
   }
 
   @override
@@ -860,18 +860,18 @@ class _ClerkSdkLocalizationsDelegate
       <String>['en'].contains(locale.languageCode);
 
   @override
-  bool shouldReload(_ClerkSdkLocalizationsDelegate old) => false;
+  bool shouldReload(_ClerkSdkLocalizationsBaseDelegate old) => false;
 }
 
-ClerkSdkLocalizations lookupClerkSdkLocalizations(Locale locale) {
+ClerkSdkLocalizationsBase lookupClerkSdkLocalizationsBase(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en':
-      return ClerkSdkLocalizationsEn();
+      return ClerkSdkLocalizationsBaseEn();
   }
 
   throw FlutterError(
-      'ClerkSdkLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'ClerkSdkLocalizationsBase.delegate failed to load unsupported locale "$locale". This is likely '
       'an issue with the localizations generation tool. Please file an issue '
       'on GitHub with a reproducible sample app and the gen-l10n configuration '
       'that was used.');

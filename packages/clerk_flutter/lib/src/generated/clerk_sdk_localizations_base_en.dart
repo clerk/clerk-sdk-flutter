@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, use_super_parameters
 
-import 'clerk_sdk_localizations.dart';
+import 'clerk_sdk_localizations_base.dart';
 
 /// The translations for English (`en`).
-class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
-  ClerkSdkLocalizationsEn([String locale = 'en']) : super(locale);
+class ClerkSdkLocalizationsBaseEn extends ClerkSdkLocalizationsBase {
+  ClerkSdkLocalizationsBaseEn([String locale = 'en']) : super(locale);
 
   @override
   String aLengthOfBetweenMINAndMAX(int min, int max) {

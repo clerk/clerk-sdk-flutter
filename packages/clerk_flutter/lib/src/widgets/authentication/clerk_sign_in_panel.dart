@@ -98,13 +98,13 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
-    final localizations = authState.localizationsOf(context);
+    final l10ns = authState.localizationsOf(context);
     final env = authState.env;
     final identifiers = env.identificationStrategies
-        .map((s) => s.localizedMessage(localizations))
+        .map((s) => s.localizedMessage(l10ns))
         .toList(growable: false);
     final phoneIdentifiers = env.phoneIdentificationStrategies
-        .map((s) => s.localizedMessage(localizations))
+        .map((s) => s.localizedMessage(l10ns))
         .toList(growable: false);
     final factor = authState.client.signIn?.supportedFirstFactors
         .firstWhereOrNull((f) => f.strategy == _strategy);
@@ -133,10 +133,9 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                     children: [
                       ClerkTextFormField(
                         key: const Key('identifier'),
-                        label: StringExt.alternatives(
-                          identifiers,
-                          connector: localizations.or,
-                        ).capitalized,
+                        label: l10ns.toSentence(
+                          l10ns.toListAsText(identifiers),
+                        ),
                         onChanged: (text) {
                           if (text.isEmpty != _identifier.isEmpty) {
                             // only rebuild if we need the password box to animate
@@ -154,11 +153,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                             onPressed: _togglePhoneInput,
                             style: _buttonStyle,
                             child: Text(
-                              StringExt.alternatives(
-                                phoneIdentifiers,
-                                connector: localizations.or,
-                                prefix: localizations.switchTo,
-                              ),
+                              '${l10ns.switchTo} '
+                              '${l10ns.toListAsText(phoneIdentifiers)}',
                             ),
                           ),
                         ),
@@ -172,10 +168,9 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                     children: [
                       ClerkPhoneNumberFormField(
                         key: const Key('phoneIdentifier'),
-                        label: StringExt.alternatives(
-                          phoneIdentifiers,
-                          connector: localizations.or,
-                        ).capitalized,
+                        label: l10ns.toSentence(
+                          l10ns.toListAsText(phoneIdentifiers),
+                        ),
                         onChanged: (text) {
                           if (text.isEmpty != _identifier.isEmpty) {
                             // only rebuild if we need the password box to animate
@@ -193,11 +188,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                             onPressed: _togglePhoneInput,
                             style: _buttonStyle,
                             child: Text(
-                              StringExt.alternatives(
-                                identifiers,
-                                connector: localizations.or,
-                                prefix: localizations.switchTo,
-                              ),
+                              '${l10ns.switchTo} '
+                              '${l10ns.toListAsText(identifiers)}',
                             ),
                           ),
                         ),
@@ -210,7 +202,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                   child: ClerkMaterialButton(
                     label: Padding(
                       padding: horizontalPadding8,
-                      child: Text(localizations.forgottenPassword),
+                      child: Text(l10ns.forgottenPassword),
                     ),
                     style: ClerkMaterialButtonStyle.light,
                     onPressed: _openPasswordResetFlow,
@@ -223,7 +215,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           key: const Key('emailLinkMessage'),
           closed: _strategy != clerk.Strategy.emailLink,
           child: Text(
-            localizations.clickOnTheLinkThatSBeenSentToAndThenCheckBackHere(
+            l10ns.clickOnTheLinkThatSBeenSentToAndThenCheckBackHere(
               _identifier,
             ),
             maxLines: 2,
@@ -237,8 +229,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
             child: ClerkCodeInput(
               key: const Key('code'),
               title: safeIdentifier is String
-                  ? localizations.enterTheCodeSentTo(safeIdentifier)
-                  : localizations.enterTheCodeSentToYou,
+                  ? l10ns.enterTheCodeSentTo(safeIdentifier)
+                  : l10ns.enterTheCodeSentToYou,
               onSubmit: (code) async {
                 await _continue(authState, code: code, strategy: _strategy);
                 return false;
@@ -255,7 +247,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                 Padding(
                   padding: verticalPadding8,
                   child: ClerkTextFormField(
-                    label: localizations.password,
+                    label: l10ns.password,
                     obscureText: true,
                     onChanged: (password) => _password = password,
                     onSubmit: (_) =>
@@ -284,7 +276,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Center(
-                        child: Text(localizations.cont),
+                        child: Text(l10ns.cont),
                       ),
                       horizontalMargin4,
                       const Icon(Icons.arrow_right_sharp),

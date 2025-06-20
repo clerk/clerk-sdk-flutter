@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_loading_overlay.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:collection/collection.dart';
@@ -279,11 +278,8 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       }
 
       if (missing.isNotEmpty) {
-        return StringExt.alternatives(
-          missing,
-          connector: localizations.and,
-          prefix: localizations.passwordRequires,
-        );
+        final options = localizations.toListAsText(missing, inclusive: true);
+        return '${localizations.passwordRequires} $options';
       }
     }
 

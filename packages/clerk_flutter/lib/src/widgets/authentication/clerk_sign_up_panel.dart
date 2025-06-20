@@ -55,17 +55,15 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
       if (signUp?.missingFields case List<clerk.Field> missingFields
           when missingFields.isNotEmpty) {
-        final localizations = authState.localizationsOf(context);
+        final l10ns = authState.localizationsOf(context);
+        final options = l10ns.toListAsText(
+          missingFields.map((f) => f.localizedMessage(l10ns)).toList(),
+          inclusive: true,
+        );
         authState.addError(
           clerk.AuthError(
             code: clerk.AuthErrorCode.signUpFlowError,
-            message: StringExt.alternatives(
-              missingFields
-                  .map((f) => f.localizedMessage(localizations))
-                  .toList(),
-              prefix: localizations.youNeedToAdd,
-              connector: localizations.and,
-            ),
+            message: '${l10ns.youNeedToAdd} $options',
           ),
         );
       }
@@ -312,5 +310,5 @@ class _Attribute {
   bool get isOptional => isRequired == false;
 
   String title(ClerkSdkLocalizations localizations) =>
-      attr.localizedMessage(localizations).capitalized;
+      localizations.toSentence(attr.localizedMessage(localizations));
 }

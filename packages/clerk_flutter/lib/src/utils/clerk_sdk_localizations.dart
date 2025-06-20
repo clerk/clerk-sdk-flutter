@@ -64,10 +64,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizationsBaseEn
   }
 
   @override
-  String toSentence(String item) {
-    if (item.isEmpty) {
-      return '';
-    }
-    return item[0].toUpperCase() + item.substring(1);
-  }
+  String toSentence(String item) =>
+      item.isNotEmpty ? item[0].toUpperCase() + item.substring(1) : '';
 }

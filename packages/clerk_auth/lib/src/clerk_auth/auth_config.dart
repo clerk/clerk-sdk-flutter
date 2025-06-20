@@ -1,6 +1,7 @@
 import 'package:clerk_auth/src/clerk_auth/auth.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+import 'package:clerk_auth/src/clerk_auth/sdk_flags.dart';
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:meta/meta.dart';
 
@@ -16,6 +17,7 @@ class AuthConfig {
   const AuthConfig({
     required this.publishableKey,
     required this.persistor,
+    this.flags = const SdkFlags(),
     SessionTokenPollMode? sessionTokenPollMode,
     LocalesLookup? localesLookup,
     bool? isTestMode,
@@ -40,6 +42,9 @@ class AuthConfig {
 
   /// The [Persistor] used for various state storage
   final Persistor persistor;
+
+  /// Flags used to affect behaviour
+  final SdkFlags flags;
 
   /// the mode by which session tokens are polled from the back end
   final SessionTokenPollMode sessionTokenPollMode;

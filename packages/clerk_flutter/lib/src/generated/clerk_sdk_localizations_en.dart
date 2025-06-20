@@ -115,6 +115,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get emailAddress => 'email address';
 
   @override
+  String get emailAddressConcise => 'email';
+
+  @override
   String get enrollment => 'Enrollment';
 
   @override
@@ -288,6 +291,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get phoneNumber => 'phone number';
+
+  @override
+  String get phoneNumberConcise => 'phone';
 
   @override
   String get pleaseChooseAnAccountToConnect =>

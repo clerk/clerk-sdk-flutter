@@ -292,6 +292,12 @@ abstract class ClerkSdkLocalizations {
   /// **'email address'**
   String get emailAddress;
 
+  /// No description provided for @emailAddressConcise.
+  ///
+  /// In en, this message translates to:
+  /// **'email'**
+  String get emailAddressConcise;
+
   /// No description provided for @enrollment.
   ///
   /// In en, this message translates to:
@@ -585,6 +591,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'phone number'**
   String get phoneNumber;
+
+  /// No description provided for @phoneNumberConcise.
+  ///
+  /// In en, this message translates to:
+  /// **'phone'**
+  String get phoneNumberConcise;
 
   /// No description provided for @pleaseChooseAnAccountToConnect.
   ///

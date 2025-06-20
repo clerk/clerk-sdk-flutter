@@ -11,8 +11,9 @@ class InputLabel extends StatelessWidget {
   const InputLabel({
     super.key,
     required this.label,
-    required this.isRequired,
-    required this.isOptional,
+    this.isRequired = false,
+    this.isOptional = false,
+    this.trailing,
   });
 
   /// The [label]
@@ -24,10 +25,14 @@ class InputLabel extends StatelessWidget {
   /// Add `optional` to the row?
   final bool isOptional;
 
+  /// A widget for the end of the label
+  final Widget? trailing;
+
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label case String label) //
           Expanded(
@@ -47,6 +52,8 @@ class InputLabel extends StatelessWidget {
             localizations.requiredField,
             color: ClerkColors.incarnadine,
           ),
+        if (trailing case Widget trailing) //
+          trailing,
       ],
     );
   }

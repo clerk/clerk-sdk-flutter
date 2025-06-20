@@ -1,6 +1,7 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/generated/clerk_sdk_localizations_en.dart';
+import 'package:clerk_flutter/src/utils/clerk_sdk_flags.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart'
     show defaultLoadingWidget;
 import 'package:flutter/material.dart';
@@ -35,10 +36,10 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     ClerkSdkLocalizationsCollection? localizations,
     ClerkSdkLocalizations? fallbackLocalization,
     clerk.Persistor? persistor,
-    this.clearCookiesOnSignOut = false,
+    ClerkSdkFlags flags = const ClerkSdkFlags(),
   })  : localizations = localizations ?? {'en': _englishLocalizations},
         fallbackLocalization = fallbackLocalization ?? _englishLocalizations,
-        super(persistor: persistor ?? _defaultPersistor);
+        super(flags: flags, persistor: persistor ?? _defaultPersistor);
 
   static final _englishLocalizations = ClerkSdkLocalizationsEn();
 
@@ -56,10 +57,9 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   /// to disable the loading overlay or use your own widget.
   final Widget? loading;
 
-  /// Should cookies be cleared from the internal webview when
-  /// signing out of the last account, so that next oauth sign in
-  /// will require password again?
-  final bool clearCookiesOnSignOut;
+  /// Flags used to affect behaviour
+  @override
+  ClerkSdkFlags get flags => super.flags as ClerkSdkFlags;
 
   /// Retrieves the localization for the specified local falling back
   /// to the [fallbackLocalization]

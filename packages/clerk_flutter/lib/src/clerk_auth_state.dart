@@ -59,7 +59,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   @override
   Future<void> signOut() async {
-    if (config.clearCookiesOnSignOut) {
+    if (config.flags.clearCookiesOnSignOut) {
       await WebViewCookieManager().clearCookies();
     }
     await super.signOut();

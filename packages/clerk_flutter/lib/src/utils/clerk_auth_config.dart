@@ -1,6 +1,5 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
-import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/generated/clerk_sdk_localizations_en.dart';
+import 'package:clerk_flutter/src/utils/clerk_sdk_localizations.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart'
     show defaultLoadingWidget;
 import 'package:flutter/material.dart';

@@ -278,8 +278,11 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       }
 
       if (missing.isNotEmpty) {
-        final options = localizations.toListAsText(missing, inclusive: true);
-        return '${localizations.passwordRequires} $options';
+        return localizations.toLitany(
+          missing,
+          inclusive: true,
+          note: localizations.passwordRequires,
+        );
       }
     }
 

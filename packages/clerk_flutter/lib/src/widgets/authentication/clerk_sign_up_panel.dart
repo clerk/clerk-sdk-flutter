@@ -56,14 +56,14 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       if (signUp?.missingFields case List<clerk.Field> missingFields
           when missingFields.isNotEmpty) {
         final l10ns = authState.localizationsOf(context);
-        final options = l10ns.toListAsText(
-          missingFields.map((f) => f.localizedMessage(l10ns)).toList(),
-          inclusive: true,
-        );
         authState.addError(
           clerk.AuthError(
             code: clerk.AuthErrorCode.signUpFlowError,
-            message: '${l10ns.youNeedToAdd} $options',
+            message: l10ns.toLitany(
+              missingFields.map((f) => f.localizedMessage(l10ns)).toList(),
+              note: l10ns.youNeedToAdd,
+              inclusive: true,
+            ),
           ),
         );
       }

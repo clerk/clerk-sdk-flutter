@@ -134,7 +134,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                       ClerkTextFormField(
                         key: const Key('identifier'),
                         label: l10ns.toSentence(
-                          l10ns.toListAsText(identifiers),
+                          l10ns.toLitany(identifiers),
                         ),
                         onChanged: (text) {
                           if (text.isEmpty != _identifier.isEmpty) {
@@ -153,8 +153,10 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                             onPressed: _togglePhoneInput,
                             style: _buttonStyle,
                             child: Text(
-                              '${l10ns.switchTo} '
-                              '${l10ns.toListAsText(phoneIdentifiers)}',
+                              l10ns.toLitany(
+                                phoneIdentifiers,
+                                note: l10ns.switchTo,
+                              ),
                             ),
                           ),
                         ),
@@ -169,7 +171,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                       ClerkPhoneNumberFormField(
                         key: const Key('phoneIdentifier'),
                         label: l10ns.toSentence(
-                          l10ns.toListAsText(phoneIdentifiers),
+                          l10ns.toLitany(phoneIdentifiers),
                         ),
                         onChanged: (text) {
                           if (text.isEmpty != _identifier.isEmpty) {
@@ -188,8 +190,10 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                             onPressed: _togglePhoneInput,
                             style: _buttonStyle,
                             child: Text(
-                              '${l10ns.switchTo} '
-                              '${l10ns.toListAsText(identifiers)}',
+                              l10ns.toLitany(
+                                identifiers,
+                                note: l10ns.switchTo,
+                              ),
                             ),
                           ),
                         ),

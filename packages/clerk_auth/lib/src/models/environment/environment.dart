@@ -63,7 +63,9 @@ class Environment with InformativeToStringMixin {
       strategies.where((i) => i.isOauth == false && i.isPhone == false);
 
   /// Do we have identification strategies?
-  bool get hasIdentificationStrategies => identificationStrategies.isNotEmpty;
+  bool get hasIdentificationStrategies =>
+      identificationStrategies.isNotEmpty ||
+      phoneIdentificationStrategies.isNotEmpty;
 
   /// [Iterable] of oauth identification strategies
   Iterable<Strategy> get oauthStrategies => strategies.where((i) => i.isOauth);

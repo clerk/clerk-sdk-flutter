@@ -1,7 +1,6 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
-import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_forgotten_password_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_identifier_input.dart';
@@ -40,18 +39,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   String _password = '';
   String _code = '';
 
-  bool _showPhoneInput = false;
-
   bool get _hasIdent => _identifier.isNotEmpty;
-
-  static final _buttonStyle = ButtonStyle(
-    padding: MaterialStateProperty.all(
-      horizontalPadding8,
-    ),
-    textStyle: MaterialStateProperty.all(
-      ClerkTextStyle.userButtonSubtitle,
-    ),
-  );
 
   void _onError(clerk.AuthError _) {
     setState(() {
@@ -59,9 +47,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
       _strategy = clerk.Strategy.password;
     });
   }
-
-  void _togglePhoneInput() =>
-      setState(() => _showPhoneInput = !_showPhoneInput);
 
   Future<void> _continue(
     ClerkAuthState authState, {
@@ -98,24 +83,18 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
-    final localizations = authState.localizationsOf(context);
     final env = authState.env;
-    final identifiers = env.identificationStrategies
-        .map((s) => s.localizedMessage(localizations))
-        .toList(growable: false);
-    final phoneIdentifiers = env.phoneIdentificationStrategies
-        .map((s) => s.localizedMessage(localizations))
-        .toList(growable: false);
+    if (env.hasIdentificationStrategies == false) {
+      return emptyWidget;
+    }
+
+    final localizations = authState.localizationsOf(context);
     final factor = authState.client.signIn?.supportedFirstFactors
         .firstWhereOrNull((f) => f.strategy == _strategy);
     final safeIdentifier = factor?.safeIdentifier;
     final otherStrategies = env.otherStrategies.where(StrategyButton.supports);
     final canResetPassword =
         env.config.firstFactors.any((f) => f.isPasswordResetter);
-
-    if (identifiers.isEmpty && phoneIdentifiers.isEmpty) {
-      return emptyWidget;
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

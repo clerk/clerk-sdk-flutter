@@ -4,8 +4,8 @@ import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_forgotten_password_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_identifier_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
-import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
@@ -121,104 +121,30 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Padding(
-          padding: bottomPadding8,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (identifiers.isNotEmpty) //
-                Closeable(
-                  closed: _showPhoneInput,
-                  child: Column(
-                    children: [
-                      ClerkTextFormField(
-                        key: const Key('identifier'),
-                        label: StringExt.alternatives(
-                          identifiers,
-                          connector: localizations.or,
-                        ).capitalized,
-                        onChanged: (text) {
-                          if (text.isEmpty != _identifier.isEmpty) {
-                            // only rebuild if we need the password box to animate
-                            // i.e. when going from '' -> '<a character>' or vice versa
-                            setState(() => _identifier = text);
-                          } else {
-                            _identifier = text;
-                          }
-                        },
-                      ),
-                      if (phoneIdentifiers.isNotEmpty) //
-                        Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: TextButton(
-                            onPressed: _togglePhoneInput,
-                            style: _buttonStyle,
-                            child: Text(
-                              StringExt.alternatives(
-                                phoneIdentifiers,
-                                connector: localizations.or,
-                                prefix: localizations.switchTo,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              if (phoneIdentifiers.isNotEmpty) //
-                Closeable(
-                  closed: _showPhoneInput == false,
-                  child: Column(
-                    children: [
-                      ClerkPhoneNumberFormField(
-                        key: const Key('phoneIdentifier'),
-                        label: StringExt.alternatives(
-                          phoneIdentifiers,
-                          connector: localizations.or,
-                        ).capitalized,
-                        onChanged: (text) {
-                          if (text.isEmpty != _identifier.isEmpty) {
-                            // only rebuild if we need the password box to animate
-                            // i.e. when going from '' -> '<a character>' or vice versa
-                            setState(() => _identifier = text);
-                          } else {
-                            _identifier = text;
-                          }
-                        },
-                      ),
-                      if (identifiers.isNotEmpty) //
-                        Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: TextButton(
-                            onPressed: _togglePhoneInput,
-                            style: _buttonStyle,
-                            child: Text(
-                              StringExt.alternatives(
-                                identifiers,
-                                connector: localizations.or,
-                                prefix: localizations.switchTo,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              if (canResetPassword) //
-                Padding(
-                  padding: topPadding8,
-                  child: ClerkMaterialButton(
-                    label: Padding(
-                      padding: horizontalPadding8,
-                      child: Text(localizations.forgottenPassword),
-                    ),
-                    style: ClerkMaterialButtonStyle.light,
-                    onPressed: _openPasswordResetFlow,
-                  ),
-                ),
-            ],
-          ),
+        ClerkIdentifierInput(
+          onChanged: (text) {
+            if (text.isEmpty != _identifier.isEmpty) {
+              // only rebuild if we need the password box to animate
+              // i.e. when going from '' -> '<a character>' or vice versa
+              setState(() => _identifier = text);
+            } else {
+              _identifier = text;
+            }
+          },
         ),
+        if (canResetPassword) //
+          Padding(
+            padding: topPadding8,
+            child: ClerkMaterialButton(
+              label: Padding(
+                padding: horizontalPadding8,
+                child: Text(localizations.forgottenPassword),
+              ),
+              style: ClerkMaterialButtonStyle.light,
+              onPressed: _openPasswordResetFlow,
+            ),
+          ),
+        verticalMargin8,
         Closeable(
           key: const Key('emailLinkMessage'),
           closed: _strategy != clerk.Strategy.emailLink,

@@ -4,6 +4,7 @@ import 'dart:io' show File, HttpHeaders, HttpStatus, SocketException;
 
 import 'package:clerk_auth/src/clerk_api/token_cache.dart';
 import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
+import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_constants.dart';
 import 'package:clerk_auth/src/models/api/api_error.dart';
@@ -887,6 +888,14 @@ class Api with Logging {
       );
 
       return _processResponse(resp);
+    } on SocketException catch (error, stacktrace) {
+      logSevere('Connection issue', error, stacktrace);
+      return ApiResponse.fatal(
+        error: ApiError(
+          message: error.toString(),
+          authErrorCode: AuthErrorCode.problemsConnecting,
+        ),
+      );
     } catch (error, stacktrace) {
       logSevere('Error during fetch', error, stacktrace);
       return ApiResponse.fatal(

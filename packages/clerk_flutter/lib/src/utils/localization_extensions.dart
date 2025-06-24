@@ -10,28 +10,30 @@ extension ClerkAuthErrorExtension on clerk.AuthError {
   /// Allow localization of an [clerk.AuthError]
   String localizedMessage(ClerkSdkLocalizations localizations) {
     return switch (code) {
-      clerk.AuthErrorCode.noStageForStatus =>
-        localizations.noStageForStatus(argument.toString()),
-      clerk.AuthErrorCode.noSessionTokenRetrieved =>
-        localizations.noSessionTokenRetrieved,
-      clerk.AuthErrorCode.noAssociatedStrategy =>
-        localizations.noAssociatedStrategy(argument.toString()),
-      clerk.AuthErrorCode.passwordMatchError =>
-        localizations.passwordAndPasswordConfirmationMustMatch,
+      clerk.AuthErrorCode.actionNotTimely => localizations.actionNotTimely,
+      clerk.AuthErrorCode.cannotDeleteSelf => localizations.cannotDeleteSelf,
       clerk.AuthErrorCode.jwtPoorlyFormatted =>
         localizations.jwtPoorlyFormatted(argument.toString()),
-      clerk.AuthErrorCode.actionNotTimely => localizations.actionNotTimely,
+      clerk.AuthErrorCode.noAssociatedStrategy =>
+        localizations.noAssociatedStrategy(argument.toString()),
       clerk.AuthErrorCode.noSessionFoundForUser =>
         localizations.noSessionFoundForUser(argument.toString()),
+      clerk.AuthErrorCode.noSessionTokenRetrieved =>
+        localizations.noSessionTokenRetrieved,
+      clerk.AuthErrorCode.noStageForStatus =>
+        localizations.noStageForStatus(argument.toString()),
       clerk.AuthErrorCode.noSuchFirstFactorStrategy =>
         localizations.noSuchFirstFactorStrategy(argument.toString()),
       clerk.AuthErrorCode.noSuchSecondFactorStrategy =>
         localizations.noSuchSecondFactorStrategy(argument.toString()),
-      clerk.AuthErrorCode.signInError =>
-        localizations.signInError(argument.toString()),
+      clerk.AuthErrorCode.passwordMatchError =>
+        localizations.passwordAndPasswordConfirmationMustMatch,
       clerk.AuthErrorCode.passwordResetStrategyError =>
         localizations.unsupportedPasswordResetStrategy(argument.toString()),
-      clerk.AuthErrorCode.cannotDeleteSelf => localizations.cannotDeleteSelf,
+      clerk.AuthErrorCode.problemsConnecting =>
+        localizations.problemsConnecting,
+      clerk.AuthErrorCode.signInError =>
+        localizations.signInError(argument.toString()),
       _ => toString(),
     };
   }

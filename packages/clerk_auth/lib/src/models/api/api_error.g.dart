@@ -11,6 +11,8 @@ ApiError _$ApiErrorFromJson(Map<String, dynamic> json) => ApiError(
       code: json['code'] as String?,
       meta: json['meta'] as Map<String, dynamic>?,
       longMessage: json['long_message'] as String?,
+      authErrorCode:
+          $enumDecodeNullable(_$AuthErrorCodeEnumMap, json['auth_error_code']),
     );
 
 Map<String, dynamic> _$ApiErrorToJson(ApiError instance) {
@@ -27,5 +29,29 @@ Map<String, dynamic> _$ApiErrorToJson(ApiError instance) {
   writeNotNull('code', instance.code);
   writeNotNull('meta', instance.meta);
   writeNotNull('long_message', instance.longMessage);
+  writeNotNull(
+      'auth_error_code', _$AuthErrorCodeEnumMap[instance.authErrorCode]);
   return val;
 }
+
+const _$AuthErrorCodeEnumMap = {
+  AuthErrorCode.serverErrorResponse: 'serverErrorResponse',
+  AuthErrorCode.webviewErrorResponse: 'webviewErrorResponse',
+  AuthErrorCode.signUpFlowError: 'signUpFlowError',
+  AuthErrorCode.invalidPassword: 'invalidPassword',
+  AuthErrorCode.typeInvalid: 'typeInvalid',
+  AuthErrorCode.noStageForStatus: 'noStageForStatus',
+  AuthErrorCode.noSessionTokenRetrieved: 'noSessionTokenRetrieved',
+  AuthErrorCode.noAssociatedStrategy: 'noAssociatedStrategy',
+  AuthErrorCode.noAssociatedCodeRetrievalMethod:
+      'noAssociatedCodeRetrievalMethod',
+  AuthErrorCode.passwordMatchError: 'passwordMatchError',
+  AuthErrorCode.jwtPoorlyFormatted: 'jwtPoorlyFormatted',
+  AuthErrorCode.actionNotTimely: 'actionNotTimely',
+  AuthErrorCode.noSessionFoundForUser: 'noSessionFoundForUser',
+  AuthErrorCode.noSuchFirstFactorStrategy: 'noSuchFirstFactorStrategy',
+  AuthErrorCode.noSuchSecondFactorStrategy: 'noSuchSecondFactorStrategy',
+  AuthErrorCode.signInError: 'signInError',
+  AuthErrorCode.passwordResetStrategyError: 'passwordResetStrategyError',
+  AuthErrorCode.cannotDeleteSelf: 'cannotDeleteSelf',
+};

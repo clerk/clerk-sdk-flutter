@@ -604,6 +604,12 @@ abstract class ClerkSdkLocalizations {
   /// **'PRIMARY'**
   String get primary;
 
+  /// No description provided for @problemsConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'We are having problems connecting'**
+  String get problemsConnecting;
+
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:

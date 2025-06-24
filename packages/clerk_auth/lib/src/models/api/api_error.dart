@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -14,6 +15,7 @@ class ApiError with InformativeToStringMixin {
     this.code,
     this.meta,
     this.longMessage,
+    this.authErrorCode,
   });
 
   /// message
@@ -27,6 +29,10 @@ class ApiError with InformativeToStringMixin {
 
   /// long message
   final String? longMessage;
+
+  /// An optional [AuthErrorCode], indicating this
+  /// error is internally generated
+  final AuthErrorCode? authErrorCode;
 
   /// The longer of the two messages
   String get fullMessage => longMessage ?? message;

@@ -207,6 +207,7 @@
   "pleaseChooseAnAccountToConnect": "Please choose an account to connect",
   "pleaseEnterYourIdentifier": "Please enter your identifier",
   "primary": "PRIMARY",
+  "problemsConnecting": "We are having problems connecting",
   "profile": "Profile",
   "profileDetails": "Profile details",
   "recommendSize": "Recommend size 1:1, up to 5MB.",

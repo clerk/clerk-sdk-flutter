@@ -177,12 +177,7 @@ class Auth {
 
   ApiResponse _housekeeping(ApiResponse resp) {
     if (resp.isError) {
-      addError(
-        AuthError(
-          code: AuthErrorCode.serverErrorResponse,
-          message: resp.errorMessage,
-        ),
-      );
+      addError(AuthError(code: resp.authErrorCode, message: resp.errorMessage));
     } else if (resp.client case Client client) {
       this.client = client;
     }

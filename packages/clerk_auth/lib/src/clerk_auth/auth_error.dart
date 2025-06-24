@@ -81,4 +81,7 @@ enum AuthErrorCode {
 
   /// You are not authorized to delete your user
   cannotDeleteSelf,
+
+  /// We are having problems connecting
+  problemsConnecting,
 }

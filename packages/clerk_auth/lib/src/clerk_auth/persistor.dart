@@ -52,29 +52,36 @@ typedef DirectoryGetter = FutureOr<Directory> Function();
 ///
 class DefaultPersistor implements Persistor {
   /// Constructor
-  DefaultPersistor({required DirectoryGetter directoryGetter})
-      : _directoryGetter = directoryGetter;
+  DefaultPersistor({required DirectoryGetter getDirectory})
+      : _getDirectory = getDirectory;
+
+  /// A function to return the storage directory
+  final DirectoryGetter _getDirectory;
 
   static const _writeDelay = Duration(milliseconds: 600);
   static const _filename = 'clerk_sdk.json';
 
-  final DirectoryGetter _directoryGetter;
+  /// The cache directory
+  Directory? cacheDirectory;
+
   final _cache = <String, dynamic>{};
   late final File _cacheFile;
   Timer? _timer;
 
   @override
   Future<void> initialize() async {
-    final storageDirectory = await _directoryGetter();
-    _cacheFile = File('${storageDirectory.path}/$_filename');
-    try {
-      if (_cacheFile.existsSync()) {
-        final data = await _cacheFile.readAsString();
-        _cache.addAll(json.decode(data) as Map<String, dynamic>);
+    if (cacheDirectory == null) {
+      cacheDirectory = await _getDirectory();
+      _cacheFile = File('${cacheDirectory!.path}/$_filename');
+      try {
+        if (_cacheFile.existsSync()) {
+          final data = await _cacheFile.readAsString();
+          _cache.addAll(json.decode(data) as Map<String, dynamic>);
+        }
+      } on FormatException catch (_) {
+        // if we can't decode the json file then we'll delete it and start over
+        _cacheFile.deleteSync();
       }
-    } on FormatException catch (_) {
-      // if we can't decode the json file then we'll delete it and start over
-      _cacheFile.deleteSync();
     }
   }
 

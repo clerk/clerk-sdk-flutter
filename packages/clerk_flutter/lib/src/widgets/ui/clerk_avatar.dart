@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
+import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
@@ -50,7 +51,7 @@ class ClerkAvatar extends StatelessWidget {
     if (imageUrl case String imageUrl when imageUrl.isNotEmpty) {
       return ClipRRect(
         borderRadius: borderRadius ?? BorderRadius.circular(diameter / 2),
-        child: Image.network(
+        child: ClerkCachedImage(
           imageUrl,
           width: diameter,
           height: diameter,

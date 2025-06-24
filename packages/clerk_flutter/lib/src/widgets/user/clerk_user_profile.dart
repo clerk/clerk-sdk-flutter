@@ -5,6 +5,7 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_input_dialog.dart';
@@ -297,7 +298,7 @@ class _ExternalAccountList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.network(social.logoUrl, width: 14),
+                    ClerkCachedImage(social.logoUrl, width: 14),
                     horizontalMargin4,
                     if (account.isVerified) ...[
                       Text(social.name),

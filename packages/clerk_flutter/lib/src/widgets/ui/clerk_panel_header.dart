@@ -1,4 +1,5 @@
 import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class ClerkPanelHeader extends StatelessWidget {
             child: SizedBox.square(
               dimension: 32.0,
               child: display.logoUrl?.isNotEmpty == true
-                  ? Image.network(display.logoUrl!)
+                  ? ClerkCachedImage(display.logoUrl!)
                   : defaultOrgLogo,
             ),
           ),

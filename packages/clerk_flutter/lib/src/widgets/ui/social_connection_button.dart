@@ -1,4 +1,5 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
+import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
@@ -41,7 +42,7 @@ class SocialConnectionButton extends StatelessWidget {
             dimension: 12,
             child: Center(
               child: connection.logoUrl.isNotEmpty
-                  ? Image.network(connection.logoUrl)
+                  ? ClerkCachedImage(connection.logoUrl)
                   : Text(
                       connection.name.initials,
                       textAlign: TextAlign.center,

@@ -939,7 +939,7 @@ class Api with Logging {
     List<String>? nullableKeys,
   }) async {
     final parsedParams = {...?params}..removeWhere(
-        (key, value) => nullableKeys?.contains(key) != true && value == null,
+        (key, value) => value == null && nullableKeys?.contains(key) != true,
       );
     final queryParams =
         _queryParams(method, withSession: withSession, params: parsedParams);

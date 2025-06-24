@@ -7,6 +7,7 @@ import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_action_row.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_page.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
@@ -281,7 +282,7 @@ class _OrganizationRow extends StatelessWidget {
                 child: organization.imageUrl?.isNotEmpty == true
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(6),
-                        child: Image.network(
+                        child: ClerkCachedImage(
                           organization.imageUrl!,
                           fit: BoxFit.cover,
                         ),

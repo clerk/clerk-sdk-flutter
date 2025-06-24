@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/utils/clerk_file_cache.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
@@ -111,6 +112,10 @@ class ClerkAuth extends StatefulWidget {
   /// get the stream of [clerk.AuthError]
   static Stream<clerk.AuthError> errorStreamOf(BuildContext context) =>
       of(context, listen: false).errorStream;
+
+  /// get the [ClerkFileCache] of the [ClerkAuthConfig]
+  static ClerkFileCache fileCacheOf(BuildContext context) =>
+      of(context, listen: false).config.fileCache;
 }
 
 class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {

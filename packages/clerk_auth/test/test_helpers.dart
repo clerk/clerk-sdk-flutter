@@ -44,6 +44,9 @@ class TestHttpService implements HttpService {
   void terminate() {}
 
   @override
+  Future<bool> ping(Uri _) => Future.value(true);
+
+  @override
   Future<Response> send(
     HttpMethod method,
     Uri uri, {
@@ -142,6 +145,9 @@ class NoneHttpService implements HttpService {
 
   @override
   void terminate() {}
+
+  @override
+  Future<bool> ping(Uri uri) => Future.value(true);
 
   @override
   Future<Response> send(

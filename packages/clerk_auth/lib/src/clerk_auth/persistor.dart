@@ -82,7 +82,7 @@ class DefaultPersistor implements Persistor {
   void terminate() {}
 
   @override
-  FutureOr<T?> read<T>(String key) => _cache[key] as T;
+  FutureOr<T?> read<T>(String key) => _cache[key] as T?;
 
   @override
   FutureOr<void> write<T>(String key, T value) {

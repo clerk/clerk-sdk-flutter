@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show File, HttpHeaders, HttpStatus;
+import 'dart:io' show File, HttpHeaders, HttpStatus, SocketException;
 
 import 'package:clerk_auth/src/clerk_api/token_cache.dart';
 import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
@@ -58,6 +58,7 @@ class Api with Logging {
   static const _scheme = 'https';
 
   static const _defaultPollDelay = Duration(seconds: 53);
+  static const _pingTimeout = Duration(milliseconds: 500);
 
   /// Initialise the API
   Future<void> initialize() async {
@@ -70,6 +71,19 @@ class Api with Logging {
   /// Dispose of the API
   void terminate() {
     _pollTimer?.cancel();
+  }
+
+  /// Confirm connectivity to the back end
+  Future<bool> hasConnectivity() async {
+    try {
+      return await config.httpService
+          .ping(Uri(scheme: _scheme, host: _domain))
+          .timeout(_pingTimeout);
+    } on SocketException {
+      return false;
+    } on TimeoutException {
+      return false;
+    }
   }
 
   // environment & client

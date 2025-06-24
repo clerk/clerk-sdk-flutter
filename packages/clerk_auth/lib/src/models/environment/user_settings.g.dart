@@ -43,7 +43,7 @@ UserSettings _$UserSettingsFromJson(Map<String, dynamic> json) => UserSettings(
                 k, SocialConnection.fromJson(e as Map<String, dynamic>)),
           ) ??
           const {},
-      saml: _readSamlEnabled(json, 'saml') as bool? ?? false,
+      saml: readEnabled(json, 'saml') as bool? ?? false,
     );
 
 Map<String, dynamic> _$UserSettingsToJson(UserSettings instance) =>

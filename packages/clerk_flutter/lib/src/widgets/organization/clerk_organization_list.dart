@@ -354,11 +354,13 @@ class _Organization {
   ) =>
       _Organization(
         id: invitation.id,
-        orgId: invitation.orgId,
-        name: invitation.name,
+        orgId: invitation.organizationData.id,
+        name: invitation.organizationData.name,
         roleName:
             '${invitation.roleName} (${invitation.status.localizedMessage(localizations)})',
-        imageUrl: invitation.hasImage ? invitation.imageUrl : null,
+        imageUrl: invitation.organizationData.hasImage
+            ? invitation.organizationData.imageUrl
+            : null,
         status: invitation.status,
       );
 

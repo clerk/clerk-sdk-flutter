@@ -1,6 +1,7 @@
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/models/environment.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
+import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -55,7 +56,7 @@ class UserSettings with InformativeToStringMixin {
   final Map<UserAttribute, UserAttributeData> attributes;
 
   /// saml?
-  @JsonKey(readValue: _readSamlEnabled)
+  @JsonKey(readValue: readEnabled)
   final bool saml;
 
   /// social settings
@@ -73,8 +74,6 @@ class UserSettings with InformativeToStringMixin {
   @override
   Map<String, dynamic> toJson() => _$UserSettingsToJson(this);
 }
-
-bool _readSamlEnabled(map, _) => map['saml']?['enabled'] == true;
 
 Map<UserAttribute, UserAttributeData> _toAttributeMap(dynamic data) {
   final result = <UserAttribute, UserAttributeData>{};

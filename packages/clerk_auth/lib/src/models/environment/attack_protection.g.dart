@@ -11,7 +11,7 @@ AttackProtection _$AttackProtectionFromJson(Map<String, dynamic> json) =>
       userLockout: json['user_lockout'] == null
           ? UserLockout.empty
           : UserLockout.fromJson(json['user_lockout'] as Map<String, dynamic>),
-      piiEnabled: _readPiiEnabled(json, 'pii_enabled') as bool? ?? false,
+      piiEnabled: readEnabled(json, 'pii') as bool? ?? false,
       emailLinkRequireSameClient: _readEmailLinkRequireSameClient(
               json, 'email_link_require_same_client') as bool? ??
           false,
@@ -20,7 +20,7 @@ AttackProtection _$AttackProtectionFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$AttackProtectionToJson(AttackProtection instance) =>
     <String, dynamic>{
       'user_lockout': instance.userLockout.toJson(),
-      'pii_enabled': instance.piiEnabled,
+      'pii': instance.piiEnabled,
       'email_link_require_same_client': instance.emailLinkRequireSameClient,
     };
 

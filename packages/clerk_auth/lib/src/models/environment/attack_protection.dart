@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
+import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -22,7 +23,7 @@ class AttackProtection with InformativeToStringMixin {
   final UserLockout userLockout;
 
   /// is this PII enabled?
-  @JsonKey(readValue: _readPiiEnabled)
+  @JsonKey(name: 'pii', readValue: readEnabled)
   final bool piiEnabled;
 
   /// does email link require same client?
@@ -61,7 +62,10 @@ class UserLockout {
 
   /// duration of lockout
   @JsonKey(
-      name: 'duration_in_minutes', toJson: _fromDuration, fromJson: _toDuration)
+    name: 'duration_in_minutes',
+    toJson: _fromDuration,
+    fromJson: _toDuration,
+  )
   final Duration duration;
 
   /// fromJson
@@ -77,7 +81,5 @@ Duration _toDuration(dynamic value) =>
 
 int _fromDuration(Duration duration) => duration.inMinutes;
 
-bool _readPiiEnabled(map, _) => map['pii']?['enabled'] == true;
-
-bool _readEmailLinkRequireSameClient(map, _) =>
-    map['email_link']?['require_same_client'] == true;
+bool _readEmailLinkRequireSameClient(map, name) =>
+    readBool(map, name, 'require_same_client');

@@ -55,4 +55,4 @@ class Verification with InformativeToStringMixin {
 }
 
 String? _extractErrorMessage(Map<dynamic, dynamic> map, String field) =>
-    map['error']?['long_message'] as String?;
+    readItem<String>(map, field, 'long_message');

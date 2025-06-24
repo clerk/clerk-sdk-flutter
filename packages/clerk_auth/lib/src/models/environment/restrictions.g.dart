@@ -7,14 +7,14 @@ part of 'restrictions.dart';
 // **************************************************************************
 
 Restrictions _$RestrictionsFromJson(Map<String, dynamic> json) => Restrictions(
-      allowlistEnabled: _readStatus(json, 'allowlist') as bool? ?? false,
-      blocklistEnabled: _readStatus(json, 'blocklist') as bool? ?? false,
+      allowlistEnabled: readEnabled(json, 'allowlist') as bool? ?? false,
+      blocklistEnabled: readEnabled(json, 'blocklist') as bool? ?? false,
       blockEmailSubaddresses:
-          _readStatus(json, 'block_email_subaddresses') as bool? ?? false,
+          readEnabled(json, 'block_email_subaddresses') as bool? ?? false,
       blockDisposableEmailDomains:
-          _readStatus(json, 'block_disposable_email_domains') as bool? ?? false,
+          readEnabled(json, 'block_disposable_email_domains') as bool? ?? false,
       ignoreDotsForEmailAddresses:
-          _readStatus(json, 'ignore_dots_for_email_addresses') as bool? ??
+          readEnabled(json, 'ignore_dots_for_email_addresses') as bool? ??
               false,
     );
 

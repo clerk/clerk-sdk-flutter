@@ -16,7 +16,7 @@ class SignInSettings with InformativeToStringMixin {
   });
 
   /// second factor required?
-  @JsonKey(readValue: _readSecondFactorRequired)
+  @JsonKey(readValue: _readRequired)
   final bool secondFactorRequired;
 
   /// empty [SignInSettings] object
@@ -31,5 +31,4 @@ class SignInSettings with InformativeToStringMixin {
   Map<String, dynamic> toJson() => _$SignInSettingsToJson(this);
 }
 
-bool _readSecondFactorRequired(map, _) =>
-    isTrue(map['second_factor']?['required']);
+bool _readRequired(map, name) => readBool(map, name, 'required');

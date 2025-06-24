@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/models/client/public_organization_data.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
@@ -15,11 +16,7 @@ class OrganizationInvitation with InformativeToStringMixin {
     required this.id,
     required this.status,
     required this.roleName,
-    required this.orgId,
-    required this.name,
-    required this.slug,
-    required this.imageUrl,
-    required this.hasImage,
+    required this.organizationData,
     required this.updatedAt,
     required this.createdAt,
   });
@@ -33,25 +30,8 @@ class OrganizationInvitation with InformativeToStringMixin {
   /// role
   final String roleName;
 
-  /// organization id
-  @JsonKey(readValue: _readOrgId)
-  final String orgId;
-
-  /// name
-  @JsonKey(readValue: _readString)
-  final String name;
-
-  /// slug
-  @JsonKey(readValue: _readString)
-  final String slug;
-
-  /// image url
-  @JsonKey(readValue: _readString)
-  final String imageUrl;
-
-  /// has image
-  @JsonKey(readValue: _readBool)
-  final bool hasImage;
+  /// organization data
+  final PublicOrganizationData organizationData;
 
   /// updated at
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
@@ -69,9 +49,3 @@ class OrganizationInvitation with InformativeToStringMixin {
   @override
   Map<String, dynamic> toJson() => _$OrganizationInvitationToJson(this);
 }
-
-String _readString(map, name) => map['public_organization_data']?[name] ?? '';
-
-String _readOrgId(map, _) => _readString(map, 'id');
-
-bool _readBool(map, name) => map['public_organization_data']?[name] == true;

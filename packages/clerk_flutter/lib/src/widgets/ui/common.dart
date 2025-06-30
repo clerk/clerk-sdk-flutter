@@ -25,14 +25,12 @@ const emptyWidgetWide = SizedBox(width: double.infinity);
 
 const spacer = Spacer();
 
-const outlineInputBorder = OutlineInputBorder(
-  borderSide: BorderSide.none,
-);
+const inputBorderSide = BorderSide(color: ClerkColors.dawnPink, width: 1.0);
 
-const inputBoxBorder = RoundedRectangleBorder(
-  side: BorderSide(color: ClerkColors.dawnPink, width: 1.0),
-  borderRadius: borderRadius4,
-);
+const outlineInputBorder = OutlineInputBorder(borderSide: inputBorderSide);
+
+const inputBoxBorder =
+    RoundedRectangleBorder(side: inputBorderSide, borderRadius: borderRadius4);
 
 const inputBoxBorderDecoration = ShapeDecoration(shape: inputBoxBorder);
 

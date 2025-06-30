@@ -133,7 +133,7 @@ class _EditableProfileDataState extends State<EditableProfileData> {
                   autofocus: true,
                   decoration: const InputDecoration(
                     isCollapsed: true,
-                    border: outlineInputBorder,
+                    border: OutlineInputBorder(borderSide: BorderSide.none),
                     contentPadding: horizontalPadding8,
                   ),
                   onFieldSubmitted: _update,

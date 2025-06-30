@@ -35,7 +35,6 @@ class ClerkSignInPanel extends StatefulWidget {
 class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     with ClerkTelemetryStateMixin {
   clerk.Strategy _strategy = clerk.Strategy.password;
-  bool _isPhoneInput = false;
   String _identifier = '';
   String _password = '';
   String _code = '';
@@ -81,8 +80,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     await ClerkForgottenPasswordPanel.show(context);
   }
 
-  void _togglePhoneInput() => setState(() => _isPhoneInput = !_isPhoneInput);
-
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
@@ -104,9 +101,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
       mainAxisSize: MainAxisSize.min,
       children: [
         ClerkIdentifierInput(
-          isPhoneInput: _isPhoneInput,
           strategies: env.identificationStrategies.toList(),
-          onToggle: _togglePhoneInput,
           onChanged: (text) {
             if (text.isEmpty != _identifier.isEmpty) {
               // only rebuild if we need the password box to animate

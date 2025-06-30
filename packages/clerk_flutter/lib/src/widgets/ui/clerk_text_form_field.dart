@@ -76,6 +76,7 @@ class ClerkTextFormField extends StatelessWidget {
         verticalMargin4,
         DecoratedBox(
           decoration: inputBoxBorderDecoration,
+          position: DecorationPosition.foreground,
           child: _TextField(
             optional: isOptional,
             obscureText: obscureText,
@@ -132,7 +133,7 @@ class _TextFieldState extends State<_TextField> {
       style: ClerkTextStyle.inputText.copyWith(
         color: _isValid ? ClerkColors.charcoalGrey : ClerkColors.incarnadine,
       ),
-      onChanged: (text) => setState(() => widget.onChanged?.call(text)),
+      onChanged: widget.onChanged,
       onFieldSubmitted: widget.onSubmit,
       obscureText: widget.obscureText,
       obscuringCharacter: '\u25CF',

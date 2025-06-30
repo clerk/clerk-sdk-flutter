@@ -1,6 +1,5 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/src/generated/clerk_sdk_localizations.dart';
-import 'package:flutter/material.dart';
 
 /// Function that performs localization
 typedef LocalizedMessage = String Function(ClerkSdkLocalizations localizations);
@@ -207,8 +206,4 @@ extension StringExt on String {
   /// character capitalised
   ///
   String get capitalized => this[0].toUpperCase() + substring(1);
-
-  /// drop all supplied characters from the string
-  String dropChars(String chars) =>
-      characters.where((c) => chars.contains(c) == false).join('');
 }

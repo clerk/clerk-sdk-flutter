@@ -1,6 +1,5 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_identifier_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
@@ -13,9 +12,9 @@ import 'package:flutter/material.dart';
 
 enum _ResetFlowState {
   unstarted,
+  started,
   awaitingCode,
-  awaitingReset,
-  unknowable;
+  awaitingReset;
 
   bool get isUnstarted => this == unstarted;
 
@@ -38,7 +37,6 @@ class ClerkForgottenPasswordPanel extends StatefulWidget {
   static Future<bool?> show(BuildContext context) async {
     return await showDialog(
       context: context,
-      useRootNavigator: false,
       builder: (context) => const ClerkForgottenPasswordPanel(),
     );
   }
@@ -50,26 +48,28 @@ class ClerkForgottenPasswordPanel extends StatefulWidget {
 
 class _ClerkForgottenPasswordPanelState
     extends State<ClerkForgottenPasswordPanel> {
+  final _identifierType = ValueNotifier(clerk.IdentifierType.emailAddress);
+
   _ResetFlowState _flowState = _ResetFlowState.unstarted;
+
   bool _obscured = true;
-  bool _isPhoneInput = false;
   String _code = '';
   String _identifier = '';
   String _password = '';
   String _confirmation = '';
 
-  clerk.Strategy get _strategy => _isPhoneInput
+  clerk.Strategy get _strategy => _identifierType.value.isPhoneNumber //
       ? clerk.Strategy.resetPasswordPhoneCode
       : clerk.Strategy.resetPasswordEmailCode;
 
   Future<void> _initiatePasswordReset(ClerkAuthState authState) async {
     setState(() {
-      _flowState = _ResetFlowState.unknowable;
+      _flowState = _ResetFlowState.started;
       _code = '';
     });
 
     await authState.initiatePasswordReset(
-      identifier: _identifier.dropChars('( )'),
+      identifier: _identifierType.value.sanitize(_identifier),
       strategy: _strategy,
     );
 
@@ -86,13 +86,6 @@ class _ClerkForgottenPasswordPanelState
   }
 
   void _toggleObscurePassword() => setState(() => _obscured = !_obscured);
-
-  void _togglePhoneInput() {
-    setState(() {
-      _identifier = '';
-      _isPhoneInput = !_isPhoneInput;
-    });
-  }
 
   void _restartFlow() => setState(() => _flowState = _ResetFlowState.unstarted);
 
@@ -156,12 +149,16 @@ class _ClerkForgottenPasswordPanelState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                ClerkIdentifierInput(
-                  isPhoneInput: _isPhoneInput,
-                  strategies: factors,
-                  onToggle: _togglePhoneInput,
-                  onChanged: (identifier) => _identifier = identifier,
-                  onSubmit: (_) => _initiatePasswordReset(authState),
+                ValueListenableBuilder(
+                  valueListenable: _identifierType,
+                  builder: (BuildContext context, _, __) {
+                    return ClerkIdentifierInput(
+                      strategies: factors,
+                      identifierType: _identifierType,
+                      onChanged: (identifier) => _identifier = identifier,
+                      onSubmit: (_) => _initiatePasswordReset(authState),
+                    );
+                  },
                 ),
                 verticalMargin8,
                 _ActionButton(

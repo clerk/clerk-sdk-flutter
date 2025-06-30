@@ -78,7 +78,7 @@ class _PhoneInput extends StatefulWidget {
     required this.initial,
     required this.onChanged,
     required this.onSubmit,
-    this.focusNode,
+    required this.focusNode,
   });
 
   final String? initial;
@@ -158,13 +158,15 @@ class _PhoneInputState extends State<_PhoneInput> {
             },
             onSubmitted: widget.onSubmit,
             style: ClerkTextStyle.inputText.copyWith(
-              color:
-                  _isValid ? ClerkColors.charcoalGrey : ClerkColors.incarnadine,
+              color: _isValid //
+                  ? ClerkColors.charcoalGrey
+                  : ClerkColors.incarnadine,
             ),
             decoration: const InputDecoration(
               errorStyle: TextStyle(
-                  color: Colors.transparent,
-                  height: 0.01), // weird hack because 0 doesn't work
+                color: Colors.transparent,
+                height: 0.01,
+              ), // weird hack because 0 doesn't work
               isDense: true,
               border: InputBorder.none,
               constraints: BoxConstraints(maxHeight: 32, minHeight: 32),

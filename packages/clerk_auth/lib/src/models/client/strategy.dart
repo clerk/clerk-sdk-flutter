@@ -165,7 +165,8 @@ class Strategy {
   bool get isOtherStrategy => isOauth == false && requiresPassword == false;
 
   /// is phone strategy?
-  bool get isPhone => const [phoneCode, phoneNumber].contains(this);
+  bool get isPhone =>
+      const [phoneCode, phoneNumber, resetPasswordPhoneCode].contains(this);
 
   /// is a password reset strategy?
   bool get isPasswordResetter =>
@@ -175,7 +176,7 @@ class Strategy {
   bool get requiresPassword => const [
         password,
         resetPasswordEmailCode,
-        resetPasswordPhoneCode,
+        resetPasswordPhoneCode
       ].contains(this);
 
   /// requires code?
@@ -183,7 +184,7 @@ class Strategy {
         emailCode,
         phoneCode,
         resetPasswordEmailCode,
-        resetPasswordPhoneCode,
+        resetPasswordPhoneCode
       ].contains(this);
 
   /// requires signature?

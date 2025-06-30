@@ -35,6 +35,7 @@ class ClerkSignInPanel extends StatefulWidget {
 class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     with ClerkTelemetryStateMixin {
   clerk.Strategy _strategy = clerk.Strategy.password;
+  bool _isPhoneInput = false;
   String _identifier = '';
   String _password = '';
   String _code = '';
@@ -76,9 +77,11 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     }
   }
 
-  Future<void> _openPasswordResetFlow() async {
+  Future<void> _openPasswordResetFlow(BuildContext context) async {
     await ClerkForgottenPasswordPanel.show(context);
   }
+
+  void _togglePhoneInput() => setState(() => _isPhoneInput = !_isPhoneInput);
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +100,13 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         env.config.firstFactors.any((f) => f.isPasswordResetter);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         ClerkIdentifierInput(
+          isPhoneInput: _isPhoneInput,
+          strategies: env.identificationStrategies.toList(),
+          onToggle: _togglePhoneInput,
           onChanged: (text) {
             if (text.isEmpty != _identifier.isEmpty) {
               // only rebuild if we need the password box to animate
@@ -120,7 +126,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                 child: Text(localizations.forgottenPassword),
               ),
               style: ClerkMaterialButtonStyle.light,
-              onPressed: _openPasswordResetFlow,
+              onPressed: () => _openPasswordResetFlow(context),
             ),
           ),
         verticalMargin8,
@@ -132,7 +138,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
               _identifier,
             ),
             maxLines: 2,
-            style: ClerkTextStyle.inputLabel,
+            style: ClerkTextStyle.inputText,
           ),
         ),
         Closeable(

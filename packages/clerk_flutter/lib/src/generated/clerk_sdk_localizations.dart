@@ -454,6 +454,18 @@ abstract class ClerkSdkLocalizations {
   /// **'needs second factor'**
   String get needsSecondFactor;
 
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPassword;
+
+  /// No description provided for @newPasswordConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get newPasswordConfirmation;
+
   /// No description provided for @noAssociatedCodeRetrievalMethod.
   ///
   /// In en, this message translates to:
@@ -634,12 +646,6 @@ abstract class ClerkSdkLocalizations {
   /// **'Recommend size 1:1, up to 5MB.'**
   String get recommendSize;
 
-  /// No description provided for @requestPasswordResetCode.
-  ///
-  /// In en, this message translates to:
-  /// **'Request a password reset code'**
-  String get requestPasswordResetCode;
-
   /// No description provided for @requiredField.
   ///
   /// In en, this message translates to:
@@ -669,6 +675,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Select the account with which you wish to continue'**
   String get selectAccount;
+
+  /// No description provided for @sendMeTheCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send me the reset code'**
+  String get sendMeTheCode;
 
   /// No description provided for @signIn.
   ///

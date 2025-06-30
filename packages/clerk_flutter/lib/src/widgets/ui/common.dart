@@ -30,12 +30,11 @@ const outlineInputBorder = OutlineInputBorder(
 );
 
 const inputBoxBorder = RoundedRectangleBorder(
-  side: BorderSide(color: ClerkColors.dawnPink, width: 0.5),
+  side: BorderSide(color: ClerkColors.dawnPink, width: 1),
   borderRadius: borderRadius4,
 );
 
 const inputBoxBorderDecoration = ShapeDecoration(
-  color: ClerkColors.white,
   shape: inputBoxBorder,
 );
 

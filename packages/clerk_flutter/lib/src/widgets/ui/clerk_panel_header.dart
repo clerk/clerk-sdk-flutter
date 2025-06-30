@@ -33,7 +33,7 @@ class ClerkPanelHeader extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: verticalPadding32,
+          padding: verticalPadding24,
           child: Center(
             child: SizedBox.square(
               dimension: 32.0,

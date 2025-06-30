@@ -50,10 +50,10 @@ class TokenCache {
   /// Initialise the cache
   Future<void> initialize() async {
     // Read all stored variables first before assignment
-    final sessionId = await persistor.read(_sessionIdKey) ?? '';
+    final sessionId = await persistor.read<String>(_sessionIdKey) ?? '';
     _sessionId = sessionId;
 
-    final sessionTokens = await persistor.read(_sessionTokenKey);
+    final sessionTokens = await persistor.read<String>(_sessionTokenKey);
     if (sessionTokens case String sessionTokens) {
       final sessionTokenData =
           json.decode(sessionTokens) as Map<String, dynamic>;
@@ -66,10 +66,10 @@ class TokenCache {
       }
     }
 
-    final clientToken = await persistor.read(_clientTokenKey) ?? '';
+    final clientToken = await persistor.read<String>(_clientTokenKey) ?? '';
     _clientToken = clientToken;
 
-    final clientId = await persistor.read(_clientIdKey) ?? '';
+    final clientId = await persistor.read<String>(_clientIdKey) ?? '';
     _clientId = clientId;
   }
 

@@ -304,9 +304,8 @@ class Auth {
             .then(_housekeeping);
 
       case SignIn signIn
-          when strategy.requiresCode &&
+          when strategy.isPasswordResetter &&
               code is String &&
-              strategy.requiresPassword &&
               password is String:
         await _api
             .attemptSignIn(

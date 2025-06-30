@@ -20,7 +20,7 @@ Future<void> main() async {
     if (kDebugMode) {
       print(
         'Please run the example with: '
-        '--dart-define-from-file=example.env',
+        '--dart-define-from-file=example.json',
       );
     }
     exit(1);

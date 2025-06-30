@@ -1,3 +1,4 @@
+import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/input_label.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
@@ -17,7 +18,7 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
     this.isOptional = false,
     this.isMissing = false,
     this.initial,
-    this.defaultCountry = IsoCode.US,
+    this.focusNode,
     this.trailing,
   });
 
@@ -39,8 +40,8 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
   /// initial value
   final String? initial;
 
-  /// default country
-  final IsoCode defaultCountry;
+  /// An optional focus node
+  final FocusNode? focusNode;
 
   /// A widget for the end of the label
   final Widget? trailing;
@@ -62,9 +63,9 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
           decoration: inputBoxBorderDecoration,
           child: _PhoneInput(
             initial: initial,
-            defaultCountry: defaultCountry,
             onChanged: onChanged,
             onSubmit: onSubmit,
+            focusNode: focusNode,
           ),
         ),
       ],
@@ -75,58 +76,104 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
 class _PhoneInput extends StatefulWidget {
   const _PhoneInput({
     required this.initial,
-    required this.defaultCountry,
     required this.onChanged,
     required this.onSubmit,
+    this.focusNode,
   });
 
   final String? initial;
-  final IsoCode defaultCountry;
   final ValueChanged<String> onChanged;
   final ValueChanged<String>? onSubmit;
+  final FocusNode? focusNode;
 
   @override
   State<_PhoneInput> createState() => _PhoneInputState();
 }
 
 class _PhoneInputState extends State<_PhoneInput> {
-  late final _phoneNumber =
-      widget.initial is String ? PhoneNumber.parse(widget.initial!) : null;
-  late bool _isValid = _phoneNumber?.isValid() == true;
+  static const _kIsoCode = 'phone_number.iso_code';
+
+  late PhoneNumber _phoneNumber;
+
+  // widget.initial is String ? PhoneNumber.parse(widget.initial!) : null;
+  late bool _isValid = _phoneNumber.isValid() == true;
+  late IsoCode _isoCode;
+
+  late Future<PhoneNumber> _phoneNumberFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneNumberFuture = _getPhoneNumber();
+  }
+
+  Future<PhoneNumber> _getPhoneNumber() async {
+    final persistor = ClerkAuth.of(context, listen: false).config.persistor;
+    if (widget.initial case String initial) {
+      _phoneNumber = PhoneNumber.parse(initial);
+      _isoCode = _phoneNumber.isoCode;
+      persistor.write(_kIsoCode, _isoCode.name);
+    } else {
+      final isoCode = await persistor.read<String>(_kIsoCode) ?? 'US';
+      _isoCode = IsoCode.fromJson(isoCode);
+      _phoneNumber = PhoneNumber(isoCode: _isoCode, nsn: '');
+    }
+
+    return _phoneNumber;
+  }
+
+  Future<void> _checkIsoCode(IsoCode isoCode) async {
+    if (_isoCode != isoCode) {
+      _isoCode = isoCode;
+      final persistor = ClerkAuth.of(context, listen: false).config.persistor;
+      await persistor.write(_kIsoCode, isoCode.name);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return PhoneInput(
-      initialValue: _phoneNumber,
-      defaultCountry: widget.defaultCountry,
-      autovalidateMode: AutovalidateMode.always,
-      showFlagInInput: true,
-      flagSize: 16,
-      onChanged: (phoneNumber) {
-        if (phoneNumber case PhoneNumber phoneNumber) {
-          final valid = phoneNumber.isValid();
-          if (valid != _isValid) setState(() => _isValid = valid);
-          if (valid) {
-            widget.onChanged(phoneNumber.intlFormattedNsn);
+    return FutureBuilder(
+        future: _phoneNumberFuture,
+        builder: (context, snapshot) {
+          if (snapshot.hasData == false) {
+            return emptyWidget;
           }
-        }
-      },
-      onSubmitted: widget.onSubmit,
-      style: ClerkTextStyle.inputLabel.copyWith(
-        color: _isValid ? ClerkColors.charcoalGrey : ClerkColors.incarnadine,
-      ),
-      decoration: const InputDecoration(
-        errorStyle: TextStyle(
-            color: Colors.transparent,
-            height: 0.01), // weird hack because 0 doesn't work
-        isDense: true,
-        border: InputBorder.none,
-        constraints: BoxConstraints(maxHeight: 32, minHeight: 32),
-      ),
-      countrySelectorNavigator: const CountrySelectorNavigator.dialog(
-        addFavoriteSeparator: true,
-        favorites: [IsoCode.US, IsoCode.GB],
-      ),
-    );
+
+          return PhoneInput(
+            initialValue: _phoneNumber,
+            defaultCountry: _isoCode,
+            autovalidateMode: AutovalidateMode.always,
+            showFlagInInput: true,
+            flagSize: 16,
+            focusNode: widget.focusNode,
+            onChanged: (phoneNumber) {
+              if (phoneNumber case PhoneNumber phoneNumber) {
+                final valid = phoneNumber.isValid();
+                if (valid != _isValid) setState(() => _isValid = valid);
+                if (valid) {
+                  widget.onChanged(phoneNumber.intlFormattedNsn);
+                }
+                _checkIsoCode(phoneNumber.isoCode);
+              }
+            },
+            onSubmitted: widget.onSubmit,
+            style: ClerkTextStyle.inputText.copyWith(
+              color:
+                  _isValid ? ClerkColors.charcoalGrey : ClerkColors.incarnadine,
+            ),
+            decoration: const InputDecoration(
+              errorStyle: TextStyle(
+                  color: Colors.transparent,
+                  height: 0.01), // weird hack because 0 doesn't work
+              isDense: true,
+              border: InputBorder.none,
+              constraints: BoxConstraints(maxHeight: 32, minHeight: 32),
+            ),
+            countrySelectorNavigator: const CountrySelectorNavigator.dialog(
+              addFavoriteSeparator: true,
+              favorites: [IsoCode.US, IsoCode.GB],
+            ),
+          );
+        });
   }
 }

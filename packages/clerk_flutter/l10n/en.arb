@@ -133,6 +133,8 @@
   "needsFirstFactor": "needs first factor",
   "needsIdentifier": "needs identifier",
   "needsSecondFactor": "needs second factor",
+  "newPassword": "New password",
+  "newPasswordConfirmation": "Confirm new password",
   "noAssociatedCodeRetrievalMethod": "No code retrieval method associated with {arg}",
   "@noAssociatedCodeRetrievalMethod": {
     "placeholders": {
@@ -212,12 +214,12 @@
   "profile": "Profile",
   "profileDetails": "Profile details",
   "recommendSize": "Recommend size 1:1, up to 5MB.",
-  "requestPasswordResetCode": "Request a password reset code",
   "requiredField": "(required)",
   "resend": "Resend",
   "resetFailed": "That password reset attempt failed. A new code has been sent.",
   "resetPassword": "Reset password and sign in",
   "selectAccount": "Select the account with which you wish to continue",
+  "sendMeTheCode": "Send me the reset code",
   "signIn": "Sign in",
   "signInByClickingALinkSentToYouByEmail": "Sign in by clicking a link sent to you by email",
   "signInByEnteringACodeSentToYouByEmail": "Sign in by entering a code sent to you by email",

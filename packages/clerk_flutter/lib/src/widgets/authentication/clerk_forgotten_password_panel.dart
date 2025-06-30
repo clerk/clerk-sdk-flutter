@@ -50,9 +50,6 @@ class ClerkForgottenPasswordPanel extends StatefulWidget {
 
 class _ClerkForgottenPasswordPanelState
     extends State<ClerkForgottenPasswordPanel> {
-  static const _resetPasswordPhoneCode = clerk.Strategy.resetPasswordPhoneCode;
-  static const _resetPasswordEmailCode = clerk.Strategy.resetPasswordEmailCode;
-
   _ResetFlowState _flowState = _ResetFlowState.unstarted;
   bool _obscured = true;
   bool _isPhoneInput = false;
@@ -60,6 +57,10 @@ class _ClerkForgottenPasswordPanelState
   String _identifier = '';
   String _password = '';
   String _confirmation = '';
+
+  clerk.Strategy get _strategy => _isPhoneInput
+      ? clerk.Strategy.resetPasswordPhoneCode
+      : clerk.Strategy.resetPasswordEmailCode;
 
   Future<void> _initiatePasswordReset(ClerkAuthState authState) async {
     setState(() {
@@ -69,8 +70,7 @@ class _ClerkForgottenPasswordPanelState
 
     await authState.initiatePasswordReset(
       identifier: _identifier.dropChars('( )'),
-      strategy:
-          _isPhoneInput ? _resetPasswordPhoneCode : _resetPasswordEmailCode,
+      strategy: _strategy,
     );
 
     final newFlowState =
@@ -112,7 +112,7 @@ class _ClerkForgottenPasswordPanelState
       final code = _code;
       setState(() => _flowState = _ResetFlowState.awaitingReset);
       await authState.attemptSignIn(
-        strategy: clerk.Strategy.resetPasswordEmailCode,
+        strategy: _strategy,
         identifier: _identifier,
         password: _password,
         code: code,

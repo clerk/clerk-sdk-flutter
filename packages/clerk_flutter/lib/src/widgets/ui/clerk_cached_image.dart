@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/widgets.dart';
 
@@ -41,17 +43,17 @@ class ClerkCachedImage extends StatelessWidget {
     final cache = ClerkAuth.fileCacheOf(context);
     return StreamBuilder(
       stream: cache.stream(uri),
-      builder: (context, snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
         if (snapshot.hasData) {
           return Image.file(
             snapshot.data!,
-            fit: fit,
-            width: width,
             height: height,
+            width: width,
+            fit: fit,
           );
         }
 
-        return SizedBox(width: width ?? 0, height: height ?? 0);
+        return SizedBox(width: width, height: height);
       },
     );
   }

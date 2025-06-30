@@ -44,7 +44,7 @@ class TestHttpService implements HttpService {
   void terminate() {}
 
   @override
-  Future<bool> ping(Uri _) => Future.value(true);
+  Future<bool> ping(Uri _, {required Duration timeout}) => Future.value(true);
 
   @override
   Future<Response> send(
@@ -147,7 +147,7 @@ class NoneHttpService implements HttpService {
   void terminate() {}
 
   @override
-  Future<bool> ping(Uri uri) => Future.value(true);
+  Future<bool> ping(Uri uri, {required Duration timeout}) => Future.value(true);
 
   @override
   Future<Response> send(

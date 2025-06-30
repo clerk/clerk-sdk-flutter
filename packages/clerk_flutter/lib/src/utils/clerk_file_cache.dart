@@ -3,7 +3,7 @@ import 'dart:io';
 /// An interface to enable read-through cache for e.g. image caching
 abstract class ClerkFileCache {
   /// The default TTL for a file in cache
-  static const defaultTTL = Duration(days: 1);
+  static const defaultTTL = Duration(days: 30);
 
   /// Initialises this instance of the file cache
   ///

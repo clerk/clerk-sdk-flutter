@@ -2,8 +2,8 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/generated/clerk_sdk_localizations_en.dart';
 import 'package:clerk_flutter/src/utils/clerk_file_cache.dart';
-import 'package:clerk_flutter/src/utils/default_caching_persistor.dart';
 import 'package:clerk_flutter/src/utils/clerk_sdk_flags.dart';
+import 'package:clerk_flutter/src/utils/default_caching_persistor.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart'
     show defaultLoadingWidget;
 import 'package:flutter/material.dart';
@@ -33,6 +33,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     super.telemetryPeriod,
     super.clientRefreshPeriod,
     super.httpService,
+    super.httpConnectionTimeout,
     this.loading = defaultLoadingWidget,
     this.redirectionGenerator,
     ClerkFileCache? fileCache,
@@ -95,6 +96,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
 
   static DefaultCachingPersistor? _defaultPersistorInstance;
 
-  static get _defaultPersistor => _defaultPersistorInstance ??=
-      DefaultCachingPersistor(getDirectory: getApplicationDocumentsDirectory);
+  static get _defaultPersistor =>
+      _defaultPersistorInstance ??= DefaultCachingPersistor(
+          getCacheDirectory: getApplicationDocumentsDirectory);
 }

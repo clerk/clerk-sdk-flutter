@@ -59,7 +59,6 @@ class Api with Logging {
   static const _scheme = 'https';
 
   static const _defaultPollDelay = Duration(seconds: 53);
-  static const _pingTimeout = Duration(milliseconds: 500);
 
   /// Initialise the API
   Future<void> initialize() async {
@@ -76,15 +75,10 @@ class Api with Logging {
 
   /// Confirm connectivity to the back end
   Future<bool> hasConnectivity() async {
-    try {
-      return await config.httpService
-          .ping(Uri(scheme: _scheme, host: _domain))
-          .timeout(_pingTimeout);
-    } on SocketException {
-      return false;
-    } on TimeoutException {
-      return false;
-    }
+    return await config.httpService.ping(
+      Uri(scheme: _scheme, host: _domain),
+      timeout: config.httpConnectionTimeout,
+    );
   }
 
   // environment & client

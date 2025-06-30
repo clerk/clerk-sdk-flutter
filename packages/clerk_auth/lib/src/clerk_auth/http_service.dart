@@ -52,7 +52,7 @@ abstract interface class HttpService {
 
   /// Check that connectivity to an endpoint is available
   ///
-  Future<bool> ping(Uri uri);
+  Future<bool> ping(Uri uri, {required Duration timeout});
 
   /// [send] data to the back end, and receive a [Response]
   ///
@@ -81,8 +81,6 @@ class DefaultHttpService extends HttpService {
   /// Constructor
   const DefaultHttpService();
 
-  static const _pingTimeout = Duration(seconds: 1);
-
   static final _clients = <DefaultHttpService, http.Client>{};
 
   http.Client get _client => _clients[this] ??= http.Client();
@@ -93,9 +91,9 @@ class DefaultHttpService extends HttpService {
   }
 
   @override
-  Future<bool> ping(Uri uri) async {
+  Future<bool> ping(Uri uri, {required Duration timeout}) async {
     try {
-      final result = await _client.head(uri).timeout(_pingTimeout);
+      final result = await _client.head(uri).timeout(timeout);
       return result.statusCode == 200;
     } on Exception {
       return false;

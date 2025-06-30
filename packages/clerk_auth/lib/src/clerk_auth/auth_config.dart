@@ -24,6 +24,7 @@ class AuthConfig {
     String? telemetryEndpoint,
     Duration? telemetryPeriod,
     Duration? clientRefreshPeriod,
+    Duration? httpConnectionTimeout,
     HttpService? httpService,
   })  : sessionTokenPollMode =
             sessionTokenPollMode ?? SessionTokenPollMode.lazy,
@@ -35,6 +36,8 @@ class AuthConfig {
             telemetryPeriod ?? const Duration(milliseconds: 29300),
         clientRefreshPeriod =
             clientRefreshPeriod ?? const Duration(milliseconds: 9700),
+        httpConnectionTimeout =
+            httpConnectionTimeout ?? const Duration(milliseconds: 500),
         httpService = httpService ?? const DefaultHttpService();
 
   /// Key from the Clerk dashboard identifying the auth service account
@@ -73,6 +76,11 @@ class AuthConfig {
   /// Set to [Duration.zero] to switch off client refresh polling
   ///
   final Duration clientRefreshPeriod;
+
+  /// The duration to wait for http connectivity to assert itself
+  /// before timing out in a connectivity test
+  ///
+  final Duration httpConnectionTimeout;
 
   /// The [HttpService] used to communicate with the backend.
   final HttpService httpService;

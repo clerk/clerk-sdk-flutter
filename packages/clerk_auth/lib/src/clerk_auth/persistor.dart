@@ -52,11 +52,11 @@ typedef DirectoryGetter = FutureOr<Directory> Function();
 ///
 class DefaultPersistor implements Persistor {
   /// Constructor
-  DefaultPersistor({required DirectoryGetter getDirectory})
-      : _getDirectory = getDirectory;
+  DefaultPersistor({required DirectoryGetter getCacheDirectory})
+      : _getCacheDirectory = getCacheDirectory;
 
   /// A function to return the storage directory
-  final DirectoryGetter _getDirectory;
+  final DirectoryGetter _getCacheDirectory;
 
   static const _writeDelay = Duration(milliseconds: 600);
   static const _filename = 'clerk_sdk.json';
@@ -71,8 +71,9 @@ class DefaultPersistor implements Persistor {
   @override
   Future<void> initialize() async {
     if (cacheDirectory == null) {
-      cacheDirectory = await _getDirectory();
-      _cacheFile = File('${cacheDirectory!.path}/$_filename');
+      cacheDirectory = await _getCacheDirectory();
+      _cacheFile =
+          File('${cacheDirectory!.path}${Platform.pathSeparator}$_filename');
       try {
         if (_cacheFile.existsSync()) {
           final data = await _cacheFile.readAsString();

@@ -120,13 +120,11 @@ class Auth {
     await config.initialize();
     await _api.initialize();
 
-    const load = true;
-
     try {
       client = await _api.createClient().timeout(_initialisationTimeout);
     } on Exception {
       final clientData = await config.persistor.read<String>(_kClientKey);
-      if (clientData case String data when load) {
+      if (clientData case String data) {
         _client = Client.fromJson(jsonDecode(data));
       } else {
         _client = Client.empty;
@@ -137,7 +135,7 @@ class Auth {
       env = await _api.environment().timeout(_initialisationTimeout);
     } on Exception {
       final envData = await config.persistor.read<String>(_kEnvKey);
-      if (envData case String data when load) {
+      if (envData case String data) {
         _env = Environment.fromJson(jsonDecode(data));
       } else {
         _env = Environment.empty;
@@ -188,7 +186,8 @@ class Auth {
     final data = _persistableData;
     _persistableData = {};
 
-    if (_persistableData[_kClientKey] case Client client) {
+    if (_persistableData[_kClientKey] case Client client
+        when client.user != null) {
       config.persistor.write(_kClientKey, jsonEncode(client));
     }
 
@@ -215,6 +214,7 @@ class Auth {
   ///
   Future<void> signOut() async {
     client = await _api.signOut();
+    await config.persistor.delete(_kClientKey);
     update();
   }
 

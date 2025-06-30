@@ -8,7 +8,7 @@ Future<void> main() async {
   final auth = Auth(
     config: AuthConfig(
       publishableKey: '<YOUR-PUBLISHABLE-KEY>',
-      persistor: DefaultPersistor(getDirectory: () => Directory.current),
+      persistor: DefaultPersistor(getCacheDirectory: () => Directory.current),
 
       // To enable running of the example in e.g. Flutter environments where
       // [Directory.current] causes problems, implement a bespoke [Persistor]

@@ -22,38 +22,35 @@ class DefaultCachingPersistor extends clerk.DefaultPersistor
     final filename = uri.hashCode.toString();
     final file =
         File('${cacheDirectory!.path}${Platform.pathSeparator}$filename');
-    final eTagFile = File('${file.path}.eTag');
+    final etagKey = '$filename.etag';
 
     if (await file.exists()) {
       if (DateTime.timestamp().difference(await file.lastModified()) > ttl) {
         /// If the file is older than the TTL, delete it
         await file.delete();
-        if (await eTagFile.exists()) {
-          await eTagFile.delete();
-        }
+        await delete(etagKey);
       } else {
         yield file;
       }
     }
 
-    final eTagFileExists = await eTagFile.exists();
-    final eTag = eTagFileExists ? await eTagFile.readAsString() : null;
+    final etag = await read<String>(etagKey);
     try {
       final response = await http.get(
         uri,
         headers: {
           ...?headers,
-          if (eTag case String eTag when eTag.isNotEmpty) //
-            _kETagHeader: eTag,
+          if (etag case String etag) //
+            _kETagHeader: etag,
         },
       );
       if (response.statusCode == 200) {
         await file.writeAsBytes(response.bodyBytes);
-        if (response.headers[_kETagHeader] case String eTag) {
-          await eTagFile.writeAsString(eTag);
-        } else if (eTagFileExists) {
-          // a new image but no eTag, so the existing tag will be wrong
-          await eTagFile.delete();
+        if (response.headers[_kETagHeader] case String etag) {
+          await write(etagKey, etag);
+        } else if (etag is String) {
+          // a new image but no new etag, so the existing tag will be wrong
+          await delete(etagKey);
         }
         yield file;
       }

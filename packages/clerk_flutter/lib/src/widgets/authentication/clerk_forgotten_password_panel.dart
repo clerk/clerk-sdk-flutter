@@ -149,16 +149,11 @@ class _ClerkForgottenPasswordPanelState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                ValueListenableBuilder(
-                  valueListenable: _identifierType,
-                  builder: (BuildContext context, _, __) {
-                    return ClerkIdentifierInput(
-                      strategies: factors,
-                      identifierType: _identifierType,
-                      onChanged: (identifier) => _identifier = identifier,
-                      onSubmit: (_) => _initiatePasswordReset(authState),
-                    );
-                  },
+                ClerkIdentifierInput(
+                  strategies: factors,
+                  identifierType: _identifierType,
+                  onChanged: (identifier) => _identifier = identifier,
+                  onSubmit: (_) => _initiatePasswordReset(authState),
                 ),
                 verticalMargin8,
                 _ActionButton(

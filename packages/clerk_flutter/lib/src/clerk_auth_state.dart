@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/utils/localization_extensions.dart';
+import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_loading_overlay.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:collection/collection.dart';
@@ -231,14 +231,16 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   String? checkPassword(
     String? password,
     String? confirmation,
-    ClerkSdkLocalizations localizations,
+    BuildContext context,
   ) {
+    final l10ns = ClerkAuth.localizationsOf(context);
+
     if (password?.isNotEmpty != true) {
-      return localizations.passwordMustBeSupplied;
+      return l10ns.passwordMustBeSupplied;
     }
 
     if (password != confirmation) {
-      return localizations.passwordAndPasswordConfirmationMustMatch;
+      return l10ns.passwordAndPasswordConfirmationMustMatch;
     }
 
     if (password case String password when password.isNotEmpty) {
@@ -248,41 +250,42 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       if (criteria.meetsLengthCriteria(password) == false) {
         if (criteria.maxLength > 0) {
           missing.add(
-            localizations.aLengthOfBetweenMINAndMAX(
+            l10ns.aLengthOfBetweenMINAndMAX(
               criteria.minLength,
               criteria.maxLength,
             ),
           );
         } else {
           missing.add(
-            localizations.aLengthOfMINOrGreater(criteria.minLength),
+            l10ns.aLengthOfMINOrGreater(criteria.minLength),
           );
         }
       }
 
       if (criteria.meetsLowerCaseCriteria(password) == false) {
-        missing.add(localizations.aLowercaseLetter);
+        missing.add(l10ns.aLowercaseLetter);
       }
 
       if (criteria.meetsUpperCaseCriteria(password) == false) {
-        missing.add(localizations.anUppercaseLetter);
+        missing.add(l10ns.anUppercaseLetter);
       }
 
       if (criteria.meetsNumberCriteria(password) == false) {
-        missing.add(localizations.aNumber);
+        missing.add(l10ns.aNumber);
       }
 
       if (criteria.meetsSpecialCharCriteria(password) == false) {
         missing.add(
-          localizations.aSpecialCharacter(criteria.allowedSpecialCharacters),
+          l10ns.aSpecialCharacter(criteria.allowedSpecialCharacters),
         );
       }
 
       if (missing.isNotEmpty) {
-        return StringExt.alternatives(
+        return l10ns.toLitany(
           missing,
-          connector: localizations.and,
-          prefix: localizations.passwordRequires,
+          context: context,
+          inclusive: true,
+          note: l10ns.passwordRequires,
         );
       }
     }

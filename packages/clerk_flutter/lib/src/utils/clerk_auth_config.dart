@@ -3,6 +3,7 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/generated/clerk_sdk_localizations_en.dart';
 import 'package:clerk_flutter/src/utils/clerk_file_cache.dart';
 import 'package:clerk_flutter/src/utils/clerk_sdk_flags.dart';
+import 'package:clerk_flutter/src/utils/clerk_sdk_grammar.dart';
 import 'package:clerk_flutter/src/utils/default_caching_persistor.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart'
     show defaultLoadingWidget;
@@ -12,6 +13,10 @@ import 'package:path_provider/path_provider.dart';
 /// A map of [Locale] strings to [ClerkSdkLocalizations] instances
 ///
 typedef ClerkSdkLocalizationsCollection = Map<String, ClerkSdkLocalizations>;
+
+/// A map of [Locale] strings to [ClerkSdkGrammar] instances
+///
+typedef ClerkSdkGrammarCollection = Map<String, ClerkSdkGrammar>;
 
 /// A function that generates a redirect url for a given strategy
 ///
@@ -39,12 +44,16 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     ClerkFileCache? fileCache,
     ClerkSdkLocalizationsCollection? localizations,
     ClerkSdkLocalizations? fallbackLocalization,
+    ClerkSdkGrammarCollection? grammars,
+    ClerkSdkGrammar? fallbackGrammar,
     clerk.Persistor? persistor,
     ClerkSdkFlags flags = const ClerkSdkFlags(),
   })  : localizations = localizations ?? {'en': _englishLocalizations},
         fallbackLocalization = fallbackLocalization ?? _englishLocalizations,
         fileCache = fileCache ?? _defaultPersistor,
-        super(flags: flags, persistor: persistor ?? _defaultPersistor);
+        super(flags: flags, persistor: persistor ?? _defaultPersistor) {
+    ClerkSdkGrammar.initialise(grammars, fallbackGrammar);
+  }
 
   static final _englishLocalizations = ClerkSdkLocalizationsEn();
 
@@ -69,7 +78,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   /// Retrieves the localization for the specified local falling back
   /// to the [fallbackLocalization]
   ClerkSdkLocalizations localizationsForLocale(Locale locale) {
-    return localizations[locale.toLanguageTag()] ?? // full tag e.g. en_GB
+    return localizations[locale.toLanguageTag()] ?? // full tag e.g. en-GB
         localizations[locale.languageCode] ?? // just the language e.g. en
         fallbackLocalization;
   }

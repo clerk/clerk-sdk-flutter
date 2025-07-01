@@ -89,11 +89,8 @@ class _ClerkForgottenPasswordPanelState
 
   void _restartFlow() => setState(() => _flowState = _ResetFlowState.unstarted);
 
-  Future<void> _submit(
-    ClerkAuthState authState,
-    ClerkSdkLocalizations localizations,
-  ) async {
-    if (authState.checkPassword(_password, _confirmation, localizations)
+  Future<void> _submit(ClerkAuthState authState, BuildContext context) async {
+    if (authState.checkPassword(_password, _confirmation, context)
         case String errorMessage) {
       authState.addError(
         clerk.AuthError(
@@ -114,9 +111,10 @@ class _ClerkForgottenPasswordPanelState
         if (authState.isSignedIn) {
           Navigator.of(context).pop(true);
         } else {
+          final l10ns = ClerkAuth.localizationsOf(context);
           authState.addError(
             clerk.AuthError(
-              message: localizations.resetFailed,
+              message: l10ns.resetFailed,
               code: null,
             ),
           );
@@ -149,16 +147,11 @@ class _ClerkForgottenPasswordPanelState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                ValueListenableBuilder(
-                  valueListenable: _identifierType,
-                  builder: (BuildContext context, _, __) {
-                    return ClerkIdentifierInput(
-                      strategies: factors,
-                      identifierType: _identifierType,
-                      onChanged: (identifier) => _identifier = identifier,
-                      onSubmit: (_) => _initiatePasswordReset(authState),
-                    );
-                  },
+                ClerkIdentifierInput(
+                  strategies: factors,
+                  identifierType: _identifierType,
+                  onChanged: (identifier) => _identifier = identifier,
+                  onSubmit: (_) => _initiatePasswordReset(authState),
                 ),
                 verticalMargin8,
                 _ActionButton(
@@ -208,7 +201,7 @@ class _ClerkForgottenPasswordPanelState
                         obscureText: _obscured,
                         onObscure: _toggleObscurePassword,
                         onChanged: (password) => _password = password,
-                        onSubmit: (_) => _submit(authState, l10ns),
+                        onSubmit: (_) => _submit(authState, context),
                       ),
                       verticalMargin8,
                       ClerkTextFormField(
@@ -216,11 +209,11 @@ class _ClerkForgottenPasswordPanelState
                         obscureText: _obscured,
                         onObscure: _toggleObscurePassword,
                         onChanged: (conf) => _confirmation = conf,
-                        onSubmit: (_) => _submit(authState, l10ns),
+                        onSubmit: (_) => _submit(authState, context),
                       ),
                       verticalMargin8,
                       _ActionButton(
-                        onPressed: () => _submit(authState, l10ns),
+                        onPressed: () => _submit(authState, context),
                         label: l10ns.resetPassword,
                         isProcessing:
                             _flowState.isAwaitingReset, // hack by-product

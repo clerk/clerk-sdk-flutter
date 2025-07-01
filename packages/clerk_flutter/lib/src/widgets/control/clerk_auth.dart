@@ -92,15 +92,6 @@ class ClerkAuth extends StatefulWidget {
   /// Get the most recent [clerk.Session] object
   static clerk.Session? sessionOf(BuildContext context) => of(context).session;
 
-  /// Get the [context]'s nearest [ClerkAuthState]
-  /// without rebuild on change
-  @Deprecated('Use .of() instead with listen = false')
-  static ClerkAuthState above(BuildContext context) {
-    final result = context.findAncestorWidgetOfExactType<_ClerkAuthData>();
-    assert(result != null, 'No `ClerkAuth` found in context');
-    return result!.authState;
-  }
-
   /// Get the [ClerkTranslator]
   static ClerkSdkLocalizations localizationsOf(BuildContext context) =>
       of(context, listen: false).localizationsOf(context);

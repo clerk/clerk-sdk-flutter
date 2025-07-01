@@ -1,5 +1,6 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
@@ -55,16 +56,15 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
       if (signUp?.missingFields case List<clerk.Field> missingFields
           when missingFields.isNotEmpty) {
-        final localizations = authState.localizationsOf(context);
+        final l10ns = authState.localizationsOf(context);
         authState.addError(
           clerk.AuthError(
             code: clerk.AuthErrorCode.signUpFlowError,
-            message: StringExt.alternatives(
-              missingFields
-                  .map((f) => f.localizedMessage(localizations))
-                  .toList(),
-              prefix: localizations.youNeedToAdd,
-              connector: localizations.and,
+            message: l10ns.toLitany(
+              missingFields.map((f) => f.localizedMessage(l10ns)).toList(),
+              context: context,
+              note: l10ns.youNeedToAdd,
+              inclusive: true,
             ),
           ),
         );
@@ -80,15 +80,13 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     clerk.Strategy? strategy,
   }) async {
     final authState = ClerkAuth.of(context);
-    final localizations = authState.localizationsOf(context);
     await authState.safelyCall(
       context,
       () async {
         final password = _valueOrNull(clerk.UserAttribute.password);
         final passwordConfirmation =
             _valueOrNull(clerk.UserAttribute.passwordConfirmation);
-        if (authState.checkPassword(
-                password, passwordConfirmation, localizations)
+        if (authState.checkPassword(password, passwordConfirmation, context)
             case String errorMessage) {
           authState.addError(clerk.AuthError(
             code: clerk.AuthErrorCode.invalidPassword,
@@ -121,7 +119,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     final unverifiedFields = signUp?.unverifiedFields ?? const [];
     final hasPassword =
         _values[clerk.UserAttribute.password]?.isNotEmpty == true;
-    final localizations = authState.localizationsOf(context);
+    final l10ns = authState.localizationsOf(context);
     final attributes = [
       ...authState.env.user.attributes.entries
           .where((a) => a.value.isEnabled)
@@ -165,7 +163,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                     if (attribute.isPhoneNumber) //
                       ClerkPhoneNumberFormField(
                         initial: _values[attribute.attr],
-                        label: attribute.title(localizations),
+                        label: attribute.title(l10ns),
                         isOptional: attribute.isOptional,
                         isMissing:
                             missingFields.contains(attribute.attr.relatedField),
@@ -174,7 +172,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                     else
                       ClerkTextFormField(
                         initial: _values[attribute.attr],
-                        label: attribute.title(localizations),
+                        label: attribute.title(l10ns),
                         isMissing:
                             missingFields.contains(attribute.attr.relatedField),
                         isOptional: attribute.isOptional,
@@ -199,7 +197,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(child: Text(localizations.cont)),
+              Center(child: Text(l10ns.cont)),
               horizontalMargin4,
               const Icon(Icons.arrow_right_sharp),
             ],
@@ -311,6 +309,6 @@ class _Attribute {
 
   bool get isOptional => isRequired == false;
 
-  String title(ClerkSdkLocalizations localizations) =>
-      attr.localizedMessage(localizations).capitalized;
+  String title(ClerkSdkLocalizations l10ns) =>
+      l10ns.toSentence(attr.localizedMessage(l10ns));
 }

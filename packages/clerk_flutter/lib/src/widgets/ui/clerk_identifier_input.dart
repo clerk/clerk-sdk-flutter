@@ -1,5 +1,6 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
@@ -104,10 +105,14 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
             closed: widget.identifierType.value.isPhoneNumber,
             child: ClerkTextFormField(
               key: const Key('identifier'),
-              label: StringExt.alternatives(
-                emailStrategies.map((i) => i.localizedMessage(l10ns)).toList(),
-                connector: l10ns.or,
-              ).capitalized,
+              label: l10ns.toSentence(
+                l10ns.toLitany(
+                  emailStrategies
+                      .map((i) => i.localizedMessage(l10ns))
+                      .toList(),
+                  context: context,
+                ),
+              ),
               onChanged: widget.onChanged,
               onSubmit: widget.onSubmit,
               focusNode: _emailFocusNode,
@@ -125,10 +130,14 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
             closed: widget.identifierType.value.isEmailAddress,
             child: ClerkPhoneNumberFormField(
               key: const Key('phoneIdentifier'),
-              label: StringExt.alternatives(
-                phoneStrategies.map((i) => i.localizedMessage(l10ns)).toList(),
-                connector: l10ns.or,
-              ).capitalized,
+              label: l10ns.toSentence(
+                l10ns.toLitany(
+                  phoneStrategies
+                      .map((i) => i.localizedMessage(l10ns))
+                      .toList(),
+                  context: context,
+                ),
+              ),
               onChanged: widget.onChanged,
               onSubmit: widget.onSubmit,
               focusNode: _phoneFocusNode,
@@ -159,19 +168,20 @@ class _SwapIdentifierButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final options = StringExt.alternatives(
-      strategies
-          .map((i) => i.localizedMessage(localizations, concise: true))
-          .toList(),
-      connector: localizations.or,
-    );
+    final l10ns = ClerkAuth.localizationsOf(context);
     return Align(
       alignment: AlignmentDirectional.centerEnd,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Text(
-          '${localizations.switchTo} $options',
+          l10ns.toLitany(
+            strategies
+                .map((i) => i.localizedMessage(l10ns, concise: true))
+                .toList(),
+            note: l10ns.switchTo,
+            context: context,
+          ),
           style: ClerkTextStyle.clickable,
         ),
       ),

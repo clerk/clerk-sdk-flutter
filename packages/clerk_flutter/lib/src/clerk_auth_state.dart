@@ -281,7 +281,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       }
 
       if (missing.isNotEmpty) {
-        return l10ns.toLitany(
+        return l10ns.grammar.toLitany(
           missing,
           context: context,
           inclusive: true,

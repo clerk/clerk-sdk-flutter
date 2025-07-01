@@ -105,8 +105,8 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
             closed: widget.identifierType.value.isPhoneNumber,
             child: ClerkTextFormField(
               key: const Key('identifier'),
-              label: l10ns.toSentence(
-                l10ns.toLitany(
+              label: l10ns.grammar.toSentence(
+                l10ns.grammar.toLitany(
                   emailStrategies
                       .map((i) => i.localizedMessage(l10ns))
                       .toList(),
@@ -130,8 +130,8 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
             closed: widget.identifierType.value.isEmailAddress,
             child: ClerkPhoneNumberFormField(
               key: const Key('phoneIdentifier'),
-              label: l10ns.toSentence(
-                l10ns.toLitany(
+              label: l10ns.grammar.toSentence(
+                l10ns.grammar.toLitany(
                   phoneStrategies
                       .map((i) => i.localizedMessage(l10ns))
                       .toList(),
@@ -175,7 +175,7 @@ class _SwapIdentifierButton extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Text(
-          l10ns.toLitany(
+          l10ns.grammar.toLitany(
             strategies
                 .map((i) => i.localizedMessage(l10ns, concise: true))
                 .toList(),

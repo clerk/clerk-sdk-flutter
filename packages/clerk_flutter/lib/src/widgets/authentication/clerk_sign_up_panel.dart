@@ -60,7 +60,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
         authState.addError(
           clerk.AuthError(
             code: clerk.AuthErrorCode.signUpFlowError,
-            message: l10ns.toLitany(
+            message: l10ns.grammar.toLitany(
               missingFields.map((f) => f.localizedMessage(l10ns)).toList(),
               context: context,
               note: l10ns.youNeedToAdd,
@@ -310,5 +310,5 @@ class _Attribute {
   bool get isOptional => isRequired == false;
 
   String title(ClerkSdkLocalizations l10ns) =>
-      l10ns.toSentence(attr.localizedMessage(l10ns));
+      l10ns.grammar.toSentence(attr.localizedMessage(l10ns));
 }

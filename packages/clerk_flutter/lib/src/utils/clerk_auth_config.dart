@@ -50,18 +50,35 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     ClerkSdkFlags flags = const ClerkSdkFlags(),
   })  : localizations = localizations ?? {'en': _englishLocalizations},
         fallbackLocalization = fallbackLocalization ?? _englishLocalizations,
+        grammars = grammars ?? {'en': _englishGrammar},
+        fallbackGrammar = fallbackGrammar ?? _englishGrammar,
         fileCache = fileCache ?? _defaultPersistor,
-        super(flags: flags, persistor: persistor ?? _defaultPersistor) {
-    ClerkSdkGrammar.initialise(grammars, fallbackGrammar);
-  }
+        super(flags: flags, persistor: persistor ?? _defaultPersistor);
 
-  static final _englishLocalizations = ClerkSdkLocalizationsEn();
+  static ClerkSdkLocalizations? _englishLocalizationsInstance;
+  static DefaultCachingPersistor? _defaultPersistorInstance;
+
+  static get _englishGrammar => const ClerkSdkGrammarEn();
+
+  static get _englishLocalizations =>
+      _englishLocalizationsInstance ??= ClerkSdkLocalizationsEn();
+
+  static get _defaultPersistor =>
+      _defaultPersistorInstance ??= DefaultCachingPersistor(
+        getCacheDirectory: getApplicationDocumentsDirectory,
+      );
 
   /// [ClerkSdkLocalizationsCollection] for translation within the UI
   final ClerkSdkLocalizationsCollection localizations;
 
   /// [ClerkSdkLocalizations] for when a locale cannot be found
   final ClerkSdkLocalizations fallbackLocalization;
+
+  /// [ClerkSdkGrammarCollection] for translation within the UI
+  final ClerkSdkGrammarCollection grammars;
+
+  /// [ClerkSdkGrammar] for when a locale cannot be found
+  final ClerkSdkGrammar fallbackGrammar;
 
   /// A function to generate a [Uri] for deep link redirection
   /// back into the host app following oauth authentication
@@ -90,6 +107,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   Future<void> initialize() async {
     await super.initialize();
     await fileCache.initialize();
+    ClerkSdkGrammar.initialise(grammars, fallbackGrammar);
   }
 
   @override
@@ -102,10 +120,4 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   clerk.LocalesLookup get localesLookup {
     return () => {...localizations.keys, 'en'}.toList(growable: false);
   }
-
-  static DefaultCachingPersistor? _defaultPersistorInstance;
-
-  static get _defaultPersistor =>
-      _defaultPersistorInstance ??= DefaultCachingPersistor(
-          getCacheDirectory: getApplicationDocumentsDirectory);
 }

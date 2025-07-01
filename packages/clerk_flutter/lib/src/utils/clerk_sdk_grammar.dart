@@ -24,7 +24,7 @@ abstract class ClerkSdkGrammar {
     ClerkSdkGrammar? defaultGrammar,
   ) {
     _grammars.addAll(grammars ?? {});
-    _default = defaultGrammar ?? const DefaultClerkSdkGrammar();
+    _default = defaultGrammar ?? const ClerkSdkGrammarEn();
   }
 
   /// A method that takes a list of pre-translated [items] e.g.
@@ -68,9 +68,9 @@ abstract class ClerkSdkGrammar {
 /// A [ClerkSdkGrammar] default implementation, using English language
 /// structures
 ///
-class DefaultClerkSdkGrammar implements ClerkSdkGrammar {
+class ClerkSdkGrammarEn implements ClerkSdkGrammar {
   /// Constructor
-  const DefaultClerkSdkGrammar();
+  const ClerkSdkGrammarEn();
 
   /// [inclusive] is taken to indicate whether an 'and' or 'or' list should be
   /// returned:

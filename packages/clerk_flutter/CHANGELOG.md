@@ -1,3 +1,14 @@
+## 0.0.10-beta
+
+* feat: allow app-defined redirects aka deep-links (with example) [#170]
+* feat: add password reset flow [#161]
+* feat: clear cookies on sign out [#188]
+* feat: refactor identifier input [#197]
+* feat: add offline support [#200]
+* feat: grammatical sentence formatting [#192]
+
+See changes made in `clerk_auth` package as part of this release.
+
 ## 0.0.9-beta
 
 * feat: support fall-back localization default English [#163]

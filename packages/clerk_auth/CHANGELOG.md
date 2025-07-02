@@ -1,3 +1,14 @@
+## 0.0.10-beta
+
+* fix: added Facebook as strategy [#172]
+* feat: add oauth token sign in [#186]
+* feat: add a stream of updating session tokens as they renew [#165]
+* feat: add password reset flow [#161]
+* feat: allow user deletion via api [#174]
+* feat: **BREAKING** add Persistor and HttpService to ClarkAuthConfig [#183]
+* feat: add flags to ClarkAuthConfig [#195]
+* feat: add offline support [#200]
+
 ## 0.0.9-beta
 
 * chore: align release version with `clerk_flutter` package

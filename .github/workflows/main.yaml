@@ -56,7 +56,7 @@ jobs:
         run: flutter analyze
         working-directory: packages/clerk_flutter
 
-      - name: Prepare test environment
+      - name: Prepare the test environment
         env:
           TEST_ENV_BASE64: ${{ secrets.TEST_ENV_BASE64 }}
         run: |

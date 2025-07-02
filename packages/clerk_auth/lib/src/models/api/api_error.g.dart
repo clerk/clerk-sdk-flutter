@@ -54,4 +54,5 @@ const _$AuthErrorCodeEnumMap = {
   AuthErrorCode.signInError: 'signInError',
   AuthErrorCode.passwordResetStrategyError: 'passwordResetStrategyError',
   AuthErrorCode.cannotDeleteSelf: 'cannotDeleteSelf',
+  AuthErrorCode.problemsConnecting: 'problemsConnecting',
 };

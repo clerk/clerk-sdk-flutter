@@ -3,7 +3,7 @@
 #
 
 name: 'clerk_backend_api'
-version: '0.0.9-beta'
+version: '0.0.10-beta'
 description: 'The Clerk REST Backend API, meant to be accessed by backend servers.'
 homepage: 'https://clerk.com/docs'
 repository: https://github.com/clerk/clerk-sdk-flutter/tree/main/packages/clerk_backend_api
@@ -12,9 +12,9 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  collection: '^1.17.0'
+  collection: '>1.17.0 <2.0.0'
   http: '>=0.13.0 <0.14.0'
-  intl: ^0.18.0
+  intl: '>=0.18.0 <1.0.0'
   meta: ^1.1.8
 
 dev_dependencies:

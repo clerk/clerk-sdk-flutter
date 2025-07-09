@@ -83,8 +83,10 @@ class ExampleApp extends StatelessWidget {
         routes: {
           ExamplesList.path: (context) => const ExamplesList(),
           ClerkSignInExample.path: (context) => const ClerkSignInExample(),
-          CustomOAuthSignInExample.path: (context) => const CustomOAuthSignInExample(),
-          CustomEmailSignInExample.path: (context) => const CustomEmailSignInExample(),
+          CustomOAuthSignInExample.path: (context) =>
+              const CustomOAuthSignInExample(),
+          CustomEmailSignInExample.path: (context) =>
+              const CustomEmailSignInExample(),
         },
       ),
     );

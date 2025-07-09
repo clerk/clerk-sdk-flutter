@@ -40,7 +40,8 @@ class ClerkAuthentication extends StatefulWidget {
   State<ClerkAuthentication> createState() => _ClerkAuthenticationState();
 }
 
-class _ClerkAuthenticationState extends State<ClerkAuthentication> with ClerkTelemetryStateMixin {
+class _ClerkAuthenticationState extends State<ClerkAuthentication>
+    with ClerkTelemetryStateMixin {
   _AuthState _state = _AuthState.signingIn;
 
   void _toggle() => setState(() => _state = _state.nextState);
@@ -63,7 +64,8 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication> with ClerkTel
                       Closeable(
                         closed: authState.isSigningIn || authState.isSigningUp,
                         child: ClerkSSOPanel(
-                          onStrategyChosen: (strategy) => authState.ssoSignIn(context, strategy),
+                          onStrategyChosen: (strategy) =>
+                              authState.ssoSignIn(context, strategy),
                         ),
                       ),
                     if (env.hasIdentificationStrategies) ...[
@@ -146,8 +148,11 @@ class _BottomPortion extends StatelessWidget {
                 ),
                 const WidgetSpan(child: SizedBox(width: 6)),
                 TextSpan(
-                  text: state.isSigningIn ? localizations.signUp : localizations.signIn,
-                  style: ClerkTextStyle.subtitle.copyWith(color: ClerkColors.darkJungleGreen),
+                  text: state.isSigningIn
+                      ? localizations.signUp
+                      : localizations.signIn,
+                  style: ClerkTextStyle.subtitle
+                      .copyWith(color: ClerkColors.darkJungleGreen),
                   recognizer: TapGestureRecognizer()..onTap = onChange,
                 ),
               ],

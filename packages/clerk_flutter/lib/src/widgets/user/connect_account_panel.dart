@@ -33,11 +33,15 @@ class ConnectAccountPanel extends StatelessWidget {
                 child: ClerkChangeObserver<DateTime>(
                   onChange: onDone,
                   accumulateData: () {
-                    final accounts = authState.client.user?.externalAccounts ?? const [];
-                    return accounts.where((a) => a.isVerified || a.isInError).map((a) => a.updatedAt);
+                    final accounts =
+                        authState.client.user?.externalAccounts ?? const [];
+                    return accounts
+                        .where((a) => a.isVerified || a.isInError)
+                        .map((a) => a.updatedAt);
                   },
                   builder: (context) => ClerkSSOPanel(
-                    onStrategyChosen: (strategy) => authState.ssoConnect(context, strategy),
+                    onStrategyChosen: (strategy) =>
+                        authState.ssoConnect(context, strategy),
                   ),
                 ),
               );

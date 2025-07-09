@@ -23,9 +23,10 @@ import 'package:phone_input/phone_input_package.dart';
 @immutable
 class ClerkSignUpPanel extends StatefulWidget {
   /// Construct a new [ClerkSignUpPanel]
-  const ClerkSignUpPanel({super.key, required this.isActive});
+  const ClerkSignUpPanel({super.key, this.isActive = false});
 
   /// [true] if we are currently signing up
+  @Deprecated('no longer needed - will be removed')
   final bool isActive;
 
   @override
@@ -43,18 +44,17 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (widget.isActive) {
-      final authState = ClerkAuth.of(context, listen: false);
-      final signUp = authState.signUp;
-      _values[clerk.UserAttribute.firstName] ??= signUp?.firstName;
-      _values[clerk.UserAttribute.lastName] ??= signUp?.lastName;
-      _values[clerk.UserAttribute.username] ??= signUp?.username;
-      _values[clerk.UserAttribute.emailAddress] ??= signUp?.emailAddress;
-      _values[clerk.UserAttribute.phoneNumber] ??= signUp?.phoneNumber is String
-          ? PhoneNumber.parse(signUp!.phoneNumber!).intlFormattedNsn
+    final authState = ClerkAuth.of(context, listen: false);
+    if (authState.signUp case clerk.SignUp signUp) {
+      _values[clerk.UserAttribute.firstName] ??= signUp.firstName;
+      _values[clerk.UserAttribute.lastName] ??= signUp.lastName;
+      _values[clerk.UserAttribute.username] ??= signUp.username;
+      _values[clerk.UserAttribute.emailAddress] ??= signUp.emailAddress;
+      _values[clerk.UserAttribute.phoneNumber] ??= signUp.phoneNumber is String
+          ? PhoneNumber.parse(signUp.phoneNumber!).intlFormattedNsn
           : null;
 
-      if (signUp?.missingFields case List<clerk.Field> missingFields
+      if (signUp.missingFields case List<clerk.Field> missingFields
           when missingFields.isNotEmpty) {
         final l10ns = authState.localizationsOf(context);
         authState.addError(

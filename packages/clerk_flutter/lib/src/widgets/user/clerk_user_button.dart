@@ -15,6 +15,7 @@ import 'package:clerk_flutter/src/widgets/ui/platform_styled_dialog.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:clerk_flutter/src/widgets/user/add_account_panel.dart';
+import 'package:clerk_flutter/src/widgets/user/clerk_user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_input/phone_input_package.dart';
 
@@ -44,8 +45,7 @@ class ClerkUserButton extends StatefulWidget {
   State<ClerkUserButton> createState() => _ClerkUserButtonState();
 }
 
-class _ClerkUserButtonState extends State<ClerkUserButton>
-    with ClerkTelemetryStateMixin {
+class _ClerkUserButtonState extends State<ClerkUserButton> with ClerkTelemetryStateMixin {
   final _sessions = <clerk.Session>[];
 
   late final _authState = ClerkAuth.of(context);
@@ -54,8 +54,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
   @override
   Map<String, dynamic> get telemetryPayload {
     final sessionActions = widget.sessionActions ?? _defaultSessionActions();
-    final additionalActions =
-        widget.additionalActions ?? _defaultAdditionalActions();
+    final additionalActions = widget.additionalActions ?? _defaultAdditionalActions();
     return {
       'show_name': widget.showName,
       'session_actions': sessionActions.map((a) => a.label).join(';'),
@@ -95,16 +94,14 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
     ];
   }
 
-  Future<void> _addAccount(BuildContext context, ClerkAuthState authState) =>
-      ClerkPage.show(
+  Future<void> _addAccount(BuildContext context, ClerkAuthState authState) => ClerkPage.show(
         context,
         builder: (context) => AddAccountPanel(
           onDone: (context) => Navigator.of(context).pop(),
         ),
       );
 
-  Future<void> _manageAccount(BuildContext context, ClerkAuthState authState) =>
-      ClerkPage.show(
+  Future<void> _manageAccount(BuildContext context, ClerkAuthState authState) => ClerkPage.show(
         context,
         builder: (context) => const ClerkUserProfile(),
       );
@@ -171,10 +168,8 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
         _sessions.addOrReplaceAll(sessions, by: (s) => s.id);
         final displaySessions = List<clerk.Session>.from(_sessions);
 
-        final sessionActions =
-            widget.sessionActions ?? _defaultSessionActions();
-        final additionalActions =
-            widget.additionalActions ?? _defaultAdditionalActions();
+        final sessionActions = widget.sessionActions ?? _defaultSessionActions();
+        final additionalActions = widget.additionalActions ?? _defaultAdditionalActions();
 
         return ClerkVerticalCard(
           topPortion: Column(
@@ -317,9 +312,7 @@ class _SessionRow extends StatelessWidget {
                           ),
                         if (user.email is String || user.phoneNumber is String)
                           Text(
-                            user.email ??
-                                PhoneNumber.parse(user.phoneNumber!)
-                                    .intlFormattedNsn,
+                            user.email ?? PhoneNumber.parse(user.phoneNumber!).intlFormattedNsn,
                             style: ClerkTextStyle.buttonTitle,
                           ),
                       ],
@@ -341,8 +334,7 @@ class _SessionRow extends StatelessWidget {
                           child: Padding(
                             padding: horizontalPadding4,
                             child: ClerkMaterialButton(
-                              onPressed: () =>
-                                  action.callback(context, authState),
+                              onPressed: () => action.callback(context, authState),
                               label: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -353,8 +345,7 @@ class _SessionRow extends StatelessWidget {
                                     padding: topPadding2,
                                     child: Text(
                                       action.label,
-                                      style: ClerkTextStyle.buttonTitleDark
-                                          .copyWith(fontSize: 8),
+                                      style: ClerkTextStyle.buttonTitleDark.copyWith(fontSize: 8),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),

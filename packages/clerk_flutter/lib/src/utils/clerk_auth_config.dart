@@ -56,12 +56,14 @@ class ClerkAuthConfig extends clerk.AuthConfig {
         super(flags: flags, persistor: persistor ?? _defaultPersistor);
 
   static ClerkSdkLocalizations? _englishLocalizationsInstance;
+  static ClerkSdkGrammar? _englishGrammarInstance;
   static DefaultCachingPersistor? _defaultPersistorInstance;
-
-  static get _englishGrammar => const ClerkSdkGrammarEn();
 
   static get _englishLocalizations =>
       _englishLocalizationsInstance ??= ClerkSdkLocalizationsEn();
+
+  static get _englishGrammar =>
+      _englishGrammarInstance ??= const ClerkSdkGrammarEn();
 
   static get _defaultPersistor =>
       _defaultPersistorInstance ??= DefaultCachingPersistor(

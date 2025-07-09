@@ -6,6 +6,8 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
+import 'package:clerk_flutter/src/widgets/organization/clerk_organization_profile.dart';
+import 'package:clerk_flutter/src/widgets/organization/create_organization_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_action_row.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
@@ -40,11 +42,9 @@ class ClerkOrganizationList extends StatefulWidget {
   State<ClerkOrganizationList> createState() => _ClerkOrganizationListState();
 }
 
-class _ClerkOrganizationListState extends State<ClerkOrganizationList>
-    with ClerkTelemetryStateMixin {
+class _ClerkOrganizationListState extends State<ClerkOrganizationList> with ClerkTelemetryStateMixin {
   late final ClerkAuthState _authState = ClerkAuth.of(context);
-  late final ClerkSdkLocalizations _localizations =
-      ClerkAuth.localizationsOf(context);
+  late final ClerkSdkLocalizations _localizations = ClerkAuth.localizationsOf(context);
 
   final _organizations = <_Organization>[];
   final _invitations = <clerk.OrganizationInvitation>[];
@@ -115,8 +115,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
     });
   }
 
-  bool get _shouldRefreshInvitation =>
-      _authState.config.clientRefreshPeriod.isNotZero;
+  bool get _shouldRefreshInvitation => _authState.config.clientRefreshPeriod.isNotZero;
 
   Future<void> _fetchInvitations() async {
     _invitationsRefreshTimer?.cancel();
@@ -162,13 +161,9 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
       builder: (_, __) => emptyWidget,
       signedInBuilder: (context, authState) {
         final user = authState.user!;
-        final orgs = user.organizationMemberships
-                ?.map(_Organization.fromMembership)
-                .toList() ??
-            [];
-        _currentOrg = _currentOrg is _Organization
-            ? orgs.firstWhereOrNull((o) => o.id == _currentOrg?.id)
-            : null;
+        final orgs = user.organizationMemberships?.map(_Organization.fromMembership).toList() ?? [];
+        _currentOrg =
+            _currentOrg is _Organization ? orgs.firstWhereOrNull((o) => o.id == _currentOrg?.id) : null;
         final currentIsPersonal = _currentOrg == null;
 
         _organizations.addOrReplaceAll(orgs, by: (m) => m.orgId);
@@ -357,11 +352,8 @@ class _Organization {
         id: invitation.id,
         orgId: invitation.organizationData.id,
         name: invitation.organizationData.name,
-        roleName:
-            '${invitation.roleName} (${invitation.status.localizedMessage(localizations)})',
-        imageUrl: invitation.organizationData.hasImage
-            ? invitation.organizationData.imageUrl
-            : null,
+        roleName: '${invitation.roleName} (${invitation.status.localizedMessage(localizations)})',
+        imageUrl: invitation.organizationData.hasImage ? invitation.organizationData.imageUrl : null,
         status: invitation.status,
       );
 

@@ -40,13 +40,13 @@ class DefaultCachingPersistor extends clerk.DefaultPersistor
         uri,
         headers: {
           ...?headers,
-          if (etag case String etag) //
+          if (etag case final etag?) //
             _kETagHeader: etag,
         },
       );
       if (response.statusCode == 200) {
         await file.writeAsBytes(response.bodyBytes);
-        if (response.headers[_kETagHeader] case String etag) {
+        if (response.headers[_kETagHeader] case final etag?) {
           await write(etagKey, etag);
         } else if (etag is String) {
           // a new image but no new etag, so the existing tag will be wrong

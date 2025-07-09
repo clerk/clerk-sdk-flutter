@@ -1,4 +1,5 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/widgets/authentication/clerk_sso_panel.dart';
 import 'package:clerk_flutter/src/widgets/control/clerk_change_observer.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
@@ -32,15 +33,11 @@ class ConnectAccountPanel extends StatelessWidget {
                 child: ClerkChangeObserver<DateTime>(
                   onChange: onDone,
                   accumulateData: () {
-                    final accounts =
-                        authState.client.user?.externalAccounts ?? const [];
-                    return accounts
-                        .where((a) => a.isVerified || a.isInError)
-                        .map((a) => a.updatedAt);
+                    final accounts = authState.client.user?.externalAccounts ?? const [];
+                    return accounts.where((a) => a.isVerified || a.isInError).map((a) => a.updatedAt);
                   },
                   builder: (context) => ClerkSSOPanel(
-                    onStrategyChosen: (strategy) =>
-                        authState.ssoConnect(context, strategy),
+                    onStrategyChosen: (strategy) => authState.ssoConnect(context, strategy),
                   ),
                 ),
               );

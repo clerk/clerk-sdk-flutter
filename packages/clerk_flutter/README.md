@@ -23,7 +23,8 @@ for your users to sign up, sign in, and manage their profile from your Flutter c
 
 ## In Development
 
-* Organization support
+* Organization support  
+
 
 ## Example Usage
 
@@ -65,6 +66,25 @@ class ExampleApp extends StatelessWidget {
   }
 }
 ```
+
+
+## ⚠️ Limitations (Beta)
+
+This SDK is still under development. Known limitations:
+
+- No custom OAuth logic (`signInWithProvider`)
+- No token support (`getToken`)
+- Only basic authentication and user profile support
+- No organization or session listeners (yet)
+
+
+### ⚠️ Currently Unsupported Methods
+
+Some methods available in Clerk JS/Web SDKs are not yet supported in Flutter:
+
+- ❌ `signInWithProvider()` → Use `ClerkAuthentication()` instead
+- ❌ `getToken()` → Use `session.id` or secure backend verification
+
 
 ## License
 

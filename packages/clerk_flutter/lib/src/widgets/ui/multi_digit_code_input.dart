@@ -347,7 +347,7 @@ class _PulsingCursorState extends State<_PulsingCursor>
           width: double.infinity,
           height: widget.height,
           child: ColoredBox(
-            color: Colors.black.withOpacity(_curve.value * 0.5),
+            color: Colors.black.withAlpha((_curve.value * 128).toInt()),
           ),
         ),
       ),

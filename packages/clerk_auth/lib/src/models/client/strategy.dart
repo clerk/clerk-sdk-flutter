@@ -49,10 +49,6 @@ class Strategy {
   /// oauth token apple strategy
   static const oauthTokenApple = Strategy(name: _oauthToken, provider: 'apple');
 
-  /// oauth token google strategy
-  static const oauthTokenGoogle =
-      Strategy(name: _oauthToken, provider: 'google');
-
   /// google one tap strategy
   static const googleOneTap = Strategy(name: 'google_one_tap');
 
@@ -63,7 +59,6 @@ class Strategy {
     oauthGoogle.toString(): oauthGoogle,
     oauthFacebook.toString(): oauthFacebook,
     oauthTokenApple.toString(): oauthTokenApple,
-    oauthTokenGoogle.toString(): oauthTokenGoogle,
     googleOneTap.toString(): googleOneTap,
   };
 

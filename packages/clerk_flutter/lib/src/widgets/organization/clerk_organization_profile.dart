@@ -62,12 +62,12 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
       },
     );
 
-    if (result == DialogChoice.ok && context.mounted) {
+    if (result == DialogChoice.ok && mounted) {
       final hasLeftSuccessfully = await authState.safelyCall(
         context,
         () => authState.leaveOrganization(organization: org),
       );
-      if (hasLeftSuccessfully == true && context.mounted) {
+      if (hasLeftSuccessfully == true && mounted) {
         Navigator.of(context).pop();
       }
     }

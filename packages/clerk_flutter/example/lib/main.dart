@@ -11,8 +11,101 @@ import 'package:clerk_flutter_example/pages/custom_sign_in_example.dart';
 import 'package:clerk_flutter_example/pages/examples_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+
+class ClerkAuthenticator {
+  static final ClerkAuthenticator _instance = ClerkAuthenticator._internal();
+
+  static ClerkAuthenticator get shared => _instance;
+
+  ClerkAuthenticator._internal();
+
+  clerk.Auth? auth;
+
+  Future<void> init() async {
+    final persistor = clerk.DefaultPersistor(
+      getCacheDirectory: () async => await getApplicationDocumentsDirectory(),
+    );
+    await persistor.initialize();
+
+    auth = clerk.Auth(
+      config: clerk.AuthConfig(
+        publishableKey: const String.fromEnvironment('publishable_key'),
+        persistor: persistor,
+      ),
+    );
+    await auth?.initialize();
+  }
+
+  void logout() async {
+    await auth?.signOut();
+  }
+
+  (String?, String?) getToken() {
+    //auth?.refreshClient();
+    return (auth?.session?.lastActiveToken?.jwt, auth?.session?.id);
+  }
+
+  String? getUserId() {
+    return auth?.user?.id;
+  }
+
+  String? getUserEmailId() {
+    return auth?.user?.email;
+  }
+}
+
+class ClerkLoginService {
+  Future<clerk.User?> login({required String email, required String password}) async {
+    final auth = ClerkAuthenticator.shared.auth;
+    if (auth != null) {
+      try {
+        await auth.attemptSignIn(strategy: clerk.Strategy.password, identifier: email, password: password);
+        final user = auth.user;
+        return user;
+      } catch (e) {
+        rethrow;
+      }
+    }
+    return null;
+  }
+
+  Future<clerk.User?> signUp({required String email, required String password}) async {
+    final auth = ClerkAuthenticator.shared.auth;
+    if (auth != null) {
+      try {
+        await auth.attemptSignUp(
+          strategy: clerk.Strategy.emailAddress,
+          emailAddress: email,
+          password: password,
+          passwordConfirmation: password,
+        );
+        final user = auth.user;
+        return user;
+      } catch (e) {
+        rethrow;
+      }
+    }
+    return null;
+  }
+}
 
 Future<void> main() async {
+  Future.delayed(const Duration(seconds: 1), () async {
+    print('GO!!!');
+
+    await ClerkAuthenticator.shared.init();
+    final service = ClerkLoginService();
+
+    final user = await service.login(email: 'nicsford@gmail.com', password: 'password');
+
+    print('USER: $user');
+
+    if (user != null) {
+      ClerkAuthenticator.shared.logout();
+    }
+  });
+
   await clerk.setUpLogging(printer: const LogPrinter());
 
   const publishableKey = String.fromEnvironment('publishable_key');
@@ -83,10 +176,8 @@ class ExampleApp extends StatelessWidget {
         routes: {
           ExamplesList.path: (context) => const ExamplesList(),
           ClerkSignInExample.path: (context) => const ClerkSignInExample(),
-          CustomOAuthSignInExample.path: (context) =>
-              const CustomOAuthSignInExample(),
-          CustomEmailSignInExample.path: (context) =>
-              const CustomEmailSignInExample(),
+          CustomOAuthSignInExample.path: (context) => const CustomOAuthSignInExample(),
+          CustomEmailSignInExample.path: (context) => const CustomEmailSignInExample(),
         },
       ),
     );

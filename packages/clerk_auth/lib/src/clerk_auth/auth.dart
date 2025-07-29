@@ -354,21 +354,15 @@ class Auth {
     String? redirectUrl,
   }) async {
     // oAuthToken
-    if (strategy.isOauthToken && (token is String || code is String)) {
+    if (strategy.isOauthToken) {
       await _api
-          .oauthTokenSignIn(strategy, token: token, code: code)
+          .createSignIn(strategy: strategy, token: token, code: code)
           .then(_housekeeping);
+      update();
       return;
     }
 
-    // google one tap
-    if (strategy == Strategy.googleOneTap && token is String) {
-      await _api
-          .oauthTokenSignIn(Strategy.googleOneTap, token: token)
-          .then(_housekeeping);
-      return;
-    }
-
+    // Ensure we have a signIn object
     if (client.signIn == null) {
       // if password and identifier been presented, we can immediately attempt
       // a sign in;  if null they will be ignored

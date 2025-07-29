@@ -50,6 +50,7 @@ class Api with Logging {
   static const _kClerkSessionId = '_clerk_session_id';
   static const _kClientKey = 'client';
   static const _kErrorsKey = 'errors';
+  static const _kMetaKey = 'meta';
   static const _kIsNative = '_is_native';
   static const _kJwtKey = 'jwt';
   static const _kOrganizationId = 'organization_id';
@@ -309,6 +310,8 @@ class Api with Logging {
     String? identifier,
     String? password,
     String? redirectUrl,
+    String? token,
+    String? code,
   }) async {
     return await _fetchApiResponse(
       '/client/sign_ins',
@@ -317,6 +320,8 @@ class Api with Logging {
         'identifier': identifier,
         'password': password,
         'redirect_url': redirectUrl,
+        'token': token,
+        'code': code,
       },
     );
   }
@@ -442,23 +447,6 @@ class Api with Logging {
     return await _fetchApiResponse(
       '/client/sign_ups',
       params: {'transfer': true},
-    );
-  }
-
-  /// Send a token and code supplied by an oAuth provider to the back end
-  ///
-  Future<ApiResponse> oauthTokenSignIn(
-    Strategy strategy, {
-    String? token,
-    String? code,
-  }) async {
-    return await _fetchApiResponse(
-      '/client/sign_ins',
-      params: {
-        'strategy': strategy,
-        'token': token,
-        'code': code,
-      },
     );
   }
 
@@ -904,17 +892,14 @@ class Api with Logging {
 
   ApiResponse _processResponse(http.Response resp) {
     final body = json.decode(resp.body) as Map<String, dynamic>;
-    final errors = body[_kErrorsKey] != null
-        ? List<Map<String, dynamic>>.from(body[_kErrorsKey])
-            .map(ApiError.fromJson)
-            .toList()
-        : null;
-    final [clientData, responseData] = switch (body[_kClientKey]) {
-      Map<String, dynamic> client when client.isNotEmpty => [
+    final errors = _errors(body[_kErrorsKey]);
+    final (clientData, responseData) =
+        switch (body[_kClientKey] ?? body[_kMetaKey]?[_kClientKey]) {
+      Map<String, dynamic> client when client.isNotEmpty => (
           client,
-          body[_kResponseKey],
-        ],
-      _ => [body[_kResponseKey], null],
+          body[_kResponseKey]
+        ),
+      _ => (body[_kResponseKey], null),
     };
     if (clientData case Map<String, dynamic> clientJson) {
       final client = Client.fromJson(clientJson);
@@ -929,12 +914,22 @@ class Api with Logging {
         },
       );
     } else {
-      logSevere(body);
       return ApiResponse(
         status: resp.statusCode,
         errors: errors,
       );
     }
+  }
+
+  List<ApiError>? _errors(List<dynamic>? data) {
+    if (data == null) {
+      return null;
+    }
+
+    logSevere(data);
+    return List<Map<String, dynamic>>.from(data)
+        .map(ApiError.fromJson)
+        .toList(growable: false);
   }
 
   Future<http.Response> _fetch({

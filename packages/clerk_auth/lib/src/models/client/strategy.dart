@@ -159,7 +159,7 @@ class Strategy {
   bool get isOauth => const [_oauthToken, _oauthCustom, _oauth].contains(name);
 
   /// is oauth token?
-  bool get isOauthToken => name == _oauthToken;
+  bool get isOauthToken => name == _oauthToken || this == googleOneTap;
 
   /// is other strategy?
   bool get isOtherStrategy => isOauth == false && requiresPassword == false;

@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:clerk_auth/clerk_auth.dart' as clerk;
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uuid/uuid.dart';
 
 /// Example of how to use clerk auth with custom ui.
 ///
@@ -72,7 +74,29 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     }
   }
 
-  // Alwats dispose of the subscriptions and remove listeners.
+  Future<void> _googleOneTap() async {
+    _loading.value = true;
+    final google = GoogleSignIn.instance;
+    await google.initialize(
+      serverClientId:
+          '56207170923-qp406tdeq9glhs03t9b6ddn1ve988os5.apps.googleusercontent.com',
+      nonce: const Uuid().v4(),
+    );
+    final account = await google.authenticate(
+      scopeHint: const [
+        'openid',
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile'
+      ],
+    );
+    await _authState.attemptSignIn(
+      strategy: clerk.Strategy.googleOneTap,
+      token: account.authentication.idToken,
+    );
+    _loading.value = false;
+  }
+
+  // Always dispose of the subscriptions and remove listeners.
   @override
   void dispose() {
     super.dispose();
@@ -86,7 +110,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Custom OAuth Sign In'),
+        title: const Text('Custom Sign In'),
       ),
       body: ListenableBuilder(
         listenable: _initalized,
@@ -151,6 +175,12 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
                               ElevatedButton(
                                 onPressed: () => _signIn(strategy),
                                 child: Text(strategy.provider ?? strategy.name),
+                              ),
+                            if (_authState.env.config.firstFactors
+                                .contains(clerk.Strategy.googleOneTap)) //
+                              ElevatedButton(
+                                onPressed: _googleOneTap,
+                                child: const Text('google_one_tap'),
                               ),
                           ],
                         ),

@@ -78,16 +78,11 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     _loading.value = true;
     final google = GoogleSignIn.instance;
     await google.initialize(
-      serverClientId:
-          '56207170923-qp406tdeq9glhs03t9b6ddn1ve988os5.apps.googleusercontent.com',
+      serverClientId: const String.fromEnvironment('gcp_project_id'),
       nonce: const Uuid().v4(),
     );
     final account = await google.authenticate(
-      scopeHint: const [
-        'openid',
-        'https://www.googleapis.com/auth/userinfo.email',
-        'https://www.googleapis.com/auth/userinfo.profile'
-      ],
+      scopeHint: const ['openid', 'email', 'profile'],
     );
     await _authState.attemptSignIn(
       strategy: clerk.Strategy.googleOneTap,

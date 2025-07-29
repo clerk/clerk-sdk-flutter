@@ -75,19 +75,18 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
 
   @override
   Widget build(BuildContext context) {
-    return ClerkPanel(
-      padding: horizontalPadding24,
-      child: ClerkAuthBuilder(
-        builder: (_, __) => emptyWidget,
-        signedInBuilder: (context, authState) {
-          final membership =
-              authState.user!.organizationMemberships!.firstWhere(
-            (o) => o.id == widget.membership.id,
-          );
-          final org = membership.organization;
-          final showDomains = authState.env.organization.domains.isEnabled &&
-              membership.hasPermission(clerk.Permission.domainsManage);
-          return ListView(
+    return ClerkAuthBuilder(
+      builder: (_, __) => emptyWidget,
+      signedInBuilder: (context, authState) {
+        final membership = authState.user!.organizationMemberships!.firstWhere(
+          (o) => o.id == widget.membership.id,
+        );
+        final org = membership.organization;
+        final showDomains = authState.env.organization.domains.isEnabled &&
+            membership.hasPermission(clerk.Permission.domainsManage);
+        return ClerkPanel(
+          padding: horizontalPadding24,
+          child: ListView(
             children: [
               verticalMargin32,
               Text(
@@ -129,9 +128,9 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
               ),
               verticalMargin20,
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

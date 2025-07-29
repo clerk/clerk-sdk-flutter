@@ -48,6 +48,12 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
 
   @override
   Widget build(BuildContext context) {
+    if (ClerkAuth.of(context).isNotAvailable) {
+      // We have no environment, implying ClerkAuth has not been initialised
+      // or initialisation has failed (no connectivity?).
+      return emptyWidget;
+    }
+
     return ClerkVerticalCard(
       topPortion: Column(
         mainAxisSize: MainAxisSize.min,

@@ -84,7 +84,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
     final env = authState.env;
-    if (env.hasIdentificationStrategies == false) {
+    if (authState.isNotAvailable || env.hasIdentificationStrategies == false) {
       return emptyWidget;
     }
 

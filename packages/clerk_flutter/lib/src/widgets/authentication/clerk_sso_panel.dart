@@ -31,6 +31,10 @@ class _ClerkSSOPanelState extends State<ClerkSSOPanel>
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
+    if (authState.isNotAvailable) {
+      return emptyWidget;
+    }
+
     final oauthStrategies = authState.env.config.identificationStrategies //
         .where((i) => i.isOauth)
         .toList();

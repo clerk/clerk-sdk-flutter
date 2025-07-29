@@ -145,6 +145,10 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
+    if (authState.isNotAvailable) {
+      return emptyWidget;
+    }
+
     final env = authState.env;
     final signUp = authState.signUp;
     final hasMissingFields = signUp?.missingFields.isNotEmpty == true;

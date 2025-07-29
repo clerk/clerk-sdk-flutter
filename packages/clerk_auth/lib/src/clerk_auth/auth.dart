@@ -54,6 +54,9 @@ class Auth {
   /// Adds [error] to [errorStream]
   void addError(AuthError error) => _errors.add(error);
 
+  /// Are we not yet initialised?
+  bool get isNotAvailable => env.isEmpty;
+
   /// The [Environment] object
   ///
   /// configuration of the Clerk account - rarely changes
@@ -67,7 +70,7 @@ class Auth {
     _persistenceTimer = Timer(_persistenceDelay, _persistData);
   }
 
-  late Environment _env;
+  Environment _env = Environment.empty;
 
   /// The [Client] object
   ///
@@ -82,7 +85,7 @@ class Auth {
     _persistenceTimer = Timer(_persistenceDelay, _persistData);
   }
 
-  late Client _client;
+  Client _client = Client.empty;
 
   /// The current [SignIn] object, or null
   SignIn? get signIn => client.signIn;

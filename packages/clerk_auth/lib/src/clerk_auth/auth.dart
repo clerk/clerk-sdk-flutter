@@ -321,18 +321,24 @@ class Auth {
     String? redirectUrl,
   }) async {
     // oAuthToken
-    if (strategy.isOauthToken && (token is String || code is String)) {
-      await _api
-          .oauthTokenSignIn(strategy, token: token, code: code)
-          .then(_housekeeping);
+    if (strategy.isOauthToken) {
+      if (token?.isNotEmpty == true || code?.isNotEmpty == true) {
+        await _api
+            .createSignIn(strategy: strategy, token: token, code: code)
+            .then(_housekeeping);
+        update();
+      }
       return;
     }
 
-    // google one tap
-    if (strategy == Strategy.googleOneTap && token is String) {
-      await _api
-          .oauthTokenSignIn(Strategy.googleOneTap, token: token)
-          .then(_housekeeping);
+    // googleOneTap
+    if (strategy == Strategy.googleOneTap) {
+      if (token?.isNotEmpty == true) {
+        await _api
+            .createSignIn(strategy: Strategy.googleOneTap, token: token)
+            .then(_housekeeping);
+        update();
+      }
       return;
     }
 

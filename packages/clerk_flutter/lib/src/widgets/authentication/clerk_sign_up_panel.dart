@@ -12,6 +12,8 @@ import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_input/phone_input_package.dart';
 
+typedef _ValueChanger = void Function(String value);
+
 /// The [ClerkSignUpPanel] renders a UI for signing up users.
 ///
 /// The functionality of the [ClerkSignUpPanel] is controlled by the instance settings
@@ -38,7 +40,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   static final _phoneNumberRE = RegExp(r'[^0-9+]');
 
   final _values = <clerk.UserAttribute, String?>{};
-  bool _obscurePassword = true;
+  bool _isObscured = true;
 
   @override
   void didChangeDependencies() {
@@ -111,21 +113,29 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     );
   }
 
+  void _onObscure() => setState(() => _isObscured = !_isObscured);
+
+  _ValueChanger _change(clerk.UserAttribute attr) =>
+      (String value) => _values[attr] = value;
+
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
     final signUp = authState.signUp;
-    final missingFields = signUp?.missingFields ?? const [];
+    final hasMissingFields = signUp?.missingFields.isNotEmpty == true;
     final unverifiedFields = signUp?.unverifiedFields ?? const [];
     final hasPassword =
         _values[clerk.UserAttribute.password]?.isNotEmpty == true;
     final l10ns = authState.localizationsOf(context);
-    final attributes = [
-      ...authState.env.user.attributes.entries
-          .where((a) => a.value.isEnabled)
-          .map(_Attribute.fromMapEntry),
-      const _Attribute(clerk.UserAttribute.passwordConfirmation, true),
-    ]..sort((a, b) => a.index - b.index);
+    final attributes = authState.env.user.attributes.entries
+        .where((a) => a.value.isEnabled)
+        .map(_Attribute.fromMapEntry)
+        .toList(growable: false)
+      ..sort((a, b) => a.index - b.index);
+
+    bool isMissing(clerk.UserAttribute attr) =>
+        signUp?.missing(attr.relatedField) == true;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -137,7 +147,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           _CodeInputBox(
             attribute: attr,
             value: _values[attr] ?? '',
-            closed: missingFields.isNotEmpty ||
+            closed: hasMissingFields ||
                 hasPassword == false ||
                 signUp?.unverified(attr.relatedField) != true,
             onSubmit: (code) async {
@@ -152,42 +162,50 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             ),
           ),
         Closeable(
-          closed: missingFields.isEmpty &&
+          closed: hasMissingFields == false &&
               hasPassword &&
               unverifiedFields.isNotEmpty,
           child: Column(
             children: [
-              for (final attribute in attributes)
-                Column(
-                  children: [
-                    if (attribute.isPhoneNumber) //
-                      ClerkPhoneNumberFormField(
-                        initial: _values[attribute.attr],
-                        label: attribute.title(l10ns),
-                        isOptional: attribute.isOptional,
-                        isMissing:
-                            missingFields.contains(attribute.attr.relatedField),
-                        onChanged: (value) => _values[attribute.attr] = value,
-                      )
-                    else
-                      ClerkTextFormField(
-                        initial: _values[attribute.attr],
-                        label: attribute.title(l10ns),
-                        isMissing:
-                            missingFields.contains(attribute.attr.relatedField),
-                        isOptional: attribute.isOptional,
-                        obscureText:
-                            attribute.needsObscuring && _obscurePassword,
-                        onObscure: attribute.needsObscuring
-                            ? () => setState(
-                                  () => _obscurePassword = !_obscurePassword,
-                                )
-                            : null,
-                        onChanged: (value) => _values[attribute.attr] = value,
-                      ),
-                    verticalMargin16,
-                  ],
-                ),
+              for (final attribute in attributes) ...[
+                if (attribute.isPhoneNumber) //
+                  ClerkPhoneNumberFormField(
+                    initial: _values[clerk.UserAttribute.phoneNumber],
+                    label: attribute.title(l10ns),
+                    isMissing: isMissing(clerk.UserAttribute.phoneNumber),
+                    isOptional: attribute.isOptional,
+                    onChanged: _change(clerk.UserAttribute.phoneNumber),
+                  )
+                else if (attribute.isPassword) ...[
+                  ClerkTextFormField(
+                    initial: _values[clerk.UserAttribute.password],
+                    label: attribute.title(l10ns),
+                    isMissing: isMissing(clerk.UserAttribute.password),
+                    isOptional: attribute.isOptional,
+                    obscureText: _isObscured,
+                    onObscure: _onObscure,
+                    onChanged: _change(clerk.UserAttribute.password),
+                  ),
+                  verticalMargin16,
+                  ClerkTextFormField(
+                    initial: _values[clerk.UserAttribute.passwordConfirmation],
+                    label: attribute.title(l10ns),
+                    isOptional: attribute.isOptional,
+                    obscureText: _isObscured,
+                    onObscure: _onObscure,
+                    onChanged:
+                        _change(clerk.UserAttribute.passwordConfirmation),
+                  ),
+                ] else
+                  ClerkTextFormField(
+                    initial: _values[attribute.attr],
+                    label: attribute.title(l10ns),
+                    isMissing: isMissing(attribute.attr),
+                    isOptional: attribute.isOptional,
+                    onChanged: _change(attribute.attr),
+                  ),
+                verticalMargin16,
+              ],
             ],
           ),
         ),
@@ -303,9 +321,9 @@ class _Attribute {
 
   int get index => attr.index;
 
-  bool get needsObscuring => attr.isPassword;
-
   bool get isPhoneNumber => attr == clerk.UserAttribute.phoneNumber;
+
+  bool get isPassword => attr == clerk.UserAttribute.password;
 
   bool get isOptional => isRequired == false;
 

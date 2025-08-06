@@ -69,9 +69,6 @@ enum UserAttribute {
   /// passkey
   passkey;
 
-  /// is password?
-  bool get isPassword => this == password || this == passwordConfirmation;
-
   @override
   String toString() => _$UserAttributeEnumMap[this]!;
 

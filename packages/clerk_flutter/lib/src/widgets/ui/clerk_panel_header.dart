@@ -36,8 +36,8 @@ class ClerkPanelHeader extends StatelessWidget {
         Padding(
           padding: verticalPadding24,
           child: Center(
-            child: SizedBox.square(
-              dimension: 32.0,
+            child: SizedBox(
+              height: 32.0,
               child: display.logoUrl?.isNotEmpty == true
                   ? ClerkCachedImage(display.logoUrl!)
                   : defaultOrgLogo,

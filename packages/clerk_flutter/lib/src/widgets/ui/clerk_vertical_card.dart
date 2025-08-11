@@ -1,4 +1,5 @@
 import 'package:clerk_flutter/src/assets.dart';
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class ClerkVerticalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final displayConfig = ClerkAuth.displayConfigOf(context);
     return Align(
       alignment: Alignment.topCenter,
       child: DecoratedBox(
@@ -54,19 +56,21 @@ class ClerkVerticalCard extends StatelessWidget {
                   child: topPortion,
                 ),
                 bottomPortion,
-                const Divider(
-                  color: ClerkColors.seashell,
-                  thickness: 2.0,
-                  height: 2.0,
-                ),
-                verticalMargin12,
-                Center(
-                  child: SvgPicture.asset(
-                    ClerkAssets.securedByClerkLogo,
-                    package: 'clerk_flutter',
+                if (displayConfig.branded) ...[
+                  const Divider(
+                    color: ClerkColors.seashell,
+                    thickness: 2.0,
+                    height: 2.0,
                   ),
-                ),
-                verticalMargin12,
+                  verticalMargin12,
+                  Center(
+                    child: SvgPicture.asset(
+                      ClerkAssets.securedByClerkLogo,
+                      package: 'clerk_flutter',
+                    ),
+                  ),
+                  verticalMargin12,
+                ],
               ],
             ),
           ),

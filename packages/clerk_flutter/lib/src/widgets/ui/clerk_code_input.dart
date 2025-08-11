@@ -52,13 +52,16 @@ class ClerkCodeInput extends StatelessWidget {
             ),
           ),
         if (subtitle case String subtitle)
-          Text(
-            subtitle,
-            textAlign: TextAlign.start,
-            maxLines: 2,
-            style: ClerkTextStyle.subtitleDark,
+          Padding(
+            padding: topPadding8,
+            child: Text(
+              subtitle,
+              textAlign: TextAlign.start,
+              maxLines: 2,
+              style: ClerkTextStyle.subtitleDark,
+            ),
           ),
-        verticalMargin4,
+        verticalMargin12,
         MultiDigitCodeInput(
           onSubmit: onSubmit,
           isSmall: isSmall,

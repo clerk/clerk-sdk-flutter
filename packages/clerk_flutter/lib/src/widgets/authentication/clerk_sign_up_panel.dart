@@ -93,7 +93,9 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     String? code,
     clerk.Strategy? strategy,
   }) async {
-    final authState = ClerkAuth.of(context);
+    _resendRequested = false;
+
+    final authState = ClerkAuth.of(context, listen: false);
     await authState.safelyCall(
       context,
       () async {
@@ -177,7 +179,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           _CodeInputBox(
             attribute: attr,
             value: _values[attr] ?? '',
-            closed: hasMissingFields ||
+            closed: _resendRequested ||
+                hasMissingFields ||
                 hasPassword == false ||
                 signUp?.unverified(attr.relatedField) != true,
             onSubmit: (code) async {
@@ -187,12 +190,11 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
               );
               return false;
             },
-            onResend: () => _continue(
-              strategy: clerk.Strategy.forUserAttribute(attr),
-            ),
+            onResend: _resend,
           ),
         Closeable(
-          closed: hasMissingFields == false &&
+          closed: _resendRequested == false &&
+              hasMissingFields == false &&
               hasPassword &&
               unverifiedFields.isNotEmpty,
           child: Column(

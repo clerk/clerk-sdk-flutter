@@ -134,7 +134,9 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
     } else {
       _closeInputConnectionIfNeeded();
     }
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -172,14 +174,17 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
     return false;
   }
 
-  @override
-  Widget build(BuildContext context) {
+  String? _labelFor(int i) {
     if (loading) {
-      return emptyWidget;
+      return null;
     }
 
     final text = _editingValue.text;
+    return i < text.length ? text[i] : null;
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Focus(
       focusNode: _focusNode,
       child: GestureDetector(
@@ -192,7 +197,7 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
               _CodeDigit(
                 isSmall: widget.isSmall,
                 hasCursor: _hasCursor(i),
-                label: i < text.length ? text[i] : null,
+                label: _labelFor(i),
               ),
           ],
         ),

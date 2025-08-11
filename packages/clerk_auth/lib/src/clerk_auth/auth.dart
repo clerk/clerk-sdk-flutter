@@ -527,7 +527,7 @@ class Auth {
             )
             .then(_housekeeping);
 
-      case SignUp signUp when signUp.missingFields.isNotEmpty:
+      case SignUp signUp when code is! String:
         await _api
             .updateSignUp(
               signUp,

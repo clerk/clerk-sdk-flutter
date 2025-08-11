@@ -18,9 +18,7 @@ import 'package:clerk_auth/src/models/api/api_response.dart';
 ///
 class Auth {
   /// Create an [Auth] object using appropriate Clerk credentials
-  Auth({required this.config})
-      : telemetry = Telemetry(config: config),
-        _api = Api(config: config);
+  Auth({required this.config});
 
   /// Use 'English' as the default locale
   static List<String> defaultLocalesLookup() => <String>['en'];
@@ -118,6 +116,8 @@ class Auth {
   ///
   Future<void> initialize() async {
     await config.initialize();
+    telemetry = Telemetry(config: config);
+    _api = Api(config: config, sessionTokenSink: _sessionTokens.sink);
     await _api.initialize();
 
     try {

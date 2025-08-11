@@ -30,6 +30,7 @@
     }
   },
   "abandoned": "abandoned",
+  "acceptTerms": "I accept the Terms & Conditions and Privacy Policy",
   "actionNotTimely": "Awaited user action not completed in required timeframe",
   "active": "active",
   "addAccount": "Add account",
@@ -211,6 +212,7 @@
   "pleaseChooseAnAccountToConnect": "Please choose an account to connect",
   "pleaseEnterYourIdentifier": "Please enter your identifier",
   "primary": "PRIMARY",
+  "privacyPolicy": "Privacy Policy",
   "problemsConnecting": "We are having problems connecting",
   "profile": "Profile",
   "profileDetails": "Profile details",
@@ -262,6 +264,7 @@
   },
   "slugUrl": "Slug URL",
   "switchTo": "Switch to",
+  "termsAndConditions": "Terms & Conditions",
   "transferable": "transferable",
   "typeTypeInvalid": "Type '{type}' is invalid",
   "@typeTypeInvalid": {

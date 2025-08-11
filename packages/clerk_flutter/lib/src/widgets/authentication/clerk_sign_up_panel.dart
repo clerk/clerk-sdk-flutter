@@ -9,8 +9,10 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart'
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_input/phone_input_package.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 typedef _ValueChanger = void Function(String value);
 
@@ -41,6 +43,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
   final _values = <clerk.UserAttribute, String?>{};
   bool _isObscured = true;
+  bool _hasAcceptedTerms = false;
 
   static const _signUpAttributes = [
     clerk.UserAttribute.username,
@@ -56,6 +59,10 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     super.didChangeDependencies();
 
     final authState = ClerkAuth.of(context, listen: false);
+
+    // If we don't need terms, just set acceptance to true up front
+    _hasAcceptedTerms = authState.env.user.signUp.legalConsentEnabled == false;
+
     if (authState.signUp case clerk.SignUp signUp) {
       _values[clerk.UserAttribute.firstName] ??= signUp.firstName;
       _values[clerk.UserAttribute.lastName] ??= signUp.lastName;
@@ -124,12 +131,23 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
   void _onObscure() => setState(() => _isObscured = !_isObscured);
 
+  void _acceptTerms() => setState(() => _hasAcceptedTerms = true);
+
   _ValueChanger _change(clerk.UserAttribute attr) =>
       (String value) => _values[attr] = value;
+
+  Widget _link(String label, String url) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => launchUrlString(url),
+      child: Text(label, style: ClerkTextStyle.clickable),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
+    final env = authState.env;
     final signUp = authState.signUp;
     final hasMissingFields = signUp?.missingFields.isNotEmpty == true;
     final unverifiedFields = signUp?.unverifiedFields ?? const [];
@@ -220,17 +238,34 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           ),
         ),
         ClerkMaterialButton(
-          onPressed: _continue,
-          label: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Center(child: Text(l10ns.cont)),
-              horizontalMargin4,
-              const Icon(Icons.arrow_right_sharp),
-            ],
-          ),
+          onPressed: _hasAcceptedTerms ? _continue : _acceptTerms,
+          label: _hasAcceptedTerms
+              ? Row(
+                  children: [
+                    horizontalMargin16,
+                    Expanded(child: Center(child: Text(l10ns.cont))),
+                    const SizedBox(
+                      width: 16,
+                      child: Icon(Icons.arrow_right_sharp),
+                    ),
+                  ],
+                )
+              : Text(l10ns.acceptTerms),
         ),
+        if (env.user.signUp.legalConsentEnabled) //
+          Closeable(
+            closed: _hasAcceptedTerms,
+            child: Padding(
+              padding: topPadding4,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _link(l10ns.termsAndConditions, env.display.termsUrl!),
+                  _link(l10ns.privacyPolicy, env.display.privacyPolicyUrl!),
+                ],
+              ),
+            ),
+          ),
         verticalMargin32,
       ],
     );

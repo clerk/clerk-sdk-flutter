@@ -31,6 +31,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get abandoned => 'abandoned';
 
   @override
+  String get acceptTerms =>
+      'I accept the Terms & Conditions and Privacy Policy';
+
+  @override
   String get actionNotTimely =>
       'Awaited user action not completed in required timeframe';
 
@@ -312,6 +316,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get primary => 'PRIMARY';
 
   @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
   String get problemsConnecting => 'We are having problems connecting';
 
   @override
@@ -392,6 +399,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get switchTo => 'Switch to';
+
+  @override
+  String get termsAndConditions => 'Terms & Conditions';
 
   @override
   String get transferable => 'transferable';

@@ -130,6 +130,12 @@ abstract class ClerkSdkLocalizations {
   /// **'abandoned'**
   String get abandoned;
 
+  /// No description provided for @acceptTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'I accept the Terms & Conditions and Privacy Policy'**
+  String get acceptTerms;
+
   /// No description provided for @actionNotTimely.
   ///
   /// In en, this message translates to:
@@ -628,6 +634,12 @@ abstract class ClerkSdkLocalizations {
   /// **'PRIMARY'**
   String get primary;
 
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
   /// No description provided for @problemsConnecting.
   ///
   /// In en, this message translates to:
@@ -765,6 +777,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Switch to'**
   String get switchTo;
+
+  /// No description provided for @termsAndConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions'**
+  String get termsAndConditions;
 
   /// No description provided for @transferable.
   ///

@@ -565,7 +565,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @passwordConfirmation.
   ///
   /// In en, this message translates to:
-  /// **'password confirmation'**
+  /// **'confirm password'**
   String get passwordConfirmation;
 
   /// No description provided for @passwordMatchError.

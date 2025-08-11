@@ -277,7 +277,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
       'Password and password confirmation must match';
 
   @override
-  String get passwordConfirmation => 'password confirmation';
+  String get passwordConfirmation => 'confirm password';
 
   @override
   String get passwordMatchError =>

@@ -200,7 +200,7 @@
   "passkey": "passkey",
   "password": "Password",
   "passwordAndPasswordConfirmationMustMatch": "Password and password confirmation must match",
-  "passwordConfirmation": "password confirmation",
+  "passwordConfirmation": "confirm password",
   "passwordMatchError": "Password and password confirmation must match",
   "passwordMustBeSupplied": "A password must be supplied",
   "passwordRequires": "Password requires:",

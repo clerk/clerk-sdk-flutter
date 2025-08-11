@@ -39,6 +39,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   String _identifier = '';
   String _password = '';
   String _code = '';
+  bool _isObscured = true;
 
   bool get _hasIdent => _identifier.isNotEmpty;
 
@@ -80,6 +81,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   Future<void> _openPasswordResetFlow(BuildContext context) async {
     await ClerkForgottenPasswordPanel.show(context);
   }
+
+  void _onObscure() => setState(() => _isObscured = !_isObscured);
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +166,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                   padding: verticalPadding8,
                   child: ClerkTextFormField(
                     label: localizations.password,
-                    obscureText: true,
+                    obscureText: _isObscured,
+                    onObscure: _onObscure,
                     onChanged: (password) => _password = password,
                     onSubmit: (_) =>
                         _continue(authState, strategy: clerk.Strategy.password),

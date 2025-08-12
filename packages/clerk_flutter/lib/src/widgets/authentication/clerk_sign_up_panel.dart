@@ -39,11 +39,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
   final _values = <clerk.UserAttribute, String?>{};
   bool _isObscured = true;
-  bool? _legalAccepted;
-
-  // where `_legalAccepted` is null, we assume true because no legal
-  // consent is required
-  bool get _hasAcceptedTerms => _legalAccepted ?? true;
+  bool _needsLegalAcceptance = true;
+  bool _hasLegalAcceptance = false;
 
   static const _signUpAttributes = [
     clerk.UserAttribute.username,
@@ -60,10 +57,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
     final authState = ClerkAuth.of(context, listen: false);
 
-    if (_legalAccepted == null &&
-        authState.env.user.signUp.legalConsentEnabled) {
-      _legalAccepted = false;
-    }
+    _needsLegalAcceptance = authState.env.user.signUp.legalConsentEnabled;
 
     if (authState.signUp case clerk.SignUp signUp) {
       _values[clerk.UserAttribute.firstName] ??= signUp.firstName;
@@ -93,7 +87,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   }
 
   String? _valueOrNull(clerk.UserAttribute attr) =>
-      _values[attr]?.orNullIfEmpty;
+      _values[attr]?.trim().orNullIfEmpty;
 
   Future<void> _continue({
     String? code,
@@ -125,7 +119,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             password: password,
             passwordConfirmation: passwordConfirmation,
             code: code,
-            legalAccepted: _legalAccepted,
+            legalAccepted:
+                _needsLegalAcceptance && _hasLegalAcceptance ? true : null,
           );
         }
       },
@@ -134,7 +129,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
   void _onObscure() => setState(() => _isObscured = !_isObscured);
 
-  void _acceptTerms() => setState(() => _legalAccepted = true);
+  void _acceptTerms() => setState(() => _hasLegalAcceptance = true);
 
   _ValueChanger _change(clerk.UserAttribute attr) =>
       (String value) => _values[attr] = value;
@@ -240,31 +235,44 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             ],
           ),
         ),
-        ClerkMaterialButton(
-          onPressed: _hasAcceptedTerms ? _continue : _acceptTerms,
-          label: _hasAcceptedTerms
-              ? Row(
-                  children: [
-                    horizontalMargin16,
-                    Expanded(child: Center(child: Text(l10ns.cont))),
-                    const SizedBox(
-                      width: 16,
-                      child: Icon(Icons.arrow_right_sharp),
-                    ),
-                  ],
-                )
-              : Text(l10ns.acceptTerms),
+        Closeable(
+          closed: _needsLegalAcceptance && _hasLegalAcceptance == false,
+          child: ClerkMaterialButton(
+            onPressed: _continue,
+            label: Row(
+              children: [
+                horizontalMargin16,
+                Expanded(child: Center(child: Text(l10ns.cont))),
+                const SizedBox(
+                  width: 16,
+                  child: Icon(Icons.arrow_right_sharp),
+                ),
+              ],
+            ),
+          ),
         ),
-        if (env.user.signUp.legalConsentEnabled) //
+        if (_needsLegalAcceptance) //
           Closeable(
-            closed: _hasAcceptedTerms,
+            closed: _hasLegalAcceptance,
             child: Padding(
               padding: topPadding4,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _link(l10ns.termsAndConditions, env.display.termsUrl!),
-                  _link(l10ns.privacyPolicy, env.display.privacyPolicyUrl!),
+                  ClerkMaterialButton(
+                    onPressed: _acceptTerms,
+                    label: Text(l10ns.acceptTerms),
+                  ),
+                  verticalMargin4,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (env.display.termsUrl case String termsUrl)
+                        _link(l10ns.termsAndConditions, termsUrl),
+                      if (env.display.privacyPolicyUrl case String privacyUrl)
+                        _link(l10ns.privacyPolicy, privacyUrl),
+                    ],
+                  ),
                 ],
               ),
             ),

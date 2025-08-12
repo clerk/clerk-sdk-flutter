@@ -324,15 +324,11 @@ class _Attribute {
 
   final clerk.UserAttributeData data;
 
-  bool get isRequired => data.isRequired;
-
-  int get index => attr.index;
-
   bool get isPhoneNumber => attr == clerk.UserAttribute.phoneNumber;
 
   bool get isPassword => attr == clerk.UserAttribute.password;
 
-  bool get isOptional => isRequired == false;
+  bool get isOptional => data.isRequired == false;
 
   String title(ClerkSdkLocalizations l10ns) =>
       l10ns.grammar.toSentence(attr.localizedMessage(l10ns));

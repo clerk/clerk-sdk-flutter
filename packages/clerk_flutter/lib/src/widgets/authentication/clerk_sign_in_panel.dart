@@ -29,7 +29,8 @@ class ClerkSignInPanel extends StatefulWidget {
   State<ClerkSignInPanel> createState() => _ClerkSignInPanelState();
 }
 
-class _ClerkSignInPanelState extends State<ClerkSignInPanel> with ClerkTelemetryStateMixin {
+class _ClerkSignInPanelState extends State<ClerkSignInPanel>
+    with ClerkTelemetryStateMixin {
   clerk.Strategy _strategy = clerk.Strategy.password;
   String _identifier = '';
   String _password = '';
@@ -92,7 +93,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> with ClerkTelemetry
         .firstWhereOrNull((f) => f.strategy == _strategy);
     final safeIdentifier = factor?.safeIdentifier;
     final otherStrategies = env.otherStrategies.where(StrategyButton.supports);
-    final canResetPassword = env.config.firstFactors.any((f) => f.isPasswordResetter);
+    final canResetPassword =
+        env.config.firstFactors.any((f) => f.isPasswordResetter);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +165,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel> with ClerkTelemetry
                     obscureText: _isObscured,
                     onObscure: _onObscure,
                     onChanged: (password) => _password = password,
-                    onSubmit: (_) => _continue(authState, strategy: clerk.Strategy.password),
+                    onSubmit: (_) =>
+                        _continue(authState, strategy: clerk.Strategy.password),
                   ),
                 ),
               if (otherStrategies.isNotEmpty) ...[

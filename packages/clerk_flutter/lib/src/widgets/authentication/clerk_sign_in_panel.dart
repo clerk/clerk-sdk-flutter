@@ -23,18 +23,13 @@ import 'package:flutter/material.dart';
 ///
 class ClerkSignInPanel extends StatefulWidget {
   /// Constructs a new [ClerkSignInPanel].
-  const ClerkSignInPanel({super.key, this.isActive = false});
-
-  /// [true] if we are currently signing in
-  @Deprecated('no longer needed - will be removed')
-  final bool isActive;
+  const ClerkSignInPanel({super.key});
 
   @override
   State<ClerkSignInPanel> createState() => _ClerkSignInPanelState();
 }
 
-class _ClerkSignInPanelState extends State<ClerkSignInPanel>
-    with ClerkTelemetryStateMixin {
+class _ClerkSignInPanelState extends State<ClerkSignInPanel> with ClerkTelemetryStateMixin {
   clerk.Strategy _strategy = clerk.Strategy.password;
   String _identifier = '';
   String _password = '';
@@ -97,8 +92,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         .firstWhereOrNull((f) => f.strategy == _strategy);
     final safeIdentifier = factor?.safeIdentifier;
     final otherStrategies = env.otherStrategies.where(StrategyButton.supports);
-    final canResetPassword =
-        env.config.firstFactors.any((f) => f.isPasswordResetter);
+    final canResetPassword = env.config.firstFactors.any((f) => f.isPasswordResetter);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,8 +163,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                     obscureText: _isObscured,
                     onObscure: _onObscure,
                     onChanged: (password) => _password = password,
-                    onSubmit: (_) =>
-                        _continue(authState, strategy: clerk.Strategy.password),
+                    onSubmit: (_) => _continue(authState, strategy: clerk.Strategy.password),
                   ),
                 ),
               if (otherStrategies.isNotEmpty) ...[

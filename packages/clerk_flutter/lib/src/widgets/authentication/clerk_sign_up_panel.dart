@@ -27,18 +27,13 @@ typedef _ValueChanger = void Function(String value);
 @immutable
 class ClerkSignUpPanel extends StatefulWidget {
   /// Construct a new [ClerkSignUpPanel]
-  const ClerkSignUpPanel({super.key, this.isActive = false});
-
-  /// [true] if we are currently signing up
-  @Deprecated('no longer needed - will be removed')
-  final bool isActive;
+  const ClerkSignUpPanel({super.key});
 
   @override
   State<ClerkSignUpPanel> createState() => _ClerkSignUpPanelState();
 }
 
-class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
-    with ClerkTelemetryStateMixin {
+class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetryStateMixin {
   static final _phoneNumberRE = RegExp(r'[^0-9+]');
 
   final _values = <clerk.UserAttribute, String?>{};
@@ -72,8 +67,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           ? PhoneNumber.parse(signUp.phoneNumber!).intlFormattedNsn
           : null;
 
-      if (signUp.missingFields case List<clerk.Field> missingFields
-          when missingFields.isNotEmpty) {
+      if (signUp.missingFields case List<clerk.Field> missingFields when missingFields.isNotEmpty) {
         final l10ns = authState.localizationsOf(context);
         authState.addError(
           clerk.AuthError(
@@ -90,8 +84,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     }
   }
 
-  String? _valueOrNull(clerk.UserAttribute attr) =>
-      _values[attr]?.orNullIfEmpty;
+  String? _valueOrNull(clerk.UserAttribute attr) => _values[attr]?.orNullIfEmpty;
 
   Future<void> _continue({
     String? code,
@@ -102,8 +95,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       context,
       () async {
         final password = _valueOrNull(clerk.UserAttribute.password);
-        final passwordConfirmation =
-            _valueOrNull(clerk.UserAttribute.passwordConfirmation);
+        final passwordConfirmation = _valueOrNull(clerk.UserAttribute.passwordConfirmation);
         if (authState.checkPassword(password, passwordConfirmation, context)
             case String errorMessage) {
           authState.addError(clerk.AuthError(
@@ -133,8 +125,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
   void _acceptTerms() => setState(() => _hasAcceptedTerms = true);
 
-  _ValueChanger _change(clerk.UserAttribute attr) =>
-      (String value) => _values[attr] = value;
+  _ValueChanger _change(clerk.UserAttribute attr) => (String value) => _values[attr] = value;
 
   Widget _link(String label, String url) {
     return GestureDetector(
@@ -151,8 +142,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     final signUp = authState.signUp;
     final hasMissingFields = signUp?.missingFields.isNotEmpty == true;
     final unverifiedFields = signUp?.unverifiedFields ?? const [];
-    final hasPassword =
-        _values[clerk.UserAttribute.password]?.isNotEmpty == true;
+    final hasPassword = _values[clerk.UserAttribute.password]?.isNotEmpty == true;
     final l10ns = authState.localizationsOf(context);
     final attributes = [
       for (final attr in _signUpAttributes) //
@@ -161,8 +151,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           _Attribute(attr, data),
     ];
 
-    bool isMissing(clerk.UserAttribute attr) =>
-        signUp?.missing(attr.relatedField) == true;
+    bool isMissing(clerk.UserAttribute attr) => signUp?.missing(attr.relatedField) == true;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -190,9 +179,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             ),
           ),
         Closeable(
-          closed: hasMissingFields == false &&
-              hasPassword &&
-              unverifiedFields.isNotEmpty,
+          closed: hasMissingFields == false && hasPassword && unverifiedFields.isNotEmpty,
           child: Column(
             children: [
               for (final attribute in attributes) ...[
@@ -221,8 +208,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                     isOptional: attribute.isOptional,
                     obscureText: _isObscured,
                     onObscure: _onObscure,
-                    onChanged:
-                        _change(clerk.UserAttribute.passwordConfirmation),
+                    onChanged: _change(clerk.UserAttribute.passwordConfirmation),
                   ),
                 ] else
                   ClerkTextFormField(
@@ -324,10 +310,8 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
               key: Key(widget.attribute.name),
               focusNode: _focus,
               title: switch (widget.attribute) {
-                clerk.UserAttribute.emailAddress =>
-                  localizations.verifyYourEmailAddress,
-                clerk.UserAttribute.phoneNumber =>
-                  localizations.verifyYourPhoneNumber,
+                clerk.UserAttribute.emailAddress => localizations.verifyYourEmailAddress,
+                clerk.UserAttribute.phoneNumber => localizations.verifyYourPhoneNumber,
                 _ => widget.attribute.toString(),
               },
               subtitle: localizations.enterCodeSentTo(widget.value),

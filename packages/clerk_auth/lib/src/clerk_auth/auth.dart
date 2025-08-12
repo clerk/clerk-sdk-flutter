@@ -473,6 +473,7 @@ class Auth {
     String? code,
     String? token,
     String? signature,
+    bool? legalAccepted,
   }) async {
     if (password != passwordConfirmation) {
       throw const AuthError(
@@ -494,6 +495,7 @@ class Auth {
               password: password,
               code: code,
               token: token,
+              legalAccepted: legalAccepted,
             )
             .then(_housekeeping);
 
@@ -510,6 +512,7 @@ class Auth {
               password: password,
               code: code,
               token: token,
+              legalAccepted: legalAccepted,
             )
             .then(_housekeeping);
     }

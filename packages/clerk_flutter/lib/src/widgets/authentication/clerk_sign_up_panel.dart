@@ -33,12 +33,17 @@ class ClerkSignUpPanel extends StatefulWidget {
   State<ClerkSignUpPanel> createState() => _ClerkSignUpPanelState();
 }
 
-class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetryStateMixin {
+class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
+    with ClerkTelemetryStateMixin {
   static final _phoneNumberRE = RegExp(r'[^0-9+]');
 
   final _values = <clerk.UserAttribute, String?>{};
   bool _isObscured = true;
-  bool _hasAcceptedTerms = false;
+  bool? _legalAccepted;
+
+  // where `_legalAccepted` is null, we assume true because no legal
+  // consent is required
+  bool get _hasAcceptedTerms => _legalAccepted ?? true;
 
   static const _signUpAttributes = [
     clerk.UserAttribute.username,
@@ -55,8 +60,10 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetry
 
     final authState = ClerkAuth.of(context, listen: false);
 
-    // If we don't need terms, just set acceptance to true up front
-    _hasAcceptedTerms = authState.env.user.signUp.legalConsentEnabled == false;
+    if (_legalAccepted == null &&
+        authState.env.user.signUp.legalConsentEnabled) {
+      _legalAccepted = false;
+    }
 
     if (authState.signUp case clerk.SignUp signUp) {
       _values[clerk.UserAttribute.firstName] ??= signUp.firstName;
@@ -67,7 +74,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetry
           ? PhoneNumber.parse(signUp.phoneNumber!).intlFormattedNsn
           : null;
 
-      if (signUp.missingFields case List<clerk.Field> missingFields when missingFields.isNotEmpty) {
+      if (signUp.missingFields case List<clerk.Field> missingFields
+          when missingFields.isNotEmpty) {
         final l10ns = authState.localizationsOf(context);
         authState.addError(
           clerk.AuthError(
@@ -84,7 +92,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetry
     }
   }
 
-  String? _valueOrNull(clerk.UserAttribute attr) => _values[attr]?.orNullIfEmpty;
+  String? _valueOrNull(clerk.UserAttribute attr) =>
+      _values[attr]?.orNullIfEmpty;
 
   Future<void> _continue({
     String? code,
@@ -95,7 +104,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetry
       context,
       () async {
         final password = _valueOrNull(clerk.UserAttribute.password);
-        final passwordConfirmation = _valueOrNull(clerk.UserAttribute.passwordConfirmation);
+        final passwordConfirmation =
+            _valueOrNull(clerk.UserAttribute.passwordConfirmation);
         if (authState.checkPassword(password, passwordConfirmation, context)
             case String errorMessage) {
           authState.addError(clerk.AuthError(
@@ -115,6 +125,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetry
             password: password,
             passwordConfirmation: passwordConfirmation,
             code: code,
+            legalAccepted: _legalAccepted,
           );
         }
       },
@@ -123,9 +134,10 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetry
 
   void _onObscure() => setState(() => _isObscured = !_isObscured);
 
-  void _acceptTerms() => setState(() => _hasAcceptedTerms = true);
+  void _acceptTerms() => setState(() => _legalAccepted = true);
 
-  _ValueChanger _change(clerk.UserAttribute attr) => (String value) => _values[attr] = value;
+  _ValueChanger _change(clerk.UserAttribute attr) =>
+      (String value) => _values[attr] = value;
 
   Widget _link(String label, String url) {
     return GestureDetector(
@@ -142,7 +154,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetry
     final signUp = authState.signUp;
     final hasMissingFields = signUp?.missingFields.isNotEmpty == true;
     final unverifiedFields = signUp?.unverifiedFields ?? const [];
-    final hasPassword = _values[clerk.UserAttribute.password]?.isNotEmpty == true;
+    final hasPassword =
+        _values[clerk.UserAttribute.password]?.isNotEmpty == true;
     final l10ns = authState.localizationsOf(context);
     final attributes = [
       for (final attr in _signUpAttributes) //
@@ -151,7 +164,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetry
           _Attribute(attr, data),
     ];
 
-    bool isMissing(clerk.UserAttribute attr) => signUp?.missing(attr.relatedField) == true;
+    bool isMissing(clerk.UserAttribute attr) =>
+        signUp?.missing(attr.relatedField) == true;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -179,7 +193,9 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetry
             ),
           ),
         Closeable(
-          closed: hasMissingFields == false && hasPassword && unverifiedFields.isNotEmpty,
+          closed: hasMissingFields == false &&
+              hasPassword &&
+              unverifiedFields.isNotEmpty,
           child: Column(
             children: [
               for (final attribute in attributes) ...[
@@ -208,7 +224,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel> with ClerkTelemetry
                     isOptional: attribute.isOptional,
                     obscureText: _isObscured,
                     onObscure: _onObscure,
-                    onChanged: _change(clerk.UserAttribute.passwordConfirmation),
+                    onChanged:
+                        _change(clerk.UserAttribute.passwordConfirmation),
                   ),
                 ] else
                   ClerkTextFormField(
@@ -310,8 +327,10 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
               key: Key(widget.attribute.name),
               focusNode: _focus,
               title: switch (widget.attribute) {
-                clerk.UserAttribute.emailAddress => localizations.verifyYourEmailAddress,
-                clerk.UserAttribute.phoneNumber => localizations.verifyYourPhoneNumber,
+                clerk.UserAttribute.emailAddress =>
+                  localizations.verifyYourEmailAddress,
+                clerk.UserAttribute.phoneNumber =>
+                  localizations.verifyYourPhoneNumber,
                 _ => widget.attribute.toString(),
               },
               subtitle: localizations.enterCodeSentTo(widget.value),

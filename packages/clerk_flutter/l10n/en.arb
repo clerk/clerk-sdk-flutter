@@ -152,14 +152,6 @@
       }
     }
   },
-  "noFieldForAttribute": "No field found for user attribute {arg}",
-  "@noFieldForAttribute": {
-    "placeholders": {
-      "arg": {
-        "type": "String"
-      }
-    }
-  },
   "noSessionFoundForUser": "No session found for user {arg}",
   "@noSessionFoundForUser": {
     "placeholders": {

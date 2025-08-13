@@ -228,11 +228,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
-  String noFieldForAttribute(String arg) {
-    return 'No field found for user attribute $arg';
-  }
-
-  @override
   String noSessionFoundForUser(String arg) {
     return 'No session found for user $arg';
   }

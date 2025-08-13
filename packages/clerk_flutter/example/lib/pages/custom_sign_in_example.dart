@@ -27,8 +27,7 @@ class CustomOAuthSignInExample extends StatefulWidget {
   static const path = '/custom-oauth-sign-in-example';
 
   @override
-  State<CustomOAuthSignInExample> createState() =>
-      _CustomOAuthSignInExampleState();
+  State<CustomOAuthSignInExample> createState() => _CustomOAuthSignInExampleState();
 }
 
 class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
@@ -85,7 +84,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
       scopeHint: const ['openid', 'email', 'profile'],
     );
     await _authState.attemptSignIn(
-      strategy: clerk.Strategy.googleOneTap,
+      strategy: clerk.Strategy.oauthTokenGoogle,
       token: account.authentication.idToken,
     );
     _loading.value = false;
@@ -172,7 +171,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
                                 child: Text(strategy.provider ?? strategy.name),
                               ),
                             if (_authState.env.config.firstFactors
-                                .contains(clerk.Strategy.googleOneTap)) //
+                                .contains(clerk.Strategy.oauthTokenGoogle)) //
                               ElevatedButton(
                                 onPressed: _googleOneTap,
                                 child: const Text('google_one_tap'),

@@ -16,6 +16,7 @@ dependencies:
   url_launcher_ios: 6.2.0
   google_sign_in: ^7.1.0
   uuid: ^4.5.1
+  win32: ^5.5.4
 
 dev_dependencies:
   flutter_lints: ^3.0.1

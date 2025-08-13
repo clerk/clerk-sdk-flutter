@@ -34,9 +34,6 @@ enum AuthErrorCode {
   /// Webview error response
   webviewErrorResponse,
 
-  /// Error during sign-up flow
-  signUpFlowError,
-
   /// Invalid Password
   invalidPassword,
 
@@ -84,4 +81,7 @@ enum AuthErrorCode {
 
   /// We are having problems connecting
   problemsConnecting,
+
+  /// Required fields are missing
+  requiredFieldsAreMissing,
 }

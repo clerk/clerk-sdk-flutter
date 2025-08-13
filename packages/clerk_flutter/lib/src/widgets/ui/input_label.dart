@@ -11,8 +11,8 @@ class InputLabel extends StatelessWidget {
   const InputLabel({
     super.key,
     required this.label,
-    this.isRequired = false,
-    this.isOptional = false,
+    this.isRequired,
+    this.isOptional,
     this.trailing,
   });
 
@@ -20,10 +20,10 @@ class InputLabel extends StatelessWidget {
   final String? label;
 
   /// Add `required` to the row?
-  final bool isRequired;
+  final bool? isRequired;
 
   /// Add `optional` to the row?
-  final bool isOptional;
+  final bool? isOptional;
 
   /// A widget for the end of the label
   final Widget? trailing;
@@ -41,16 +41,16 @@ class InputLabel extends StatelessWidget {
             textAlign: TextAlign.start,
             maxLines: 2,
             style: ClerkTextStyle.inputBoxLabel.copyWith(
-              color: isRequired ? ClerkColors.incarnadine : null,
+              color: isRequired == true ? ClerkColors.incarnadine : null,
             ),
           ),
-        if (isOptional) //
-          _LabelModifier(localizations.optional),
-        if (isRequired) //
+        if (isRequired == true) //
           _LabelModifier(
             localizations.requiredField,
             color: ClerkColors.incarnadine,
-          ),
+          )
+        else if (isOptional == false) //
+          _LabelModifier(localizations.requiredField),
         if (trailing case Widget trailing) //
           trailing,
       ],

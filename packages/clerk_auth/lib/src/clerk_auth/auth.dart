@@ -219,8 +219,7 @@ class Auth {
     final data = _persistableData;
     _persistableData = {};
 
-    if (_persistableData[_kClientKey] case Client client
-        when client.user != null) {
+    if (_persistableData[_kClientKey] case Client client when client.user != null) {
       config.persistor.write(_kClientKey, jsonEncode(client));
     }
 
@@ -265,9 +264,7 @@ class Auth {
     Organization? organization,
     String? templateName,
   }) async {
-    final org = env.organization.isEnabled
-        ? organization ?? Organization.personal
-        : null;
+    final org = env.organization.isEnabled ? organization ?? Organization.personal : null;
     final token = await _api.sessionToken(org, templateName);
     if (token is! SessionToken) {
       throw const AuthError(
@@ -285,9 +282,7 @@ class Auth {
     required Uri? redirect,
   }) async {
     final redirectUrl = redirect?.toString() ?? ClerkConstants.oauthRedirect;
-    await _api
-        .createSignIn(strategy: strategy, redirectUrl: redirectUrl)
-        .then(_housekeeping);
+    await _api.createSignIn(strategy: strategy, redirectUrl: redirectUrl).then(_housekeeping);
     if (client.signIn case SignIn signIn) {
       await _api
           .prepareSignIn(
@@ -308,9 +303,7 @@ class Auth {
     required Uri? redirect,
   }) async {
     final redirectUrl = redirect?.toString() ?? ClerkConstants.oauthRedirect;
-    await _api
-        .addExternalAccount(strategy: strategy, redirectUrl: redirectUrl)
-        .then(_housekeeping);
+    await _api.addExternalAccount(strategy: strategy, redirectUrl: redirectUrl).then(_housekeeping);
     update();
   }
 
@@ -326,9 +319,7 @@ class Auth {
     required Strategy strategy,
   }) async {
     if (strategy.isPasswordResetter) {
-      await _api
-          .createSignIn(identifier: identifier, strategy: strategy)
-          .then(_housekeeping);
+      await _api.createSignIn(identifier: identifier, strategy: strategy).then(_housekeeping);
     } else {
       addError(
         AuthError(
@@ -367,9 +358,7 @@ class Auth {
     if (client.signIn == null) {
       // if password and identifier been presented, we can immediately attempt
       // a sign in;  if null they will be ignored
-      await _api
-          .createSignIn(identifier: identifier, password: password)
-          .then(_housekeeping);
+      await _api.createSignIn(identifier: identifier, password: password).then(_housekeeping);
     }
 
     switch (client.signIn) {
@@ -377,23 +366,15 @@ class Auth {
         // We have signed in - possibly when creating the [SignIn] above
         break;
 
-      case SignIn signIn
-          when signIn.status == Status.needsIdentifier && identifier is String:
+      case SignIn signIn when signIn.status == Status.needsIdentifier && identifier is String:
         // if a password has been presented, we can immediately attempt a
         // sign in; if `password` is null it will be ignored
-        await _api
-            .createSignIn(identifier: identifier, password: password)
-            .then(_housekeeping);
+        await _api.createSignIn(identifier: identifier, password: password).then(_housekeeping);
 
       case SignIn signIn when strategy.isOauth && token is String:
-        await _api
-            .sendOauthToken(signIn, strategy: strategy, token: token)
-            .then(_housekeeping);
+        await _api.sendOauthToken(signIn, strategy: strategy, token: token).then(_housekeeping);
 
-      case SignIn signIn
-          when strategy.isPasswordResetter &&
-              code is String &&
-              password is String:
+      case SignIn signIn when strategy.isPasswordResetter && code is String && password is String:
         await _api
             .attemptSignIn(
               signIn,
@@ -404,8 +385,7 @@ class Auth {
             )
             .then(_housekeeping);
 
-      case SignIn signIn
-          when strategy == Strategy.emailLink && redirectUrl is String:
+      case SignIn signIn when strategy == Strategy.emailLink && redirectUrl is String:
         await _api
             .prepareSignIn(
               signIn,
@@ -443,28 +423,21 @@ class Auth {
             )
             .then(_housekeeping);
 
-      case SignIn signIn
-          when signIn.status.needsFactor && strategy.requiresCode:
+      case SignIn signIn when signIn.status.needsFactor && strategy.requiresCode:
         final stage = Stage.forStatus(signIn.status);
         if (signIn.verificationFor(stage) is! Verification) {
-          await _api
-              .prepareSignIn(signIn, stage: stage, strategy: strategy)
-              .then(_housekeeping);
+          await _api.prepareSignIn(signIn, stage: stage, strategy: strategy).then(_housekeeping);
         }
         if (client.signIn case SignIn signIn
-            when signIn.verificationFor(stage) is Verification &&
-                code?.length == _codeLength) {
+            when signIn.verificationFor(stage) is Verification && code?.length == _codeLength) {
           await _api
-              .attemptSignIn(signIn,
-                  stage: stage, strategy: strategy, code: code)
+              .attemptSignIn(signIn, stage: stage, strategy: strategy, code: code)
               .then(_housekeeping);
         }
 
       case SignIn signIn when signIn.status.needsFactor:
         final stage = Stage.forStatus(signIn.status);
-        await _api
-            .prepareSignIn(signIn, stage: stage, strategy: strategy)
-            .then(_housekeeping);
+        await _api.prepareSignIn(signIn, stage: stage, strategy: strategy).then(_housekeeping);
         await _api
             .attemptSignIn(signIn, stage: stage, strategy: strategy, code: code)
             .then(_housekeeping);
@@ -503,6 +476,7 @@ class Auth {
     bool? legalAccepted,
   }) async {
     final hasVerificationCredential = code is String || signature is String;
+    final initialSignUp = client.signUp;
 
     if (password != passwordConfirmation) {
       throw const AuthError(
@@ -511,41 +485,26 @@ class Auth {
       );
     }
 
-    switch (client.signUp) {
-      case null:
-        await _api
-            .createSignUp(
-              strategy: strategy,
-              password: password,
-              firstName: firstName,
-              lastName: lastName,
-              username: username,
-              emailAddress: emailAddress,
-              phoneNumber: phoneNumber,
-              legalAccepted: legalAccepted,
-            )
-            .then(_housekeeping);
-
-      case SignUp signUp when hasVerificationCredential == false:
-        await _api
-            .updateSignUp(
-              signUp,
-              strategy: strategy,
-              password: password,
-              firstName: firstName,
-              lastName: lastName,
-              username: username,
-              emailAddress: emailAddress,
-              phoneNumber: phoneNumber,
-              legalAccepted: legalAccepted,
-            )
-            .then(_housekeeping);
+    if (initialSignUp is! SignUp) {
+      await _api
+          .createSignUp(
+            strategy: strategy,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            emailAddress: emailAddress,
+            phoneNumber: phoneNumber,
+            legalAccepted: legalAccepted,
+          )
+          .then(_housekeeping);
     }
+
+    final hasCreatedSignUp = initialSignUp is! SignUp && client.signUp is SignUp;
 
     if (client.user is! User) {
       switch (client.signUp) {
-        case SignUp signUp
-            when strategy.requiresCode && hasVerificationCredential:
+        case SignUp signUp when strategy.requiresVerification && hasVerificationCredential:
           await _api
               .attemptSignUp(
                 signUp,
@@ -566,11 +525,8 @@ class Auth {
           }
 
         case SignUp signUp
-            when signUp.status == Status.missingRequirements &&
-                signUp.missingFields.isEmpty:
-          await _api
-              .prepareSignUp(signUp, strategy: strategy)
-              .then(_housekeeping);
+            when signUp.status == Status.missingRequirements && signUp.missingFields.isEmpty:
+          await _api.prepareSignUp(signUp, strategy: strategy).then(_housekeeping);
           await _api
               .attemptSignUp(
                 client.signUp ?? signUp,
@@ -580,6 +536,24 @@ class Auth {
               )
               .then(_housekeeping);
       }
+    }
+
+    if (client.signUp case SignUp signUp when hasCreatedSignUp == false && client.user is! User) {
+      // if we still don't have a user, but didn't create a SignUp object this time round,
+      // now is the time to update the preexisting SignUp object, in case of changes
+      await _api
+          .updateSignUp(
+            signUp,
+            strategy: strategy,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            emailAddress: emailAddress,
+            phoneNumber: phoneNumber,
+            legalAccepted: legalAccepted,
+          )
+          .then(_housekeeping);
     }
 
     update();
@@ -604,14 +578,10 @@ class Auth {
 
     if (user?.organizationNamed(name) case Organization org) {
       if (slug?.isNotEmpty == true) {
-        await _api
-            .updateOrganization(org, slug: slug, session: session)
-            .then(_housekeeping);
+        await _api.updateOrganization(org, slug: slug, session: session).then(_housekeeping);
       }
       if (logo case File logo) {
-        await _api
-            .updateOrganizationLogo(org, logo: logo, session: session)
-            .then(_housekeeping);
+        await _api.updateOrganizationLogo(org, logo: logo, session: session).then(_housekeeping);
       }
     }
 
@@ -625,8 +595,7 @@ class Auth {
     String? name,
     File? logo,
   }) async {
-    final hasName =
-        name is String && name.isNotEmpty && name != organization.name;
+    final hasName = name is String && name.isNotEmpty && name != organization.name;
     if (hasName || logo is File) {
       if (hasName) {
         await _api
@@ -648,9 +617,7 @@ class Auth {
     required Organization organization,
     Session? session,
   }) async {
-    final result = await _api
-        .leaveOrganization(organization, session: session)
-        .then(_housekeeping);
+    final result = await _api.leaveOrganization(organization, session: session).then(_housekeeping);
     update();
     return result.isOkay;
   }
@@ -718,9 +685,7 @@ class Auth {
   Future<ApiResponse> acceptOrganizationInvitation(
     OrganizationInvitation invitation,
   ) async {
-    return await _api
-        .acceptOrganizationInvitation(invitation)
-        .then(_housekeeping);
+    return await _api.acceptOrganizationInvitation(invitation).then(_housekeeping);
   }
 
   /// Create a new [Domain] within an [Organization]
@@ -730,13 +695,10 @@ class Auth {
     required String name,
     required EnrollmentMode mode,
   }) async {
-    final response =
-        await _api.createDomain(organization, name).then(_housekeeping);
+    final response = await _api.createDomain(organization, name).then(_housekeeping);
     if (mode != EnrollmentMode.manualInvitation) {
       final domainId = response.response!['id'];
-      await _api
-          .updateDomainEnrollmentMode(organization, domainId, mode)
-          .then(_housekeeping);
+      await _api.updateDomainEnrollmentMode(organization, domainId, mode).then(_housekeeping);
     }
   }
 
@@ -802,9 +764,7 @@ class Auth {
     String identifier,
     IdentifierType type,
   ) async {
-    await _api
-        .addIdentifyingDataToCurrentUser(identifier, type)
-        .then(_housekeeping);
+    await _api.addIdentifyingDataToCurrentUser(identifier, type).then(_housekeeping);
     if (user?.identifierFrom(identifier) case UserIdentifyingData ident) {
       await _api.prepareIdentifyingDataVerification(ident).then(_housekeeping);
     }

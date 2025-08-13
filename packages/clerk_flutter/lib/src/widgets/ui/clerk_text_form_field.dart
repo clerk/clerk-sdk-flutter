@@ -11,7 +11,7 @@ class ClerkTextFormField extends StatelessWidget {
   const ClerkTextFormField({
     super.key,
     this.label,
-    this.isOptional = false,
+    this.isOptional,
     this.obscureText = false,
     this.autofocus = false,
     this.isMissing = false,
@@ -34,7 +34,7 @@ class ClerkTextFormField extends StatelessWidget {
   final String? label;
 
   /// Is this field optional?
-  final bool isOptional;
+  final bool? isOptional;
 
   /// can we see the text or not?
   final bool obscureText;
@@ -75,7 +75,6 @@ class ClerkTextFormField extends StatelessWidget {
         ),
         verticalMargin4,
         _TextField(
-          optional: isOptional,
           obscureText: obscureText,
           onChanged: onChanged,
           onSubmit: onSubmit,
@@ -92,7 +91,6 @@ class ClerkTextFormField extends StatelessWidget {
 
 class _TextField extends StatefulWidget {
   const _TextField({
-    required this.optional,
     required this.obscureText,
     required this.onChanged,
     required this.onSubmit,
@@ -105,7 +103,6 @@ class _TextField extends StatefulWidget {
 
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmit;
-  final bool optional;
   final bool obscureText;
   final bool autofocus;
   final FocusNode? focusNode;

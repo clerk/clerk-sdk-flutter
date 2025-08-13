@@ -8,8 +8,6 @@ import 'package:intl/intl.dart' as intl;
 
 import 'clerk_sdk_localizations_en.dart';
 
-// ignore_for_file: type=lint
-
 /// Callers can lookup localized strings with an instance of ClerkSdkLocalizations
 /// returned by `ClerkSdkLocalizations.of(context)`.
 ///

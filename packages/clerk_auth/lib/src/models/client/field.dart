@@ -1,3 +1,4 @@
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -49,4 +50,17 @@ class Field {
 
   /// A display title for this attribute
   String get title => name.replaceAll('_', ' ');
+
+  /// return the appropriate [Field] for a [UserAttribute]
+  static Field forUserAttribute(UserAttribute attribute) {
+    return switch (attribute) {
+      UserAttribute.phoneNumber => phoneNumber,
+      UserAttribute.emailAddress => emailAddress,
+      _ => throw AuthError(
+          message: 'No Field for {arg}',
+          argument: attribute.toString(),
+          code: AuthErrorCode.noFieldForAttribute,
+        ),
+    };
+  }
 }

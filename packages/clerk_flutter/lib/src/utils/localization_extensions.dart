@@ -22,6 +22,8 @@ extension ClerkAuthErrorExtension on clerk.AuthError {
         l10ns.noSessionTokenRetrieved,
       clerk.AuthErrorCode.noStageForStatus =>
         l10ns.noStageForStatus(argument.toString()),
+      clerk.AuthErrorCode.noFieldForAttribute =>
+        l10ns.noFieldForAttribute(argument.toString()),
       clerk.AuthErrorCode.noSuchFirstFactorStrategy =>
         l10ns.noSuchFirstFactorStrategy(argument.toString()),
       clerk.AuthErrorCode.noSuchSecondFactorStrategy =>

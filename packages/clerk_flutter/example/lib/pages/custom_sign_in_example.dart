@@ -73,7 +73,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     }
   }
 
-  Future<void> _googleOneTap() async {
+  Future<void> _oauthTokenGoogle() async {
     _loading.value = true;
     final google = GoogleSignIn.instance;
     await google.initialize(
@@ -173,8 +173,8 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
                             if (_authState.env.config.firstFactors
                                 .contains(clerk.Strategy.oauthTokenGoogle)) //
                               ElevatedButton(
-                                onPressed: _googleOneTap,
-                                child: const Text('google_one_tap'),
+                                onPressed: _oauthTokenGoogle,
+                                child: const Text('google via oauth token'),
                               ),
                           ],
                         ),

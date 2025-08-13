@@ -16,6 +16,8 @@ import 'package:http/http.dart' as http;
 
 export 'package:clerk_auth/src/models/enums.dart' show SessionTokenPollMode;
 
+typedef _JsonObject = Map<String, dynamic>;
+
 /// [Api] manages communication with the Clerk frontend API
 ///
 class Api with Logging {
@@ -93,7 +95,7 @@ class Api with Logging {
   Future<Environment> environment() async {
     final resp = await _fetch(path: '/environment', method: HttpMethod.get);
     if (resp.statusCode == HttpStatus.ok) {
-      final body = json.decode(resp.body) as Map<String, dynamic>;
+      final body = json.decode(resp.body) as _JsonObject;
       final env = Environment.fromJson(body);
 
       _testMode = env.config.testMode && config.isTestMode;
@@ -111,7 +113,7 @@ class Api with Logging {
       headers: _headers(method: method),
     );
     if (resp.statusCode == HttpStatus.ok) {
-      final body = json.decode(resp.body) as Map<String, dynamic>;
+      final body = json.decode(resp.body) as _JsonObject;
       return Client.fromJson(body[_kResponseKey]);
     }
     return Client.empty;
@@ -213,8 +215,8 @@ class Api with Logging {
         'code': code,
         'token': token,
         'legal_accepted': legalAccepted,
-        if (metadata is Map) //
-          'unsafe_metadata': json.encode(metadata!),
+        if (metadata case Map<String, dynamic> metadata) //
+          'unsafe_metadata': json.encode(metadata),
       },
     );
   }
@@ -251,8 +253,8 @@ class Api with Logging {
         'code': code,
         'token': token,
         'legal_accepted': legalAccepted,
-        if (metadata is Map) //
-          'unsafe_metadata': json.encode(metadata!),
+        if (metadata case Map<String, dynamic> metadata) //
+          'unsafe_metadata': json.encode(metadata),
       },
     );
   }
@@ -309,9 +311,9 @@ class Api with Logging {
     Strategy? strategy,
     String? identifier,
     String? password,
-    String? redirectUrl,
     String? token,
     String? code,
+    String? redirectUrl,
   }) async {
     return await _fetchApiResponse(
       '/client/sign_ins',
@@ -319,9 +321,9 @@ class Api with Logging {
         'strategy': strategy,
         'identifier': identifier,
         'password': password,
-        'redirect_url': redirectUrl,
         'token': token,
         'code': code,
+        'redirect_url': redirectUrl,
       },
     );
   }
@@ -812,7 +814,7 @@ class Api with Logging {
         nullableKeys: [_kOrganizationId],
       );
       if (resp.statusCode == HttpStatus.ok) {
-        final body = json.decode(resp.body) as Map<String, dynamic>;
+        final body = json.decode(resp.body) as _JsonObject;
         final token = body[_kJwtKey] as String;
         final sessionToken =
             _tokenCache.makeAndCacheSessionToken(token, templateName);
@@ -861,7 +863,7 @@ class Api with Logging {
     String url, {
     HttpMethod method = HttpMethod.post,
     Map<String, String>? headers,
-    Map<String, dynamic>? params,
+    _JsonObject? params,
     bool withSession = false,
   }) async {
     try {
@@ -891,27 +893,17 @@ class Api with Logging {
   }
 
   ApiResponse _processResponse(http.Response resp) {
-    final body = json.decode(resp.body) as Map<String, dynamic>;
-    final errors = _errors(body[_kErrorsKey]);
-    final (clientData, responseData) =
-        switch (body[_kClientKey] ?? body[_kMetaKey]?[_kClientKey]) {
-      Map<String, dynamic> client when client.isNotEmpty => (
-          client,
-          body[_kResponseKey]
-        ),
-      _ => (body[_kResponseKey], null),
-    };
-    if (clientData case Map<String, dynamic> clientJson) {
-      final client = Client.fromJson(clientJson);
+    final body = json.decode(resp.body) as _JsonObject;
+    final errors = _extractErrors(body[_kErrorsKey]);
+    final (clientData, responseData) = _extractClientAndResponse(body);
+    if (clientData is _JsonObject) {
+      final client = Client.fromJson(clientData);
       _tokenCache.updateFrom(resp, client);
       return ApiResponse(
         client: client,
         status: resp.statusCode,
         errors: errors,
-        response: switch (responseData) {
-          Map<String, dynamic> response => response,
-          _ => null,
-        },
+        response: responseData,
       );
     } else {
       return ApiResponse(
@@ -921,13 +913,27 @@ class Api with Logging {
     }
   }
 
-  List<ApiError>? _errors(List<dynamic>? data) {
+  (_JsonObject?, _JsonObject?) _extractClientAndResponse(_JsonObject body) {
+    final response = switch (body[_kResponseKey]) {
+      _JsonObject response when response.isNotEmpty => response,
+      _ => null,
+    };
+
+    switch (body[_kClientKey] ?? body[_kMetaKey]?[_kClientKey]) {
+      case _JsonObject client when client.isNotEmpty:
+        return (client, response);
+      default:
+        return (response, null);
+    }
+  }
+
+  List<ApiError>? _extractErrors(List<dynamic>? data) {
     if (data == null) {
       return null;
     }
 
     logSevere(data);
-    return List<Map<String, dynamic>>.from(data)
+    return List<_JsonObject>.from(data)
         .map(ApiError.fromJson)
         .toList(growable: false);
   }
@@ -936,7 +942,7 @@ class Api with Logging {
     required String path,
     HttpMethod method = HttpMethod.post,
     Map<String, String>? headers,
-    Map<String, dynamic>? params,
+    _JsonObject? params,
     bool withSession = false,
     List<String>? nullableKeys,
   }) async {
@@ -970,10 +976,10 @@ class Api with Logging {
     return resp;
   }
 
-  Map<String, dynamic> _queryParams(
+  _JsonObject _queryParams(
     HttpMethod method, {
     bool withSession = false,
-    Map<String, dynamic>? params,
+    _JsonObject? params,
   }) {
     final sessionId =
         params?.remove(_kClerkSessionId)?.toString() ?? _tokenCache.sessionId;
@@ -987,7 +993,7 @@ class Api with Logging {
     };
   }
 
-  Uri _uri(String path, {Map<String, dynamic>? params}) {
+  Uri _uri(String path, {_JsonObject? params}) {
     return Uri(
       scheme: _scheme,
       host: _domain,

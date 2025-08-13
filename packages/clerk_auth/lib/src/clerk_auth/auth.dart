@@ -353,12 +353,13 @@ class Auth {
     String? token,
     String? redirectUrl,
   }) async {
-    // oAuthToken
     if (strategy.isOauthToken) {
-      await _api
-          .createSignIn(strategy: strategy, token: token, code: code)
-          .then(_housekeeping);
-      update();
+      if (token?.isNotEmpty == true || code?.isNotEmpty == true) {
+        await _api
+            .createSignIn(strategy: strategy, token: token, code: code)
+            .then(_housekeeping);
+        update();
+      }
       return;
     }
 

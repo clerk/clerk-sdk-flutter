@@ -110,7 +110,7 @@ void main() {
           '{"response":{"object":"sign_up_attempt","id":"SIGN_UP_ATTEMPT_ID","status":"missing_requirements","required_fields":["password"],"optional_fields":["oauth_github","oauth_google","email_address","phone_number","username","last_name","first_name","oauth_apple"],"missing_fields":["password"],"unverified_fields":["email_address"],"verifications":{"email_address":null,"phone_number":null,"web3_wallet":null,"external_account":null},"username":null,"email_address":"$typoEmailAddress","phone_number":null,"web3_wallet":null,"password_enabled":false,"first_name":null,"last_name":null,"unsafe_metadata":{},"public_metadata":{},"custom_action":false,"external_id":null,"created_session_id":null,"created_user_id":null,"abandon_at":1732107014735,"legal_accepted_at":null},"client":{"object":"client","id":"CLIENT_ID","sessions":[],"sign_in":null,"sign_up":{"object":"sign_up_attempt","id":"SIGN_UP_ATTEMPT_ID","status":"missing_requirements","required_fields":["password"],"optional_fields":["phone_number","username","first_name","last_name","oauth_github","oauth_google","oauth_apple","email_address"],"missing_fields":["password"],"unverified_fields":["email_address"],"verifications":{"email_address":null,"phone_number":null,"web3_wallet":null,"external_account":null},"username":null,"email_address":"$typoEmailAddress","phone_number":null,"web3_wallet":null,"password_enabled":false,"first_name":null,"last_name":null,"unsafe_metadata":{},"public_metadata":{},"custom_action":false,"external_id":null,"created_session_id":null,"created_user_id":null,"abandon_at":1732107014735,"legal_accepted_at":null},"last_active_session_id":null,"cookie_expires_at":null,"created_at":1732020614717,"updated_at":1732020614748}}',
         );
         httpService.expect(
-          'PATCH /v1/client/sign_ups/SIGN_UP_ATTEMPT_ID email_address=$emailAddress',
+          'PATCH /v1/client/sign_ups/SIGN_UP_ATTEMPT_ID strategy=email_code&email_address=$emailAddress',
           200,
           '{"response":{"object":"sign_up_attempt","id":"SIGN_UP_ATTEMPT_ID","status":"missing_requirements","required_fields":["password"],"optional_fields":["oauth_github","oauth_google","email_address","phone_number","username","last_name","first_name","oauth_apple"],"missing_fields":["password"],"unverified_fields":["email_address"],"verifications":{"email_address":null,"phone_number":null,"web3_wallet":null,"external_account":null},"username":null,"email_address":"$emailAddress","phone_number":null,"web3_wallet":null,"password_enabled":false,"first_name":null,"last_name":null,"unsafe_metadata":{},"public_metadata":{},"custom_action":false,"external_id":null,"created_session_id":null,"created_user_id":null,"abandon_at":1732107014735,"legal_accepted_at":null},"client":{"object":"client","id":"CLIENT_ID","sessions":[],"sign_in":null,"sign_up":{"object":"sign_up_attempt","id":"SIGN_UP_ATTEMPT_ID","status":"missing_requirements","required_fields":["password"],"optional_fields":["phone_number","username","first_name","last_name","oauth_github","oauth_google","oauth_apple","email_address"],"missing_fields":["password"],"unverified_fields":["email_address"],"verifications":{"email_address":null,"phone_number":null,"web3_wallet":null,"external_account":null},"username":null,"email_address":"$emailAddress","phone_number":null,"web3_wallet":null,"password_enabled":false,"first_name":null,"last_name":null,"unsafe_metadata":{},"public_metadata":{},"custom_action":false,"external_id":null,"created_session_id":null,"created_user_id":null,"abandon_at":1732107014735,"legal_accepted_at":null},"last_active_session_id":null,"cookie_expires_at":null,"created_at":1732020614717,"updated_at":1732020614748}}',
         );
@@ -123,6 +123,16 @@ void main() {
         Client client = await auth.attemptSignUp(
           strategy: Strategy.emailCode,
           emailAddress: typoEmailAddress,
+        );
+        expect(client.signUp?.status, Status.missingRequirements);
+        expect(
+          client.signUp?.unverifiedFields.contains(Field.emailAddress),
+          true,
+        );
+
+        client = await auth.attemptSignUp(
+          strategy: Strategy.emailCode,
+          emailAddress: emailAddress,
         );
         expect(client.signUp?.status, Status.missingRequirements);
         expect(

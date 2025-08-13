@@ -2,6 +2,8 @@
 
 import 'clerk_sdk_localizations.dart';
 
+// ignore_for_file: type=lint
+
 /// The translations for English (`en`).
 class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   ClerkSdkLocalizationsEn([String locale = 'en']) : super(locale);
@@ -301,6 +303,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get phoneNumberConcise => 'phone';
 
   @override
+  String get pleaseAddRequiredInformation =>
+      'Something seems to be missing. Please add the required information';
+
+  @override
   String get pleaseChooseAnAccountToConnect =>
       'Please choose an account to connect';
 
@@ -454,7 +460,4 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   @override
   String get welcomePleaseFillInTheDetailsToGetStarted =>
       'Welcome! Please fill in the details to get started';
-
-  @override
-  String get youNeedToAdd => 'You need to add:';
 }

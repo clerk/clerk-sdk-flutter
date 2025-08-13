@@ -37,7 +37,6 @@ Map<String, dynamic> _$ApiErrorToJson(ApiError instance) {
 const _$AuthErrorCodeEnumMap = {
   AuthErrorCode.serverErrorResponse: 'serverErrorResponse',
   AuthErrorCode.webviewErrorResponse: 'webviewErrorResponse',
-  AuthErrorCode.signUpFlowError: 'signUpFlowError',
   AuthErrorCode.invalidPassword: 'invalidPassword',
   AuthErrorCode.typeInvalid: 'typeInvalid',
   AuthErrorCode.noStageForStatus: 'noStageForStatus',
@@ -55,4 +54,5 @@ const _$AuthErrorCodeEnumMap = {
   AuthErrorCode.passwordResetStrategyError: 'passwordResetStrategyError',
   AuthErrorCode.cannotDeleteSelf: 'cannotDeleteSelf',
   AuthErrorCode.problemsConnecting: 'problemsConnecting',
+  AuthErrorCode.requiredFieldsAreMissing: 'requiredFieldsAreMissing',
 };

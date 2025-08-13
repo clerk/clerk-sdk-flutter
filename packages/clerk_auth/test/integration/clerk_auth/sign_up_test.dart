@@ -56,7 +56,7 @@ void main() {
 
     await auth.initialize();
 
-    await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
+    await setUpLogging(printer: TestLogPrinter());
   });
 
   tearDown(() async {

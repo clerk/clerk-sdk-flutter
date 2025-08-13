@@ -521,7 +521,7 @@ class Auth {
               username: username,
               emailAddress: emailAddress,
               phoneNumber: phoneNumber,
-			  legalAccepted: legalAccepted,
+              legalAccepted: legalAccepted,
             )
             .then(_housekeeping);
 

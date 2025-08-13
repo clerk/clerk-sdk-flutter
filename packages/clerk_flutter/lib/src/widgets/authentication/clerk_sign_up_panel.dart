@@ -41,6 +41,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   bool _isObscured = true;
   bool _needsLegalAcceptance = true;
   bool _hasLegalAcceptance = false;
+  bool _resendRequested = false;
 
   static const _signUpAttributes = [
     clerk.UserAttribute.username,
@@ -132,6 +133,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   void _onObscure() => setState(() => _isObscured = !_isObscured);
 
   void _acceptTerms() => setState(() => _hasLegalAcceptance = true);
+
+  void _resend() => setState(() => _resendRequested = true);
 
   _ValueChanger _change(clerk.UserAttribute attr) =>
       (String value) => _values[attr] = value;

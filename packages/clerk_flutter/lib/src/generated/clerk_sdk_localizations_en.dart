@@ -230,8 +230,13 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
+  String noFieldForAttribute(String arg) {
+    return 'No field found for user attribute $arg';
+  }
+
+  @override
   String noSessionFoundForUser(String arg) {
-    return 'No session found for $arg';
+    return 'No session found for user $arg';
   }
 
   @override
@@ -239,7 +244,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String noStageForStatus(String arg) {
-    return 'No stage for $arg';
+    return 'No stage found for status $arg';
   }
 
   @override
@@ -250,11 +255,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   @override
   String noSuchSecondFactorStrategy(String arg) {
     return 'Strategy $arg not supported for second factor';
-  }
-
-  @override
-  String noTranslationFor(String name) {
-    return 'No translation for $name';
   }
 
   @override

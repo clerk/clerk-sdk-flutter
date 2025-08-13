@@ -486,10 +486,16 @@ abstract class ClerkSdkLocalizations {
   /// **'No strategy associated with {arg}'**
   String noAssociatedStrategy(String arg);
 
+  /// No description provided for @noFieldForAttribute.
+  ///
+  /// In en, this message translates to:
+  /// **'No field found for user attribute {arg}'**
+  String noFieldForAttribute(String arg);
+
   /// No description provided for @noSessionFoundForUser.
   ///
   /// In en, this message translates to:
-  /// **'No session found for {arg}'**
+  /// **'No session found for user {arg}'**
   String noSessionFoundForUser(String arg);
 
   /// No description provided for @noSessionTokenRetrieved.
@@ -501,7 +507,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @noStageForStatus.
   ///
   /// In en, this message translates to:
-  /// **'No stage for {arg}'**
+  /// **'No stage found for status {arg}'**
   String noStageForStatus(String arg);
 
   /// No description provided for @noSuchFirstFactorStrategy.
@@ -515,12 +521,6 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Strategy {arg} not supported for second factor'**
   String noSuchSecondFactorStrategy(String arg);
-
-  /// No description provided for @noTranslationFor.
-  ///
-  /// In en, this message translates to:
-  /// **'No translation for {name}'**
-  String noTranslationFor(String name);
 
   /// No description provided for @ok.
   ///

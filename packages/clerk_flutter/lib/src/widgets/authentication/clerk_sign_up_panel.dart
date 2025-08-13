@@ -169,7 +169,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     ];
 
     bool isMissing(clerk.UserAttribute attr) =>
-        signUp?.missing(attr.relatedField) == true;
+        signUp?.missing(clerk.Field.forUserAttribute(attr)) == true;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -185,7 +185,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             closed: _resendRequested ||
                 hasMissingFields ||
                 hasPassword == false ||
-                signUp?.unverified(attr.relatedField) != true,
+                signUp?.unverified(clerk.Field.forUserAttribute(attr)) != true,
             onSubmit: (code) async {
               await _continue(
                 strategy: clerk.Strategy.forUserAttribute(attr),

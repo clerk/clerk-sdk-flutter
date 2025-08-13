@@ -1,8 +1,6 @@
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
-import 'package:clerk_auth/src/models/client/field.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/status.dart';
-import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'enums.g.dart';
@@ -71,10 +69,6 @@ enum UserAttribute {
 
   @override
   String toString() => _$UserAttributeEnumMap[this]!;
-
-  /// Return the [Field] associated with this [UserAttribute]
-  Field? get relatedField =>
-      Field.values.firstWhereOrNull((f) => f.name == toString());
 }
 
 /// [Stage] Clerk object

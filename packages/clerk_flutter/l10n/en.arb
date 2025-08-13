@@ -152,7 +152,15 @@
       }
     }
   },
-  "noSessionFoundForUser": "No session found for {arg}",
+  "noFieldForAttribute": "No field found for user attribute {arg}",
+  "@noFieldForAttribute": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
+  "noSessionFoundForUser": "No session found for user {arg}",
   "@noSessionFoundForUser": {
     "placeholders": {
       "arg": {
@@ -161,7 +169,7 @@
     }
   },
   "noSessionTokenRetrieved": "No session token retrieved",
-  "noStageForStatus": "No stage for {arg}",
+  "noStageForStatus": "No stage found for status {arg}",
   "@noStageForStatus": {
     "placeholders": {
       "arg": {
@@ -181,14 +189,6 @@
   "@noSuchSecondFactorStrategy": {
     "placeholders": {
       "arg": {
-        "type": "String"
-      }
-    }
-  },
-  "noTranslationFor": "No translation for {name}",
-  "@noTranslationFor": {
-    "placeholders": {
-      "name": {
         "type": "String"
       }
     }

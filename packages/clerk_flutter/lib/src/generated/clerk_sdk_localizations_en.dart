@@ -2,6 +2,8 @@
 
 import 'clerk_sdk_localizations.dart';
 
+// ignore_for_file: type=lint
+
 /// The translations for English (`en`).
 class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   ClerkSdkLocalizationsEn([String locale = 'en']) : super(locale);
@@ -31,12 +33,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get abandoned => 'abandoned';
 
   @override
-  String get acceptTerms =>
-      'I accept the Terms & Conditions and Privacy Policy';
+  String get acceptTerms => 'I accept the Terms & Conditions and Privacy Policy';
 
   @override
-  String get actionNotTimely =>
-      'Awaited user action not completed in required timeframe';
+  String get actionNotTimely => 'Awaited user action not completed in required timeframe';
 
   @override
   String get active => 'active';
@@ -277,15 +277,13 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get password => 'Password';
 
   @override
-  String get passwordAndPasswordConfirmationMustMatch =>
-      'Password and password confirmation must match';
+  String get passwordAndPasswordConfirmationMustMatch => 'Password and password confirmation must match';
 
   @override
   String get passwordConfirmation => 'confirm password';
 
   @override
-  String get passwordMatchError =>
-      'Password and password confirmation must match';
+  String get passwordMatchError => 'Password and password confirmation must match';
 
   @override
   String get passwordMustBeSupplied => 'A password must be supplied';
@@ -306,8 +304,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get phoneNumberConcise => 'phone';
 
   @override
-  String get pleaseChooseAnAccountToConnect =>
-      'Please choose an account to connect';
+  String get pleaseChooseAnAccountToConnect => 'Please choose an account to connect';
 
   @override
   String get pleaseEnterYourIdentifier => 'Please enter your identifier';
@@ -337,15 +334,13 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get resend => 'Resend';
 
   @override
-  String get resetFailed =>
-      'That password reset attempt failed. A new code has been sent.';
+  String get resetFailed => 'That password reset attempt failed. A new code has been sent.';
 
   @override
   String get resetPassword => 'Reset password and sign in';
 
   @override
-  String get selectAccount =>
-      'Select the account with which you wish to continue';
+  String get selectAccount => 'Select the account with which you wish to continue';
 
   @override
   String get sendMeTheCode => 'Send me the reset code';
@@ -354,16 +349,13 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get signIn => 'Sign in';
 
   @override
-  String get signInByClickingALinkSentToYouByEmail =>
-      'Sign in by clicking a link sent to you by email';
+  String get signInByClickingALinkSentToYouByEmail => 'Sign in by clicking a link sent to you by email';
 
   @override
-  String get signInByEnteringACodeSentToYouByEmail =>
-      'Sign in by entering a code sent to you by email';
+  String get signInByEnteringACodeSentToYouByEmail => 'Sign in by entering a code sent to you by email';
 
   @override
-  String get signInByEnteringACodeSentToYouByTextMessage =>
-      'Sign in by entering a code sent to you by text message';
+  String get signInByEnteringACodeSentToYouByTextMessage => 'Sign in by entering a code sent to you by text message';
 
   @override
   String signInError(String arg) {
@@ -453,12 +445,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get web3Wallet => 'web3 wallet';
 
   @override
-  String get welcomeBackPleaseSignInToContinue =>
-      'Welcome back! Please sign in to continue';
+  String get welcomeBackPleaseSignInToContinue => 'Welcome back! Please sign in to continue';
 
   @override
-  String get welcomePleaseFillInTheDetailsToGetStarted =>
-      'Welcome! Please fill in the details to get started';
+  String get welcomePleaseFillInTheDetailsToGetStarted => 'Welcome! Please fill in the details to get started';
 
   @override
   String get youNeedToAdd => 'You need to add:';

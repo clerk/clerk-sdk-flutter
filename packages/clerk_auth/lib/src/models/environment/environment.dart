@@ -51,15 +51,15 @@ class Environment with InformativeToStringMixin {
   static const empty = Environment();
 
   /// Do we have [Strategy.password] configured?
-  bool get hasPasswordStrategy =>
-      config.firstFactors.contains(Strategy.password);
+  bool get hasPasswordStrategy => config.firstFactors.contains(Strategy.password);
 
   /// [List] of identification strategies
   List<Strategy> get strategies => config.identificationStrategies;
 
   /// [Iterable] of non-oauth and non-phone identification strategies
-  Iterable<Strategy> get identificationStrategies =>
-      strategies.where((i) => i.isOauth == false);
+  Iterable<Strategy> get identificationStrategies => strategies.where(
+        (i) => const [Strategy.emailAddress, Strategy.username, Strategy.phoneNumber].contains(i),
+      );
 
   /// Do we have identification strategies?
   bool get hasIdentificationStrategies => identificationStrategies.isNotEmpty;
@@ -72,15 +72,13 @@ class Environment with InformativeToStringMixin {
 
   /// [Iterable] of other strategies
   /// i.e. strategies that are neither oauth nor password-based
-  Iterable<Strategy> get otherStrategies =>
-      strategies.where((f) => f.isOtherStrategy);
+  Iterable<Strategy> get otherStrategies => strategies.where((f) => f.isOtherStrategy);
 
   /// Do we have other strategies?
   bool get hasOtherStrategies => otherStrategies.isNotEmpty;
 
   /// fromJson
-  static Environment fromJson(Map<String, dynamic> json) =>
-      _$EnvironmentFromJson(json);
+  static Environment fromJson(Map<String, dynamic> json) => _$EnvironmentFromJson(json);
 
   /// toJson
   @override

@@ -44,6 +44,9 @@ class Environment with InformativeToStringMixin {
   /// isEmpty?
   bool get isEmpty => this == empty;
 
+  /// is not empty?
+  bool get isNotEmpty => isEmpty == false;
+
   /// empty [Environment]
   static const empty = Environment();
 

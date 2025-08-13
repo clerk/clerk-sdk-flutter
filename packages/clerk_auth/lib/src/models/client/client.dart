@@ -52,6 +52,9 @@ class Client with InformativeToStringMixin {
   /// is empty?
   bool get isEmpty => this == empty;
 
+  /// is not empty?
+  bool get isNotEmpty => isEmpty == false;
+
   /// fromJson
   static Client fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
 

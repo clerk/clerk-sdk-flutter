@@ -27,7 +27,8 @@ class CustomOAuthSignInExample extends StatefulWidget {
   static const path = '/custom-oauth-sign-in-example';
 
   @override
-  State<CustomOAuthSignInExample> createState() => _CustomOAuthSignInExampleState();
+  State<CustomOAuthSignInExample> createState() =>
+      _CustomOAuthSignInExampleState();
 }
 
 class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {

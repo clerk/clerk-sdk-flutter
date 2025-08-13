@@ -8,4 +8,4 @@ environment:
   flutter: '>=3.10.0'
 
 dev_dependencies:
-  melos: ^6.1.0
+  melos: ^6.3.2

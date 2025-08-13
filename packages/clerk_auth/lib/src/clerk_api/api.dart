@@ -623,7 +623,7 @@ class Api with Logging {
       withSession: true,
       params: {
         'name': name,
-        _kClerkSessionId: session?.id, // An explict session ID, if supplied
+        _kClerkSessionId: session?.id, // An explicit session ID, if supplied
       },
     );
   }
@@ -720,7 +720,7 @@ class Api with Logging {
       params: {
         'name': name,
         'slug': slug,
-        _kClerkSessionId: session?.id, // An explict session ID, if supplied
+        _kClerkSessionId: session?.id, // An explicit session ID, if supplied
       },
     );
   }
@@ -736,7 +736,7 @@ class Api with Logging {
       method: HttpMethod.delete,
       withSession: true,
       params: {
-        _kClerkSessionId: session?.id, // An explict session ID, if supplied
+        _kClerkSessionId: session?.id, // An explicit session ID, if supplied
       },
     );
   }
@@ -766,7 +766,7 @@ class Api with Logging {
       method: HttpMethod.delete,
       withSession: true,
       params: {
-        _kClerkSessionId: session?.id, // An explict session ID, if supplied
+        _kClerkSessionId: session?.id, // An explicit session ID, if supplied
       },
     );
   }

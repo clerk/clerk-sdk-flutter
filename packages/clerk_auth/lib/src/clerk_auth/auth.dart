@@ -499,10 +499,11 @@ class Auth {
     String? password,
     String? passwordConfirmation,
     String? code,
-    String? token,
     String? signature,
     bool? legalAccepted,
   }) async {
+    final hasVerificationCredential = code is String || signature is String;
+
     if (password != passwordConfirmation) {
       throw const AuthError(
         message: "Password and password confirmation must match",
@@ -525,42 +526,33 @@ class Auth {
             )
             .then(_housekeeping);
 
-      case SignUp signUp:
-        final currentData = _SignUpData.from(
-          signUp,
-          password: password,
-          strategy: strategy,
-        );
-        final newData = _SignUpData(
-          strategy: strategy,
-          password: password,
-          firstName: firstName,
-          lastName: lastName,
-          username: username,
-          emailAddress: emailAddress,
-          phoneNumber: phoneNumber,
-        );
-        if (newData.hasPersistableChangesVersus(currentData)) {
-          await _api
-              .updateSignUp(
-                signUp,
-                strategy: newData.strategyIfDiffersFrom(currentData),
-                password: newData.passwordIfDiffersFrom(currentData),
-                firstName: newData.firstNameIfDiffersFrom(currentData),
-                lastName: newData.lastNameIfDiffersFrom(currentData),
-                username: newData.usernameIfDiffersFrom(currentData),
-                emailAddress: newData.emailAddressIfDiffersFrom(currentData),
-                phoneNumber: newData.phoneNumberIfDiffersFrom(currentData),
-              )
-              .then(_housekeeping);
-        }
+      case SignUp signUp when hasVerificationCredential == false:
+        await _api
+            .updateSignUp(
+              signUp,
+              strategy: strategy,
+              password: password,
+              firstName: firstName,
+              lastName: lastName,
+              username: username,
+              emailAddress: emailAddress,
+              phoneNumber: phoneNumber,
+              legalAccepted: legalAccepted,
+            )
+            .then(_housekeeping);
     }
 
     if (client.user is! User) {
       switch (client.signUp) {
-        case SignUp signUp when strategy.requiresCode && code is String:
+        case SignUp signUp
+            when strategy.requiresCode && hasVerificationCredential:
           await _api
-              .attemptSignUp(signUp, strategy: strategy, code: code)
+              .attemptSignUp(
+                signUp,
+                strategy: strategy,
+                code: code,
+                signature: signature,
+              )
               .then(_housekeeping);
 
         case SignUp signUp
@@ -580,8 +572,12 @@ class Auth {
               .prepareSignUp(signUp, strategy: strategy)
               .then(_housekeeping);
           await _api
-              .attemptSignUp(signUp,
-                  strategy: strategy, code: code, signature: signature)
+              .attemptSignUp(
+                client.signUp ?? signUp,
+                strategy: strategy,
+                code: code,
+                signature: signature,
+              )
               .then(_housekeeping);
       }
     }
@@ -873,80 +869,4 @@ class Auth {
       await Future.delayed(const Duration(seconds: 1));
     }
   }
-}
-
-class _SignUpData {
-  const _SignUpData({
-    required Strategy? strategy,
-    required String? password,
-    required String? firstName,
-    required String? lastName,
-    required String? username,
-    required String? emailAddress,
-    required String? phoneNumber,
-  })  : _phoneNumber = phoneNumber,
-        _emailAddress = emailAddress,
-        _username = username,
-        _lastName = lastName,
-        _firstName = firstName,
-        _password = password,
-        _strategy = strategy;
-
-  static _SignUpData? from(
-    SignUp? signUp, {
-    String? password,
-    Strategy? strategy,
-  }) {
-    if (signUp is SignUp) {
-      return _SignUpData(
-        strategy: strategy,
-        password: password,
-        firstName: signUp.firstName,
-        lastName: signUp.lastName,
-        username: signUp.username,
-        emailAddress: signUp.emailAddress,
-        phoneNumber: signUp.phoneNumber,
-      );
-    }
-
-    return null;
-  }
-
-  final Strategy? _strategy;
-  final String? _password;
-  final String? _firstName;
-  final String? _lastName;
-  final String? _username;
-  final String? _emailAddress;
-  final String? _phoneNumber;
-
-  Strategy? strategyIfDiffersFrom(_SignUpData? other) =>
-      _strategy != other?._strategy ? _strategy : null;
-
-  String? passwordIfDiffersFrom(_SignUpData? other) =>
-      _password != other?._password ? _password : null;
-
-  String? firstNameIfDiffersFrom(_SignUpData? other) =>
-      _firstName != other?._firstName ? _firstName : null;
-
-  String? lastNameIfDiffersFrom(_SignUpData? other) =>
-      _lastName != other?._lastName ? _lastName : null;
-
-  String? usernameIfDiffersFrom(_SignUpData? other) =>
-      _username != other?._username ? _username : null;
-
-  String? emailAddressIfDiffersFrom(_SignUpData? other) =>
-      _emailAddress != other?._emailAddress ? _emailAddress : null;
-
-  String? phoneNumberIfDiffersFrom(_SignUpData? other) =>
-      _phoneNumber != other?._phoneNumber ? _phoneNumber : null;
-
-  bool hasPersistableChangesVersus(_SignUpData? other) =>
-      strategyIfDiffersFrom(other) is Strategy ||
-      passwordIfDiffersFrom(other) is String ||
-      firstNameIfDiffersFrom(other) is String ||
-      lastNameIfDiffersFrom(other) is String ||
-      usernameIfDiffersFrom(other) is String ||
-      emailAddressIfDiffersFrom(other) is String ||
-      phoneNumberIfDiffersFrom(other) is String;
 }

@@ -105,6 +105,10 @@ class Strategy {
   static const web3CoinbaseSignature =
       Strategy(name: 'web3_coinbase_signature');
 
+  /// web3 okx wallet signature strategy
+  static const web3OkxWalletSignature =
+      Strategy(name: 'web3_okx_wallet_signature');
+
   /// the collected verification strategies
   static final verificationStrategies = {
     admin.name: admin,
@@ -188,8 +192,11 @@ class Strategy {
       ].contains(this);
 
   /// requires signature?
-  bool get requiresSignature =>
-      const [web3MetamaskSignature, web3CoinbaseSignature].contains(this);
+  bool get requiresSignature => const [
+        web3MetamaskSignature,
+        web3CoinbaseSignature,
+        web3OkxWalletSignature
+      ].contains(this);
 
   /// requires redirect?
   bool get requiresRedirect =>

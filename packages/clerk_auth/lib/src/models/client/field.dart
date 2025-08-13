@@ -52,15 +52,11 @@ class Field {
   String get title => name.replaceAll('_', ' ');
 
   /// return the appropriate [Field] for a [UserAttribute]
-  static Field forUserAttribute(UserAttribute attribute) {
+  static Field? forUserAttribute(UserAttribute attribute) {
     return switch (attribute) {
       UserAttribute.phoneNumber => phoneNumber,
       UserAttribute.emailAddress => emailAddress,
-      _ => throw AuthError(
-          message: 'No Field for {arg}',
-          argument: attribute.toString(),
-          code: AuthErrorCode.noFieldForAttribute,
-        ),
+      _ => null,
     };
   }
 }

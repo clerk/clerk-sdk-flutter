@@ -486,12 +486,6 @@ abstract class ClerkSdkLocalizations {
   /// **'No strategy associated with {arg}'**
   String noAssociatedStrategy(String arg);
 
-  /// No description provided for @noFieldForAttribute.
-  ///
-  /// In en, this message translates to:
-  /// **'No field found for user attribute {arg}'**
-  String noFieldForAttribute(String arg);
-
   /// No description provided for @noSessionFoundForUser.
   ///
   /// In en, this message translates to:

@@ -84,7 +84,4 @@ enum AuthErrorCode {
 
   /// We are having problems connecting
   problemsConnecting,
-
-  /// No field for attribute
-  noFieldForAttribute,
 }

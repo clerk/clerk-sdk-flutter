@@ -25,6 +25,7 @@ class Strategy {
   /// provider
   final String? provider;
 
+  static const _oauthTokenGoogleName = 'google_one_tap';
   static const _oauthToken = 'oauth_token';
   static const _oauthCustom = 'oauth_custom';
   static const _oauth = 'oauth';
@@ -49,12 +50,8 @@ class Strategy {
   /// oauth token apple strategy
   static const oauthTokenApple = Strategy(name: _oauthToken, provider: 'apple');
 
-  /// oauth token google strategy
-  static const oauthTokenGoogle =
-      Strategy(name: _oauthToken, provider: 'google');
-
   /// google one tap strategy
-  static const googleOneTap = Strategy(name: 'google_one_tap');
+  static const oauthTokenGoogle = Strategy(name: _oauthTokenGoogleName);
 
   /// the collected oauth strategies
   static final oauthStrategies = {
@@ -64,7 +61,6 @@ class Strategy {
     oauthFacebook.toString(): oauthFacebook,
     oauthTokenApple.toString(): oauthTokenApple,
     oauthTokenGoogle.toString(): oauthTokenGoogle,
-    googleOneTap.toString(): googleOneTap,
   };
 
   // verification strategies
@@ -155,11 +151,15 @@ class Strategy {
   /// is known?
   bool get isKnown => isUnknown == false;
 
-  /// is oauth?
-  bool get isOauth => const [_oauthToken, _oauthCustom, _oauth].contains(name);
+  /// is oauth custom?
+  bool get isOauthCustom => name == _oauthCustom;
 
   /// is oauth token?
-  bool get isOauthToken => name == _oauthToken;
+  bool get isOauthToken =>
+      const [_oauthToken, _oauthTokenGoogleName].contains(name);
+
+  /// is some variety of oauth?
+  bool get isOauth => name == _oauth || isOauthCustom || isOauthToken;
 
   /// is other strategy?
   bool get isOtherStrategy => isOauth == false && requiresPassword == false;

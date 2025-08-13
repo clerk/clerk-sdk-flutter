@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
   flutter: '>=3.10.0'
 
 dependencies:
@@ -14,6 +14,9 @@ dependencies:
   clerk_auth: '>=0.0.10-beta'
   app_links: ^3.5.1
   url_launcher_ios: 6.2.0
+  google_sign_in: ^7.1.0
+  uuid: ^4.5.1
+  win32: ^5.5.4
 
 dev_dependencies:
   flutter_lints: ^3.0.1

@@ -157,7 +157,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
         DialogChoice.ok: _localizations.ok,
       },
     );
-    if (result == DialogChoice.ok && context.mounted) {
+    if (result == DialogChoice.ok && mounted) {
       await _authState.safelyCall(context, () => _authState.signOut());
     }
   }

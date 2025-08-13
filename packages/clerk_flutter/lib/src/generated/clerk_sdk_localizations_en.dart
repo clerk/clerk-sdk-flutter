@@ -229,7 +229,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String noSessionFoundForUser(String arg) {
-    return 'No session found for $arg';
+    return 'No session found for user $arg';
   }
 
   @override
@@ -237,7 +237,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String noStageForStatus(String arg) {
-    return 'No stage for $arg';
+    return 'No stage found for status $arg';
   }
 
   @override
@@ -248,11 +248,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   @override
   String noSuchSecondFactorStrategy(String arg) {
     return 'Strategy $arg not supported for second factor';
-  }
-
-  @override
-  String noTranslationFor(String name) {
-    return 'No translation for $name';
   }
 
   @override
@@ -304,6 +299,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get phoneNumberConcise => 'phone';
+
+  @override
+  String get pleaseAddRequiredInformation =>
+      'Something seems to be missing. Please add the required information';
 
   @override
   String get pleaseChooseAnAccountToConnect =>
@@ -459,7 +458,4 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   @override
   String get welcomePleaseFillInTheDetailsToGetStarted =>
       'Welcome! Please fill in the details to get started';
-
-  @override
-  String get youNeedToAdd => 'You need to add:';
 }

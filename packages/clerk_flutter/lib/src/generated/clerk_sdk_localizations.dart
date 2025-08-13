@@ -487,7 +487,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @noSessionFoundForUser.
   ///
   /// In en, this message translates to:
-  /// **'No session found for {arg}'**
+  /// **'No session found for user {arg}'**
   String noSessionFoundForUser(String arg);
 
   /// No description provided for @noSessionTokenRetrieved.
@@ -499,7 +499,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @noStageForStatus.
   ///
   /// In en, this message translates to:
-  /// **'No stage for {arg}'**
+  /// **'No stage found for status {arg}'**
   String noStageForStatus(String arg);
 
   /// No description provided for @noSuchFirstFactorStrategy.
@@ -513,12 +513,6 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Strategy {arg} not supported for second factor'**
   String noSuchSecondFactorStrategy(String arg);
-
-  /// No description provided for @noTranslationFor.
-  ///
-  /// In en, this message translates to:
-  /// **'No translation for {name}'**
-  String noTranslationFor(String name);
 
   /// No description provided for @ok.
   ///
@@ -615,6 +609,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'phone'**
   String get phoneNumberConcise;
+
+  /// No description provided for @pleaseAddRequiredInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Something seems to be missing. Please add the required information'**
+  String get pleaseAddRequiredInformation;
 
   /// No description provided for @pleaseChooseAnAccountToConnect.
   ///
@@ -885,12 +885,6 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Welcome! Please fill in the details to get started'**
   String get welcomePleaseFillInTheDetailsToGetStarted;
-
-  /// No description provided for @youNeedToAdd.
-  ///
-  /// In en, this message translates to:
-  /// **'You need to add:'**
-  String get youNeedToAdd;
 }
 
 class _ClerkSdkLocalizationsDelegate

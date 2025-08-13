@@ -152,7 +152,7 @@
       }
     }
   },
-  "noSessionFoundForUser": "No session found for {arg}",
+  "noSessionFoundForUser": "No session found for user {arg}",
   "@noSessionFoundForUser": {
     "placeholders": {
       "arg": {
@@ -161,7 +161,7 @@
     }
   },
   "noSessionTokenRetrieved": "No session token retrieved",
-  "noStageForStatus": "No stage for {arg}",
+  "noStageForStatus": "No stage found for status {arg}",
   "@noStageForStatus": {
     "placeholders": {
       "arg": {
@@ -185,14 +185,6 @@
       }
     }
   },
-  "noTranslationFor": "No translation for {name}",
-  "@noTranslationFor": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "ok": "OK",
   "optional": "(optional)",
   "or": "or",
@@ -209,6 +201,7 @@
   "personalAccount": "Personal account",
   "phoneNumber": "phone number",
   "phoneNumberConcise": "phone",
+  "pleaseAddRequiredInformation": "Something seems to be missing. Please add the required information",
   "pleaseChooseAnAccountToConnect": "Please choose an account to connect",
   "pleaseEnterYourIdentifier": "Please enter your identifier",
   "primary": "PRIMARY",
@@ -295,6 +288,5 @@
   "viaManualInvitation": "via manual invitation",
   "web3Wallet": "web3 wallet",
   "welcomeBackPleaseSignInToContinue": "Welcome back! Please sign in to continue",
-  "welcomePleaseFillInTheDetailsToGetStarted": "Welcome! Please fill in the details to get started",
-  "youNeedToAdd": "You need to add:"
+  "welcomePleaseFillInTheDetailsToGetStarted": "Welcome! Please fill in the details to get started"
 }

@@ -55,8 +55,13 @@ class Environment with InformativeToStringMixin {
   List<Strategy> get strategies => config.identificationStrategies;
 
   /// [Iterable] of non-oauth and non-phone identification strategies
-  Iterable<Strategy> get identificationStrategies =>
-      strategies.where((i) => i.isOauth == false);
+  Iterable<Strategy> get identificationStrategies => strategies.where(
+        (s) => const [
+          Strategy.emailAddress,
+          Strategy.username,
+          Strategy.phoneNumber
+        ].contains(s),
+      );
 
   /// Do we have identification strategies?
   bool get hasIdentificationStrategies => identificationStrategies.isNotEmpty;

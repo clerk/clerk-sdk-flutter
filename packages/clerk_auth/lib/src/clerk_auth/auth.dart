@@ -471,10 +471,12 @@ class Auth {
     String? password,
     String? passwordConfirmation,
     String? code,
-    String? token,
     String? signature,
     bool? legalAccepted,
   }) async {
+    final hasVerificationCredential = code is String || signature is String;
+    final initialSignUp = client.signUp;
+
     if (password != passwordConfirmation) {
       throw const AuthError(
         message: "Password and password confirmation must match",
@@ -482,46 +484,35 @@ class Auth {
       );
     }
 
-    switch (client.signUp) {
-      case null:
-        await _api
-            .createSignUp(
-              strategy: strategy,
-              firstName: firstName,
-              lastName: lastName,
-              username: username,
-              emailAddress: emailAddress,
-              phoneNumber: phoneNumber,
-              password: password,
-              code: code,
-              token: token,
-              legalAccepted: legalAccepted,
-            )
-            .then(_housekeeping);
-
-      case SignUp signUp when signUp.missingFields.isNotEmpty:
-        await _api
-            .updateSignUp(
-              signUp,
-              strategy: strategy,
-              firstName: firstName,
-              lastName: lastName,
-              username: username,
-              emailAddress: emailAddress,
-              phoneNumber: phoneNumber,
-              password: password,
-              code: code,
-              token: token,
-              legalAccepted: legalAccepted,
-            )
-            .then(_housekeeping);
+    if (initialSignUp is! SignUp) {
+      await _api
+          .createSignUp(
+            strategy: strategy,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            emailAddress: emailAddress,
+            phoneNumber: phoneNumber,
+            legalAccepted: legalAccepted,
+          )
+          .then(_housekeeping);
     }
+
+    final hasCreatedSignUp =
+        initialSignUp is! SignUp && client.signUp is SignUp;
 
     if (client.user is! User) {
       switch (client.signUp) {
-        case SignUp signUp when strategy.requiresCode && code is String:
+        case SignUp signUp
+            when strategy.requiresVerification && hasVerificationCredential:
           await _api
-              .attemptSignUp(signUp, strategy: strategy, code: code)
+              .attemptSignUp(
+                signUp,
+                strategy: strategy,
+                code: code,
+                signature: signature,
+              )
               .then(_housekeeping);
 
         case SignUp signUp
@@ -541,10 +532,33 @@ class Auth {
               .prepareSignUp(signUp, strategy: strategy)
               .then(_housekeeping);
           await _api
-              .attemptSignUp(signUp,
-                  strategy: strategy, code: code, signature: signature)
+              .attemptSignUp(
+                client.signUp ?? signUp,
+                strategy: strategy,
+                code: code,
+                signature: signature,
+              )
               .then(_housekeeping);
       }
+    }
+
+    if (client.signUp case SignUp signUp
+        when hasCreatedSignUp == false && client.user is! User) {
+      // if we still don't have a user, but didn't create a SignUp object this time round,
+      // now is the time to update the preexisting SignUp object, in case of changes
+      await _api
+          .updateSignUp(
+            signUp,
+            strategy: strategy,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            emailAddress: emailAddress,
+            phoneNumber: phoneNumber,
+            legalAccepted: legalAccepted,
+          )
+          .then(_housekeeping);
     }
 
     update();

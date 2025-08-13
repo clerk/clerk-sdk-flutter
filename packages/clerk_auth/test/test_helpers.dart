@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:io';
 
@@ -37,6 +39,8 @@ class TestLogPrinter extends Printer {
 class TestHttpService implements HttpService {
   final _expectations = <String, List<Response>>{};
 
+  void reset() => _expectations.clear();
+
   @override
   Future<void> initialize() async {}
 
@@ -60,12 +64,22 @@ class TestHttpService implements HttpService {
       final resp = resps.removeAt(0);
       return Future.value(resp);
     }
+    print('\x1B[31mNO RESPONSE AVAILABLE FOR: $key\x1B[0m');
     throw TestHttpServiceError(message: 'No response available for $key');
   }
 
   void expect(String key, int status, String body) {
     _expectations[key] ??= [];
     _expectations[key]!.add(Response(body, status));
+  }
+
+  bool get isCompleted {
+    final remaining =
+        _expectations.entries.where((e) => e.value.isNotEmpty).toList();
+    for (final exp in remaining) {
+      print('\x1B[31mUNUSED CALL: ${exp.value.length} x ${exp.key}\x1B[0m');
+    }
+    return remaining.isEmpty;
   }
 
   String _key(

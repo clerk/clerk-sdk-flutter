@@ -120,7 +120,7 @@ class Api with Logging {
   Future<Client> createClient() async {
     if (_tokenCache.hasClientToken) {
       final client = await currentClient();
-      if (client.isEmpty == false) return client;
+      if (client.isNotEmpty) return client;
     }
 
     return await _fetchClient(method: HttpMethod.post);

@@ -18,8 +18,8 @@ for your users to sign up, sign in, and manage their profile from your Flutter c
 
 ## Requirements
 
-* Flutter >= 3.10.0
-* Dart >= 3.0.0
+* Flutter >= 3.27.4
+* Dart >= 3.6.2
 
 ## In Development
 

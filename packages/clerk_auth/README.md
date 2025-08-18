@@ -18,7 +18,7 @@ for your users to sign up, sign in, and manage their profile from your Dart code
 
 ## Requirements
 
-* Dart >= 3.0.0
+* Dart >= 3.6.2
 
 ## Example Usage
 

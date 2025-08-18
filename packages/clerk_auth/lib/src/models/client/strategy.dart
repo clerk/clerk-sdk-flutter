@@ -151,18 +151,18 @@ class Strategy {
   /// is known?
   bool get isKnown => isUnknown == false;
 
+  /// is some variety of oauth?
+  bool get isOauth => name == _oauth || isOauthCustom || isOauthToken;
+
   /// is oauth custom?
   bool get isOauthCustom => name == _oauthCustom;
-
-  /// is other strategy?
-  bool get isOtherStrategy => isOauth == false && requiresPassword == false;
 
   /// is oauth token?
   bool get isOauthToken =>
       const [_oauthToken, _oauthTokenGoogleName].contains(name);
 
-  /// is some variety of oauth?
-  bool get isOauth => name == _oauth || isOauthCustom || isOauthToken;
+  /// is other strategy?
+  bool get isOtherStrategy => isOauth == false && requiresPassword == false;
 
   /// is phone strategy?
   bool get isPhone =>

@@ -50,7 +50,7 @@ class Strategy {
   /// oauth token apple strategy
   static const oauthTokenApple = Strategy(name: _oauthToken, provider: 'apple');
 
-  /// google one tap strategy
+  /// google authentication token strategy (google one tap)
   static const oauthTokenGoogle = Strategy(name: _oauthTokenGoogleName);
 
   /// the collected oauth strategies
@@ -84,12 +84,10 @@ class Strategy {
   static const phoneCode = Strategy(name: 'phone_code');
 
   /// reset password email code strategy
-  static const resetPasswordEmailCode =
-      Strategy(name: 'reset_password_email_code');
+  static const resetPasswordEmailCode = Strategy(name: 'reset_password_email_code');
 
   /// reset password phone code strategy
-  static const resetPasswordPhoneCode =
-      Strategy(name: 'reset_password_phone_code');
+  static const resetPasswordPhoneCode = Strategy(name: 'reset_password_phone_code');
 
   /// saml strategy
   static const saml = Strategy(name: 'saml');
@@ -98,12 +96,10 @@ class Strategy {
   static const ticket = Strategy(name: 'ticket');
 
   /// web3 metamask signature strategy
-  static const web3MetamaskSignature =
-      Strategy(name: 'web3_metamask_signature');
+  static const web3MetamaskSignature = Strategy(name: 'web3_metamask_signature');
 
   /// web3 coinbase signature strategy
-  static const web3CoinbaseSignature =
-      Strategy(name: 'web3_coinbase_signature');
+  static const web3CoinbaseSignature = Strategy(name: 'web3_coinbase_signature');
 
   /// the collected verification strategies
   static final verificationStrategies = {
@@ -154,46 +150,35 @@ class Strategy {
   /// is oauth custom?
   bool get isOauthCustom => name == _oauthCustom;
 
+  /// is other strategy?
+  bool get isOtherStrategy => isOauth == false && requiresPassword == false;
+
   /// is oauth token?
-  bool get isOauthToken =>
-      const [_oauthToken, _oauthTokenGoogleName].contains(name);
+  bool get isOauthToken => const [_oauthToken, _oauthTokenGoogleName].contains(name);
 
   /// is some variety of oauth?
   bool get isOauth => name == _oauth || isOauthCustom || isOauthToken;
 
-  /// is other strategy?
-  bool get isOtherStrategy => isOauth == false && requiresPassword == false;
-
   /// is phone strategy?
-  bool get isPhone =>
-      const [phoneCode, phoneNumber, resetPasswordPhoneCode].contains(this);
+  bool get isPhone => const [phoneCode, phoneNumber, resetPasswordPhoneCode].contains(this);
 
   /// is a password reset strategy?
   bool get isPasswordResetter =>
       const [resetPasswordEmailCode, resetPasswordPhoneCode].contains(this);
 
   /// requires password?
-  bool get requiresPassword => const [
-        password,
-        resetPasswordEmailCode,
-        resetPasswordPhoneCode
-      ].contains(this);
+  bool get requiresPassword =>
+      const [password, resetPasswordEmailCode, resetPasswordPhoneCode].contains(this);
 
   /// requires code?
-  bool get requiresCode => const [
-        emailCode,
-        phoneCode,
-        resetPasswordEmailCode,
-        resetPasswordPhoneCode
-      ].contains(this);
+  bool get requiresCode =>
+      const [emailCode, phoneCode, resetPasswordEmailCode, resetPasswordPhoneCode].contains(this);
 
   /// requires signature?
-  bool get requiresSignature =>
-      const [web3MetamaskSignature, web3CoinbaseSignature].contains(this);
+  bool get requiresSignature => const [web3MetamaskSignature, web3CoinbaseSignature].contains(this);
 
   /// requires redirect?
-  bool get requiresRedirect =>
-      name == _oauth || const [emailLink, saml].contains(this);
+  bool get requiresRedirect => name == _oauth || const [emailLink, saml].contains(this);
 
   /// For a given [name] return the [Strategy] it identifies.
   /// Create one if necessary and possible

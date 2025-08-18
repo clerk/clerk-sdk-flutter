@@ -2,7 +2,7 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
    exclude:
-     - lib/src/generated/**
+     - lib/generated/**
 
 formatter:
   page_width: 80

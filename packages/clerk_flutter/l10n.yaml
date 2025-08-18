@@ -1,7 +1,7 @@
 arb-dir: l10n/
 template-arb-file: en.arb
 output-localization-file: clerk_sdk_localizations.dart
-output-dir: lib/src/generated
+output-dir: lib/generated
 output-class: ClerkSdkLocalizations
 synthetic-package: false
 suppress-warnings: true

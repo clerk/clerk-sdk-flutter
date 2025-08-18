@@ -41,15 +41,7 @@ jobs:
         working-directory: packages/clerk_backend_api
 
       - name: Verify formatting of clerk_flutter
-        shell: bash
-        run: |
-          set +e
-          dart format --line-length=80 --set-exit-if-changed .
-          if [[ $? -ne 0 ]]; then
-            echo "Formatting failed:"
-            git diff
-            exit 1
-          fi
+        run: dart format --line-length=80 --output=none --set-exit-if-changed ./lib/src/
         working-directory: packages/clerk_flutter
 
       - name: Analyze clerk_auth

@@ -1,5 +1,5 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
-import 'package:clerk_flutter/src/generated/clerk_sdk_localizations.dart';
+import 'package:clerk_flutter/generated/clerk_sdk_localizations.dart';
 
 /// Function that performs localization
 typedef LocalizedMessage = String Function(ClerkSdkLocalizations l10ns);

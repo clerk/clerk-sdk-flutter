@@ -612,6 +612,12 @@ abstract class ClerkSdkLocalizations {
   /// **'phone'**
   String get phoneNumberConcise;
 
+  /// No description provided for @pleaseAddRequiredInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Something seems to be missing. Please add the required information'**
+  String get pleaseAddRequiredInformation;
+
   /// No description provided for @pleaseChooseAnAccountToConnect.
   ///
   /// In en, this message translates to:
@@ -881,12 +887,6 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Welcome! Please fill in the details to get started'**
   String get welcomePleaseFillInTheDetailsToGetStarted;
-
-  /// No description provided for @youNeedToAdd.
-  ///
-  /// In en, this message translates to:
-  /// **'You need to add:'**
-  String get youNeedToAdd;
 }
 
 class _ClerkSdkLocalizationsDelegate

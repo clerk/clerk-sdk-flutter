@@ -33,15 +33,15 @@ jobs:
         run: melos bs && melos run get
 
       - name: Verify formatting of clerk_auth
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format --line-length=80 --output=none --set-exit-if-changed .
         working-directory: packages/clerk_auth
 
       - name: Verify formatting of clerk_backend_api
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format --line-length=80 --output=none --set-exit-if-changed .
         working-directory: packages/clerk_backend_api
 
       - name: Verify formatting of clerk_flutter
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format --line-length=80 --output=none --set-exit-if-changed .
         working-directory: packages/clerk_flutter
 
       - name: Analyze clerk_auth

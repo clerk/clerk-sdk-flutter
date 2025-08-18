@@ -303,6 +303,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get phoneNumberConcise => 'phone';
 
   @override
+  String get pleaseAddRequiredInformation =>
+      'Something seems to be missing. Please add the required information';
+
+  @override
   String get pleaseChooseAnAccountToConnect =>
       'Please choose an account to connect';
 
@@ -456,7 +460,4 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   @override
   String get welcomePleaseFillInTheDetailsToGetStarted =>
       'Welcome! Please fill in the details to get started';
-
-  @override
-  String get youNeedToAdd => 'You need to add:';
 }

@@ -78,7 +78,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     _loading.value = true;
     final google = GoogleSignIn.instance;
     await google.initialize(
-      serverClientId: const String.fromEnvironment('gcp_project_id'),
+      serverClientId: const String.fromEnvironment('google_client_id'),
       nonce: const Uuid().v4(),
     );
     final account = await google.authenticate(

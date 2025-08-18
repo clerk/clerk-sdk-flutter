@@ -561,7 +561,7 @@ class Auth {
               .then(_housekeeping);
           await _api
               .attemptSignUp(
-                client.signUp ?? signUp,
+                client.signUp!,
                 strategy: strategy,
                 code: code,
                 signature: signature,

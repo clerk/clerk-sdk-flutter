@@ -500,6 +500,7 @@ class Auth {
     String? passwordConfirmation,
     String? code,
     String? signature,
+    String? redirectUrl,
     bool? legalAccepted,
   }) async {
     final hasVerificationCredential = code is String || signature is String;
@@ -523,6 +524,7 @@ class Auth {
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             legalAccepted: legalAccepted,
+            redirectUrl: redirectUrl,
           )
           .then(_housekeeping);
     }
@@ -585,6 +587,7 @@ class Auth {
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             legalAccepted: legalAccepted,
+            redirectUrl: redirectUrl,
           )
           .then(_housekeeping);
     }

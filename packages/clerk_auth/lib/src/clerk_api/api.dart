@@ -813,6 +813,12 @@ class Api with Logging {
         },
         nullableKeys: [_kOrganizationId],
       );
+      /* If there is an error here, the response gets swallowed and the method returns null:
+       I had organizations enabled, but a user wihtout an organization (user created before organizations were enabled)
+       Example error that silently happens and returns null: 
+       {"errors":[{"message":"not found or unauthorized","long_message":"Given organization not found, or you don't have permission to access the organization","code":"organization_not_found_or_unauthorized"}],
+       
+      */
       if (resp.statusCode == HttpStatus.ok) {
         final body = json.decode(resp.body) as _JsonObject;
         final token = body[_kJwtKey] as String;

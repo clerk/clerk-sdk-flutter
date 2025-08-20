@@ -170,7 +170,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   /// Return a redirect url for email verification, or null if
   /// not appropriate
-  Uri? emailVerificationRedirectUrl(BuildContext context) {
+  Uri? emailVerificationRedirectUri(BuildContext context) {
     if (env.supportsEmailLink) {
       return config.redirectionGenerator
           ?.call(context, clerk.Strategy.emailLink);

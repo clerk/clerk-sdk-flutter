@@ -61,6 +61,10 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         });
       }
 
+      final redirectUri = strategy == clerk.Strategy.emailLink
+          ? authState.emailVerificationRedirectUri(context)
+          : null;
+
       await authState.safelyCall(
         context,
         () => authState.attemptSignIn(
@@ -68,6 +72,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           identifier: _identifier,
           password: _password.orNullIfEmpty,
           code: newCode.orNullIfEmpty,
+          redirectUrl: redirectUri?.toString(),
         ),
         onError: _onError,
       );
@@ -92,7 +97,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final factor = authState.client.signIn?.supportedFirstFactors
         .firstWhereOrNull((f) => f.strategy == _strategy);
     final safeIdentifier = factor?.safeIdentifier;
-    final otherStrategies = env.otherStrategies.where(StrategyButton.supports);
+    final otherStrategies =
+        env.config.firstFactors.where(StrategyButton.supports);
     final canResetPassword =
         env.config.firstFactors.any((f) => f.isPasswordResetter);
 

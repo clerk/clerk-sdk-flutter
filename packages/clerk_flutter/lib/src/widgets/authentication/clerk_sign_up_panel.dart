@@ -136,7 +136,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       return;
     }
 
-    final redirectUrl = authState.emailVerificationRedirectUrl(context);
+    final redirectUri = authState.emailVerificationRedirectUri(context);
 
     await authState.safelyCall(
       context,
@@ -152,7 +152,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
               .orNullIfEmpty,
           password: password,
           passwordConfirmation: passwordConfirmation,
-          redirectUrl: redirectUrl?.toString(),
+          redirectUrl: redirectUri?.toString(),
           legalAccepted: _needsLegalAcceptance ? _hasLegalAcceptance : null,
         );
       },

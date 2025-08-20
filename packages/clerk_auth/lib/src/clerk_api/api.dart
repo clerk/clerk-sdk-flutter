@@ -950,11 +950,16 @@ class Api with Logging {
     bool withSession = false,
   }) async {
     final parsedParams = {
-      ...{...?params}..removeWhere((k, v) => v == null),
+      for (final entry in (params ?? const {}).entries)
+        if (entry.value != null) //
+          entry.key: entry.value,
       ...?nullableParams,
     };
-    final queryParams =
-        _queryParams(method, withSession: withSession, params: parsedParams);
+    final queryParams = _queryParams(
+      method,
+      withSession: withSession,
+      params: parsedParams,
+    );
     final uri = _uri(path, params: queryParams);
 
     final resp = await config.httpService.send(

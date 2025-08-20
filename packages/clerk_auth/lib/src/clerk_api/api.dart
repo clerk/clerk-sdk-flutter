@@ -114,7 +114,9 @@ class Api with Logging {
     );
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body) as _JsonObject;
-      return Client.fromJson(body[_kResponseKey]);
+      final client = Client.fromJson(body[_kResponseKey]);
+      _tokenCache.updateFrom(resp, client);
+      return client;
     }
     return Client.empty;
   }
@@ -809,11 +811,10 @@ class Api with Logging {
       final resp = await _fetch(
         path: path,
         headers: _headers(),
-        params: {
+        nullableParams: {
           if (org case Organization org) //
             _kOrganizationId: org.externalId,
         },
-        nullableKeys: [_kOrganizationId],
       );
       if (resp.statusCode == HttpStatus.ok) {
         final body = json.decode(resp.body) as _JsonObject;
@@ -945,12 +946,13 @@ class Api with Logging {
     HttpMethod method = HttpMethod.post,
     Map<String, String>? headers,
     _JsonObject? params,
+    _JsonObject? nullableParams,
     bool withSession = false,
-    List<String>? nullableKeys,
   }) async {
-    final parsedParams = {...?params}..removeWhere(
-        (key, value) => value == null && nullableKeys?.contains(key) != true,
-      );
+    final parsedParams = {
+      ...{...?params}..removeWhere((k, v) => v == null),
+      ...?nullableParams,
+    };
     final queryParams =
         _queryParams(method, withSession: withSession, params: parsedParams);
     final uri = _uri(path, params: queryParams);

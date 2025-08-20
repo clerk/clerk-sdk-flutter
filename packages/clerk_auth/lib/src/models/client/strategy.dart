@@ -3,8 +3,6 @@ import 'package:clerk_auth/src/models/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
-import 'field.dart';
-
 /// [Strategy] Clerk object
 ///
 /// A [Strategy] has a [name]. The various oAuth strategies ('oauth',
@@ -238,21 +236,6 @@ class Strategy {
     }
 
     return null;
-  }
-
-  /// For a given [Field], return an appropriate [Strategy], or
-  /// throw an error
-  ///
-  static Strategy forField(Field field) {
-    return switch (field) {
-      Field.phoneNumber => Strategy.phoneCode,
-      Field.emailAddress => Strategy.emailCode,
-      _ => throw AuthError(
-          message: 'No strategy associated with {arg}',
-          argument: field.name,
-          code: AuthErrorCode.noAssociatedStrategy,
-        ),
-    };
   }
 
   /// For a given [UserAttribute], return an appropriate [Strategy], or

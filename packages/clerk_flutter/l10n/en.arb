@@ -68,14 +68,6 @@
   "emailAddressConcise": "email",
   "enrollment": "Enrollment",
   "enrollmentMode": "Enrollment mode:",
-  "enterCodeSentTo": "Enter code sent to {identifier}",
-  "@enterCodeSentTo": {
-    "placeholders": {
-      "identifier": {
-        "type": "String"
-      }
-    }
-  },
   "enterTheCodeSentTo": "Enter the code sent to {identifier}",
   "@enterTheCodeSentTo": {
     "placeholders": {

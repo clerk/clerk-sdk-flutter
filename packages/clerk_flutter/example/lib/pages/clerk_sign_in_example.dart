@@ -18,16 +18,19 @@ class ClerkSignInExample extends StatelessWidget {
       ),
       body: SafeArea(
         child: ClerkErrorListener(
-          child: ClerkAuthBuilder(
-            signedInBuilder: (context, authState) {
-              if (authState.env.organization.isEnabled == false) {
-                return const ClerkUserButton();
-              }
-              return const _UserAndOrgTabs();
-            },
-            signedOutBuilder: (context, authState) {
-              return const ClerkAuthentication();
-            },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: ClerkAuthBuilder(
+              signedInBuilder: (context, authState) {
+                if (authState.env.organization.isEnabled == false) {
+                  return const ClerkUserButton();
+                }
+                return const _UserAndOrgTabs();
+              },
+              signedOutBuilder: (context, authState) {
+                return const ClerkAuthentication();
+              },
+            ),
           ),
         ),
       ),

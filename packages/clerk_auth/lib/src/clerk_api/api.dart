@@ -196,7 +196,6 @@ class Api with Logging {
     String? emailAddress,
     String? phoneNumber,
     String? web3Wallet,
-    String? redirectUrl,
     String? code,
     String? token,
     bool? legalAccepted,
@@ -213,7 +212,6 @@ class Api with Logging {
         'email_address': emailAddress,
         'phone_number': phoneNumber,
         'web3_wallet': web3Wallet,
-        'redirect_url': redirectUrl,
         'code': code,
         'token': token,
         'legal_accepted': legalAccepted,
@@ -235,7 +233,6 @@ class Api with Logging {
     String? emailAddress,
     String? phoneNumber,
     String? web3Wallet,
-    String? redirectUrl,
     String? code,
     String? token,
     bool? legalAccepted,
@@ -253,7 +250,6 @@ class Api with Logging {
         'email_address': emailAddress,
         'phone_number': phoneNumber,
         'web3_wallet': web3Wallet,
-        'redirect_url': redirectUrl,
         'code': code,
         'token': token,
         'legal_accepted': legalAccepted,
@@ -268,11 +264,13 @@ class Api with Logging {
   Future<ApiResponse> prepareSignUp(
     SignUp signUp, {
     required Strategy strategy,
+    String? redirectUrl,
   }) async {
     return await _fetchApiResponse(
       '/client/sign_ups/${signUp.id}/prepare_verification',
       params: {
         'strategy': strategy,
+        'redirect_url': redirectUrl,
       },
     );
   }

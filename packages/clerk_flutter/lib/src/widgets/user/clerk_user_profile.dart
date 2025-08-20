@@ -74,7 +74,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
               localizations.verificationPhoneNumber,
             _ => uid.type.toString(),
           },
-          subtitle: localizations.enterCodeSentTo(identifier),
+          subtitle: localizations.enterTheCodeSentTo(identifier),
           onSubmit: (code) async {
             await authState.verifyIdentifyingData(uid, code);
             final newUid = authState.user!.identifierFrom(uid.identifier);

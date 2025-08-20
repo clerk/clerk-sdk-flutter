@@ -130,11 +130,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get enrollmentMode => 'Enrollment mode:';
 
   @override
-  String enterCodeSentTo(String identifier) {
-    return 'Enter code sent to $identifier';
-  }
-
-  @override
   String enterTheCodeSentTo(String identifier) {
     return 'Enter the code sent to $identifier';
   }

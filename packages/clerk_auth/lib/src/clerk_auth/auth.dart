@@ -524,7 +524,6 @@ class Auth {
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             legalAccepted: legalAccepted,
-            redirectUrl: redirectUrl,
           )
           .then(_housekeeping);
     }
@@ -549,10 +548,27 @@ class Auth {
             when signUp.status == Status.missingRequirements &&
                 signUp.missingFields.isEmpty &&
                 signUp.unverifiedFields.isNotEmpty:
-          for (final field in signUp.unverifiedFields) {
+          if (env.supportsPhoneCode && signUp.unverified(Field.phoneNumber)) {
             await _api
-                .prepareSignUp(signUp, strategy: Strategy.forField(field))
+                .prepareSignUp(signUp, strategy: Strategy.phoneCode)
                 .then(_housekeeping);
+          }
+
+          if (signUp.unverified(Field.emailAddress)) {
+            if (env.supportsEmailCode) {
+              await _api
+                  .prepareSignUp(signUp, strategy: Strategy.emailCode)
+                  .then(_housekeeping);
+            }
+            if (env.supportsEmailLink && redirectUrl is String) {
+              await _api
+                  .prepareSignUp(
+                    signUp,
+                    strategy: Strategy.emailLink,
+                    redirectUrl: redirectUrl,
+                  )
+                  .then(_housekeeping);
+            }
           }
 
         case SignUp signUp
@@ -561,14 +577,16 @@ class Auth {
           await _api
               .prepareSignUp(signUp, strategy: strategy)
               .then(_housekeeping);
-          await _api
-              .attemptSignUp(
-                client.signUp!,
-                strategy: strategy,
-                code: code,
-                signature: signature,
-              )
-              .then(_housekeeping);
+          if (code is String || signature is String) {
+            await _api
+                .attemptSignUp(
+                  client.signUp!,
+                  strategy: strategy,
+                  code: code,
+                  signature: signature,
+                )
+                .then(_housekeeping);
+          }
       }
     }
 
@@ -587,7 +605,6 @@ class Auth {
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             legalAccepted: legalAccepted,
-            redirectUrl: redirectUrl,
           )
           .then(_housekeeping);
     }

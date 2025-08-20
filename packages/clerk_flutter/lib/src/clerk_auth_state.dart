@@ -168,6 +168,16 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     }
   }
 
+  /// Return a redirect url for email verification, or null if
+  /// not appropriate
+  Uri? emailVerificationRedirectUrl(BuildContext context) {
+    if (env.supportsEmailLink) {
+      return config.redirectionGenerator
+          ?.call(context, clerk.Strategy.emailLink);
+    }
+    return null;
+  }
+
   /// Parse a [Uri] played into the app by a deep link, and complete
   /// sign in accordingly. Returns [true] if parsing was successful,
   /// else [false]
@@ -176,20 +186,31 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   /// final element of the [uri.path] will be the name of the strategy to use
   Future<bool> parseDeepLink(ClerkDeepLink link) async {
     final uri = link.uri;
-    final token = uri.queryParameters[_kRotatingTokenNonce];
-    if (token case String token) {
-      final strategy = switch (link.strategy) {
-        clerk.Strategy strategy when strategy.isKnown => strategy,
-        _ => clerk.Strategy.fromJson(uri.pathSegments.last),
-      };
-      if (strategy.isUnknown) {
-        return false;
-      }
 
-      await attemptSignIn(strategy: strategy, token: token);
-    } else {
+    final strategy = switch (link.strategy) {
+      clerk.Strategy strategy when strategy.isKnown => strategy,
+      _ => clerk.Strategy.fromJson(uri.pathSegments.last),
+    };
+    if (strategy.isUnknown) {
+      return false;
+    } else if (strategy == clerk.Strategy.emailLink) {
       await refreshClient();
-      await transfer();
+    } else if (strategy.isOauth) {
+      final token = uri.queryParameters[_kRotatingTokenNonce];
+      if (token case String token) {
+        final strategy = switch (link.strategy) {
+          clerk.Strategy strategy when strategy.isKnown => strategy,
+          _ => clerk.Strategy.fromJson(uri.pathSegments.last),
+        };
+        if (strategy.isUnknown) {
+          return false;
+        }
+
+        await attemptSignIn(strategy: strategy, token: token);
+      } else {
+        await refreshClient();
+        await transfer();
+      }
     }
 
     return true;
@@ -236,7 +257,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     final l10ns = ClerkAuth.localizationsOf(context);
 
     if (password?.isNotEmpty != true) {
-      return l10ns.passwordMustBeSupplied;
+      return null;
     }
 
     if (password != confirmation) {

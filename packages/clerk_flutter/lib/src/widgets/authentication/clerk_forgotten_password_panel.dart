@@ -175,7 +175,7 @@ class _ClerkForgottenPasswordPanelState
                 ClerkCodeInput(
                   key: const Key('code'),
                   code: _code,
-                  subtitle: l10ns.enterCodeSentTo(_identifier),
+                  subtitle: l10ns.enterTheCodeSentTo(_identifier),
                   onSubmit: _setCode,
                 ),
                 Closeable(

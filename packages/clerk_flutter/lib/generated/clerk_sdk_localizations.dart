@@ -318,12 +318,6 @@ abstract class ClerkSdkLocalizations {
   /// **'Enrollment mode:'**
   String get enrollmentMode;
 
-  /// No description provided for @enterCodeSentTo.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter code sent to {identifier}'**
-  String enterCodeSentTo(String identifier);
-
   /// No description provided for @enterTheCodeSentTo.
   ///
   /// In en, this message translates to:

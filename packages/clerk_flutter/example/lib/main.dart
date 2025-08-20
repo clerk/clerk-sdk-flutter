@@ -46,7 +46,7 @@ class ExampleApp extends StatelessWidget {
   /// contain a [clerk.Strategy], to use in preference to a strategy
   /// inferred from the [Uri]
   ClerkDeepLink? createClerkLink(Uri uri) {
-    if (uri.pathSegments.first == 'sign_in') {
+    if (uri.pathSegments.first == 'auth') {
       return ClerkDeepLink(uri: uri);
     }
 
@@ -59,7 +59,7 @@ class ExampleApp extends StatelessWidget {
   /// redirect for a given [clerk.Strategy], or [null] if redirection should
   /// be handled in-app
   Uri? generateDeepLink(BuildContext context, clerk.Strategy strategy) {
-    return Uri.parse('clerk://example.com/sign_in/$strategy');
+    return Uri.parse('clerk://example.com/auth/$strategy');
 
     // if you want to use the default in-app SSO, just remove the
     // [redirectionGenerator] parameter from the [ClerkAuthConfig] object

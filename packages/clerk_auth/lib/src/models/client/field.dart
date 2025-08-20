@@ -26,10 +26,14 @@ class Field {
   /// username
   static const username = Field._('username');
 
+  /// password
+  static const password = Field._('password');
+
   static final _values = <String, Field>{
     phoneNumber.name: phoneNumber,
     emailAddress.name: emailAddress,
     username.name: username,
+    password.name: password,
   };
 
   /// The [values] of the Fields

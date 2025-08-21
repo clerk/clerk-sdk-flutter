@@ -4,14 +4,14 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: '>=3.10.0'
+  sdk: '>=3.6.2 <4.0.0'
+  flutter: '>=3.27.4'
 
 dependencies:
   flutter:
     sdk: flutter
-  clerk_flutter: '>=0.0.10-beta'
-  clerk_auth: '>=0.0.10-beta'
+  clerk_flutter: '>=0.0.11-beta'
+  clerk_auth: '>=0.0.11-beta'
   app_links: ^3.5.1
   url_launcher_ios: 6.2.0
   google_sign_in: ^7.1.0

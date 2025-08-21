@@ -1,3 +1,19 @@
+## 0.0.11-beta
+
+* feat: **BREAKING** Upgrade to Flutter 3.27.4 and Dart 3.6.2 [#242]
+* fix: re-enable email link in signIn [#241]
+* fix: restrict sign up fields to known entities [#227]
+* fix: allow email address to be edited for verification [#226]
+* fix: allow landscape logos to look better in components [#225]
+* fix: remove branding if required in dashboard [#224]
+* fix: allow obscuration on sign in password to be togglable [#223]
+* fix: enable legal consent confirmation [#222]
+* fix: resolve issues with the sessionTokenStream [#221]
+* fix: make ui respond better when wifi is unavailable [#212]
+* fix: refactor sign-in panel to keep password and confirmation together [#208]
+* fix: make google authentication work directly with tokens [#207]
+* fix: minor refactoring to caching [#204]
+
 ## 0.0.10-beta
 
 * feat: allow app-defined redirects aka deep-links (with example) [#170]

@@ -1,3 +1,13 @@
+## 0.0.11-beta
+
+* fix: ensure all params are trimmed [#236]
+* fix: amend persistor docs [#235]
+* fix: allow email address to be edited for verification [#226]
+* fix: enable legal consent confirmation [#222]
+* fix: resolve issues with the sessionTokenStream [#221]
+* fix: support offline better [#212]
+* fix: make google authentication work directly with tokens [#207]
+
 ## 0.0.10-beta
 
 * fix: added Facebook as strategy [#172]

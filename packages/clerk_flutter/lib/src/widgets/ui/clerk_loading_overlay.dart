@@ -40,9 +40,9 @@ class ClerkLoadingOverlay {
       _displayTimer ??= Timer(
         startupDuration,
         () {
-          if (!overlay.isDisplaying(_loadingWidget!)) {
+          if (!overlay.isDisplaying(_loadingWidget)) {
             _hideAfter = DateTime.timestamp().add(minimumOnScreenDuration);
-            overlay.insert(_loadingWidget!);
+            overlay.insert(_loadingWidget);
           }
         },
       );
@@ -60,17 +60,17 @@ class ClerkLoadingOverlay {
       _displayTimer?.cancel();
       _displayTimer = null;
 
-      if (_hideTimer == null && overlay.isDisplaying(_loadingWidget!)) {
+      if (_hideTimer == null && overlay.isDisplaying(_loadingWidget)) {
         final now = DateTime.timestamp();
         if (_hideAfter.isBefore(now)) {
-          overlay.remove(_loadingWidget!);
+          overlay.remove(_loadingWidget);
         } else {
           _hideTimer = Timer(
             _hideAfter.difference(now),
             () {
               _hideTimer = null;
               if (overlay.mounted) {
-                overlay.remove(_loadingWidget!);
+                overlay.remove(_loadingWidget);
               }
             },
           );

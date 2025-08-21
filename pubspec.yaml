@@ -1,10 +1,10 @@
 name: clerk_sdk
-version: 0.0.9-beta
+version: 0.0.11-beta
 description: >
   Clerk SDK containing all packages that define use of Clerk 
   services for Dart and Flutter code.
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.6.2 <4.0.0'
   flutter: '>=3.27.4'
 
 dev_dependencies:

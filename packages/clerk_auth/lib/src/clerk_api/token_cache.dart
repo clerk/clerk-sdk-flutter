@@ -73,6 +73,9 @@ class TokenCache {
     _clientId = clientId;
   }
 
+  /// Dispose of [TokenCache]
+  void terminate() {}
+
   /// Reset the [TokenCache]
   ///
   void clear() {

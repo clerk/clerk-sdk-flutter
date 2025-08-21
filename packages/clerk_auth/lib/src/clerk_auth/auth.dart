@@ -37,10 +37,12 @@ class Auth {
   static const _kClientKey = '\$client';
   static const _kEnvKey = '\$env';
   static const _codeLength = 6;
+  static const _defaultPollDelay = Duration(seconds: 53);
 
   Timer? _clientTimer;
   Timer? _persistenceTimer;
   Timer? _refetchTimer;
+  Timer? _pollTimer;
   Map<String, dynamic> _persistableData = {};
 
   /// Stream of errors reported by the SDK of type [AuthError]
@@ -125,7 +127,7 @@ class Auth {
   Future<void> initialize() async {
     await config.initialize();
     telemetry = Telemetry(config: config);
-    _api = Api(config: config, sessionTokenSink: _sessionTokens.sink);
+    _api = Api(config: config);
     await _api.initialize();
 
     final (client, env) = await _fetchClientAndEnv();
@@ -166,6 +168,10 @@ class Auth {
         },
       );
     }
+
+    if (config.sessionTokenPollMode == SessionTokenPollMode.hungry) {
+      await _pollForSessionToken();
+    }
   }
 
   /// Disposal of the [Auth] object
@@ -174,6 +180,7 @@ class Auth {
   /// method, if that is mixed in e.g. in clerk_flutter
   ///
   void terminate() {
+    _pollTimer?.cancel();
     _clientTimer?.cancel();
     _persistenceTimer?.cancel();
     _refetchTimer?.cancel();
@@ -182,6 +189,31 @@ class Auth {
     _sessionTokens.close();
     telemetry.terminate();
     config.terminate();
+  }
+
+  Future<void> _pollForSessionToken() async {
+    _pollTimer?.cancel();
+
+    Duration delay = _defaultPollDelay;
+
+    try {
+      final sessionToken = await _api.updateSessionToken();
+      if (sessionToken case SessionToken token) {
+        _sessionTokens.add(token);
+        delay = token.expiry.difference(DateTime.timestamp());
+      }
+    } on AuthError catch (error) {
+      addError(error);
+    } catch (error) {
+      addError(
+        AuthError(
+          code: AuthErrorCode.noSessionTokenRetrieved,
+          message: error.toString(),
+        ),
+      );
+    } finally {
+      _pollTimer = Timer(delay, _pollForSessionToken);
+    }
   }
 
   Future<void> _retryFetchClientAndEnv(_) async {
@@ -211,7 +243,7 @@ class Auth {
 
   ApiResponse _housekeeping(ApiResponse resp) {
     if (resp.isError) {
-      addError(AuthError(code: resp.authErrorCode, message: resp.errorMessage));
+      addError(AuthError.from(resp.errorCollection));
     } else if (resp.client case Client client) {
       this.client = client;
     }
@@ -286,13 +318,19 @@ class Auth {
     final org = env.organization.isEnabled
         ? organization ?? Organization.personal
         : null;
-    final token = await _api.sessionToken(org, templateName);
+    SessionToken? token = _api.sessionToken(org, templateName);
     if (token is! SessionToken) {
-      throw const AuthError(
-        message: 'No session token retrieved',
-        code: AuthErrorCode.noSessionTokenRetrieved,
-      );
+      token = await _api.updateSessionToken(org, templateName);
+      if (token is SessionToken) {
+        _sessionTokens.add(token);
+      } else {
+        throw const AuthError(
+          message: 'No session token retrieved',
+          code: AuthErrorCode.noSessionTokenRetrieved,
+        );
+      }
     }
+
     return token;
   }
 

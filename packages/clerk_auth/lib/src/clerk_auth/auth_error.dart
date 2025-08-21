@@ -1,3 +1,5 @@
+import 'package:clerk_auth/src/models/api/api_error.dart';
+
 /// Container for errors encountered during Clerk auth(entication|orization)
 ///
 class AuthError implements Exception {
@@ -7,6 +9,10 @@ class AuthError implements Exception {
     required this.message,
     this.argument,
   });
+
+  /// Construct from an [ApiErrorCollection]
+  factory AuthError.from(ApiErrorCollection errors) =>
+      AuthError(code: errors.authErrorCode, message: errors.errorMessage);
 
   /// Error code
   final AuthErrorCode? code;

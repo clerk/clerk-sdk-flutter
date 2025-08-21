@@ -56,3 +56,23 @@ const _$AuthErrorCodeEnumMap = {
   AuthErrorCode.problemsConnecting: 'problemsConnecting',
   AuthErrorCode.requiredFieldsAreMissing: 'requiredFieldsAreMissing',
 };
+
+ApiErrorCollection _$ApiErrorCollectionFromJson(Map<String, dynamic> json) =>
+    ApiErrorCollection(
+      errors: (json['errors'] as List<dynamic>?)
+          ?.map((e) => ApiError.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ApiErrorCollectionToJson(ApiErrorCollection instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('errors', instance.errors?.map((e) => e.toJson()).toList());
+  return val;
+}

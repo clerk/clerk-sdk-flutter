@@ -23,7 +23,6 @@ class Api with Logging {
   ///
   Api({
     required this.config,
-    this.sessionTokenSink,
   })  : _tokenCache = TokenCache(
           persistor: config.persistor,
           publishableKey: config.publishableKey,
@@ -34,14 +33,10 @@ class Api with Logging {
   /// The config used to initialize this api instance.
   final AuthConfig config;
 
-  /// The [Sink] for session tokens
-  final Sink<SessionToken>? sessionTokenSink;
-
   final TokenCache _tokenCache;
   final String _domain;
 
   bool _testMode;
-  Timer? _pollTimer;
   bool _multiSessionMode = true;
 
   static const _kClerkAPIVersion = 'clerk-api-version';
@@ -60,19 +55,14 @@ class Api with Logging {
   static const _kXMobile = 'x-mobile';
   static const _scheme = 'https';
 
-  static const _defaultPollDelay = Duration(seconds: 53);
-
   /// Initialise the API
   Future<void> initialize() async {
     await _tokenCache.initialize();
-    if (config.sessionTokenPolling) {
-      await _pollForSessionToken();
-    }
   }
 
   /// Dispose of the API
   void terminate() {
-    _pollTimer?.cancel();
+    _tokenCache.terminate();
   }
 
   /// Confirm connectivity to the back end
@@ -813,18 +803,15 @@ class Api with Logging {
 
   // Session
 
-  /// Return the [SessionToken] for the current active [Session], refreshing it
-  /// if required
+  /// Return the [SessionToken] for the current active [Session], if
+  /// available
   ///
-  Future<SessionToken?> sessionToken([
-    Organization? org,
-    String? templateName,
-  ]) async {
-    return _tokenCache.sessionTokenFor(org, templateName) ??
-        await _updateSessionToken(org, templateName);
-  }
+  SessionToken? sessionToken([Organization? org, String? templateName]) =>
+      _tokenCache.sessionTokenFor(org, templateName);
 
-  Future<SessionToken?> _updateSessionToken([
+  /// Refresh and return the [SessionToken] for the current active [Session]
+  ///
+  Future<SessionToken?> updateSessionToken([
     Organization? org,
     String? templateName,
   ]) async {
@@ -843,24 +830,20 @@ class Api with Logging {
             _kOrganizationId: org.id,
         },
       );
+      final body = json.decode(resp.body) as _JsonObject;
       if (resp.statusCode == HttpStatus.ok) {
-        final body = json.decode(resp.body) as _JsonObject;
         final token = body[_kJwtKey] as String;
-        final sessionToken =
-            _tokenCache.makeAndCacheSessionToken(token, templateName);
-        sessionTokenSink?.add(sessionToken);
-        return sessionToken;
+        return _tokenCache.makeAndCacheSessionToken(token, templateName);
+      } else if (_extractErrorCollection(body) case ApiErrorCollection errors) {
+        throw AuthError.from(errors);
+      } else {
+        throw const AuthError(
+          message: 'No session token retrieved',
+          code: AuthErrorCode.noSessionTokenRetrieved,
+        );
       }
     }
     return null;
-  }
-
-  Future<void> _pollForSessionToken() async {
-    _pollTimer?.cancel();
-
-    final sessionToken = await _updateSessionToken();
-    final delay = sessionToken?.ttl ?? _defaultPollDelay;
-    _pollTimer = Timer(delay, _pollForSessionToken);
   }
 
   // Internal
@@ -922,7 +905,7 @@ class Api with Logging {
 
   ApiResponse _processResponse(http.Response resp) {
     final body = json.decode(resp.body) as _JsonObject;
-    final errors = _extractErrors(body[_kErrorsKey]);
+    final errorCollection = _extractErrorCollection(body);
     final (clientData, responseData) = _extractClientAndResponse(body);
     if (clientData is _JsonObject) {
       final client = Client.fromJson(clientData);
@@ -930,14 +913,12 @@ class Api with Logging {
       return ApiResponse(
         client: client,
         status: resp.statusCode,
-        errors: errors,
+        errorCollection: errorCollection,
         response: responseData,
       );
     } else {
       return ApiResponse(
-        status: resp.statusCode,
-        errors: errors,
-      );
+          status: resp.statusCode, errorCollection: errorCollection);
     }
   }
 
@@ -955,15 +936,13 @@ class Api with Logging {
     }
   }
 
-  List<ApiError>? _extractErrors(List<dynamic>? data) {
-    if (data == null) {
+  ApiErrorCollection? _extractErrorCollection(Map<String, dynamic>? data) {
+    if (data?[_kErrorsKey] == null) {
       return null;
     }
 
     logSevere(data);
-    return List<_JsonObject>.from(data)
-        .map(ApiError.fromJson)
-        .toList(growable: false);
+    return ApiErrorCollection.fromJson(data);
   }
 
   dynamic _ensureNotNullOrEmpty(dynamic param) {

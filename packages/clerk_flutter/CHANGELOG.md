@@ -1,3 +1,8 @@
+## 0.0.12-beta
+
+* chore: align release version with `clerk_auth` 0.0.12-beta package
+* fix: ensure decoding of UserPublic.identifier is optional [#256]
+
 ## 0.0.11-beta
 
 * feat: **BREAKING** Upgrade to Flutter 3.27.4 and Dart 3.6.2 [#242]

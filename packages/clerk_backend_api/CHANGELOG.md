@@ -1,3 +1,7 @@
+## 0.0.12-beta
+
+* chore: align release version with `clerk_auth` package
+
 ## 0.0.11-beta
 
 * chore: align release version with `clerk_flutter` package

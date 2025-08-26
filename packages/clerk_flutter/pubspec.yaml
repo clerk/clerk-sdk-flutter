@@ -1,6 +1,6 @@
 name: clerk_flutter
 description: Package that will allow you to authenticate and use Clerk from Flutter code.
-version: 0.0.11-beta
+version: 0.0.12-beta
 homepage: https://clerk.com/docs
 repository: https://github.com/clerk/clerk-sdk-flutter/tree/main/packages/clerk_flutter
 issue_tracker: https://github.com/clerk/clerk-sdk-flutter/labels/clerk_flutter
@@ -17,7 +17,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  clerk_auth: '>=0.0.11-beta <1.0.0'
+  clerk_auth: '>=0.0.12-beta <1.0.0'
   collection: '>=1.17.1 <2.0.0'
   email_validator: ^3.0.0
   flutter_svg: ^2.0.10+1

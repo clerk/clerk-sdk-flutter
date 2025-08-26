@@ -1,3 +1,7 @@
+## 0.0.12-beta
+
+* fix: ensure decoding of UserPublic.identifier is optional [#256]
+
 ## 0.0.11-beta
 
 * fix: ensure all params are trimmed [#236]

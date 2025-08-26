@@ -10,8 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  clerk_flutter: '>=0.0.11-beta'
-  clerk_auth: '>=0.0.11-beta'
+  clerk_flutter: '>=0.0.12-beta'
+  clerk_auth: '>=0.0.12-beta'
   app_links: ^3.5.1
   url_launcher_ios: 6.2.0
   google_sign_in: ^7.1.0

@@ -19,7 +19,7 @@ class UserPublic with InformativeToStringMixin {
   });
 
   /// identifier
-  final String identifier;
+  final String? identifier;
 
   /// first name
   final String? firstName;

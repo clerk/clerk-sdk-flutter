@@ -108,7 +108,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   bool _requiresBack(clerk.SignIn signIn) => signIn.status.isUnknown == false;
 
   bool _requiresContinue(clerk.SignIn signIn) =>
-      _strategy.isUnknown || _strategy.requiresPassword;
+      signIn.status.isUnknown ||
+      (signIn.verification == null && signIn.canUsePassword);
 
   @override
   Widget build(BuildContext context) {
@@ -280,8 +281,7 @@ class _FactorList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10ns = ClerkAuth.localizationsOf(context);
-    final hasPassword =
-        factors.any((f) => f.strategy == clerk.Strategy.password);
+    final hasPassword = factors.any((f) => f.strategy.isPassword);
     final otherFactors = factors.where(StrategyButton.supports).toList();
 
     return Column(

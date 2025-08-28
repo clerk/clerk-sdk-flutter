@@ -438,7 +438,7 @@ class Auth {
 
       case SignIn signIn
           when signIn.status.needsFactor &&
-              strategy == Strategy.password &&
+              strategy.isPassword &&
               password is String:
         await _api
             .attemptSignIn(

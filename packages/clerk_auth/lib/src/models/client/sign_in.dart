@@ -112,6 +112,9 @@ class SignIn with InformativeToStringMixin {
         _ => const [],
       };
 
+  /// can we handle the password strategy?
+  bool get canUsePassword => factors.any((f) => f.strategy.isPassword);
+
   /// Find the [Factor] for this [SignIn] that matches
   /// the [strategy] and [stage]
   ///

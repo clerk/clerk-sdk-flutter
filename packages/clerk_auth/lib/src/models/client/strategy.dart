@@ -157,6 +157,9 @@ class Strategy {
   /// is known?
   bool get isKnown => isUnknown == false;
 
+  /// is password?
+  bool get isPassword => this == password;
+
   /// is some variety of oauth?
   bool get isOauth => name == _oauth || isOauthCustom || isOauthToken;
 

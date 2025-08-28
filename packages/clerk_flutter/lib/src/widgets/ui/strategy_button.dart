@@ -27,59 +27,66 @@ class StrategyButton extends StatelessWidget {
     clerk.Strategy.emailLink: Icons.email_outlined,
     clerk.Strategy.emailCode: Icons.email_outlined,
     clerk.Strategy.phoneCode: Icons.phone_android_outlined,
+    clerk.Strategy.enterpriseSSO: Icons.safety_check_outlined,
   };
 
-  /// boolean to say whether the [strategy] can be displayed
+  static bool _supports(clerk.Strategy strategy) =>
+      _icons.containsKey(strategy);
+
+  /// boolean to say whether the [Factor] can be displayed
   /// by this widget
-  static bool supports(clerk.Strategy strategy) => _icons.containsKey(strategy);
+  static bool supports(clerk.Factor factor) => _supports(factor.strategy);
+
+  String _label(ClerkSdkLocalizations localizations) {
+    switch (strategy) {
+      case clerk.Strategy.emailLink:
+        return localizations.signInByClickingALinkSentToYouByEmail;
+      case clerk.Strategy.emailCode:
+        return localizations.signInByEnteringACodeSentToYouByEmail;
+      case clerk.Strategy.phoneCode:
+        return localizations.signInByEnteringACodeSentToYouByTextMessage;
+      case clerk.Strategy.enterpriseSSO:
+        return localizations.signInUsingEnterpriseSSO;
+      default:
+        throw clerk.AuthError(
+          code: clerk.AuthErrorCode.noAssociatedStrategy,
+          message: localizations.noAssociatedCodeRetrievalMethod(
+            strategy.toString(),
+          ),
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (supports(strategy) == false) {
+    if (_supports(strategy) == false) {
       return emptyWidget;
     }
 
     final localizations = ClerkAuth.localizationsOf(context);
 
-    return Row(
-      children: [
-        SizedBox(
-          width: 60,
-          child: MaterialButton(
-            onPressed: onClick,
-            elevation: 2.0,
-            shape: const RoundedRectangleBorder(
-              borderRadius: borderRadius4,
-              side: BorderSide(color: ClerkColors.dawnPink),
-            ),
-            child: Padding(
-              padding: verticalPadding4,
-              child: Icon(_icons[strategy], color: ClerkColors.midGrey),
+    return MaterialButton(
+      onPressed: onClick,
+      elevation: 2.0,
+      padding: allPadding8,
+      shape: const RoundedRectangleBorder(
+        borderRadius: borderRadius4,
+        side: BorderSide(color: ClerkColors.dawnPink),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(_icons[strategy], color: ClerkColors.midGrey),
+          horizontalMargin8,
+          Flexible(
+            child: Text(
+              _label(localizations),
+              maxLines: 2,
+              style: ClerkTextStyle.buttonTitle.copyWith(height: 1.2),
             ),
           ),
-        ),
-        horizontalMargin8,
-        Expanded(
-          child: Text(
-            switch (strategy) {
-              clerk.Strategy.emailLink =>
-                localizations.signInByClickingALinkSentToYouByEmail,
-              clerk.Strategy.emailCode =>
-                localizations.signInByEnteringACodeSentToYouByEmail,
-              clerk.Strategy.phoneCode =>
-                localizations.signInByEnteringACodeSentToYouByTextMessage,
-              _ => throw clerk.AuthError(
-                  code: clerk.AuthErrorCode.noAssociatedStrategy,
-                  message: localizations.noAssociatedCodeRetrievalMethod(
-                    strategy.toString(),
-                  ),
-                ),
-            },
-            maxLines: 1,
-            style: ClerkTextStyle.buttonTitle,
-          ),
-        )
-      ],
+        ],
+      ),
     );
   }
 }

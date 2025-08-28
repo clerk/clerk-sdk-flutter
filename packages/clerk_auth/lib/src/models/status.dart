@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/models/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -93,8 +94,17 @@ class Status {
   /// is expired?
   bool get isExpired => this == expired;
 
+  /// is unknown?
+  bool get isUnknown => this == unknown;
+
   /// needs factor?
   bool get needsFactor => this == needsFirstFactor || this == needsSecondFactor;
+
+  /// Do we need factors for this stage?
+  bool needsFactorFor(Stage stage) => switch (stage) {
+        Stage.first => this == needsFirstFactor,
+        Stage.second => this == needsSecondFactor,
+      };
 
   /// toString
   @override

@@ -49,8 +49,8 @@ class InputLabel extends StatelessWidget {
             localizations.requiredField,
             color: ClerkColors.incarnadine,
           )
-        else if (isOptional == false) //
-          _LabelModifier(localizations.requiredField),
+        else if (isOptional == true) //
+          _LabelModifier(localizations.optional),
         if (trailing case Widget trailing) //
           trailing,
       ],

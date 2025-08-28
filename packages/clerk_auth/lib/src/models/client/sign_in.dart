@@ -6,6 +6,7 @@ import 'package:clerk_auth/src/models/client/verification.dart';
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/models/status.dart';
+import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -20,15 +21,15 @@ class SignIn with InformativeToStringMixin {
   const SignIn({
     required this.id,
     required this.status,
-    required this.supportedIdentifiers,
-    required this.identifier,
-    required this.userData,
-    required this.supportedFirstFactors,
-    required this.firstFactorVerification,
-    required this.supportedSecondFactors,
-    required this.secondFactorVerification,
-    required this.createdSessionId,
-    required this.abandonAt,
+    this.identifier,
+    this.userData,
+    this.supportedIdentifiers = const [],
+    this.supportedFirstFactors = const [],
+    this.firstFactorVerification,
+    this.supportedSecondFactors = const [],
+    this.secondFactorVerification,
+    this.createdSessionId,
+    this.abandonAt = DateTimeExt.epoch,
   });
 
   /// id
@@ -67,6 +68,16 @@ class SignIn with InformativeToStringMixin {
   @JsonKey(defaultValue: [])
   final List<Factor> supportedSecondFactors;
 
+  /// Empty [SignIn]
+  static const empty = SignIn(id: '~empty~', status: Status.unknown);
+
+  /// The currently most important verification
+  Verification? get verification =>
+      firstFactorVerification ?? secondFactorVerification;
+
+  /// Do we have a verification in operation>?
+  bool get hasVerification => verification is Verification;
+
   /// fromJson
   static SignIn fromJson(Map<String, dynamic> json) => _$SignInFromJson(json);
 
@@ -84,17 +95,33 @@ class SignIn with InformativeToStringMixin {
     };
   }
 
+  /// Find the [Factor]s for this [SignIn] that match
+  /// the [stage]
+  ///
+  List<Factor> factorsFor(Stage stage) {
+    return switch (stage) {
+      Stage.first => supportedFirstFactors,
+      Stage.second => supportedSecondFactors,
+    };
+  }
+
+  /// The factors for
+  List<Factor> get factors => switch (status) {
+        Status.needsFirstFactor => supportedFirstFactors,
+        Status.needsSecondFactor => supportedSecondFactors,
+        _ => const [],
+      };
+
+  /// can we handle the password strategy?
+  bool get canUsePassword => factors.any((f) => f.strategy.isPassword);
+
   /// Find the [Factor] for this [SignIn] that matches
   /// the [strategy] and [stage]
   ///
   /// Throw an error on failure
   ///
   Factor factorFor(Strategy strategy, Stage stage) {
-    final factors = switch (stage) {
-      Stage.first => supportedFirstFactors,
-      Stage.second => supportedSecondFactors,
-    };
-    for (final factor in factors) {
+    for (final factor in factorsFor(stage)) {
       if (factor.strategy == strategy) return factor;
     }
     switch (stage) {

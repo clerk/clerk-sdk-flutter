@@ -21,6 +21,7 @@ class ClerkIdentifierInput extends StatefulWidget {
     required this.onChanged,
     required this.strategies,
     ValueNotifier<clerk.IdentifierType>? identifierType,
+    this.initial,
     this.onSubmit,
   }) : identifierType =
             identifierType ?? ValueNotifier(clerk.IdentifierType.emailAddress);
@@ -36,6 +37,9 @@ class ClerkIdentifierInput extends StatefulWidget {
 
   /// The method to call when the input text is submitted
   final ValueChanged<String>? onSubmit;
+
+  /// The value with which to initialise the field
+  final String? initial;
 
   @override
   State<ClerkIdentifierInput> createState() => _ClerkIdentifierInputState();
@@ -105,6 +109,7 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
             closed: widget.identifierType.value.isPhoneNumber,
             child: ClerkTextFormField(
               key: const Key('identifier'),
+              initial: widget.initial,
               label: l10ns.grammar.toSentence(
                 l10ns.grammar.toLitany(
                   emailStrategies

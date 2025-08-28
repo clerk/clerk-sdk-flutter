@@ -9,13 +9,14 @@ part of 'sign_in.dart';
 SignIn _$SignInFromJson(Map<String, dynamic> json) => SignIn(
       id: json['id'] as String,
       status: Status.fromJson(json['status'] as String),
-      supportedIdentifiers: (json['supported_identifiers'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
       identifier: json['identifier'] as String?,
       userData: json['user_data'] == null
           ? null
           : UserPublic.fromJson(json['user_data'] as Map<String, dynamic>),
+      supportedIdentifiers: (json['supported_identifiers'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       supportedFirstFactors: (json['supported_first_factors'] as List<dynamic>?)
               ?.map((e) => Factor.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -34,7 +35,9 @@ SignIn _$SignInFromJson(Map<String, dynamic> json) => SignIn(
           : Verification.fromJson(
               json['second_factor_verification'] as Map<String, dynamic>),
       createdSessionId: json['created_session_id'] as String?,
-      abandonAt: intToDateTime(json['abandon_at']),
+      abandonAt: json['abandon_at'] == null
+          ? DateTimeExt.epoch
+          : intToDateTime(json['abandon_at']),
     );
 
 Map<String, dynamic> _$SignInToJson(SignIn instance) {

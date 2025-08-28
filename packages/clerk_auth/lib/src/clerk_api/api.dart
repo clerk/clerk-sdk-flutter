@@ -121,6 +121,11 @@ class Api with Logging {
     return Client.empty;
   }
 
+  /// Force-create a new [Client]
+  Future<Client> resetClient() async {
+    return await _fetchClient(method: HttpMethod.post);
+  }
+
   /// Creates a new [Client] object to manage sessions
   Future<Client> createClient() async {
     if (_tokenCache.hasClientToken) {
@@ -128,7 +133,7 @@ class Api with Logging {
       if (client.isNotEmpty) return client;
     }
 
-    return await _fetchClient(method: HttpMethod.post);
+    return await resetClient();
   }
 
   /// Gets a refreshed [Client] object from the back end

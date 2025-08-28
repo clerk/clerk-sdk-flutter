@@ -77,6 +77,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get automaticSuggestion => 'Automatic suggestion';
 
   @override
+  String get back => 'Back';
+
+  @override
   String get backupCode => 'backup code';
 
   @override
@@ -86,7 +89,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get cannotDeleteSelf => 'You are not authorized to delete your user';
 
   @override
-  String clickOnTheLinkThatSBeenSentToAndThenCheckBackHere(String identifier) {
+  String clickOnTheLinkThatsBeenSentTo(String identifier) {
     return 'Click on the link that‘s been sent to $identifier and then check back here';
   }
 
@@ -370,6 +373,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String signInTo(String name) {
     return 'Sign in to $name';
   }
+
+  @override
+  String get signInUsingEnterpriseSSO => 'Sign in using Enterprise SSO';
 
   @override
   String get signOut => 'Sign out';

@@ -122,12 +122,17 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   Future<void> ssoSignIn(
     BuildContext context,
     clerk.Strategy strategy, {
+    String? identifier,
     ClerkErrorCallback? onError,
   }) async {
     final redirect = config.redirectionGenerator?.call(context, strategy);
     await safelyCall(
       context,
-      () => oauthSignIn(strategy: strategy, redirect: redirect),
+      () => oauthSignIn(
+        strategy: strategy,
+        identifier: identifier,
+        redirect: redirect,
+      ),
       onError: onError,
     );
     final url =
@@ -186,31 +191,21 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   /// final element of the [uri.path] will be the name of the strategy to use
   Future<bool> parseDeepLink(ClerkDeepLink link) async {
     final uri = link.uri;
-
     final strategy = switch (link.strategy) {
       clerk.Strategy strategy when strategy.isKnown => strategy,
       _ => clerk.Strategy.fromJson(uri.pathSegments.last),
     };
+
     if (strategy.isUnknown) {
       return false;
     } else if (strategy == clerk.Strategy.emailLink) {
       await refreshClient();
-    } else if (strategy.isOauth) {
-      final token = uri.queryParameters[_kRotatingTokenNonce];
-      if (token case String token) {
-        final strategy = switch (link.strategy) {
-          clerk.Strategy strategy when strategy.isKnown => strategy,
-          _ => clerk.Strategy.fromJson(uri.pathSegments.last),
-        };
-        if (strategy.isUnknown) {
-          return false;
-        }
-
-        await attemptSignIn(strategy: strategy, token: token);
-      } else {
-        await refreshClient();
-        await transfer();
-      }
+    } else if (uri.queryParameters[_kRotatingTokenNonce] case String token
+        when strategy.isSSO) {
+      await attemptSignIn(strategy: strategy, token: token);
+    } else {
+      await refreshClient();
+      await transfer();
     }
 
     return true;

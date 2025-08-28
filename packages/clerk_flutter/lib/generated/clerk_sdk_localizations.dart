@@ -216,6 +216,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Automatic suggestion'**
   String get automaticSuggestion;
 
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
   /// No description provided for @backupCode.
   ///
   /// In en, this message translates to:
@@ -234,11 +240,11 @@ abstract class ClerkSdkLocalizations {
   /// **'You are not authorized to delete your user'**
   String get cannotDeleteSelf;
 
-  /// No description provided for @clickOnTheLinkThatSBeenSentToAndThenCheckBackHere.
+  /// No description provided for @clickOnTheLinkThatsBeenSentTo.
   ///
   /// In en, this message translates to:
   /// **'Click on the link that‘s been sent to {identifier} and then check back here'**
-  String clickOnTheLinkThatSBeenSentToAndThenCheckBackHere(String identifier);
+  String clickOnTheLinkThatsBeenSentTo(String identifier);
 
   /// No description provided for @complete.
   ///
@@ -731,6 +737,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Sign in to {name}'**
   String signInTo(String name);
+
+  /// No description provided for @signInUsingEnterpriseSSO.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in using Enterprise SSO'**
+  String get signInUsingEnterpriseSSO;
 
   /// No description provided for @signOut.
   ///

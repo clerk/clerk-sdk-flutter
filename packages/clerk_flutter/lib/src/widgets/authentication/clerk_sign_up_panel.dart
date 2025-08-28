@@ -240,7 +240,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
               if (env.supportsEmailLink &&
                   signUp?.unverified(clerk.Field.emailAddress) == true) ...[
                 Text(
-                  l10ns.clickOnTheLinkThatSBeenSentToAndThenCheckBackHere(
+                  l10ns.clickOnTheLinkThatsBeenSentTo(
                     _values[clerk.UserAttribute.emailAddress]!,
                   ),
                   textAlign: TextAlign.center,
@@ -249,10 +249,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                 ),
                 verticalMargin16,
               ],
-              const SizedBox.square(
-                dimension: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
+              defaultLoadingWidget,
             ],
           ),
         ),

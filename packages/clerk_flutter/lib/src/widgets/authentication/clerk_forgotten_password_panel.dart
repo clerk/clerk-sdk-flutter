@@ -248,13 +248,7 @@ class _ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isProcessing) {
-      return const Padding(
-        padding: allPadding4,
-        child: SizedBox.square(
-          dimension: 20,
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
-      );
+      return defaultLoadingWidget;
     }
 
     return ClerkMaterialButton(

@@ -21,8 +21,8 @@ enum ClosingAxis {
 }
 
 /// [Closeable] provides a widget that will animate to closed or open positions depending
-/// on the `open` or `closed` parameter values. One and only one of `open` or `closed` must
-/// be provided.
+/// on the `closed` parameter value.
+///
 class Closeable extends StatefulWidget {
   /// Construct a [Closeable] panel
   const Closeable({
@@ -125,6 +125,25 @@ class _CloseableState extends State<Closeable> {
       ),
     );
   }
+}
+
+/// [Openable] is the complement of [Closeable], taking a boolean [open] that
+/// asserts its open/closed state
+///
+class Openable extends Closeable {
+  /// Construct an [Openable] panel
+  const Openable({
+    super.key,
+    required bool open,
+    super.startsClosed,
+    super.duration,
+    super.axis,
+    super.alignment,
+    super.closingAlignment,
+    super.curve,
+    super.onEnd,
+    super.child,
+  }) : super(closed: open == false);
 }
 
 extension on Alignment {

@@ -44,11 +44,12 @@
   "authenticatorApp": "authenticator app",
   "automaticInvitation": "Automatic invitation",
   "automaticSuggestion": "Automatic suggestion",
+  "back": "Back",
   "backupCode": "backup code",
   "cancel": "Cancel",
   "cannotDeleteSelf": "You are not authorized to delete your user",
-  "clickOnTheLinkThatSBeenSentToAndThenCheckBackHere": "Click on the link that‘s been sent to {identifier} and then check back here",
-  "@clickOnTheLinkThatSBeenSentToAndThenCheckBackHere": {
+  "clickOnTheLinkThatsBeenSentTo": "Click on the link that‘s been sent to {identifier} and then check back here",
+  "@clickOnTheLinkThatsBeenSentTo": {
     "placeholders": {
       "identifier": {
         "type": "String"
@@ -228,6 +229,7 @@
       }
     }
   },
+  "signInUsingEnterpriseSSO": "Sign in using Enterprise SSO",
   "signOut": "Sign out",
   "signOutIdentifier": "Sign out {identifier}",
   "@signOutIdentifier": {

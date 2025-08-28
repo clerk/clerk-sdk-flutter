@@ -103,10 +103,10 @@ class Auth {
   bool get isSignedIn => user != null;
 
   /// Are we currently signing in?
-  bool get isSigningIn => signIn?.status.isActive == true;
+  bool get isSigningIn => signIn is SignIn;
 
   /// Are we currently signing up?
-  bool get isSigningUp => signUp?.status.isActive == true;
+  bool get isSigningUp => signUp is SignUp;
 
   /// A method to be overridden by extension classes to cope with
   /// updating their systems when things change (e.g. the clerk_flutter
@@ -236,6 +236,13 @@ class Auth {
     update();
   }
 
+  /// Reset the current [Client]: clear any [SignUp] or [SignIn] object
+  ///
+  Future<void> resetClient() async {
+    client = await _api.resetClient();
+    update();
+  }
+
   /// Refresh the current [Environment]
   ///
   Future<void> refreshEnvironment() async {
@@ -283,12 +290,17 @@ class Auth {
   Future<void> oauthSignIn({
     required Strategy strategy,
     required Uri? redirect,
+    String? identifier,
   }) async {
     final redirectUrl = redirect?.toString() ?? ClerkConstants.oauthRedirect;
     await _api
-        .createSignIn(strategy: strategy, redirectUrl: redirectUrl)
+        .createSignIn(
+          strategy: strategy,
+          identifier: identifier,
+          redirectUrl: redirectUrl,
+        )
         .then(_housekeeping);
-    if (client.signIn case SignIn signIn) {
+    if (client.signIn case SignIn signIn when signIn.hasVerification == false) {
       await _api
           .prepareSignIn(
             signIn,
@@ -363,8 +375,10 @@ class Auth {
       return;
     }
 
-    // Ensure we have a signIn object
-    if (client.signIn == null) {
+    // Ensure we have a signIn object for the current identifier
+    if (client.signIn == null ||
+        (identifier?.orNullIfEmpty is String &&
+            identifier != client.signIn!.identifier)) {
       // if password and identifier been presented, we can immediately attempt
       // a sign in;  if null they will be ignored
       await _api
@@ -377,22 +391,14 @@ class Auth {
         // We have signed in - possibly when creating the [SignIn] above
         break;
 
-      case SignIn signIn
-          when signIn.status == Status.needsIdentifier && identifier is String:
-        // if a password has been presented, we can immediately attempt a
-        // sign in; if `password` is null it will be ignored
-        await _api
-            .createSignIn(identifier: identifier, password: password)
-            .then(_housekeeping);
-
-      case SignIn signIn when strategy.isOauth && token is String:
+      case SignIn signIn when strategy.isSSO && token is String:
         await _api
             .sendOauthToken(signIn, strategy: strategy, token: token)
             .then(_housekeeping);
 
       case SignIn signIn
           when strategy.isPasswordResetter &&
-              code is String &&
+              code?.length == _codeLength &&
               password is String:
         await _api
             .attemptSignIn(
@@ -431,13 +437,13 @@ class Auth {
         return signInCompleter.future;
 
       case SignIn signIn
-          when signIn.status == Status.needsFirstFactor &&
+          when signIn.status.needsFactor &&
               strategy == Strategy.password &&
               password is String:
         await _api
             .attemptSignIn(
               signIn,
-              stage: Stage.first,
+              stage: Stage.forStatus(signIn.status),
               strategy: Strategy.password,
               password: password,
             )
@@ -459,26 +465,6 @@ class Auth {
                   stage: stage, strategy: strategy, code: code)
               .then(_housekeeping);
         }
-
-      case SignIn signIn when signIn.status.needsFactor:
-        final stage = Stage.forStatus(signIn.status);
-        await _api
-            .prepareSignIn(signIn, stage: stage, strategy: strategy)
-            .then(_housekeeping);
-        await _api
-            .attemptSignIn(signIn, stage: stage, strategy: strategy, code: code)
-            .then(_housekeeping);
-
-      // No matching sign-in sequence, reset loading state
-      default:
-        final status = signIn?.status ?? Status.unknown;
-        addError(
-          AuthError(
-            code: AuthErrorCode.signInError,
-            message: 'Unsupported sign in attempt: {arg}',
-            argument: status.name,
-          ),
-        );
     }
 
     update();

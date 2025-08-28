@@ -92,6 +92,9 @@ class Strategy {
   /// saml strategy
   static const saml = Strategy(name: 'saml');
 
+  /// enterprise sso strategy
+  static const enterpriseSSO = Strategy(name: 'enterprise_sso');
+
   /// ticket strategy
   static const ticket = Strategy(name: 'ticket');
 
@@ -121,6 +124,7 @@ class Strategy {
     ticket.name: ticket,
     web3MetamaskSignature.name: web3MetamaskSignature,
     web3CoinbaseSignature.name: web3CoinbaseSignature,
+    enterpriseSSO.name: enterpriseSSO,
   };
 
   // identification strategies
@@ -199,9 +203,12 @@ class Strategy {
   /// required verification?
   bool get requiresVerification => requiresCode || requiresSignature;
 
+  /// is SSO?
+  bool get isSSO => name == _oauth || this == enterpriseSSO;
+
   /// requires redirect?
   bool get requiresRedirect =>
-      name == _oauth || const [emailLink, saml].contains(this);
+      name == _oauth || const [emailLink, enterpriseSSO].contains(this);
 
   /// For a given [name] return the [Strategy] it identifies.
   /// Create one if necessary and possible

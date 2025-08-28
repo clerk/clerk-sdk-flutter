@@ -2,12 +2,10 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_sign_in_panel.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_sign_up_panel.dart';
-import 'package:clerk_flutter/src/widgets/authentication/clerk_sso_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/or_divider.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/gestures.dart';
@@ -54,41 +52,35 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
       return emptyWidget;
     }
 
+    final display = ClerkAuth.displayConfigOf(context);
+    final localizations = ClerkAuth.localizationsOf(context);
+
     return ClerkVerticalCard(
       topPortion: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _TopPortion(state: _state),
+          ClerkPanelHeader(
+            title: _state.isSigningIn
+                ? localizations.signInTo(display.applicationName)
+                : localizations.signUpTo(display.applicationName),
+            subtitle: _state.isSigningIn
+                ? localizations.welcomeBackPleaseSignInToContinue
+                : localizations.welcomePleaseFillInTheDetailsToGetStarted,
+          ),
           ClerkAuthBuilder(
             builder: (context, authState) {
-              final env = authState.env;
               return Padding(
                 padding: horizontalPadding32,
                 child: Column(
                   children: [
-                    if (env.hasOauthStrategies) //
-                      Closeable(
-                        closed: authState.isSigningIn || authState.isSigningUp,
-                        child: ClerkSSOPanel(
-                          onStrategyChosen: (strategy) =>
-                              authState.ssoSignIn(context, strategy),
-                        ),
-                      ),
-                    if (env.hasIdentificationStrategies) ...[
-                      if (env.hasOauthStrategies) //
-                        const Padding(
-                          padding: verticalPadding24,
-                          child: OrDivider(),
-                        ),
-                      Closeable(
-                        closed: _state.isSigningIn == false,
-                        child: const ClerkSignInPanel(),
-                      ),
-                      Closeable(
-                        closed: _state.isSigningUp == false,
-                        child: const ClerkSignUpPanel(),
-                      ),
-                    ],
+                    Closeable(
+                      closed: _state.isSigningIn == false,
+                      child: const ClerkSignInPanel(),
+                    ),
+                    Closeable(
+                      closed: _state.isSigningUp == false,
+                      child: const ClerkSignUpPanel(),
+                    ),
                   ],
                 ),
               );
@@ -100,28 +92,6 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
         state: _state,
         onChange: _toggle,
       ),
-    );
-  }
-}
-
-@immutable
-class _TopPortion extends StatelessWidget {
-  const _TopPortion({required this.state});
-
-  final _AuthState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final display = ClerkAuth.displayConfigOf(context);
-    final localizations = ClerkAuth.localizationsOf(context);
-
-    return ClerkPanelHeader(
-      title: state.isSigningIn
-          ? localizations.signInTo(display.applicationName)
-          : localizations.signUpTo(display.applicationName),
-      subtitle: state.isSigningIn
-          ? localizations.welcomeBackPleaseSignInToContinue
-          : localizations.welcomePleaseFillInTheDetailsToGetStarted,
     );
   }
 }

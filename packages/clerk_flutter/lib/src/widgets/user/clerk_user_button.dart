@@ -334,17 +334,18 @@ class _SessionRow extends StatelessWidget {
                 closed: selected == false,
                 child: Padding(
                   padding: horizontalPadding12 + leftPadding48 + bottomPadding8,
-                  child: Row(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       for (final action in actions)
-                        Expanded(
-                          child: Padding(
-                            padding: horizontalPadding4,
-                            child: ClerkMaterialButton(
-                              onPressed: () =>
-                                  action.callback(context, authState),
-                              label: Row(
+                        Padding(
+                          padding: allPadding4,
+                          child: ClerkMaterialButton(
+                            onPressed: () =>
+                                action.callback(context, authState),
+                            label: Center(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -354,17 +355,15 @@ class _SessionRow extends StatelessWidget {
                                     padding: topPadding2,
                                     child: Text(
                                       action.label,
-                                      style: ClerkTextStyle.buttonTitleDark
-                                          .copyWith(fontSize: 8),
+                                      style: ClerkTextStyle.buttonTitleDark,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],
                               ),
-                              style: ClerkMaterialButtonStyle.light,
-                              height: 16,
                             ),
+                            style: ClerkMaterialButtonStyle.light,
                           ),
                         ),
                     ],

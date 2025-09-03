@@ -4,7 +4,6 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_forgotten_password_panel.dart';
-import 'package:clerk_flutter/src/widgets/authentication/clerk_sso_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_identifier_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
@@ -145,11 +144,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ClerkSSOPanel(
-                    onStrategyChosen: (strategy) =>
-                        _continue(authState, strategy: strategy),
-                  ),
-                  const Padding(padding: verticalPadding24, child: OrDivider()),
                   ClerkIdentifierInput(
                     initialValue: _identifier,
                     strategies: env.identificationStrategies.toList(),
@@ -289,7 +283,7 @@ class _FactorList extends StatelessWidget {
       children: [
         if (hasPassword) //
           Padding(
-            padding: verticalPadding8,
+            padding: topPadding8 + bottomPadding2,
             child: ClerkTextFormField(
               label: l10ns.password,
               obscureText: true,

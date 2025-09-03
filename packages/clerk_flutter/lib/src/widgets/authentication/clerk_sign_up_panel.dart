@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';
@@ -45,9 +47,10 @@ class ClerkSignUpPanel extends StatefulWidget {
 class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     with ClerkTelemetryStateMixin {
   static final _phoneNumberRE = RegExp(r'[^0-9+]');
-
-  _SignUpPanelState _state = _SignUpPanelState.input;
+  final _completer = Completer<void>();
   final Map<clerk.UserAttribute, String?> _values = {};
+  _SignUpPanelState _state = _SignUpPanelState.input;
+  String _passwordConfirmation = '';
   bool _isObscured = true;
   bool _needsLegalAcceptance = true;
   bool _hasLegalAcceptance = false;
@@ -61,6 +64,15 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     clerk.UserAttribute.lastName,
     clerk.UserAttribute.password,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _reset();
+      _completer.complete();
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -98,9 +110,6 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     final authState = ClerkAuth.of(context, listen: false);
 
     final password = _valueOrNull(clerk.UserAttribute.password);
-    final passwordConfirmation =
-        _valueOrNull(clerk.UserAttribute.passwordConfirmation);
-
     if (authState.signUp?.requires(clerk.Field.password) == true &&
         password?.isNotEmpty != true) {
       final l10ns = ClerkAuth.localizationsOf(context);
@@ -113,7 +122,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       return;
     }
 
-    if (authState.checkPassword(password, passwordConfirmation, context)
+    if (authState.checkPassword(password, _passwordConfirmation, context)
         case String errorMessage) {
       authState.addError(
         clerk.AuthError(
@@ -138,6 +147,11 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
     final redirectUri = authState.emailVerificationRedirectUri(context);
 
+    final username = _valueOrNull(clerk.UserAttribute.username);
+    final emailAddress = _valueOrNull(clerk.UserAttribute.emailAddress);
+    final phoneNumber = _valueOrNull(clerk.UserAttribute.phoneNumber)
+        ?.replaceAll(_phoneNumberRE, '')
+        .orNullIfEmpty;
     await authState.safelyCall(
       context,
       () async {
@@ -145,18 +159,21 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           strategy: clerk.Strategy.password,
           firstName: _valueOrNull(clerk.UserAttribute.firstName),
           lastName: _valueOrNull(clerk.UserAttribute.lastName),
-          username: _valueOrNull(clerk.UserAttribute.username),
-          emailAddress: _valueOrNull(clerk.UserAttribute.emailAddress),
-          phoneNumber: _valueOrNull(clerk.UserAttribute.phoneNumber)
-              ?.replaceAll(_phoneNumberRE, '')
-              .orNullIfEmpty,
+          username: username,
+          emailAddress: emailAddress,
+          phoneNumber: phoneNumber,
           password: password,
-          passwordConfirmation: passwordConfirmation,
+          passwordConfirmation: _passwordConfirmation.orNullIfEmpty,
           redirectUrl: redirectUri?.toString(),
           legalAccepted: _needsLegalAcceptance ? _hasLegalAcceptance : null,
         );
       },
     );
+
+    if (authState.signUp case clerk.SignUp signUp
+        when signUp.requiresEnterpriseSSOSignUp && mounted) {
+      await authState.ssoSignUp(context, clerk.Strategy.enterpriseSSO);
+    }
 
     setState(() {
       _state = _SignUpPanelState.waiting;
@@ -168,7 +185,11 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
   void _acceptTerms() => setState(() => _hasLegalAcceptance = true);
 
-  void _reset() => setState(() => _state = _SignUpPanelState.input);
+  Future<void> _reset() async {
+    final authState = ClerkAuth.of(context, listen: false);
+    await authState.resetClient();
+    _state = _SignUpPanelState.input;
+  }
 
   _ValueChanger _change(clerk.UserAttribute attr) => (String value) {
         _values[attr] = value;
@@ -278,14 +299,13 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                   ),
                   verticalMargin16,
                   ClerkTextFormField(
-                    initial: _values[clerk.UserAttribute.passwordConfirmation],
+                    initial: _passwordConfirmation,
                     label: l10ns.grammar.toSentence(l10ns.passwordConfirmation),
                     isMissing: isMissing(attribute),
                     isOptional: attribute.isOptional,
                     obscureText: _isObscured,
                     onObscure: _onObscure,
-                    onChanged:
-                        _change(clerk.UserAttribute.passwordConfirmation),
+                    onChanged: (conf) => _passwordConfirmation = conf,
                   ),
                 ] else
                   ClerkTextFormField(

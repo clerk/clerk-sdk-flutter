@@ -14,17 +14,20 @@ class OrDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
-    return Row(
-      children: [
-        const Expanded(child: Divider(color: ClerkColors.whiteSmoke)),
-        horizontalMargin24,
-        Text(
-          localizations.or,
-          style: ClerkTextStyle.subtitle.copyWith(fontSize: 12.0),
-        ),
-        horizontalMargin24,
-        const Expanded(child: Divider(color: ClerkColors.whiteSmoke)),
-      ],
+    return Padding(
+      padding: verticalPadding8,
+      child: Row(
+        children: [
+          const Expanded(child: Divider(color: ClerkColors.whiteSmoke)),
+          horizontalMargin24,
+          Text(
+            localizations.or,
+            style: ClerkTextStyle.subtitle.copyWith(fontSize: 12.0),
+          ),
+          horizontalMargin24,
+          const Expanded(child: Divider(color: ClerkColors.whiteSmoke)),
+        ],
+      ),
     );
   }
 }

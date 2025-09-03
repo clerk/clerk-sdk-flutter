@@ -1,5 +1,5 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/widgets/authentication/clerk_sso_panel.dart';
+import 'package:clerk_flutter/src/widgets/authentication/clerk_oauth_panel.dart';
 import 'package:clerk_flutter/src/widgets/control/clerk_change_observer.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
@@ -39,7 +39,7 @@ class ConnectAccountPanel extends StatelessWidget {
                         .where((a) => a.isVerified || a.isInError)
                         .map((a) => a.updatedAt);
                   },
-                  builder: (context) => ClerkSSOPanel(
+                  builder: (context) => ClerkOAuthPanel(
                     onStrategyChosen: (strategy) =>
                         authState.ssoConnect(context, strategy),
                   ),

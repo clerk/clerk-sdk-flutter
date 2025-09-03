@@ -109,6 +109,11 @@ class SignUp with InformativeToStringMixin {
   @override
   Map<String, dynamic> toJson() => _$SignUpToJson(this);
 
+  /// Does this [SignUp] require Enterpise SSO sign up?
+  bool get requiresEnterpriseSSOSignUp =>
+      status == Status.missingRequirements &&
+      (missing(Field.saml) || missing(Field.enterpriseSSO));
+
   /// is [field] required?
   bool requires(Field? field) => requiredFields.contains(field);
 

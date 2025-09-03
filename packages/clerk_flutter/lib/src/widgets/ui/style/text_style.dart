@@ -18,6 +18,7 @@ class ClerkTextStyle {
   /// The Clerk-branded text style for subheadings.
   static const subtitle = TextStyle(
     fontSize: 14.0,
+    fontWeight: FontWeight.w400,
     color: ClerkColors.stormGrey,
   );
 

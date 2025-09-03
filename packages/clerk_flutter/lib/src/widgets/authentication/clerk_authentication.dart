@@ -1,11 +1,13 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/widgets/authentication/clerk_oauth_panel.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_sign_in_panel.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_sign_up_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/or_divider.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/gestures.dart';
@@ -46,7 +48,8 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
 
   @override
   Widget build(BuildContext context) {
-    if (ClerkAuth.of(context).isNotAvailable) {
+    final authState = ClerkAuth.of(context);
+    if (authState.isNotAvailable) {
       // We have no environment, implying ClerkAuth has not been initialised
       // or initialisation has failed (no connectivity?).
       return emptyWidget;
@@ -73,6 +76,20 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
                 padding: horizontalPadding32,
                 child: Column(
                   children: [
+                    if (authState.env.hasOauthStrategies) //
+                      Closeable(
+                        closed: authState.isSigningIn || authState.isSigningUp,
+                        child: Column(
+                          children: [
+                            ClerkOAuthPanel(
+                              onStrategyChosen: (strategy) async {
+                                await authState.ssoSignIn(context, strategy);
+                              },
+                            ),
+                            const OrDivider(),
+                          ],
+                        ),
+                      ),
                     Closeable(
                       closed: _state.isSigningIn == false,
                       child: const ClerkSignInPanel(),

@@ -29,11 +29,19 @@ class Field {
   /// password
   static const password = Field._('password');
 
+  /// saml
+  static const saml = Field._('saml');
+
+  /// enterprise sso
+  static const enterpriseSSO = Field._('enterprise_sso');
+
   static final _values = <String, Field>{
     phoneNumber.name: phoneNumber,
     emailAddress.name: emailAddress,
     username.name: username,
     password.name: password,
+    saml.name: saml,
+    enterpriseSSO.name: enterpriseSSO,
   };
 
   /// The [values] of the Fields

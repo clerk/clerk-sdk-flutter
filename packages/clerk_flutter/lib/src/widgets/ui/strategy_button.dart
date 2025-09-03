@@ -82,7 +82,7 @@ class StrategyButton extends StatelessWidget {
             child: Text(
               _label(localizations),
               maxLines: 2,
-              style: ClerkTextStyle.buttonTitle.copyWith(height: 1.2),
+              style: ClerkTextStyle.subtitle,
             ),
           ),
         ],

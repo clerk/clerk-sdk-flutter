@@ -5,28 +5,28 @@ import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/social_connection_button.dart';
 import 'package:flutter/material.dart';
 
-/// The [ClerkSSOPanel] renders a UI for signing up via configured
+/// The [ClerkOAuthPanel] renders a UI for signing up via configured
 /// oAuth providers.
 ///
-/// The functionality of the [ClerkSSOPanel] is controlled by the instance settings
+/// The functionality of the [ClerkOAuthPanel] is controlled by the instance settings
 /// you specify in your Clerk Dashboard, such as sign-in and social connections. You can
-/// further customize your [ClerkSSOPanel] by passing additional properties.
+/// further customize your [ClerkOAuthPanel] by passing additional properties.
 ///
 /// https://clerk.com/docs/components/authentication/sign-up
 ///
 ///
-class ClerkSSOPanel extends StatefulWidget {
-  /// Construct a new [ClerkSSOPanel]
-  const ClerkSSOPanel({super.key, required this.onStrategyChosen});
+class ClerkOAuthPanel extends StatefulWidget {
+  /// Construct a new [ClerkOAuthPanel]
+  const ClerkOAuthPanel({super.key, required this.onStrategyChosen});
 
   /// Function to call when a strategy is chosen
   final ValueChanged<clerk.Strategy> onStrategyChosen;
 
   @override
-  State<ClerkSSOPanel> createState() => _ClerkSSOPanelState();
+  State<ClerkOAuthPanel> createState() => _ClerkOAuthPanelState();
 }
 
-class _ClerkSSOPanelState extends State<ClerkSSOPanel>
+class _ClerkOAuthPanelState extends State<ClerkOAuthPanel>
     with ClerkTelemetryStateMixin {
   @override
   Widget build(BuildContext context) {

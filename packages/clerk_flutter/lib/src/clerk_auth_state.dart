@@ -173,6 +173,64 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     }
   }
 
+  /// Performs SSO sign in according to the [strategy]
+  Future<void> ssoSignUp(
+    BuildContext context,
+    clerk.Strategy strategy, {
+    String? identifier,
+    ClerkErrorCallback? onError,
+  }) async {
+    final redirect = config.redirectionGenerator?.call(context, strategy);
+    await safelyCall(
+      context,
+      () => attemptSignUp(strategy: strategy, redirectUrl: redirect.toString()),
+      onError: onError,
+    );
+    if (context.mounted == false) {
+      return;
+    }
+
+    final url = client.signUp?.verifications.values
+        .map((v) => v.externalVerificationRedirectUrl)
+        .nonNulls
+        .firstOrNull;
+
+    if (url case String url) {
+      final uri = Uri.parse(url);
+      if (redirect == null) {
+        // The default redirect: we handle this in-app
+        final redirectUrl = await showDialog<String>(
+          context: context,
+          useSafeArea: false,
+          useRootNavigator: true,
+          routeSettings: const RouteSettings(name: _kSsoRouteName),
+          builder: (context) => _SsoWebViewOverlay(
+            strategy: strategy,
+            uri: uri,
+            onError: (error) => _onError(error, onError),
+          ),
+        );
+        if (redirectUrl != null && context.mounted) {
+          final uri = Uri.parse(redirectUrl);
+          await safelyCall(
+            context,
+            () => parseDeepLink(ClerkDeepLink(strategy: strategy, uri: uri)),
+            onError: onError,
+          );
+          if (context.mounted) {
+            Navigator.of(context).popUntil(
+              (route) => route.settings.name != _kSsoRouteName,
+            );
+          }
+        }
+      } else {
+        // a bespoke redirect: we handle externally, and assume a deep link
+        // will complete sign-in
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    }
+  }
+
   /// Return a redirect url for email verification, or null if
   /// not appropriate
   Uri? emailVerificationRedirectUri(BuildContext context) {
@@ -255,7 +313,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       return null;
     }
 
-    if (password != confirmation) {
+    if (password?.orNullIfEmpty != confirmation?.orNullIfEmpty) {
       return l10ns.passwordAndPasswordConfirmationMustMatch;
     }
 

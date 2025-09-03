@@ -130,7 +130,6 @@ extension ClerkUserAttributeLocalization on clerk.UserAttribute {
       clerk.UserAttribute.firstName => l10ns.firstName,
       clerk.UserAttribute.lastName => l10ns.lastName,
       clerk.UserAttribute.password => l10ns.password,
-      clerk.UserAttribute.passwordConfirmation => l10ns.passwordConfirmation,
       clerk.UserAttribute.web3Wallet => l10ns.web3Wallet,
       clerk.UserAttribute.authenticatorApp => l10ns.authenticatorApp,
       clerk.UserAttribute.backupCode => l10ns.backupCode,

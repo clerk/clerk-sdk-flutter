@@ -490,7 +490,7 @@ class Auth {
     bool? legalAccepted,
   }) async {
     final hasVerificationCredential = code is String || signature is String;
-    final initialSignUp = client.signUp;
+    final hasInitialSignUp = client.signUp is SignUp;
 
     if (password != passwordConfirmation) {
       throw const AuthError(
@@ -499,7 +499,7 @@ class Auth {
       );
     }
 
-    if (initialSignUp is! SignUp) {
+    if (hasInitialSignUp == false) {
       await _api
           .createSignUp(
             strategy: strategy,
@@ -513,9 +513,6 @@ class Auth {
           )
           .then(_housekeeping);
     }
-
-    final hasCreatedSignUp =
-        initialSignUp is! SignUp && client.signUp is SignUp;
 
     if (client.user is! User) {
       switch (client.signUp) {
@@ -558,6 +555,16 @@ class Auth {
           }
 
         case SignUp signUp
+            when signUp.requiresEnterpriseSSOSignUp && redirectUrl is String:
+          await _api
+              .updateSignUp(
+                signUp,
+                strategy: strategy,
+                redirectUrl: redirectUrl,
+              )
+              .then(_housekeeping);
+
+        case SignUp signUp
             when signUp.status == Status.missingRequirements &&
                 signUp.missingFields.isEmpty:
           await _api
@@ -573,26 +580,24 @@ class Auth {
                 )
                 .then(_housekeeping);
           }
-      }
-    }
 
-    if (client.signUp case SignUp signUp
-        when hasCreatedSignUp == false && client.user is! User) {
-      // if we still don't have a user, but didn't create a SignUp object this time round,
-      // now is the time to update the preexisting SignUp object, in case of changes
-      await _api
-          .updateSignUp(
-            signUp,
-            strategy: strategy,
-            password: password,
-            firstName: firstName,
-            lastName: lastName,
-            username: username,
-            emailAddress: emailAddress,
-            phoneNumber: phoneNumber,
-            legalAccepted: legalAccepted,
-          )
-          .then(_housekeeping);
+        case SignUp signUp when hasInitialSignUp:
+          // if we didn't create a SignUp object earlier,  now is the time to
+          // update the preexisting SignUp object, in case of changes
+          await _api
+              .updateSignUp(
+                signUp,
+                strategy: strategy,
+                password: password,
+                firstName: firstName,
+                lastName: lastName,
+                username: username,
+                emailAddress: emailAddress,
+                phoneNumber: phoneNumber,
+                legalAccepted: legalAccepted,
+              )
+              .then(_housekeeping);
+      }
     }
 
     update();

@@ -52,9 +52,6 @@ enum UserAttribute {
   /// password
   password,
 
-  /// password confirmation
-  passwordConfirmation,
-
   /// web3 wallet
   web3Wallet,
 

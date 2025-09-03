@@ -8,9 +8,9 @@ abstract class ClerkSdkGrammar {
   /// Constructor
   const ClerkSdkGrammar();
 
-  static late final ClerkSdkGrammarCollection _grammars;
+  static late ClerkSdkGrammarCollection _grammars;
 
-  static late final ClerkSdkGrammar _default;
+  static late ClerkSdkGrammar _default;
 
   /// A method to return the correct [ClerkSdkGrammar] for a given locale string
   ///

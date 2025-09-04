@@ -177,13 +177,14 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   Future<void> ssoSignUp(
     BuildContext context,
     clerk.Strategy strategy, {
-    String? identifier,
     ClerkErrorCallback? onError,
   }) async {
     final redirect = config.redirectionGenerator?.call(context, strategy);
+    final redirectUrl =
+        redirect?.toString() ?? clerk.ClerkConstants.oauthRedirect;
     await safelyCall(
       context,
-      () => attemptSignUp(strategy: strategy, redirectUrl: redirect.toString()),
+      () => attemptSignUp(strategy: strategy, redirectUrl: redirectUrl),
       onError: onError,
     );
     if (context.mounted == false) {
@@ -211,10 +212,11 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           ),
         );
         if (redirectUrl != null && context.mounted) {
-          final uri = Uri.parse(redirectUrl);
           await safelyCall(
             context,
-            () => parseDeepLink(ClerkDeepLink(strategy: strategy, uri: uri)),
+            () => parseDeepLink(
+              ClerkDeepLink(strategy: strategy, uri: Uri.parse(redirectUrl)),
+            ),
             onError: onError,
           );
           if (context.mounted) {

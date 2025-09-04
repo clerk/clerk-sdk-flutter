@@ -206,8 +206,11 @@ class Strategy {
   /// required verification?
   bool get requiresVerification => requiresCode || requiresSignature;
 
+  /// is Enterprise SSO?
+  bool get isEnterpriseSSO => this == enterpriseSSO;
+
   /// is SSO?
-  bool get isSSO => name == _oauth || this == enterpriseSSO;
+  bool get isSSO => name == _oauth || isEnterpriseSSO;
 
   /// requires redirect?
   bool get requiresRedirect =>

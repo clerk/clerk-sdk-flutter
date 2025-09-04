@@ -76,26 +76,28 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
       });
     }
 
-    if (strategy.isSSO) {
-      final identifier = strategy == clerk.Strategy.enterpriseSSO
-          ? _identifier.orNullIfEmpty
-          : null;
-      await authState.ssoSignIn(context, strategy, identifier: identifier);
-    } else {
-      final redirectUri = strategy == clerk.Strategy.emailLink
-          ? authState.emailVerificationRedirectUri(context)
-          : null;
+    final redirectUri = strategy == clerk.Strategy.emailLink
+        ? authState.emailVerificationRedirectUri(context)
+        : null;
 
-      await authState.safelyCall(
+    await authState.safelyCall(
+      context,
+      () => authState.attemptSignIn(
+        strategy: strategy!,
+        identifier: _identifier.orNullIfEmpty,
+        password: _password.orNullIfEmpty,
+        code: code?.orNullIfEmpty,
+        redirectUrl: redirectUri?.toString(),
+      ),
+      onError: _onError,
+    );
+
+    if (authState.client.signIn?.factors case List<clerk.Factor> factors
+        when mounted && factors.any((f) => f.strategy.isEnterpriseSSO)) {
+      await authState.ssoSignIn(
         context,
-        () => authState.attemptSignIn(
-          strategy: strategy!,
-          identifier: _identifier.orNullIfEmpty,
-          password: _password.orNullIfEmpty,
-          code: code?.orNullIfEmpty,
-          redirectUrl: redirectUri?.toString(),
-        ),
-        onError: _onError,
+        clerk.Strategy.enterpriseSSO,
+        identifier: _identifier.orNullIfEmpty,
       );
     }
   }

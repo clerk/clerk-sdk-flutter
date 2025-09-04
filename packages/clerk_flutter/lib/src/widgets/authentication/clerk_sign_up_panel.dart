@@ -122,12 +122,12 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       return;
     }
 
-    if (authState.checkPassword(password, _passwordConfirmation, context)
-        case String errorMessage) {
+    final conf = _passwordConfirmation.trim();
+    if (authState.checkPassword(password, conf, context) case String error) {
       authState.addError(
         clerk.AuthError(
           code: clerk.AuthErrorCode.invalidPassword,
-          message: errorMessage,
+          message: error,
         ),
       );
       return;
@@ -213,10 +213,11 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     final env = authState.env;
     final signUp = authState.signUp;
     final l10ns = authState.localizationsOf(context);
+    final userAttrs = authState.env.user.attributes;
     final attributes = [
       for (final attr in _signUpAttributes) //
-        if (authState.env.user.attributes[attr]
-            case clerk.UserAttributeData data when data.isEnabled) //
+        if (userAttrs[attr] case clerk.UserAttributeData data
+            when data.isEnabled) //
           _Attribute(attr, data),
     ];
     final isAwaitingCode = (env.supportsEmailCode &&

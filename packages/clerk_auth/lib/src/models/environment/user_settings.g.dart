@@ -69,7 +69,6 @@ const _$UserAttributeEnumMap = {
   UserAttribute.firstName: 'first_name',
   UserAttribute.lastName: 'last_name',
   UserAttribute.password: 'password',
-  UserAttribute.passwordConfirmation: 'password_confirmation',
   UserAttribute.web3Wallet: 'web3_wallet',
   UserAttribute.authenticatorApp: 'authenticator_app',
   UserAttribute.backupCode: 'backup_code',

@@ -70,6 +70,14 @@ class ExampleApp extends StatelessWidget {
 }
 ```
 
+## Installation (Android)
+
+Add the following line to your `android/app/src/main/AndroidManifest.xml` file:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+```
+
 ## License
 
 This SDK is licensed under the MIT license found in the [LICENSE](./LICENSE) file.

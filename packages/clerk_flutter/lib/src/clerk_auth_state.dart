@@ -37,6 +37,28 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   ClerkAuthConfig get config => _config;
   final ClerkAuthConfig _config;
 
+  StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
+
+  @override
+  Future<void> initialize() async {
+    await super.initialize();
+    _deepLinkSub ??= config.deepLinkStream?.listen(_processDeepLink);
+  }
+
+  @override
+  void terminate() {
+    _deepLinkSub?.cancel();
+    _deepLinkSub = null;
+    dispose();
+    super.terminate();
+  }
+
+  void _processDeepLink(ClerkDeepLink? link) {
+    if (link case ClerkDeepLink link) {
+      parseDeepLink(link);
+    }
+  }
+
   /// Localizations for the current [ClerkAuthState] and [Locale]
   ClerkSdkLocalizations localizationsOf(BuildContext context) {
     final locale = View.of(context).platformDispatcher.locale;
@@ -50,12 +72,6 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   @override
   void update() => notifyListeners();
-
-  @override
-  void terminate() {
-    super.terminate();
-    dispose();
-  }
 
   @override
   Future<void> signOut() async {
@@ -99,7 +115,8 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
             );
           },
         );
-        if (responseUrl == clerk.ClerkConstants.oauthRedirect) {
+        if (responseUrl?.startsWith(clerk.ClerkConstants.oauthRedirect) ==
+            true) {
           await refreshClient();
 
           final newAccounts = client.user?.externalAccounts?.toSet() ?? {};
@@ -179,9 +196,9 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
   }) async {
-    final redirect = config.redirectionGenerator?.call(context, strategy);
-    final redirectUrl =
-        redirect?.toString() ?? clerk.ClerkConstants.oauthRedirect;
+    final redirect = config.redirectionGenerator?.call(context, strategy) ??
+        Uri.parse(clerk.ClerkConstants.oauthRedirect);
+    final redirectUrl = redirect.toString();
     await safelyCall(
       context,
       () => attemptSignUp(strategy: strategy, redirectUrl: redirectUrl),
@@ -198,7 +215,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
     if (url case String url) {
       final uri = Uri.parse(url);
-      if (redirect == null) {
+      if (redirectUrl.startsWith(clerk.ClerkConstants.oauthRedirect)) {
         // The default redirect: we handle this in-app
         final redirectUrl = await showDialog<String>(
           context: context,
@@ -250,19 +267,18 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   /// If the link contains no known [clerk.Strategy], it is assumed that the
   /// final element of the [uri.path] will be the name of the strategy to use
   Future<bool> parseDeepLink(ClerkDeepLink link) async {
-    final uri = link.uri;
     final strategy = switch (link.strategy) {
       clerk.Strategy strategy when strategy.isKnown => strategy,
-      _ => clerk.Strategy.fromJson(uri.pathSegments.last),
+      _ => clerk.Strategy.fromJson(link.uri.pathSegments.last),
     };
 
     if (strategy.isUnknown) {
       return false;
     } else if (strategy == clerk.Strategy.emailLink) {
       await refreshClient();
-    } else if (uri.queryParameters[_kRotatingTokenNonce] case String token
+    } else if (link.uri.queryParameters[_kRotatingTokenNonce] case String token
         when strategy.isSSO) {
-      await attemptSignIn(strategy: strategy, token: token);
+      await completeOAuthSignIn(strategy: strategy, token: token);
     } else {
       await refreshClient();
       await transfer();

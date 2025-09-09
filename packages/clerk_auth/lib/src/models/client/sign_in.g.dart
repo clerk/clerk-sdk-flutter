@@ -16,7 +16,7 @@ SignIn _$SignInFromJson(Map<String, dynamic> json) => SignIn(
       supportedIdentifiers: (json['supported_identifiers'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          const [],
+          [],
       supportedFirstFactors: (json['supported_first_factors'] as List<dynamic>?)
               ?.map((e) => Factor.fromJson(e as Map<String, dynamic>))
               .toList() ??

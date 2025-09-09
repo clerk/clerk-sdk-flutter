@@ -1,11 +1,9 @@
 import 'package:clerk_auth/clerk_auth.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 /// Pseudo-enum representing fields
 ///
 @immutable
-@JsonSerializable()
 class Field {
   const Field._(this.name);
 

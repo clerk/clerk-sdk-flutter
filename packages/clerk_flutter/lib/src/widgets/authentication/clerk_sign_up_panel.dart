@@ -47,7 +47,6 @@ class ClerkSignUpPanel extends StatefulWidget {
 class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     with ClerkTelemetryStateMixin {
   static final _phoneNumberRE = RegExp(r'[^0-9+]');
-  final _completer = Completer<void>();
   final Map<clerk.UserAttribute, String?> _values = {};
   _SignUpPanelState _state = _SignUpPanelState.input;
   String _passwordConfirmation = '';
@@ -64,15 +63,6 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     clerk.UserAttribute.lastName,
     clerk.UserAttribute.password,
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _reset();
-      _completer.complete();
-    });
-  }
 
   @override
   void didChangeDependencies() {
@@ -145,8 +135,6 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       return;
     }
 
-    final redirectUri = authState.emailVerificationRedirectUri(context);
-
     final username = _valueOrNull(clerk.UserAttribute.username);
     final emailAddress = _valueOrNull(clerk.UserAttribute.emailAddress);
     final phoneNumber = _valueOrNull(clerk.UserAttribute.phoneNumber)
@@ -164,7 +152,6 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           phoneNumber: phoneNumber,
           password: password,
           passwordConfirmation: _passwordConfirmation.orNullIfEmpty,
-          redirectUrl: redirectUri?.toString(),
           legalAccepted: _needsLegalAcceptance ? _hasLegalAcceptance : null,
         );
       },

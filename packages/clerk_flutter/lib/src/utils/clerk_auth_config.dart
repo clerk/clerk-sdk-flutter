@@ -40,6 +40,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     super.httpConnectionTimeout,
     this.loading = defaultLoadingWidget,
     this.redirectionGenerator,
+    this.deepLinkStream,
     ClerkFileCache? fileCache,
     ClerkSdkLocalizationsCollection? localizations,
     ClerkSdkLocalizations? fallbackLocalization,
@@ -84,6 +85,10 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   /// A function to generate a [Uri] for deep link redirection
   /// back into the host app following oauth authentication
   final ClerkRedirectUriGenerator? redirectionGenerator;
+
+  /// A stream of deep links that the host app thinks the Clerk
+  /// SDK might be interested in
+  final Stream<ClerkDeepLink?>? deepLinkStream;
 
   /// The [Widget] to display while loading data, override with null
   /// to disable the loading overlay or use your own widget.

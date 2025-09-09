@@ -32,20 +32,10 @@ class ClerkSignInPanel extends StatefulWidget {
 
 class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     with ClerkTelemetryStateMixin {
-  final _completer = Completer<void>();
   clerk.Strategy _strategy = clerk.Strategy.password;
   String _identifier = '';
   String _password = '';
   String _code = '';
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _reset();
-      _completer.complete();
-    });
-  }
 
   void _onError(clerk.AuthError _) {
     setState(() {
@@ -114,149 +104,136 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _completer.future,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Padding(
-            padding: bottomPadding8,
-            child: defaultLoadingWidget,
-          );
-        }
+    final authState = ClerkAuth.of(context);
+    final env = authState.env;
+    if (authState.isNotAvailable || env.hasIdentificationStrategies == false) {
+      return emptyWidget;
+    }
 
-        final authState = ClerkAuth.of(context);
-        final env = authState.env;
-        if (authState.isNotAvailable ||
-            env.hasIdentificationStrategies == false) {
-          return emptyWidget;
-        }
+    final signIn = authState.signIn ?? clerk.SignIn.empty;
+    final l10ns = authState.localizationsOf(context);
+    final canResetPassword =
+        env.config.firstFactors.any((f) => f.isPasswordResetter);
 
-        final signIn = authState.signIn ?? clerk.SignIn.empty;
-        final l10ns = authState.localizationsOf(context);
-        final canResetPassword =
-            env.config.firstFactors.any((f) => f.isPasswordResetter);
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Openable(
-              open: signIn.status.isUnknown,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ClerkIdentifierInput(
-                    initialValue: _identifier,
-                    strategies: env.identificationStrategies.toList(),
-                    onChanged: (identifier) => _identifier = identifier,
-                    onSubmit: (_) => _continue(authState),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Openable(
+          open: signIn.status.isUnknown,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClerkIdentifierInput(
+                initialValue: _identifier,
+                strategies: env.identificationStrategies.toList(),
+                onChanged: (identifier) => _identifier = identifier,
+                onSubmit: (_) => _continue(authState),
+              ),
+              if (canResetPassword) ...[
+                verticalMargin8,
+                ClerkMaterialButton(
+                  label: Padding(
+                    padding: horizontalPadding8,
+                    child: Text(l10ns.forgottenPassword),
                   ),
-                  if (canResetPassword) ...[
-                    verticalMargin8,
-                    ClerkMaterialButton(
-                      label: Padding(
-                        padding: horizontalPadding8,
-                        child: Text(l10ns.forgottenPassword),
-                      ),
-                      style: ClerkMaterialButtonStyle.light,
-                      onPressed: _openPasswordResetFlow,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            Openable(
-              open: signIn.status.needsFactor,
-              child: Text(_identifier, style: ClerkTextStyle.title),
-            ),
-            verticalMargin8,
-            Openable(
-              key: const Key('emailLinkMessage'),
-              open: _strategy == clerk.Strategy.emailLink,
-              child: Text(
-                l10ns.clickOnTheLinkThatsBeenSentTo(_identifier),
-                maxLines: 3,
-                style: ClerkTextStyle.inputText,
-              ),
-            ),
-            Openable(
-              open: signIn.verification?.strategy.requiresCode == true,
-              child: Padding(
-                padding: verticalPadding8,
-                child: ClerkCodeInput(
-                  key: const Key('code'),
-                  title: _identifier.isNotEmpty
-                      ? l10ns.enterTheCodeSentTo(_identifier)
-                      : l10ns.enterTheCodeSentToYou,
-                  onSubmit: (code) async {
-                    await _continue(
-                      authState,
-                      code: code,
-                      strategy: signIn.verification!.strategy,
-                    );
-                    return false;
-                  },
+                  style: ClerkMaterialButtonStyle.light,
+                  onPressed: _openPasswordResetFlow,
                 ),
-              ),
-            ),
-            for (final stage in clerk.Stage.values) //
-              if (signIn.factorsFor(stage) case final factors
-                  when factors.isNotEmpty) //
-                Openable(
-                  key: ValueKey<clerk.Stage>(stage),
-                  open: signIn.hasVerification == false &&
-                      _strategy != clerk.Strategy.emailLink &&
-                      signIn.status.needsFactorFor(stage),
-                  child: _FactorList(
-                    factors: factors,
-                    onPasswordChanged: (password) => _password = password,
-                    onSubmit: (strategy) =>
-                        _continue(authState, strategy: strategy),
-                  ),
-                ),
-            verticalMargin16,
-            Row(
-              children: [
-                if (_requiresBack(signIn)) //
-                  Expanded(
-                    child: ClerkMaterialButton(
-                      onPressed: _reset,
-                      label: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          const Icon(Icons.arrow_left_sharp),
-                          horizontalMargin4,
-                          Center(child: Text(l10ns.back)),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (_requiresContinue(signIn)) ...[
-                  if (_requiresBack(signIn)) //
-                    horizontalMargin8,
-                  Expanded(
-                    child: ClerkMaterialButton(
-                      onPressed: () => _continue(authState),
-                      label: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Center(child: Text(l10ns.cont)),
-                          horizontalMargin4,
-                          const Icon(Icons.arrow_right_sharp),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
               ],
+            ],
+          ),
+        ),
+        Openable(
+          open: signIn.status.needsFactor,
+          child: Text(_identifier, style: ClerkTextStyle.title),
+        ),
+        verticalMargin8,
+        Openable(
+          key: const Key('emailLinkMessage'),
+          open: _strategy == clerk.Strategy.emailLink,
+          child: Text(
+            l10ns.clickOnTheLinkThatsBeenSentTo(_identifier),
+            maxLines: 3,
+            style: ClerkTextStyle.inputText,
+          ),
+        ),
+        Openable(
+          open: signIn.verification?.strategy.requiresCode == true,
+          child: Padding(
+            padding: verticalPadding8,
+            child: ClerkCodeInput(
+              key: const Key('code'),
+              title: _identifier.isNotEmpty
+                  ? l10ns.enterTheCodeSentTo(_identifier)
+                  : l10ns.enterTheCodeSentToYou,
+              onSubmit: (code) async {
+                await _continue(
+                  authState,
+                  code: code,
+                  strategy: signIn.verification!.strategy,
+                );
+                return false;
+              },
             ),
-            verticalMargin32,
+          ),
+        ),
+        for (final stage in clerk.Stage.values) //
+          if (signIn.factorsFor(stage) case final factors
+              when factors.isNotEmpty) //
+            Openable(
+              key: ValueKey<clerk.Stage>(stage),
+              open: signIn.hasVerification == false &&
+                  _strategy != clerk.Strategy.emailLink &&
+                  signIn.status.needsFactorFor(stage),
+              child: _FactorList(
+                factors: factors,
+                onPasswordChanged: (password) => _password = password,
+                onSubmit: (strategy) =>
+                    _continue(authState, strategy: strategy),
+              ),
+            ),
+        verticalMargin16,
+        Row(
+          children: [
+            if (_requiresBack(signIn)) //
+              Expanded(
+                child: ClerkMaterialButton(
+                  onPressed: _reset,
+                  label: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Icon(Icons.arrow_left_sharp),
+                      horizontalMargin4,
+                      Center(child: Text(l10ns.back)),
+                    ],
+                  ),
+                ),
+              ),
+            if (_requiresContinue(signIn)) ...[
+              if (_requiresBack(signIn)) //
+                horizontalMargin8,
+              Expanded(
+                child: ClerkMaterialButton(
+                  onPressed: () => _continue(authState),
+                  label: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Center(child: Text(l10ns.cont)),
+                      horizontalMargin4,
+                      const Icon(Icons.arrow_right_sharp),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ],
-        );
-      },
+        ),
+        verticalMargin32,
+      ],
     );
   }
 }

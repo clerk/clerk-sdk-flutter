@@ -261,8 +261,16 @@ class Auth {
   /// Transfer an oAuth authentication into a [User]
   ///
   Future<void> transfer() async {
-    await _api.transfer().then(_housekeeping);
-    update();
+    if (signIn?.verification?.status.isTransferable == true) {
+      await _api.transferSignUp().then(_housekeeping);
+      update();
+    } else {
+      final verifications = signUp?.verifications.values ?? const [];
+      if (verifications.any((v) => v.status.isTransferable)) {
+        await _api.transferSignIn().then(_housekeeping);
+        update();
+      }
+    }
   }
 
   /// Get the current [sessionToken] for an [Organization] , or the
@@ -311,6 +319,20 @@ class Auth {
           .then(_housekeeping);
     }
     update();
+  }
+
+  /// Complete oAuth sign in by presenting the token
+  ///
+  Future<void> completeOAuthSignIn({
+    required Strategy strategy,
+    required String token,
+  }) async {
+    if (signIn ?? signUp case AuthObject authObject) {
+      await _api
+          .sendOauthToken(authObject, strategy: strategy, token: token)
+          .then(_housekeeping);
+      update();
+    }
   }
 
   /// Prepare to connect an account via an oAuth provider

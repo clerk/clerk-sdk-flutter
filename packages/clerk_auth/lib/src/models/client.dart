@@ -1,5 +1,6 @@
 library;
 
+export 'client/auth_object.dart';
 export 'client/client.dart';
 export 'client/email.dart';
 export 'client/external_account.dart';

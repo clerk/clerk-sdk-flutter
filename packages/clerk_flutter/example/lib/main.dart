@@ -74,8 +74,8 @@ class ExampleApp extends StatelessWidget {
       config: ClerkAuthConfig(
         publishableKey: publishableKey,
         redirectionGenerator: generateDeepLink,
+        deepLinkStream: AppLinks().allUriLinkStream.map(createClerkLink),
       ),
-      deepLinkStream: AppLinks().allUriLinkStream.map(createClerkLink),
       child: MaterialApp(
         theme: ThemeData.light(),
         debugShowCheckedModeBanner: false,

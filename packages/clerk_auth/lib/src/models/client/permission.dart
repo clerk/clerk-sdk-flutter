@@ -1,10 +1,8 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 /// Pseudo-enum representing permissions
 ///
 @immutable
-@JsonSerializable()
 class Permission {
   const Permission._(this.name);
 

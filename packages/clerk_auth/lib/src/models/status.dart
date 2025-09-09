@@ -1,11 +1,9 @@
 import 'package:clerk_auth/src/models/enums.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 /// Pseudo-enum representing fields
 ///
 @immutable
-@JsonSerializable()
 class Status {
   const Status._(this.name);
 
@@ -96,6 +94,9 @@ class Status {
 
   /// is unknown?
   bool get isUnknown => this == unknown;
+
+  /// is transferable?
+  bool get isTransferable => this == transferable;
 
   /// needs factor?
   bool get needsFactor => this == needsFirstFactor || this == needsSecondFactor;

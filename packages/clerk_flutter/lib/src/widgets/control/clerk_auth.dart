@@ -31,7 +31,6 @@ class ClerkAuth extends StatefulWidget {
     this.persistor,
     this.httpService,
     this.authState,
-    this.deepLinkStream,
   })  : assert(
           (config == null) != (authState == null),
           'Requires one and only one of `authState` or `config`',
@@ -46,7 +45,6 @@ class ClerkAuth extends StatefulWidget {
     return (BuildContext context, Widget? child) {
       return ClerkAuth(
         config: config,
-        deepLinkStream: deepLinkStream,
         child: ClerkErrorListener(child: child!),
       );
     };
@@ -59,10 +57,6 @@ class ClerkAuth extends StatefulWidget {
 
   /// auth instance from elsewhere
   final ClerkAuthState? authState;
-
-  /// A stream of deep links that the host app thinks the Clerk
-  /// SDK might be interested in
-  final Stream<ClerkDeepLink?>? deepLinkStream;
 
   /// An override for the default [clerk.Persistor]
   final clerk.Persistor? persistor;
@@ -114,8 +108,6 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
 
   ClerkAuthState? get effectiveAuthState => widget.authState ?? _clerkAuthState;
 
-  StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
-
   @override
   clerk.Telemetry? get telemetry => effectiveAuthState?.telemetry;
 
@@ -143,29 +135,12 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
         }
       });
     }
-    _deepLinkSub = widget.deepLinkStream?.listen(_processDeepLink);
   }
 
   @override
   void dispose() {
-    super.dispose();
-    _deepLinkSub?.cancel();
     _clerkAuthState?.terminate();
-  }
-
-  @override
-  void didUpdateWidget(covariant ClerkAuth oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.deepLinkStream != oldWidget.deepLinkStream) {
-      _deepLinkSub?.cancel();
-      _deepLinkSub = widget.deepLinkStream?.listen(_processDeepLink);
-    }
-  }
-
-  void _processDeepLink(ClerkDeepLink? link) {
-    if (link case ClerkDeepLink link) {
-      effectiveAuthState?.parseDeepLink(link);
-    }
+    super.dispose();
   }
 
   @override

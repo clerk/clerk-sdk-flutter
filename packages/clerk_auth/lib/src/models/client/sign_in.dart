@@ -1,4 +1,5 @@
 import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/models/client/auth_object.dart';
 import 'package:clerk_auth/src/models/client/factor.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user_public.dart';
@@ -16,29 +17,30 @@ part 'sign_in.g.dart';
 /// [SignIn] Clerk object
 @immutable
 @JsonSerializable()
-class SignIn with InformativeToStringMixin {
+class SignIn extends AuthObject with InformativeToStringMixin {
   /// Constructor
   const SignIn({
-    required this.id,
+    required super.id,
     required this.status,
     this.identifier,
     this.userData,
-    this.supportedIdentifiers = const [],
-    this.supportedFirstFactors = const [],
+    required this.supportedIdentifiers,
+    required this.supportedFirstFactors,
     this.firstFactorVerification,
-    this.supportedSecondFactors = const [],
+    required this.supportedSecondFactors,
     this.secondFactorVerification,
     this.createdSessionId,
     this.abandonAt = DateTimeExt.epoch,
   });
 
-  /// id
-  final String id;
+  @override
+  String get urlType => 'sign_ins';
 
   /// status
   final Status status;
 
   /// supported identifiers
+  @JsonKey(defaultValue: [])
   final List<String> supportedIdentifiers;
 
   /// identifier
@@ -69,7 +71,13 @@ class SignIn with InformativeToStringMixin {
   final List<Factor> supportedSecondFactors;
 
   /// Empty [SignIn]
-  static const empty = SignIn(id: '~empty~', status: Status.unknown);
+  static const empty = SignIn(
+    id: '~empty~',
+    status: Status.unknown,
+    supportedFirstFactors: [],
+    supportedIdentifiers: [],
+    supportedSecondFactors: [],
+  );
 
   /// The currently most important verification
   Verification? get verification =>
@@ -105,7 +113,7 @@ class SignIn with InformativeToStringMixin {
     };
   }
 
-  /// The factors for
+  /// The factors for the current stage
   List<Factor> get factors => switch (status) {
         Status.needsFirstFactor => supportedFirstFactors,
         Status.needsSecondFactor => supportedSecondFactors,

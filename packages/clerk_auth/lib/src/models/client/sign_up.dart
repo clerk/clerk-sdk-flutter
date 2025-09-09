@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/models/client/auth_object.dart';
 import 'package:clerk_auth/src/models/client/field.dart';
 import 'package:clerk_auth/src/models/client/verification.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
@@ -5,16 +6,15 @@ import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-
 part 'sign_up.g.dart';
 
 /// [SignUp] Clerk object
 @immutable
 @JsonSerializable()
-class SignUp with InformativeToStringMixin {
+class SignUp extends AuthObject with InformativeToStringMixin {
   /// Constructor
   const SignUp({
-    required this.id,
+    required super.id,
     required this.status,
     required this.requiredFields,
     required this.optionalFields,
@@ -37,8 +37,8 @@ class SignUp with InformativeToStringMixin {
     required this.abandonAt,
   });
 
-  /// id
-  final String id;
+  @override
+  String get urlType => 'sign_ups';
 
   /// status
   final Status status;

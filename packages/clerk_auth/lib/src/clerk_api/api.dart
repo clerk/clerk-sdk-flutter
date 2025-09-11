@@ -499,9 +499,6 @@ class Api with Logging {
           'first_name': user.firstName,
         if (config.allowsLastName) //
           'last_name': user.lastName,
-        'primary_email_address_id': user.primaryEmailAddressId,
-        'primary_phone_number_id': user.primaryPhoneNumberId,
-        'primary_web3_wallet_id': user.primaryWeb3WalletId,
         'unsafe_metadata':
             user.hasMetadata ? json.encode(user.unsafeMetadata) : null,
       },

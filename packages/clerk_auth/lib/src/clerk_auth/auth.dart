@@ -783,20 +783,28 @@ class Auth {
     Map<String, dynamic>? metadata,
     File? avatar,
   }) async {
+    final config = env.config;
     if (user case User user) {
-      final needsUpdate = username != user.username ||
-          firstName != user.username ||
-          lastName != user.lastName ||
+      final needsUpdate = (config.allowsUsername &&
+              username is String &&
+              username != user.username) ||
+          (config.allowsFirstName &&
+              firstName is String &&
+              firstName != user.username) ||
+          (config.allowsLastName &&
+              lastName is String &&
+              lastName != user.lastName) ||
           metadata?.isNotEmpty == true;
       if (needsUpdate || avatar is File) {
         if (needsUpdate) {
-          final newUser = user.copyWith(
-            username: username,
-            firstName: firstName,
-            lastName: lastName,
-            unsafeMetadata: metadata,
-          );
-          await _api.updateUser(newUser, env.config).then(_housekeeping);
+          await _api
+              .updateUser(
+                username: config.allowsUsername ? username : null,
+                firstName: config.allowsFirstName ? firstName : null,
+                lastName: config.allowsLastName ? lastName : null,
+                metadata: metadata,
+              )
+              .then(_housekeeping);
         }
         if (avatar case File avatar) {
           await _api.updateAvatar(avatar).then(_housekeeping);

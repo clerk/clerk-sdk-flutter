@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:clerk_auth/src/clerk_api/api.dart';
-import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
-import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
@@ -20,12 +18,7 @@ void main() {
     test('will fail unless encoded part follows underscore', () {
       expect(
         () => Api(
-          config: const AuthConfig(
-            publishableKey: 'NOT A PUBLISHABLE KEY',
-            localesLookup: testLocalesLookup,
-            persistor: Persistor.none,
-            httpService: noneHttpService,
-          ),
+          config: testAuthConfig('NOT A PUBLISHABLE KEY'),
         ),
         throwsA(const TypeMatcher<FormatException>()),
       );
@@ -33,24 +26,14 @@ void main() {
 
     test('will pass when encoded part follows underscore', () {
       final result = Api(
-        config: AuthConfig(
-          publishableKey: publishableKey,
-          localesLookup: testLocalesLookup,
-          persistor: Persistor.none,
-          httpService: noneHttpService,
-        ),
+        config: testAuthConfig(publishableKey),
       );
       expect(result.domain, isA<String>());
     });
 
     test('will return correct domain from decoded key', () {
       final result = Api(
-        config: AuthConfig(
-          publishableKey: publishableKey,
-          localesLookup: testLocalesLookup,
-          persistor: Persistor.none,
-          httpService: noneHttpService,
-        ),
+        config: testAuthConfig(publishableKey),
       );
       expect(result.domain, domain);
     });

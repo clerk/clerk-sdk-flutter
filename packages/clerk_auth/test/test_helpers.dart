@@ -3,7 +3,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
+import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:http/http.dart' show ByteStream, Response;
@@ -147,9 +149,18 @@ class TestHttpServiceError extends Error {
   String toString() => '$runtimeType: $message';
 }
 
-List<String> testLocalesLookup() => <String>['en'];
-
-const noneHttpService = NoneHttpService();
+AuthConfig testAuthConfig(
+  String publishableKey, [
+  HttpService httpService = const NoneHttpService(),
+]) {
+  return AuthConfig(
+    publishableKey: publishableKey,
+    sessionTokenPolling: false,
+    localesLookup: () => const <String>['en'],
+    persistor: Persistor.none,
+    httpService: httpService,
+  );
+}
 
 class NoneHttpService implements HttpService {
   const NoneHttpService();

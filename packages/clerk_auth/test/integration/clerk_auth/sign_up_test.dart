@@ -1,6 +1,4 @@
 import 'package:clerk_auth/src/clerk_auth/auth.dart';
-import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
-import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/models/client/client.dart';
 import 'package:clerk_auth/src/models/client/field.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
@@ -35,12 +33,7 @@ void main() {
 
     env = TestEnv('.env.test');
     auth = Auth(
-      config: AuthConfig(
-        publishableKey: env.publishableKey,
-        localesLookup: testLocalesLookup,
-        persistor: Persistor.none,
-        httpService: httpService,
-      ),
+      config: testAuthConfig(env.publishableKey, httpService),
     );
 
     httpService.expect(

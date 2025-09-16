@@ -29,7 +29,11 @@ class AuthConfig {
     Duration? clientRefreshPeriod,
     Duration? httpConnectionTimeout,
     HttpService? httpService,
-  })  : localesLookup = localesLookup ?? Auth.defaultLocalesLookup,
+  })  : assert(
+          sessionTokenPollMode == null,
+          'sessionTokenPollMode has been deprecated: please use sessionTokenPolling',
+        ),
+        localesLookup = localesLookup ?? Auth.defaultLocalesLookup,
         isTestMode = isTestMode ?? false,
         telemetryEndpoint =
             telemetryEndpoint ?? 'https://clerk-telemetry.com/v1/event',

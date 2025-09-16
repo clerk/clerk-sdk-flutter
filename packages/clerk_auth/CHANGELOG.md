@@ -1,3 +1,7 @@
+## 0.0.13-beta
+
+* change: session token polling now defaults to ON (previous versions had it defaulting to OFF)
+
 ## 0.0.12-beta
 
 * fix: ensure decoding of UserPublic.identifier is optional [#256]

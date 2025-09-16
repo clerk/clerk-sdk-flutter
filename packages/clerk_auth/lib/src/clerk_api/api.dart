@@ -845,7 +845,7 @@ class Api with Logging {
     _pollTimer?.cancel();
 
     final sessionToken = await _updateSessionToken();
-    final delay = sessionToken?.ttd ?? _defaultPollDelay;
+    final delay = sessionToken?.ttl ?? _defaultPollDelay;
     _pollTimer = Timer(delay, _pollForSessionToken);
   }
 

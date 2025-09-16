@@ -71,10 +71,10 @@ class SessionToken with InformativeToStringMixin {
   /// Is this token still valid?
   bool get isNotExpired => isExpired == false;
 
-  /// The Time to Die as a [Duration], or null if expired
-  Duration? get ttd {
-    final ttd = expiry.difference(DateTime.timestamp());
-    return ttd > Duration.zero ? ttd : null;
+  /// The Time to Live as a [Duration], or null if expired
+  Duration? get ttl {
+    final ttl = expiry.difference(DateTime.timestamp());
+    return ttl > Duration.zero ? ttl : null;
   }
 
   /// fromJson

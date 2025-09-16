@@ -68,13 +68,8 @@ class Organization with InformativeToStringMixin {
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
   final DateTime createdAt;
 
-  /// The [id] for use externally
-  String? get externalId => this == personal ? null : id;
-
-  static const _personalOrgId = r'$PERSONAL$';
-
   /// A dummy personal [Organization] used internally
-  static const personal = Organization(id: _personalOrgId);
+  static const personal = Organization();
 
   /// fromJson
   static Organization fromJson(Map<String, dynamic> json) =>
@@ -86,4 +81,7 @@ class Organization with InformativeToStringMixin {
 
   /// Do we have unlimited membership?
   bool get hasUnlimitedMembership => maxAllowedMemberships == 0;
+
+  /// Is this the personal account?
+  bool get isPersonal => this == personal;
 }

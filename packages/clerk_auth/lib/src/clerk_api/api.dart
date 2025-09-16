@@ -14,8 +14,6 @@ import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:http/http.dart' as http;
 
-export 'package:clerk_auth/src/models/enums.dart' show SessionTokenPollMode;
-
 typedef _JsonObject = Map<String, dynamic>;
 
 /// [Api] manages communication with the Clerk frontend API
@@ -52,6 +50,7 @@ class Api with Logging {
   static const _kClerkSessionId = '_clerk_session_id';
   static const _kClientKey = 'client';
   static const _kErrorsKey = 'errors';
+  static const _kActiveOrganizationIdKey = 'active_organization_id';
   static const _kMetaKey = 'meta';
   static const _kIsNative = '_is_native';
   static const _kJwtKey = 'jwt';
@@ -66,7 +65,7 @@ class Api with Logging {
   /// Initialise the API
   Future<void> initialize() async {
     await _tokenCache.initialize();
-    if (config.sessionTokenPollMode == SessionTokenPollMode.hungry) {
+    if (config.sessionTokenPolling) {
       await _pollForSessionToken();
     }
   }
@@ -616,6 +615,20 @@ class Api with Logging {
 
   // Organization
 
+  /// Get details for an [Organization]
+  ///
+  Future<ApiResponse> setActiveOrganization(
+    String sessionId,
+    String orgId,
+  ) async {
+    return await _fetchApiResponse(
+      '/client/sessions/$sessionId/touch',
+      nullableParams: {
+        _kActiveOrganizationIdKey: orgId,
+      },
+    );
+  }
+
   /// Create a new [Organization]
   ///
   Future<ApiResponse> createOrganization(
@@ -813,7 +826,7 @@ class Api with Logging {
         headers: _headers(),
         nullableParams: {
           if (org case Organization org) //
-            _kOrganizationId: org.externalId,
+            _kOrganizationId: org.id,
         },
       );
       if (resp.statusCode == HttpStatus.ok) {
@@ -831,13 +844,11 @@ class Api with Logging {
   Future<void> _pollForSessionToken() async {
     _pollTimer?.cancel();
 
-    final sessionToken = await _updateSessionToken();
-    final delay = switch (sessionToken) {
-      SessionToken sessionToken when sessionToken.isNotExpired =>
-        sessionToken.expiry.difference(DateTime.timestamp()),
-      _ => _defaultPollDelay,
-    };
-    _pollTimer = Timer(delay, _pollForSessionToken);
+    while (true) {
+      final sessionToken = await _updateSessionToken();
+      final delay = sessionToken?.ttd ?? _defaultPollDelay;
+      _pollTimer = Timer(delay, _pollForSessionToken);
+    }
   }
 
   // Internal
@@ -867,6 +878,7 @@ class Api with Logging {
     HttpMethod method = HttpMethod.post,
     Map<String, String>? headers,
     _JsonObject? params,
+    _JsonObject? nullableParams,
     bool withSession = false,
   }) async {
     try {
@@ -874,6 +886,7 @@ class Api with Logging {
         method: method,
         path: url,
         params: params,
+        nullableParams: nullableParams,
         headers: _headers(method: method, headers: headers),
         withSession: withSession,
       );
@@ -956,7 +969,7 @@ class Api with Logging {
     _JsonObject? nullableParams,
     bool withSession = false,
   }) async {
-    final parsedParams = {
+    final bodyParams = {
       if (params?.entries case final entries?) //
         for (final MapEntry(:key, :value) in entries) //
           if (_ensureNotNullOrEmpty(value) case final value?) //
@@ -966,7 +979,7 @@ class Api with Logging {
     final queryParams = _queryParams(
       method,
       withSession: withSession,
-      params: parsedParams,
+      bodyParams: bodyParams,
     );
     final uri = _uri(path, params: queryParams);
 
@@ -974,7 +987,7 @@ class Api with Logging {
       method,
       uri,
       headers: headers,
-      params: method.isNotGet ? parsedParams : null,
+      params: method.isNotGet ? bodyParams : null,
     );
 
     if (resp.statusCode == HttpStatus.tooManyRequests) {
@@ -996,17 +1009,17 @@ class Api with Logging {
   _JsonObject _queryParams(
     HttpMethod method, {
     bool withSession = false,
-    _JsonObject? params,
+    _JsonObject? bodyParams,
   }) {
-    final sessionId =
-        params?.remove(_kClerkSessionId)?.toString() ?? _tokenCache.sessionId;
+    final sessionId = bodyParams?.remove(_kClerkSessionId)?.toString() ??
+        _tokenCache.sessionId;
     return {
       _kIsNative: true,
       _kClerkJsVersion: ClerkConstants.jsVersion,
       if (withSession && _multiSessionMode && sessionId.isNotEmpty) //
         _kClerkSessionId: sessionId,
       if (method.isGet) //
-        ...?params,
+        ...?bodyParams,
     };
   }
 

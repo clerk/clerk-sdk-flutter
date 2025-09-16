@@ -12,8 +12,8 @@ OrganizationInvitation _$OrganizationInvitationFromJson(
       id: json['id'] as String,
       status: Status.fromJson(json['status'] as String),
       roleName: json['role_name'] as String,
-      organizationData: PublicOrganizationData.fromJson(
-          json['organization_data'] as Map<String, dynamic>),
+      organization: Organization.fromJson(
+          json['public_organization_data'] as Map<String, dynamic>),
       updatedAt: intToDateTime(json['updated_at']),
       createdAt: intToDateTime(json['created_at']),
     );
@@ -24,7 +24,7 @@ Map<String, dynamic> _$OrganizationInvitationToJson(
       'id': instance.id,
       'status': instance.status.toJson(),
       'role_name': instance.roleName,
-      'organization_data': instance.organizationData.toJson(),
+      'public_organization_data': instance.organization.toJson(),
       'updated_at': dateTimeToInt(instance.updatedAt),
       'created_at': dateTimeToInt(instance.createdAt),
     };

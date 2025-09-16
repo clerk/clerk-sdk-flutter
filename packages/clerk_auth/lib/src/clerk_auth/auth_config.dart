@@ -1,8 +1,10 @@
+// ignore_for_file:
+
 import 'package:clerk_auth/src/clerk_auth/auth.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/clerk_auth/sdk_flags.dart';
-import 'package:clerk_auth/src/models/enums.dart';
+import 'package:clerk_auth/src/models/enums.dart' show SessionTokenPollMode;
 import 'package:meta/meta.dart';
 
 /// Used by [Api] to locate the current user locale preference.
@@ -18,7 +20,8 @@ class AuthConfig {
     required this.publishableKey,
     required this.persistor,
     this.flags = const SdkFlags(),
-    SessionTokenPollMode? sessionTokenPollMode,
+    this.sessionTokenPolling = true,
+    SessionTokenPollMode? sessionTokenPollMode, // deprecated
     LocalesLookup? localesLookup,
     bool? isTestMode,
     String? telemetryEndpoint,
@@ -26,9 +29,7 @@ class AuthConfig {
     Duration? clientRefreshPeriod,
     Duration? httpConnectionTimeout,
     HttpService? httpService,
-  })  : sessionTokenPollMode =
-            sessionTokenPollMode ?? SessionTokenPollMode.lazy,
-        localesLookup = localesLookup ?? Auth.defaultLocalesLookup,
+  })  : localesLookup = localesLookup ?? Auth.defaultLocalesLookup,
         isTestMode = isTestMode ?? false,
         telemetryEndpoint =
             telemetryEndpoint ?? 'https://clerk-telemetry.com/v1/event',
@@ -49,8 +50,8 @@ class AuthConfig {
   /// Flags used to affect behaviour
   final SdkFlags flags;
 
-  /// the mode by which session tokens are polled from the back end
-  final SessionTokenPollMode sessionTokenPollMode;
+  /// Do we want to regularly poll for a new session token?
+  final bool sessionTokenPolling;
 
   /// Function to return list of current user's locales for translation
   final LocalesLookup localesLookup;

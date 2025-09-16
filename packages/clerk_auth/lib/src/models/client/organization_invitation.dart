@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/models/client/public_organization_data.dart';
+import 'package:clerk_auth/src/models/client/organization.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
@@ -16,7 +16,7 @@ class OrganizationInvitation with InformativeToStringMixin {
     required this.id,
     required this.status,
     required this.roleName,
-    required this.organizationData,
+    required this.organization,
     required this.updatedAt,
     required this.createdAt,
   });
@@ -31,7 +31,8 @@ class OrganizationInvitation with InformativeToStringMixin {
   final String roleName;
 
   /// organization data
-  final PublicOrganizationData organizationData;
+  @JsonKey(name: 'public_organization_data')
+  final Organization organization;
 
   /// updated at
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)

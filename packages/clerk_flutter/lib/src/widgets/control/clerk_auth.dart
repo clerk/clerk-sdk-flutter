@@ -122,7 +122,7 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
   @override
   Map<String, dynamic> get telemetryPayload {
     return {
-      'poll_mode': widget.config.sessionTokenPollMode.toString(),
+      'poll_mode': widget.config.sessionTokenPolling.toString(),
       'primary_instance': widget.authState == null,
     };
   }

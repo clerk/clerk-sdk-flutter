@@ -70,6 +70,32 @@ Future<void> main() async {
 
 For more details see [Clerk Auth object](https://pub.dev/documentation/clerk_auth/latest/clerk_auth/Auth-class.html)
 
+## Session Token Polling
+
+By default, `ClerkAuth` will regularly poll for session tokens, providing them into the app
+via the `sessionTokenStream`. In line with other SDKs (and if organizations are enabled) the stream 
+of session tokens will augmented with data from the `Organization` most recently activated.
+
+If you do not wish for session tokens to be polled in this way, the behaviour can be disabled 
+through the config object when creating your `Auth` object:
+
+```dart
+final auth = Auth(
+  config: const AuthConfig(
+    publishableKey: '<YOUR-PUBLISHABLE-KEY>',
+    sessionTokenPolling: false,
+    ...
+  ), 
+  ...
+);
+```
+
+### Note re: v0.0.12-beta and previous
+
+Note that the behaviour described above has been introduced in v0.0.13-beta. Prior versions defaulted to
+polling off, enabling it via a `SessionTokenPollMode` object. This object has been deprecated in v0.0.13-beta: it is no
+longer used, and will be deleted in a future version.
+
 ## License
 
 This SDK is licensed under the MIT license found in the [LICENSE](./LICENSE) file.

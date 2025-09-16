@@ -7,6 +7,10 @@ part 'enums.g.dart';
 
 /// [SessionTokenPollMode] manages how to refresh the [sessionToken]
 ///
+@Deprecated(
+  'SessionTokenPollMode has been deprecated. '
+  'Use the AuthConfig.sessionTokenPolling boolean instead',
+)
 enum SessionTokenPollMode {
   /// Hungry refresh: whenever token expires (more http access and power use)
   hungry,

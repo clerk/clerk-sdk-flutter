@@ -99,6 +99,9 @@ class Auth {
   /// The current [User] object, or null
   User? get user => session?.user;
 
+  /// The current [Organization] object, or null
+  Organization? get organization => session?.organization;
+
   /// Are we currently signed in?
   bool get isSignedIn => user != null;
 
@@ -618,6 +621,17 @@ class Auth {
   Future<void> signOutOf(Session session) async {
     await _api.signOutOf(session).then(_housekeeping);
     update();
+  }
+
+  /// Make an [Organization] active
+  ///
+  Future<void> setActiveOrganization(Organization organization) async {
+    if (session case Session session) {
+      await _api
+          .setActiveOrganization(session.id, organization.id)
+          .then(_housekeeping);
+      update();
+    }
   }
 
   /// Create a new [Organization]

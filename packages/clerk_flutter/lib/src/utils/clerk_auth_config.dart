@@ -31,7 +31,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   /// Construct a [ClerkAuthConfig]
   ClerkAuthConfig({
     required super.publishableKey,
-    super.sessionTokenPollMode,
+    super.sessionTokenPolling,
     super.isTestMode,
     super.telemetryEndpoint,
     super.telemetryPeriod,

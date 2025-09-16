@@ -71,6 +71,12 @@ class SessionToken with InformativeToStringMixin {
   /// Is this token still valid?
   bool get isNotExpired => isExpired == false;
 
+  /// The Time to Die as a [Duration], or null if expired
+  Duration? get ttd {
+    final ttd = expiry.difference(DateTime.timestamp());
+    return ttd > Duration.zero ? ttd : null;
+  }
+
   /// fromJson
   static SessionToken fromJson(Map<String, dynamic> json) =>
       _$SessionTokenFromJson(json);

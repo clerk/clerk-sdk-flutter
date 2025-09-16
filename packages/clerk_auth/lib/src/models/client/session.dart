@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/models/client/organization.dart';
 import 'package:clerk_auth/src/models/client/session_token.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/client/user_public.dart';
@@ -66,4 +67,16 @@ class Session with InformativeToStringMixin {
   /// toJson
   @override
   Map<String, dynamic> toJson() => _$SessionToJson(this);
+
+  /// Currently active [Organization], or null
+  Organization? get organization {
+    if (user.organizationMemberships case final organizationMemberships?) {
+      for (final membership in organizationMemberships) {
+        if (membership.organization.id == lastActiveOrganizationId) {
+          return membership.organization;
+        }
+      }
+    }
+    return null;
+  }
 }

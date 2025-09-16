@@ -844,11 +844,9 @@ class Api with Logging {
   Future<void> _pollForSessionToken() async {
     _pollTimer?.cancel();
 
-    while (true) {
-      final sessionToken = await _updateSessionToken();
-      final delay = sessionToken?.ttd ?? _defaultPollDelay;
-      _pollTimer = Timer(delay, _pollForSessionToken);
-    }
+    final sessionToken = await _updateSessionToken();
+    final delay = sessionToken?.ttd ?? _defaultPollDelay;
+    _pollTimer = Timer(delay, _pollForSessionToken);
   }
 
   // Internal

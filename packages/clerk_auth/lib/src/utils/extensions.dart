@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
+
 /// Extension on [Object] useful for debugging
 extension ObjectIdentity on Object {
   /// Returns a summary of the runtime type and hash code of `object`.
@@ -75,6 +77,17 @@ extension ListExtension<T> on List<T> {
           add(item);
       }
     }
+  }
+
+  /// Remove and return the first item that satisfies the test, and update
+  /// the list accordingly
+  ///
+  T? removeFirstOrNull(bool Function(T) test) {
+    if (firstWhereOrNull(test) case T item) {
+      remove(item);
+      return item;
+    }
+    return null;
   }
 
   /// Do we contain a thing?

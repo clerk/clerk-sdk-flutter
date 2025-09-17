@@ -34,7 +34,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get acceptTerms =>
-      'I accept the Terms & Conditions and Privacy Policy';
+      'I agree to the Terms of Service and Privacy Policy';
 
   @override
   String get actionNotTimely =>
@@ -419,7 +419,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get switchTo => 'Switch to';
 
   @override
-  String get termsAndConditions => 'Terms & Conditions';
+  String get termsOfService => 'Terms of Service';
 
   @override
   String get transferable => 'transferable';

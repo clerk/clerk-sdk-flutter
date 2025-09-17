@@ -135,7 +135,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @acceptTerms.
   ///
   /// In en, this message translates to:
-  /// **'I accept the Terms & Conditions and Privacy Policy'**
+  /// **'I agree to the Terms of Service and Privacy Policy'**
   String get acceptTerms;
 
   /// No description provided for @actionNotTimely.
@@ -816,11 +816,11 @@ abstract class ClerkSdkLocalizations {
   /// **'Switch to'**
   String get switchTo;
 
-  /// No description provided for @termsAndConditions.
+  /// No description provided for @termsOfService.
   ///
   /// In en, this message translates to:
-  /// **'Terms & Conditions'**
-  String get termsAndConditions;
+  /// **'Terms of Service'**
+  String get termsOfService;
 
   /// No description provided for @transferable.
   ///

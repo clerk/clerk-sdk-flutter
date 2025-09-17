@@ -32,16 +32,18 @@ class InputLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         if (label case String label) //
-          Text(
-            label,
-            textAlign: TextAlign.start,
-            maxLines: 2,
-            style: ClerkTextStyle.inputBoxLabel.copyWith(
-              color: isRequired == true ? ClerkColors.incarnadine : null,
+          Expanded(
+            child: Text(
+              label,
+              textAlign: TextAlign.start,
+              maxLines: 2,
+              style: ClerkTextStyle.inputBoxLabel.copyWith(
+                color: isRequired == true ? ClerkColors.incarnadine : null,
+              ),
             ),
           ),
         if (isRequired == true) //

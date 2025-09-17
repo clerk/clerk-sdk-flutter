@@ -14,12 +14,11 @@ import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_input/phone_input_package.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-typedef _ValueChanger = void Function(String value);
 
 enum _SignUpPanelState {
   input,
@@ -171,8 +170,6 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     });
   }
 
-  void _onObscure() => setState(() => _isObscured = !_isObscured);
-
   void _acceptTerms() =>
       setState(() => _hasLegalAcceptance = !_hasLegalAcceptance);
 
@@ -181,10 +178,6 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     await authState.resetClient();
     _state = _SignUpPanelState.input;
   }
-
-  _ValueChanger _change(clerk.UserAttribute attr) => (String value) {
-        _values[attr] = value;
-      };
 
   @override
   Widget build(BuildContext context) {
@@ -203,19 +196,19 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             when data.isEnabled) //
           _Attribute(attr, data),
     ];
-    final lastNameAttr = attributes.any((a) => a.isFirstName)
-        ? attributes.removeFirstOrNull((a) => a.isLastName)
-        : null;
     final isAwaitingCode = (env.supportsEmailCode &&
             signUp?.unverified(clerk.Field.emailAddress) == true) ||
         (env.supportsPhoneCode &&
             signUp?.unverified(clerk.Field.phoneNumber) == true);
 
-    bool isMissing(_Attribute attribute) =>
-        signUp?.missing(clerk.Field.forUserAttribute(attribute.attr)) == true ||
-        (_highlightMissing &&
-            attribute.isRequired &&
-            _valueOrNull(attribute.attr) == null);
+    // if we have both first and last name, associate them
+    attributes.firstWhereOrNull((a) => a.isFirstName)?.associated =
+        attributes.removeFirstOrNull((a) => a.isLastName);
+
+    // if we have a password, associate a confirmation
+    final password = attributes.firstWhereOrNull((a) => a.isPassword);
+    password?.associated =
+        _Attribute(clerk.UserAttribute.passwordConfirmation, password.data);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -264,73 +257,16 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
         Closeable(
           closed: _state.isWaiting,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              for (final attribute in attributes) ...[
-                if (attribute.isPhoneNumber) //
-                  ClerkPhoneNumberFormField(
-                    initial: _values[clerk.UserAttribute.phoneNumber],
-                    label: attribute.title(l10ns),
-                    isMissing: isMissing(attribute),
-                    isOptional: attribute.isOptional,
-                    onChanged: _change(clerk.UserAttribute.phoneNumber),
-                  )
-                else if (attribute.isFirstName) //
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: ClerkTextFormField(
-                          initial: _values[attribute.attr],
-                          label: attribute.title(l10ns),
-                          isMissing: isMissing(attribute),
-                          isOptional: attribute.isOptional,
-                          onChanged: _change(attribute.attr),
-                        ),
-                      ),
-                      if (lastNameAttr case final lastNameAttr?) ...[
-                        horizontalMargin16,
-                        Expanded(
-                          child: ClerkTextFormField(
-                            initial: _values[lastNameAttr.attr],
-                            label: lastNameAttr.title(l10ns),
-                            isMissing: isMissing(lastNameAttr),
-                            isOptional: lastNameAttr.isOptional,
-                            onChanged: _change(lastNameAttr.attr),
-                          ),
-                        ),
-                      ],
-                    ],
-                  )
-                else if (attribute.isPassword) ...[
-                  ClerkTextFormField(
-                    initial: _values[clerk.UserAttribute.password],
-                    label: attribute.title(l10ns),
-                    isMissing: isMissing(attribute),
-                    isOptional: attribute.isOptional,
-                    obscureText: _isObscured,
-                    onObscure: _onObscure,
-                    onChanged: _change(clerk.UserAttribute.password),
-                  ),
-                  verticalMargin16,
-                  ClerkTextFormField(
-                    initial: _passwordConfirmation,
-                    label: l10ns.grammar.toSentence(l10ns.passwordConfirmation),
-                    isMissing: isMissing(attribute),
-                    isOptional: attribute.isOptional,
-                    obscureText: _isObscured,
-                    onObscure: _onObscure,
-                    onChanged: (conf) => _passwordConfirmation = conf,
-                  ),
-                ] else
-                  ClerkTextFormField(
-                    initial: _values[attribute.attr],
-                    label: attribute.title(l10ns),
-                    isMissing: isMissing(attribute),
-                    isOptional: attribute.isOptional,
-                    onChanged: _change(attribute.attr),
-                  ),
-                verticalMargin16,
-              ],
+              for (final attribute in attributes) //
+                _FormField(
+                  attribute: attribute,
+                  authState: authState,
+                  localizations: l10ns,
+                  values: _values,
+                  highlight: _highlightMissing,
+                ),
             ],
           ),
         ),
@@ -384,13 +320,97 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   }
 }
 
+class _FormField extends StatelessWidget {
+  const _FormField({
+    required this.attribute,
+    required this.authState,
+    required this.localizations,
+    required this.values,
+    required this.highlight,
+  });
+
+  final _Attribute attribute;
+
+  final ClerkAuthState authState;
+
+  final ClerkSdkLocalizations localizations;
+
+  final Map<clerk.UserAttribute, String?> values;
+
+  final bool highlight;
+
+  static final _obscure = ValueNotifier(true);
+
+  bool _isMissing(ClerkAuthState authState, _Attribute attribute) =>
+      authState.signUp?.missing(clerk.Field.forUserAttribute(attribute.attr)) ==
+          true ||
+      (highlight &&
+          attribute.isRequired &&
+          (values[attribute.attr]?.trim() ?? '').isEmpty);
+
+  Widget _formField(_Attribute attribute) {
+    if (attribute.needsObscuring) {
+      return ValueListenableBuilder(
+        valueListenable: _obscure,
+        builder: (context, obscure, _) {
+          return ClerkTextFormField(
+            initial: values[attribute.attr],
+            label: attribute.title(localizations),
+            obscureText: obscure,
+            onObscure: () => _obscure.value = !obscure,
+            isMissing: _isMissing(authState, attribute),
+            onChanged: (value) => values[attribute.attr] = value,
+          );
+        },
+      );
+    }
+
+    return ClerkTextFormField(
+      initial: values[attribute.attr],
+      label: attribute.title(localizations),
+      isMissing: _isMissing(authState, attribute),
+      onChanged: (value) => values[attribute.attr] = value,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: bottomPadding16,
+      child: switch (attribute) {
+        _Attribute attribute when attribute.isPhoneNumber =>
+          ClerkPhoneNumberFormField(
+            initial: values[attribute.attr],
+            label: attribute.title(localizations),
+            isMissing: _isMissing(authState, attribute),
+            isOptional: attribute.isOptional,
+            onChanged: (value) => values[attribute.attr] = value,
+          ),
+        _Attribute attribute when attribute.associated is _Attribute => Flex(
+            direction: attribute.isFirstName ? Axis.horizontal : Axis.vertical,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(fit: FlexFit.loose, child: _formField(attribute)),
+              const SizedBox.square(dimension: 16),
+              Flexible(
+                fit: FlexFit.loose,
+                child: _formField(attribute.associated!),
+              ),
+            ],
+          ),
+        _Attribute attribute => _formField(attribute),
+      },
+    );
+  }
+}
+
 class _LegalAcceptanceConfirmation extends StatelessWidget {
   const _LegalAcceptanceConfirmation();
 
   List<TextSpan> _subSpans(String text, String target, String? url) {
-    if (url case String url) {
+    if (url case String url when url.isNotEmpty) {
       final segments = text.split(target);
-      final spans = <TextSpan>[TextSpan(text: segments.first)];
+      final spans = [TextSpan(text: segments.first)];
 
       for (final segmentText in segments.skip(1)) {
         spans.add(
@@ -517,11 +537,13 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
 }
 
 class _Attribute {
-  const _Attribute(this.attr, this.data);
+  _Attribute(this.attr, this.data);
 
   final clerk.UserAttribute attr;
 
   final clerk.UserAttributeData data;
+
+  _Attribute? associated;
 
   bool get isPhoneNumber => attr == clerk.UserAttribute.phoneNumber;
 
@@ -534,6 +556,9 @@ class _Attribute {
   bool get isRequired => data.isRequired;
 
   bool get isOptional => isRequired == false;
+
+  bool get needsObscuring =>
+      isPassword || attr == clerk.UserAttribute.passwordConfirmation;
 
   String title(ClerkSdkLocalizations l10ns) =>
       l10ns.grammar.toSentence(attr.localizedMessage(l10ns));

@@ -223,6 +223,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           _CodeInputBox(
             attribute: attr,
             value: _values[attr] ?? '',
+            localizations: l10ns,
             closed: _state.isInput ||
                 signUp?.unverified(clerk.Field.forUserAttribute(attr)) != true,
             onSubmit: (code) async {
@@ -421,7 +422,9 @@ class _LegalAcceptanceConfirmation extends StatelessWidget {
               ..onTap = () => launchUrlString(url),
           ),
         );
-        spans.add(TextSpan(text: segmentText));
+        if (segmentText.isNotEmpty) {
+          spans.add(TextSpan(text: segmentText));
+        }
       }
 
       return spans;
@@ -430,6 +433,13 @@ class _LegalAcceptanceConfirmation extends StatelessWidget {
     return [TextSpan(text: text)];
   }
 
+  // We're assuming here that, whatever language has had its localizations
+  // generated, the `termsOfService` and `privacyPolicy` will be literal
+  // unique substrings of `acceptTerms`, so can be turned into links in
+  // this manner - and it's the responsibility of the engineer dealing with
+  // translations to ensure that's the case, so that this will work. (I'm not
+  // aware of any language where that won't work, but would love to be told
+  // if there is one.)
   List<InlineSpan> _spans(BuildContext context) {
     final authState = ClerkAuth.of(context, listen: false);
     final display = authState.env.display;
@@ -461,6 +471,7 @@ class _CodeInputBox extends StatefulWidget {
     required this.attribute,
     required this.onResend,
     required this.onSubmit,
+    required this.localizations,
     required this.closed,
     required this.value,
   });
@@ -470,6 +481,8 @@ class _CodeInputBox extends StatefulWidget {
   final Future<bool> Function(String) onSubmit;
 
   final VoidCallback onResend;
+
+  final ClerkSdkLocalizations localizations;
 
   final bool closed;
 
@@ -490,8 +503,6 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = ClerkAuth.localizationsOf(context);
-
     return Closeable(
       closed: widget.closed,
       onEnd: (closed) {
@@ -509,12 +520,12 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
               focusNode: _focus,
               title: switch (widget.attribute) {
                 clerk.UserAttribute.emailAddress =>
-                  localizations.verifyYourEmailAddress,
+                  widget.localizations.verifyYourEmailAddress,
                 clerk.UserAttribute.phoneNumber =>
-                  localizations.verifyYourPhoneNumber,
+                  widget.localizations.verifyYourPhoneNumber,
                 _ => widget.attribute.toString(),
               },
-              subtitle: localizations.enterTheCodeSentTo(widget.value),
+              subtitle: widget.localizations.enterTheCodeSentTo(widget.value),
               onSubmit: widget.onSubmit,
             ),
             Padding(
@@ -525,7 +536,7 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
                 child: ClerkMaterialButton(
                   style: ClerkMaterialButtonStyle.light,
                   onPressed: widget.onResend,
-                  label: Text(localizations.resend),
+                  label: Text(widget.localizations.resend),
                 ),
               ),
             ),

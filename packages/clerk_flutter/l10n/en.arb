@@ -30,7 +30,7 @@
     }
   },
   "abandoned": "abandoned",
-  "acceptTerms": "I accept the Terms & Conditions and Privacy Policy",
+  "acceptTerms": "I agree to the Terms of Service and Privacy Policy",
   "actionNotTimely": "Awaited user action not completed in required timeframe",
   "active": "active",
   "addAccount": "Add account",
@@ -249,7 +249,7 @@
   },
   "slugUrl": "Slug URL",
   "switchTo": "Switch to",
-  "termsAndConditions": "Terms & Conditions",
+  "termsOfService": "Terms of Service",
   "transferable": "transferable",
   "typeTypeInvalid": "Type '{type}' is invalid",
   "@typeTypeInvalid": {

@@ -20,6 +20,8 @@ OrganizationSettings _$OrganizationSettingsFromJson(
           ? DomainSettings.empty
           : DomainSettings.fromJson(json['domains'] as Map<String, dynamic>),
       isEnabled: json['enabled'] as bool? ?? false,
+      forceOrganizationSelection:
+          json['force_organization_selection'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$OrganizationSettingsToJson(
@@ -29,5 +31,6 @@ Map<String, dynamic> _$OrganizationSettingsToJson(
       'creator_role': instance.creatorRole,
       'domains': instance.domains.toJson(),
       'actions': instance.actions.toJson(),
+      'force_organization_selection': instance.forceOrganizationSelection,
       'enabled': instance.isEnabled,
     };

@@ -63,6 +63,15 @@ abstract class ClerkSdkGrammar {
   /// Current locale can be derived from the [context]
   ///
   String toSentence(String item);
+
+  /// Return a slug from a given name
+  ///
+  /// This needs to return a string that is lowercase, and contains only
+  /// alphanumeric Latin/Arabic characters and hyphens (which typically replace
+  /// other characters). Languages that do not use Latin/Arabic characters
+  /// beware!
+  ///
+  String toSlug(String name);
 }
 
 /// A [ClerkSdkGrammar] default implementation, using English language
@@ -121,4 +130,12 @@ class ClerkSdkGrammarEn implements ClerkSdkGrammar {
   @override
   String toSentence(String item) =>
       item.isNotEmpty ? item[0].toUpperCase() + item.substring(1) : '';
+
+  static final _nonAlphaNum = RegExp(r'[^a-z0-9]+');
+
+  /// To make a name into a slug in English we lowercase it, remove
+  /// non-alphanumerics, and replace whitespace with hyphens
+  @override
+  String toSlug(String name) =>
+      name.toLowerCase().replaceAll(_nonAlphaNum, '-');
 }

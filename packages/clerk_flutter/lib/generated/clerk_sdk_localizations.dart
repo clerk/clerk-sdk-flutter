@@ -276,6 +276,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Create organization'**
   String get createOrganization;
 
+  /// No description provided for @developmentMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Development mode'**
+  String get developmentMode;
+
   /// No description provided for @didntReceiveCode.
   ///
   /// In en, this message translates to:
@@ -335,6 +341,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Enter the code sent to you'**
   String get enterTheCodeSentToYou;
+
+  /// No description provided for @enterYourOrganizationDetailsToContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your organization details to continue'**
+  String get enterYourOrganizationDetailsToContinue;
 
   /// No description provided for @expired.
   ///
@@ -437,6 +449,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'missing requirements'**
   String get missingRequirements;
+
+  /// No description provided for @myOrganization.
+  ///
+  /// In en, this message translates to:
+  /// **'My Organization'**
+  String get myOrganization;
 
   /// No description provided for @name.
   ///
@@ -702,6 +720,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Send me the reset code'**
   String get sendMeTheCode;
 
+  /// No description provided for @setUpYourOrganization.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your organization'**
+  String get setUpYourOrganization;
+
   /// No description provided for @signIn.
   ///
   /// In en, this message translates to:
@@ -773,6 +797,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Sign up to {name}'**
   String signUpTo(String name);
+
+  /// No description provided for @slug.
+  ///
+  /// In en, this message translates to:
+  /// **'Slug'**
+  String get slug;
 
   /// No description provided for @slugUrl.
   ///

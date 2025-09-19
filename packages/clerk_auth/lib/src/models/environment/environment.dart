@@ -62,6 +62,14 @@ class Environment with InformativeToStringMixin {
         ].contains(i),
       );
 
+  /// [List] of available social connections i.e. oAuth sign in possibilites
+  List<SocialConnection> get socialConnections => user.socialSettings.values
+      .where((s) => oauthStrategies.contains(s.strategy))
+      .toList(growable: false);
+
+  /// Do we have social connections?
+  bool get hasSocialConnections => socialConnections.isNotEmpty;
+
   /// Do we have identification strategies?
   bool get hasIdentificationStrategies => identificationStrategies.isNotEmpty;
 

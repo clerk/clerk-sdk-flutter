@@ -109,6 +109,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get createOrganization => 'Create organization';
 
   @override
+  String get developmentMode => 'Development mode';
+
+  @override
   String get didntReceiveCode => 'Didn\'t receive the code?';
 
   @override
@@ -139,6 +142,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get enterTheCodeSentToYou => 'Enter the code sent to you';
+
+  @override
+  String get enterYourOrganizationDetailsToContinue =>
+      'Enter your organization details to continue';
 
   @override
   String get expired => 'expired';
@@ -198,6 +205,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get missingRequirements => 'missing requirements';
+
+  @override
+  String get myOrganization => 'My Organization';
 
   @override
   String get name => 'Name';
@@ -350,6 +360,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get sendMeTheCode => 'Send me the reset code';
 
   @override
+  String get setUpYourOrganization => 'Set up your organization';
+
+  @override
   String get signIn => 'Sign in';
 
   @override
@@ -395,6 +408,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String signUpTo(String name) {
     return 'Sign up to $name';
   }
+
+  @override
+  String get slug => 'Slug';
 
   @override
   String get slugUrl => 'Slug URL';

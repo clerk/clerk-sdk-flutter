@@ -1,6 +1,5 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/social_connection_button.dart';
 import 'package:flutter/material.dart';
@@ -15,51 +14,48 @@ import 'package:flutter/material.dart';
 /// https://clerk.com/docs/components/authentication/sign-up
 ///
 ///
-class ClerkSSOPanel extends StatefulWidget {
+class ClerkSSOPanel extends StatelessWidget {
   /// Construct a new [ClerkSSOPanel]
   const ClerkSSOPanel({super.key, required this.onStrategyChosen});
 
   /// Function to call when a strategy is chosen
   final ValueChanged<clerk.Strategy> onStrategyChosen;
 
-  @override
-  State<ClerkSSOPanel> createState() => _ClerkSSOPanelState();
-}
+  Widget _connection(clerk.SocialConnection connection) => Expanded(
+        child: SocialConnectionButton(
+          key: ValueKey<clerk.SocialConnection>(connection),
+          connection: connection,
+          onPressed: () => onStrategyChosen(connection.strategy),
+        ),
+      );
 
-class _ClerkSSOPanelState extends State<ClerkSSOPanel>
-    with ClerkTelemetryStateMixin {
+  Iterable<Widget> _connections(
+    List<clerk.SocialConnection> connections,
+  ) sync* {
+    if (connections.isNotEmpty) {
+      yield _connection(connections.first);
+      for (final connection in connections.skip(1)) {
+        yield horizontalMargin8;
+        yield _connection(connection);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final authState = ClerkAuth.of(context);
-    if (authState.isNotAvailable) {
-      return emptyWidget;
-    }
+    return ClerkAuthBuilder(
+      builder: (context, authState) {
+        if (authState.isNotAvailable) {
+          return emptyWidget;
+        }
 
-    final oauthStrategies = authState.env.config.identificationStrategies //
-        .where((i) => i.isOauth)
-        .toList();
-    final socialConnections = authState.env.user.socialSettings.values //
-        .where((s) => oauthStrategies.contains(s.strategy))
-        .toList();
+        final socialConnections = authState.env.socialConnections;
+        if (socialConnections.isEmpty) {
+          return emptyWidget;
+        }
 
-    if (socialConnections.isEmpty) {
-      return emptyWidget;
-    }
-
-    return Row(
-      children: [
-        for (final (index, connection) in socialConnections.indexed) ...[
-          if (index > 0) //
-            horizontalMargin8,
-          Expanded(
-            child: SocialConnectionButton(
-              key: ValueKey<clerk.SocialConnection>(connection),
-              connection: connection,
-              onPressed: () => widget.onStrategyChosen(connection.strategy),
-            ),
-          ),
-        ],
-      ],
+        return Row(children: _connections(socialConnections).toList());
+      },
     );
   }
 }

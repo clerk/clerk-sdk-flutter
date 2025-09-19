@@ -13,7 +13,7 @@ class ClerkPanelHeader extends StatelessWidget {
     super.key,
     this.subtitle,
     this.title,
-    this.padding = horizontalPadding48,
+    this.padding = horizontalPadding24,
   });
 
   /// The title, if other than the app title

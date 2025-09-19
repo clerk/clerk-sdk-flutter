@@ -149,7 +149,11 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                     onStrategyChosen: (strategy) =>
                         _continue(authState, strategy: strategy),
                   ),
-                  const Padding(padding: verticalPadding24, child: OrDivider()),
+                  if (env.hasSocialConnections) //
+                    const Padding(
+                      padding: verticalPadding24,
+                      child: OrDivider(),
+                    ),
                   ClerkIdentifierInput(
                     initialValue: _identifier,
                     strategies: env.identificationStrategies.toList(),

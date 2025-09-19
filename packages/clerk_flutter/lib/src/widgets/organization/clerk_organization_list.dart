@@ -85,17 +85,22 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
   ) async {
     await ClerkPage.show(
       context,
-      builder: (context) => CreateOrganizationPanel(
-        onSubmit: (String name, String? slug, File? image) async {
-          await authState.safelyCall(
-            context,
-            () => authState.createOrganization(
-              name: name,
-              slug: slug,
-              logo: image,
-            ),
-          );
-        },
+      builder: (context) => ClerkVerticalCard(
+        topPortion: CreateOrganizationPanel(
+          onSubmit: (String name, String slug, File? image) async {
+            await authState.safelyCall(
+              context,
+              () => authState.createOrganization(
+                name: name,
+                slug: slug,
+                logo: image,
+              ),
+            );
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
+          },
+        ),
       ),
     );
   }
@@ -111,10 +116,12 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
   }
 
   void _selectOrg([_Organization? org]) {
-    setState(() {
-      _previousOrg = _currentOrg;
-      _currentOrg = org;
-    });
+    if (_currentOrg != org) {
+      setState(() {
+        _previousOrg = _currentOrg;
+        _currentOrg = org;
+      });
+    }
   }
 
   bool get _shouldRefreshInvitation =>
@@ -126,10 +133,8 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
       final invitations = await _authState.fetchOrganizationInvitations();
       _invitations.addOrReplaceAll(invitations, by: (i) => i.id);
       setState(() {});
-      _invitationsRefreshTimer = Timer(
-        _authState.config.clientRefreshPeriod,
-        _fetchInvitations,
-      );
+      _invitationsRefreshTimer =
+          Timer(_authState.config.clientRefreshPeriod, _fetchInvitations);
     }
   }
 
@@ -168,10 +173,9 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
                 ?.map(_Organization.fromMembership)
                 .toList() ??
             [];
-        _currentOrg = _currentOrg is _Organization
-            ? orgs.firstWhereOrNull((o) => o.id == _currentOrg?.id)
-            : null;
-        final currentIsPersonal = _currentOrg == null;
+        _currentOrg = orgs.firstWhereOrNull(
+          (o) => o.id == authState.session?.lastActiveOrganizationId,
+        );
 
         _organizations.addOrReplaceAll(orgs, by: (m) => m.orgId);
         _organizations.sortBy((a) => a.name);
@@ -208,14 +212,15 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
                   startsClosed: false,
                   child: _OrganizationRow(organization: previous),
                 ),
-              _OrganizationRow(
-                key: const Key('personal'),
-                organization: _Organization(
-                  name: _localizations.personalAccount,
-                  imageUrl: user.imageUrl,
+              if (authState.env.organization.allowsPersonalOrgs) //
+                _OrganizationRow(
+                  key: const Key('personal'),
+                  organization: _Organization(
+                    name: _localizations.personalAccount,
+                    imageUrl: user.imageUrl,
+                  ),
+                  onTap: _selectOrg,
                 ),
-                onTap: currentIsPersonal ? null : _selectOrg,
-              ),
               for (final org in _organizations) //
                 Closeable(
                   key: Key(org.id),

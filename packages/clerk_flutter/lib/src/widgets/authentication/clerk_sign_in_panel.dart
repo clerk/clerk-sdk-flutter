@@ -151,7 +151,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                   ),
                   const Padding(padding: verticalPadding24, child: OrDivider()),
                   ClerkIdentifierInput(
-                    initial: _identifier,
+                    initialValue: _identifier,
                     strategies: env.identificationStrategies.toList(),
                     onChanged: (identifier) => _identifier = identifier,
                     onSubmit: (_) => _continue(authState),

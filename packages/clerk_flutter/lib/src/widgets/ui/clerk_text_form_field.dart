@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/input_label.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
@@ -121,8 +123,8 @@ class _TextFieldState extends State<_TextField> {
   @override
   void didUpdateWidget(covariant _TextField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.obscureText case bool obscureText) {
-      _obscure = obscureText;
+    if (widget.obscureText != oldWidget.obscureText) {
+      _obscure = widget.obscureText ?? false;
     }
   }
 
@@ -141,9 +143,7 @@ class _TextFieldState extends State<_TextField> {
       obscuringCharacter: '\u25CF' /* Unicode: Black Circle */,
       validator: (text) {
         if (widget.validator?.call(text) case bool valid when valid != _valid) {
-          WidgetsBinding.instance.addPostFrameCallback(
-            (_) => setState(() => _valid = valid),
-          );
+          scheduleMicrotask(() => setState(() => _valid = valid));
         }
         return null;
       },

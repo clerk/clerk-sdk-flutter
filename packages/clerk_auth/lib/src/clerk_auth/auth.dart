@@ -103,10 +103,10 @@ class Auth {
   bool get isSignedIn => user != null;
 
   /// Are we currently signing in?
-  bool get isSigningIn => signIn is SignIn;
+  bool get isSigningIn => signIn != null;
 
   /// Are we currently signing up?
-  bool get isSigningUp => signUp is SignUp;
+  bool get isSigningUp => signUp != null;
 
   /// A method to be overridden by extension classes to cope with
   /// updating their systems when things change (e.g. the clerk_flutter

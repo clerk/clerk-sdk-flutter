@@ -22,7 +22,8 @@ class ClerkSignInExample extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: ClerkAuthBuilder(
               signedInBuilder: (context, authState) {
-                if (authState.env.organization.isEnabled == false) {
+                if (authState.env.organization.isEnabled == false ||
+                    authState.user!.hasOrganizations == false) {
                   return const ClerkUserButton();
                 }
                 return const _UserAndOrgTabs();

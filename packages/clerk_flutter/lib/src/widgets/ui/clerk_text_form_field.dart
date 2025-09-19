@@ -5,6 +5,7 @@ import 'package:clerk_flutter/src/widgets/ui/input_label.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// A reusable and Clerk styled [TextFormField].
 ///
@@ -17,6 +18,7 @@ class ClerkTextFormField extends StatelessWidget {
     this.obscureText,
     this.autofocus = false,
     this.isMissing = false,
+    this.inputFormatter,
     this.focusNode,
     this.onChanged,
     this.onSubmit,
@@ -24,6 +26,7 @@ class ClerkTextFormField extends StatelessWidget {
     this.onObscure,
     this.validator,
     this.trailing,
+    this.hint,
   });
 
   /// Report changes back to calling widget
@@ -47,6 +50,9 @@ class ClerkTextFormField extends StatelessWidget {
   /// Do we need to mark this field as required?
   final bool isMissing;
 
+  /// A [TextInputFormatter] to normalise input text
+  final TextInputFormatter? inputFormatter;
+
   /// An optional focus node
   final FocusNode? focusNode;
 
@@ -62,6 +68,9 @@ class ClerkTextFormField extends StatelessWidget {
 
   /// A widget for the end of the label
   final Widget? trailing;
+
+  /// Hint text
+  final String? hint;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +94,8 @@ class ClerkTextFormField extends StatelessWidget {
           validator: validator,
           autofocus: autofocus,
           focusNode: focusNode,
+          inputFormatter: inputFormatter,
+          hint: hint,
         ),
       ],
     );
@@ -100,7 +111,9 @@ class _TextField extends StatefulWidget {
     required this.onObscure,
     required this.validator,
     required this.autofocus,
+    this.inputFormatter,
     this.focusNode,
+    this.hint,
   });
 
   final ValueChanged<String>? onChanged;
@@ -110,7 +123,14 @@ class _TextField extends StatefulWidget {
   final FocusNode? focusNode;
   final VoidCallback? onObscure;
   final bool Function(String?)? validator;
+  final TextInputFormatter? inputFormatter;
   final String? initial;
+  final String? hint;
+
+  List<TextInputFormatter>? get inputFormatters => switch (inputFormatter) {
+        TextInputFormatter formatter => [formatter],
+        _ => null,
+      };
 
   @override
   State<_TextField> createState() => _TextFieldState();
@@ -147,9 +167,12 @@ class _TextFieldState extends State<_TextField> {
         }
         return null;
       },
+      inputFormatters: widget.inputFormatters,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         isCollapsed: true,
+        hintText: widget.hint,
+        hintStyle: const TextStyle(color: ClerkColors.mountainMist),
         border: outlineInputBorder,
         enabledBorder: outlineInputBorder,
         focusedBorder: outlineInputBorder,

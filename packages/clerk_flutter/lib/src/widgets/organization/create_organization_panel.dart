@@ -1,14 +1,17 @@
 import 'dart:io';
 
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/src/assets.dart';
+import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';
 import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
-import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -23,7 +26,7 @@ class CreateOrganizationPanel extends StatefulWidget {
 
   /// The function to be called once editing of the
   /// org data has completed
-  final Future<void> Function(String, String?, File?) onSubmit;
+  final Future<void> Function(String, String, File?) onSubmit;
 
   @override
   State<CreateOrganizationPanel> createState() =>
@@ -31,14 +34,16 @@ class CreateOrganizationPanel extends StatefulWidget {
 }
 
 class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
+  late final _l10ns = ClerkAuth.localizationsOf(context);
+  late final _slugFormatter = TextInputFormatter.withFunction(
+    (_, value) => value.copyWith(text: _l10ns.grammar.toSlug(value.text)),
+  );
+
   String _name = '';
-  String? _slug;
+  String _slug = '';
   File? _image;
 
-  Future<void> _chooseImage(
-    BuildContext context, {
-    ImageSource source = ImageSource.camera,
-  }) async {
+  Future<void> _chooseImage(BuildContext context, ImageSource source) async {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: source);
     if (context.mounted && image != null) {
@@ -46,129 +51,142 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
     }
   }
 
+  String _generateSlug(String name) {
+    name = name.orNullIfEmpty ?? _l10ns.myOrganization;
+    return _l10ns.grammar.toSlug(name);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final localizations = ClerkAuth.localizationsOf(context);
     return Center(
-      child: ClerkVerticalCard(
-        topPortion: Padding(
-          padding: allPadding24,
+      child: Padding(
+        padding: allPadding24,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClerkPanelHeader(
+              title: _l10ns.setUpYourOrganization,
+              subtitle: _l10ns.enterYourOrganizationDetailsToContinue,
+            ),
+            Text(
+              _l10ns.logo,
+              style: ClerkTextStyle.inputBoxLabel,
+              maxLines: 1,
+            ),
+            verticalMargin4,
+            _LogoPicker(
+              imageFile: _image,
+              openPicker: (source) => _chooseImage(context, source),
+            ),
+            verticalMargin28,
+            ClerkTextFormField(
+              label: _l10ns.name,
+              initial: _name,
+              hint: _l10ns.myOrganization,
+              onChanged: (name) => setState(() => _name = name),
+            ),
+            verticalMargin16,
+            ClerkTextFormField(
+              label: _l10ns.slug,
+              initial: _slug,
+              hint: _generateSlug(_name),
+              inputFormatter: _slugFormatter,
+              onChanged: (slug) => _slug = slug,
+            ),
+            verticalMargin28,
+            Align(
+              alignment: Alignment.centerRight,
+              child: SizedBox(
+                width: 150.0,
+                child: ClerkMaterialButton(
+                  onPressed: () => widget.onSubmit(_name, _slug, _image),
+                  label: Text(_l10ns.createOrganization),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LogoPicker extends StatelessWidget {
+  const _LogoPicker({this.imageFile, required this.openPicker});
+
+  final File? imageFile;
+  final ValueChanged<ImageSource> openPicker;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10ns = ClerkAuth.localizationsOf(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => openPicker(ImageSource.camera),
+          child: SizedBox.square(
+            dimension: 64,
+            child: imageFile is File
+                ? ClipRRect(
+                    borderRadius: borderRadius4,
+                    child: Image.file(
+                      imageFile!,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : SvgPicture.asset(
+                    ClerkAssets.uploadLogoPlaceholder,
+                    package: 'clerk_flutter',
+                  ),
+          ),
+        ),
+        horizontalMargin16,
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                localizations.createOrganization,
-                style: ClerkTextStyle.title,
-                maxLines: 1,
-              ),
-              verticalMargin32,
-              Text(
-                localizations.logo,
-                style: ClerkTextStyle.subtitle,
-                maxLines: 1,
-              ),
-              verticalMargin10,
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => _chooseImage(context),
-                    child: SizedBox.square(
-                      dimension: 64,
-                      child: _image is File
-                          ? ClipRRect(
-                              borderRadius: borderRadius4,
-                              child: Image.file(
-                                _image!,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : SvgPicture.asset(
-                              ClerkAssets.uploadLogoPlaceholder,
-                              package: 'clerk_flutter',
-                            ),
+                  SizedBox(
+                    height: 20,
+                    width: 40,
+                    child: ClerkMaterialButton(
+                      style: ClerkMaterialButtonStyle.light,
+                      onPressed: () => openPicker(ImageSource.camera),
+                      label: const Icon(
+                        Icons.camera_alt,
+                        color: ClerkColors.midGrey,
+                      ),
                     ),
                   ),
-                  horizontalMargin16,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              height: 20,
-                              width: 40,
-                              child: ClerkMaterialButton(
-                                style: ClerkMaterialButtonStyle.light,
-                                onPressed: () => _chooseImage(context),
-                                label: const Icon(
-                                  Icons.camera_alt,
-                                  color: ClerkColors.midGrey,
-                                ),
-                              ),
-                            ),
-                            horizontalMargin8,
-                            SizedBox(
-                              height: 20,
-                              width: 40,
-                              child: ClerkMaterialButton(
-                                style: ClerkMaterialButtonStyle.light,
-                                onPressed: () => _chooseImage(
-                                  context,
-                                  source: ImageSource.gallery,
-                                ),
-                                label: const Icon(
-                                  Icons.collections,
-                                  color: ClerkColors.midGrey,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        verticalMargin10,
-                        Text(
-                          localizations.recommendSize,
-                          maxLines: 2,
-                          style: ClerkTextStyle.buttonTitle,
-                        ),
-                      ],
+                  horizontalMargin8,
+                  SizedBox(
+                    height: 20,
+                    width: 40,
+                    child: ClerkMaterialButton(
+                      style: ClerkMaterialButtonStyle.light,
+                      onPressed: () => openPicker(ImageSource.gallery),
+                      label: const Icon(
+                        Icons.collections,
+                        color: ClerkColors.midGrey,
+                      ),
                     ),
                   ),
                 ],
               ),
-              verticalMargin28,
-              ClerkTextFormField(
-                label: localizations.name,
-                onChanged: (name) => _name = name,
-              ),
-              verticalMargin28,
-              ClerkTextFormField(
-                label: localizations.slugUrl,
-                onChanged: (slug) => _slug = slug,
-              ),
-              verticalMargin28,
-              Align(
-                alignment: Alignment.centerRight,
-                child: SizedBox(
-                  width: 150.0,
-                  child: ClerkMaterialButton(
-                    onPressed: () async {
-                      await widget.onSubmit(_name, _slug, _image);
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    label: Text(localizations.createOrganization),
-                  ),
-                ),
+              verticalMargin10,
+              Text(
+                l10ns.recommendSize,
+                maxLines: 2,
+                style: ClerkTextStyle.buttonTitle,
               ),
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 }

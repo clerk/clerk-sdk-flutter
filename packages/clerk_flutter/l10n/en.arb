@@ -61,6 +61,7 @@
   "connectedAccounts": "Connected accounts",
   "cont": "Continue",
   "createOrganization": "Create organization",
+  "developmentMode": "Development mode",
   "didntReceiveCode": "Didn't receive the code?",
   "domainName": "Domain name",
   "dontHaveAnAccount": "Don’t have an account?",
@@ -78,6 +79,7 @@
     }
   },
   "enterTheCodeSentToYou": "Enter the code sent to you",
+  "enterYourOrganizationDetailsToContinue": "Enter your organization details to continue",
   "expired": "expired",
   "failed": "failed",
   "firstName": "first name",
@@ -123,6 +125,7 @@
   "logo": "Logo",
   "manualInvitation": "Manual invitation",
   "missingRequirements": "missing requirements",
+  "myOrganization": "My Organization",
   "name": "Name",
   "needsFirstFactor": "needs first factor",
   "needsIdentifier": "needs identifier",
@@ -209,6 +212,7 @@
   "resetPassword": "Reset password and sign in",
   "selectAccount": "Select the account with which you wish to continue",
   "sendMeTheCode": "Send me the reset code",
+  "setUpYourOrganization": "Set up your organization",
   "signIn": "Sign in",
   "signInByClickingALinkSentToYouByEmail": "Sign in by clicking a link sent to you by email",
   "signInByEnteringACodeSentToYouByEmail": "Sign in by entering a code sent to you by email",
@@ -249,6 +253,7 @@
       }
     }
   },
+  "slug": "Slug",
   "slugUrl": "Slug URL",
   "switchTo": "Switch to",
   "termsAndConditions": "Terms & Conditions",

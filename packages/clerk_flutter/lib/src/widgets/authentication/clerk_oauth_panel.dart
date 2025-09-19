@@ -30,36 +30,33 @@ class _ClerkOAuthPanelState extends State<ClerkOAuthPanel>
     with ClerkTelemetryStateMixin {
   @override
   Widget build(BuildContext context) {
-    final authState = ClerkAuth.of(context);
-    if (authState.isNotAvailable) {
-      return emptyWidget;
-    }
+    return ClerkAuthBuilder(
+      builder: (context, authState) {
+        if (authState.isNotAvailable) {
+          return emptyWidget;
+        }
 
-    final oauthStrategies = authState.env.config.identificationStrategies //
-        .where((i) => i.isOauth)
-        .toList();
-    final socialConnections = authState.env.user.socialSettings.values //
-        .where((s) => oauthStrategies.contains(s.strategy))
-        .toList();
+        final socialConnections = authState.env.socialConnections;
+        if (socialConnections.isEmpty) {
+          return emptyWidget;
+        }
 
-    if (socialConnections.isEmpty) {
-      return emptyWidget;
-    }
-
-    return Row(
-      children: [
-        for (final (index, connection) in socialConnections.indexed) ...[
-          if (index > 0) //
-            horizontalMargin8,
-          Expanded(
-            child: SocialConnectionButton(
-              key: ValueKey<clerk.SocialConnection>(connection),
-              connection: connection,
-              onPressed: () => widget.onStrategyChosen(connection.strategy),
-            ),
-          ),
-        ],
-      ],
+        return Row(
+          children: [
+            for (final (index, connection) in socialConnections.indexed) ...[
+              if (index > 0) //
+                horizontalMargin8,
+              Expanded(
+                child: SocialConnectionButton(
+                  key: ValueKey<clerk.SocialConnection>(connection),
+                  connection: connection,
+                  onPressed: () => widget.onStrategyChosen(connection.strategy),
+                ),
+              ),
+            ]
+          ],
+        );
+      },
     );
   }
 }

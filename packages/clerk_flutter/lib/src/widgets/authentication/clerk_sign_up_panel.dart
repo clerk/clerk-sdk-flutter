@@ -6,6 +6,7 @@ import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_continue_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
@@ -311,19 +312,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
         Closeable(
           closed: (_state.isWaiting && isAwaitingCode == false) ||
               (_needsLegalAcceptance && _hasLegalAcceptance == false),
-          child: ClerkMaterialButton(
-            onPressed: () => _continue(attributes),
-            label: Row(
-              children: [
-                horizontalMargin16,
-                Expanded(child: Center(child: Text(l10ns.cont))),
-                const SizedBox(
-                  width: 16,
-                  child: Icon(Icons.arrow_right_sharp),
-                ),
-              ],
-            ),
-          ),
+          child: ClerkContinueButton(onPressed: () => _continue(attributes)),
         ),
         if (_needsLegalAcceptance) //
           Closeable(

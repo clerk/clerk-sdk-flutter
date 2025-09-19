@@ -18,6 +18,7 @@ class OrganizationSettings with InformativeToStringMixin {
     this.actions = OrganizationActions.empty,
     this.domains = DomainSettings.empty,
     this.isEnabled = false,
+    this.forceOrganizationSelection = false,
   });
 
   /// max allowed memberships
@@ -32,8 +33,14 @@ class OrganizationSettings with InformativeToStringMixin {
   /// organization actions
   final OrganizationActions actions;
 
+  /// force organization selection
+  final bool forceOrganizationSelection;
+
   /// empty [OrganizationSettings]
   static const empty = OrganizationSettings();
+
+  /// do we allow personal orgs?
+  bool get allowsPersonalOrgs => forceOrganizationSelection == false;
 
   /// is enabled?
   @JsonKey(name: 'enabled')

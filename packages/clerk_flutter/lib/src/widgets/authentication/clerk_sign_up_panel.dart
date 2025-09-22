@@ -51,8 +51,6 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   static final _phoneNumberRE = RegExp(r'[^0-9+]');
   final Map<clerk.UserAttribute, String?> _values = {};
   _SignUpPanelState _state = _SignUpPanelState.input;
-  String _passwordConfirmation = '';
-  bool _isObscured = true;
   bool _needsLegalAcceptance = true;
   bool _hasLegalAcceptance = false;
   bool _highlightMissing = false;
@@ -114,8 +112,10 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       return;
     }
 
-    final conf = _passwordConfirmation.trim();
-    if (authState.checkPassword(password, conf, context) case String error) {
+    final passwordConfirmation =
+        _valueOrNull(clerk.UserAttribute.passwordConfirmation);
+    if (authState.checkPassword(password, passwordConfirmation, context)
+        case String error) {
       authState.addError(
         clerk.AuthError(
           code: clerk.AuthErrorCode.invalidPassword,
@@ -153,7 +153,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           emailAddress: emailAddress,
           phoneNumber: phoneNumber,
           password: password,
-          passwordConfirmation: _passwordConfirmation.orNullIfEmpty,
+          passwordConfirmation: passwordConfirmation,
           legalAccepted: _needsLegalAcceptance ? _hasLegalAcceptance : null,
         );
       },
@@ -277,25 +277,6 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           child: ClerkContinueButton(onPressed: () => _continue(attributes)),
         ),
         if (_needsLegalAcceptance) //
-          Closeable(
-            closed: _hasLegalAcceptance,
-            child: Padding(
-              padding: topPadding4,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  horizontalMargin16,
-                  Expanded(child: Center(child: Text(l10ns.cont))),
-                  const SizedBox(
-                    width: 16,
-                    child: Icon(Icons.arrow_right_sharp),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        if (_needsLegalAcceptance) //
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -412,14 +393,15 @@ class _LegalAcceptanceConfirmation extends StatelessWidget {
     if (url case String url when url.isNotEmpty) {
       final segments = text.split(target);
       final spans = [TextSpan(text: segments.first)];
+      final recognizer = TapGestureRecognizer()
+        ..onTap = () => launchUrlString(url);
 
       for (final segmentText in segments.skip(1)) {
         spans.add(
           TextSpan(
             text: target,
             style: const TextStyle(color: ClerkColors.azure),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () => launchUrlString(url),
+            recognizer: recognizer,
           ),
         );
         if (segmentText.isNotEmpty) {

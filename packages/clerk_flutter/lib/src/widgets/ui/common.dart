@@ -8,6 +8,8 @@ import 'package:phone_input/phone_input_package.dart';
 
 extension PhoneNumberExtension on PhoneNumber {
   String get intlFormattedNsn => '(+$countryCode) ${getFormattedNsn()}';
+
+  String get intlNsn => '+$countryCode$nsn';
 }
 
 final defaultOrgLogo = SvgPicture.asset(

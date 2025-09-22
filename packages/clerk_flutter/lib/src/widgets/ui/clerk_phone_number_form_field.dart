@@ -151,7 +151,7 @@ class _PhoneInputState extends State<_PhoneInput> {
                 final valid = phoneNumber.isValid();
                 if (valid != _isValid) setState(() => _isValid = valid);
                 if (valid) {
-                  widget.onChanged(phoneNumber.intlFormattedNsn);
+                  widget.onChanged(phoneNumber.intlNsn);
                 }
                 _checkIsoCode(phoneNumber.isoCode);
               }

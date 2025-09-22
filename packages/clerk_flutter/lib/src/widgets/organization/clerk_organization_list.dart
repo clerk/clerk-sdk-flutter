@@ -116,12 +116,14 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
     );
   }
 
-  void _selectOrg([_Organization? org]) {
-    if (_currentOrg != org) {
-      setState(() {
-        _previousOrg = _currentOrg;
-        _currentOrg = org;
-      });
+  Future<void> _selectOrg(_Organization org) async {
+    if (org != _currentOrg) {
+      final authState = ClerkAuth.of(context, listen: false);
+      await authState.safelyCall(
+        context,
+        () => authState.setActiveOrganization(org.organization),
+      );
+      _previousOrg = _currentOrg;
     }
   }
 
@@ -221,9 +223,8 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
               if (authState.env.organization.allowsPersonalOrgs) //
                 _OrganizationRow(
                   key: const Key('personal'),
-                  organization: _Organization(
-                    name: _localizations.personalAccount,
-                    imageUrl: user.imageUrl,
+                  organization: const _Organization(
+                    organization: clerk.Organization.personal,
                   ),
                   onTap: _selectOrg,
                 ),

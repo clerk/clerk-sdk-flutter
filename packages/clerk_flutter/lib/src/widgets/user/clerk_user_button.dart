@@ -176,9 +176,20 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
           authState.localizationsOf(context).grammar.toSlug(name);
       await authState.safelyCall(
         context,
-        () => authState.createOrganization(name: name, slug: slug, logo: logo),
+        () async {
+          await authState.createOrganization(
+            name: name,
+            slug: slug,
+            logo: logo,
+          );
+          if (authState.user?.organizationMemberships
+              case List<clerk.OrganizationMembership> memberships
+              when memberships.isNotEmpty) {
+            final org = memberships.first.organization;
+            await authState.setActiveOrganization(org);
+          }
+        },
       );
-      // TODO: add touch org (to make it active) once other PRs are merged
     }
   }
 

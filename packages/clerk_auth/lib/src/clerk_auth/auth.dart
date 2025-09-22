@@ -169,7 +169,7 @@ class Auth {
       );
     }
 
-    if (config.sessionTokenPollMode == SessionTokenPollMode.hungry) {
+    if (config.sessionTokenPolling) {
       await _pollForSessionToken();
     }
   }

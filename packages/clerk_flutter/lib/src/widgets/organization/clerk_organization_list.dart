@@ -54,7 +54,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
   _Organization? _previousOrg;
   _Organization? _currentlyAccepting;
   Timer? _invitationsRefreshTimer;
-  late final _OnceOnlyBoolean _isAfterFirstBuild;
+  bool _isFirstBuild = true;
 
   static const _editArrow = Padding(
     padding: allPadding8,
@@ -67,6 +67,15 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
     return {
       'actions': actions.map((a) => a.label).join(';'),
     };
+  }
+
+  bool get _isAfterFirstBuild {
+    if (_isFirstBuild) {
+      _isFirstBuild = false; // for next time
+      return false;
+    }
+
+    return true;
   }
 
   List<ClerkUserAction> _defaultActions() {
@@ -153,12 +162,6 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
       _Organization.fromInvitation(inv, _localizations);
 
   @override
-  void initState() {
-    super.initState();
-    _isAfterFirstBuild = _OnceOnlyBoolean(false);
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_shouldRefreshInvitation && _invitationsRefreshTimer == null) {
@@ -206,7 +209,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
                 Closeable(
                   key: Key('current:${current.orgId}'),
                   closed: false,
-                  startsClosed: _isAfterFirstBuild.value,
+                  startsClosed: _isAfterFirstBuild,
                   child: _OrganizationRow(
                     organization: current,
                     onTap: _editCurrentOrg,
@@ -390,21 +393,4 @@ class _Organization {
   @override
   operator ==(Object other) =>
       other is _Organization && organization == other.organization;
-}
-
-class _OnceOnlyBoolean {
-  _OnceOnlyBoolean(this.initialValue);
-
-  final bool initialValue;
-
-  bool _hasBeenRead = false;
-
-  bool get value {
-    if (_hasBeenRead) {
-      return initialValue == false;
-    }
-
-    _hasBeenRead = true;
-    return initialValue;
-  }
 }

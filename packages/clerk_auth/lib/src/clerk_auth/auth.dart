@@ -320,9 +320,7 @@ class Auth {
     Organization? organization,
     String? templateName,
   }) async {
-    final org = env.organization.isEnabled
-        ? organization ?? Organization.personal
-        : null;
+    final org = env.organization.isEnabled ? organization : null;
     SessionToken? token = _api.sessionToken(org, templateName);
     if (token is! SessionToken) {
       if (org == null && templateName == null) {

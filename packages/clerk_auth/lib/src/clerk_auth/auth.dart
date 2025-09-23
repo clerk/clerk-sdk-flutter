@@ -191,16 +191,19 @@ class Auth {
     config.terminate();
   }
 
-  Future<void> _pollForSessionToken() async {
+  Future<SessionToken?> _pollForSessionToken() async {
     _pollTimer?.cancel();
 
     Duration delay = _defaultPollDelay;
+    SessionToken? sessionToken;
 
     try {
-      final sessionToken = await _api.updateSessionToken();
-      if (sessionToken case SessionToken token) {
-        _sessionTokens.add(token);
-        delay = token.expiry.difference(DateTime.timestamp());
+      if (isSignedIn) {
+        sessionToken = await _api.updateSessionToken();
+        if (sessionToken case SessionToken token) {
+          _sessionTokens.add(token);
+          delay = token.expiry.difference(DateTime.timestamp());
+        }
       }
     } on AuthError catch (error) {
       addError(error);
@@ -214,6 +217,8 @@ class Auth {
     } finally {
       _pollTimer = Timer(delay, _pollForSessionToken);
     }
+
+    return sessionToken;
   }
 
   Future<void> _retryFetchClientAndEnv(_) async {
@@ -320,7 +325,11 @@ class Auth {
         : null;
     SessionToken? token = _api.sessionToken(org, templateName);
     if (token is! SessionToken) {
-      token = await _api.updateSessionToken(org, templateName);
+      if (org == null && templateName == null) {
+        token = await _pollForSessionToken(); // this resets the timer too
+      } else {
+        token = await _api.updateSessionToken(org, templateName);
+      }
       if (token is SessionToken) {
         _sessionTokens.add(token);
       } else {

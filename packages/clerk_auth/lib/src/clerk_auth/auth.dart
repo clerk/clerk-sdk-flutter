@@ -942,7 +942,7 @@ class Auth {
     String newPassword, {
     bool signOut = true,
   }) async {
-    await _api.updatePassword(currentPassword, newPassword, signOut);
+    await _api.updatePassword(currentPassword, newPassword, signOut).then(_housekeeping);
     update();
   }
 

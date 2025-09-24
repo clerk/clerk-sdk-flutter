@@ -84,10 +84,13 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
     if (authState.client.signIn?.factors case List<clerk.Factor> factors
         when mounted && factors.any((f) => f.strategy.isEnterpriseSSO)) {
-      await authState.ssoSignIn(
+      await authState.safelyCall(
         context,
-        clerk.Strategy.enterpriseSSO,
-        identifier: _identifier.orNullIfEmpty,
+        () => authState.ssoSignIn(
+          context,
+          clerk.Strategy.enterpriseSSO,
+          identifier: _identifier.orNullIfEmpty,
+        ),
       );
     }
   }
@@ -100,7 +103,9 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
   bool _requiresContinue(clerk.SignIn signIn) =>
       signIn.status.isUnknown ||
-      (signIn.verification == null && signIn.canUsePassword);
+      (signIn.verification == null &&
+          signIn.canUsePassword &&
+          _strategy != clerk.Strategy.emailLink);
 
   @override
   Widget build(BuildContext context) {
@@ -153,10 +158,17 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         Openable(
           key: const Key('emailLinkMessage'),
           open: _strategy == clerk.Strategy.emailLink,
-          child: Text(
-            l10ns.clickOnTheLinkThatsBeenSentTo(_identifier),
-            maxLines: 3,
-            style: ClerkTextStyle.inputText,
+          child: Column(
+            children: [
+              Text(
+                l10ns.clickOnTheLinkThatsBeenSentTo(_identifier),
+                textAlign: TextAlign.center,
+                maxLines: 3,
+                style: ClerkTextStyle.subtitle,
+              ),
+              verticalMargin16,
+              defaultLoadingWidget,
+            ],
           ),
         ),
         Openable(

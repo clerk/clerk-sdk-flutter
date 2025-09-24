@@ -139,9 +139,11 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
     final username = _valueOrNull(clerk.UserAttribute.username);
     final emailAddress = _valueOrNull(clerk.UserAttribute.emailAddress);
+    final redirectUri = authState.emailVerificationRedirectUri(context);
     final phoneNumber = _valueOrNull(clerk.UserAttribute.phoneNumber)
         ?.replaceAll(_phoneNumberRE, '')
         .orNullIfEmpty;
+
     await authState.safelyCall(
       context,
       () async {
@@ -154,6 +156,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           phoneNumber: phoneNumber,
           password: password,
           passwordConfirmation: passwordConfirmation,
+          redirectUrl: redirectUri?.toString(),
           legalAccepted: _needsLegalAcceptance ? _hasLegalAcceptance : null,
         );
       },
@@ -165,7 +168,9 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     }
 
     setState(() {
-      _state = _SignUpPanelState.waiting;
+      _state = authState.isSigningUp
+          ? _SignUpPanelState.waiting
+          : _SignUpPanelState.input;
       _highlightMissing = true;
     });
   }
@@ -235,12 +240,12 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             },
             onResend: _reset,
           ),
-        Closeable(
-          closed: _state.isInput || isAwaitingCode,
-          child: Column(
-            children: [
-              if (env.supportsEmailLink &&
-                  signUp?.unverified(clerk.Field.emailAddress) == true) ...[
+        if (env.supportsEmailLink &&
+            signUp?.unverified(clerk.Field.emailAddress) == true) //
+          Closeable(
+            closed: _state.isInput || isAwaitingCode,
+            child: Column(
+              children: [
                 Text(
                   l10ns.clickOnTheLinkThatsBeenSentTo(
                     _values[clerk.UserAttribute.emailAddress]!,
@@ -250,11 +255,10 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                   style: ClerkTextStyle.subtitle,
                 ),
                 verticalMargin16,
+                defaultLoadingWidget,
               ],
-              defaultLoadingWidget,
-            ],
+            ),
           ),
-        ),
         Closeable(
           closed: _state.isWaiting,
           child: Column(
@@ -277,24 +281,27 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           child: ClerkContinueButton(onPressed: () => _continue(attributes)),
         ),
         if (_needsLegalAcceptance) //
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: _acceptTerms,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 8, 8),
-                  child: Icon(
-                    _hasLegalAcceptance
-                        ? Icons.check_box_outlined
-                        : Icons.check_box_outline_blank,
+          Closeable(
+            closed: _state.isWaiting,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _acceptTerms,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+                    child: Icon(
+                      _hasLegalAcceptance
+                          ? Icons.check_box_outlined
+                          : Icons.check_box_outline_blank,
+                    ),
                   ),
                 ),
-              ),
-              const Expanded(child: _LegalAcceptanceConfirmation()),
-            ],
+                const Expanded(child: _LegalAcceptanceConfirmation()),
+              ],
+            ),
           ),
         verticalMargin32,
       ],

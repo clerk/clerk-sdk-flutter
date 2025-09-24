@@ -483,21 +483,7 @@ class Auth {
               redirectUrl: redirectUrl,
             )
             .then(_housekeeping);
-
-        final signInCompleter = Completer<void>();
-
-        unawaited(
-          _pollForCompletion().then(
-            (client) {
-              this.client = client;
-              signInCompleter.complete();
-              update();
-            },
-          ),
-        );
-
-        update();
-        return signInCompleter.future;
+        unawaited(_pollForCompletion());
 
       case SignIn signIn
           when signIn.status.needsFactor &&
@@ -614,6 +600,7 @@ class Auth {
                     redirectUrl: redirectUrl,
                   )
                   .then(_housekeeping);
+              unawaited(_pollForCompletion());
             }
           }
 
@@ -955,20 +942,21 @@ class Auth {
     update();
   }
 
-  Future<Client> _pollForCompletion() async {
-    while (true) {
-      final client = await _api.currentClient();
-      if (client.user is User) return client;
-
-      final expiry = client.signIn?.firstFactorVerification?.expireAt;
-      if (expiry?.isAfter(DateTime.timestamp()) != true) {
-        throw const AuthError(
-          message: 'Awaited user action not completed in required timeframe',
-          code: AuthErrorCode.actionNotTimely,
-        );
-      }
-
+  Future<void> _pollForCompletion() async {
+    while (client.user == null) {
       await Future.delayed(const Duration(seconds: 1));
+
+      final client = await _api.currentClient();
+      if (client.user is User) {
+        this.client = client;
+        update();
+      } else {
+        final expiry = client.signIn?.firstFactorVerification?.expireAt ??
+            client.signUp?.verifications[Field.emailAddress]?.expireAt;
+        if (expiry == null || expiry.isBefore(DateTime.timestamp())) {
+          break;
+        }
+      }
     }
   }
 }

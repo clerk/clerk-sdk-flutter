@@ -133,49 +133,50 @@ class _PhoneInputState extends State<_PhoneInput> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _phoneNumberFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasData == false) {
-            return emptyWidget;
-          }
+      future: _phoneNumberFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasData == false) {
+          return emptyWidget;
+        }
 
-          return PhoneInput(
-            initialValue: _phoneNumber,
-            defaultCountry: _isoCode,
-            autovalidateMode: AutovalidateMode.always,
-            showFlagInInput: true,
-            flagSize: 16,
-            focusNode: widget.focusNode,
-            onChanged: (phoneNumber) {
-              if (phoneNumber case PhoneNumber phoneNumber) {
-                final valid = phoneNumber.isValid();
-                if (valid != _isValid) setState(() => _isValid = valid);
-                if (valid) {
-                  widget.onChanged(phoneNumber.intlNsn);
-                }
-                _checkIsoCode(phoneNumber.isoCode);
+        return PhoneInput(
+          initialValue: _phoneNumber,
+          defaultCountry: _isoCode,
+          autovalidateMode: AutovalidateMode.always,
+          showFlagInInput: true,
+          flagSize: 16,
+          focusNode: widget.focusNode,
+          onChanged: (phoneNumber) {
+            if (phoneNumber case PhoneNumber phoneNumber) {
+              final valid = phoneNumber.isValid();
+              if (valid != _isValid) setState(() => _isValid = valid);
+              if (valid) {
+                widget.onChanged(phoneNumber.international);
               }
-            },
-            onSubmitted: widget.onSubmit,
-            style: ClerkTextStyle.inputText.copyWith(
-              color: _isValid //
-                  ? ClerkColors.charcoalGrey
-                  : ClerkColors.incarnadine,
-            ),
-            decoration: const InputDecoration(
-              errorStyle: TextStyle(
-                color: Colors.transparent,
-                height: 0.01,
-              ), // weird hack because 0 doesn't work
-              isDense: true,
-              border: InputBorder.none,
-              constraints: BoxConstraints(maxHeight: 32, minHeight: 32),
-            ),
-            countrySelectorNavigator: const CountrySelectorNavigator.dialog(
-              addFavoriteSeparator: true,
-              favorites: [IsoCode.US, IsoCode.GB],
-            ),
-          );
-        });
+              _checkIsoCode(phoneNumber.isoCode);
+            }
+          },
+          onSubmitted: widget.onSubmit,
+          style: ClerkTextStyle.inputText.copyWith(
+            color: _isValid //
+                ? ClerkColors.charcoalGrey
+                : ClerkColors.incarnadine,
+          ),
+          decoration: const InputDecoration(
+            errorStyle: TextStyle(
+              color: Colors.transparent,
+              height: 0.01,
+            ), // weird hack because 0 doesn't work
+            isDense: true,
+            border: InputBorder.none,
+            constraints: BoxConstraints(maxHeight: 32, minHeight: 32),
+          ),
+          countrySelectorNavigator: const CountrySelectorNavigator.dialog(
+            addFavoriteSeparator: true,
+            favorites: [IsoCode.US, IsoCode.GB],
+          ),
+        );
+      },
+    );
   }
 }

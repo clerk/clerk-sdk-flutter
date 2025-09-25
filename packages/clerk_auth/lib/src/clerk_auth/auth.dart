@@ -931,7 +931,7 @@ class Auth {
   /// Delete the avatar of the current [User]
   ///
   Future<void> deleteUserImage() async {
-    await _api.deleteAvatar();
+    await _api.deleteAvatar().then(_housekeeping);
     update();
   }
 

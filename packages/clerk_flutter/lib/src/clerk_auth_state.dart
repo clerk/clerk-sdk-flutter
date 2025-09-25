@@ -37,12 +37,12 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   ClerkAuthConfig get config => _config;
   final ClerkAuthConfig _config;
 
-  StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
+  late final StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
 
   @override
   Future<void> initialize() async {
     await super.initialize();
-    _deepLinkSub ??= config.deepLinkStream?.listen(_processDeepLink);
+    _deepLinkSub = config.deepLinkStream?.listen(_processDeepLink);
   }
 
   @override
@@ -71,7 +71,10 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   static const _kSsoRouteName = 'clerk_sso_popup';
 
   @override
-  void update() => notifyListeners();
+  void update() {
+    super.update();
+    notifyListeners();
+  }
 
   @override
   Future<void> signOut() async {

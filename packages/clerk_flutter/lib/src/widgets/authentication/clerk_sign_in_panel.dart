@@ -72,27 +72,26 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
     await authState.safelyCall(
       context,
-      () => authState.attemptSignIn(
-        strategy: strategy!,
-        identifier: _identifier.orNullIfEmpty,
-        password: _password.orNullIfEmpty,
-        code: code?.orNullIfEmpty,
-        redirectUrl: redirectUri?.toString(),
-      ),
+      () async {
+        await authState.attemptSignIn(
+          strategy: strategy!,
+          identifier: _identifier.orNullIfEmpty,
+          password: _password.orNullIfEmpty,
+          code: code?.orNullIfEmpty,
+          redirectUrl: redirectUri?.toString(),
+        );
+
+        if (authState.client.signIn?.factors case List<clerk.Factor> factors
+            when mounted && factors.any((f) => f.strategy.isEnterpriseSSO)) {
+          await authState.ssoSignIn(
+            context,
+            clerk.Strategy.enterpriseSSO,
+            identifier: _identifier.orNullIfEmpty,
+          );
+        }
+      },
       onError: _onError,
     );
-
-    if (authState.client.signIn?.factors case List<clerk.Factor> factors
-        when mounted && factors.any((f) => f.strategy.isEnterpriseSSO)) {
-      await authState.safelyCall(
-        context,
-        () => authState.ssoSignIn(
-          context,
-          clerk.Strategy.enterpriseSSO,
-          identifier: _identifier.orNullIfEmpty,
-        ),
-      );
-    }
   }
 
   Future<void> _openPasswordResetFlow() async {

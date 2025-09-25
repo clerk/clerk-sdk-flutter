@@ -942,14 +942,16 @@ class Auth {
     String newPassword, {
     bool signOut = true,
   }) async {
-    await _api.updatePassword(currentPassword, newPassword, signOut).then(_housekeeping);
+    await _api
+        .updatePassword(currentPassword, newPassword, signOut)
+        .then(_housekeeping);
     update();
   }
 
   /// Delete the password of the current [User]
   ///
   Future<void> deleteUserPassword(String currentPassword) async {
-    await _api.deletePassword(currentPassword);
+    await _api.deletePassword(currentPassword).then(_housekeeping);
     update();
   }
 

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:clerk_auth/src/models/api/api_response.dart';
+import 'package:meta/meta.dart';
 
 /// [Auth] provides more abstracted access to the Clerk API.
 ///
@@ -117,6 +118,7 @@ class Auth {
   /// updating their systems when things change (e.g. the clerk_flutter
   /// ClerkAuth class)
   ///
+  @mustCallSuper
   void update() {}
 
   /// Initialisation of the [Auth] object
@@ -124,6 +126,7 @@ class Auth {
   /// [initialize] must be called before any further use of the [Auth]
   /// object is made
   ///
+  @mustCallSuper
   Future<void> initialize() async {
     await config.initialize();
     telemetry = Telemetry(config: config);
@@ -179,6 +182,7 @@ class Auth {
   /// Named [terminate] so as not to clash with [ChangeNotifier]'s [dispose]
   /// method, if that is mixed in e.g. in clerk_flutter
   ///
+  @mustCallSuper
   void terminate() {
     _pollTimer?.cancel();
     _clientTimer?.cancel();
@@ -483,7 +487,7 @@ class Auth {
               redirectUrl: redirectUrl,
             )
             .then(_housekeeping);
-        unawaited(_pollForCompletion());
+        unawaited(_pollForEmailLinkCompletion());
 
       case SignIn signIn
           when signIn.status.needsFactor &&
@@ -600,7 +604,7 @@ class Auth {
                     redirectUrl: redirectUrl,
                   )
                   .then(_housekeeping);
-              unawaited(_pollForCompletion());
+              unawaited(_pollForEmailLinkCompletion());
             }
           }
 
@@ -942,7 +946,7 @@ class Auth {
     update();
   }
 
-  Future<void> _pollForCompletion() async {
+  Future<void> _pollForEmailLinkCompletion() async {
     while (client.user == null) {
       await Future.delayed(const Duration(seconds: 1));
 

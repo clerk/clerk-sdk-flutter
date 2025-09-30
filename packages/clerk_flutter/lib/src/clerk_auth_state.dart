@@ -37,12 +37,12 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   ClerkAuthConfig get config => _config;
   final ClerkAuthConfig _config;
 
-  late final StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
+  StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
 
   @override
   Future<void> initialize() async {
     await super.initialize();
-    _deepLinkSub = config.deepLinkStream?.listen(_processDeepLink);
+    _deepLinkSub ??= config.deepLinkStream?.listen(_processDeepLink);
   }
 
   @override

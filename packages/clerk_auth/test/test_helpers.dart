@@ -159,6 +159,8 @@ AuthConfig testAuthConfig(
     localesLookup: () => const <String>['en'],
     persistor: Persistor.none,
     httpService: httpService,
+    clientRefreshPeriod: Duration.zero,
+    telemetryPeriod: Duration.zero,
   );
 }
 

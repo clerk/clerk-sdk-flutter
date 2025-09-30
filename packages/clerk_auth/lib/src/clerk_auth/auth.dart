@@ -202,7 +202,11 @@ class Auth {
         sessionToken = await _api.updateSessionToken();
         if (sessionToken case SessionToken token) {
           _sessionTokens.add(token);
-          delay = token.expiry.difference(DateTime.timestamp());
+          if (token.expiry.difference(DateTime.timestamp())
+              case Duration tokenBasedDelay
+              when tokenBasedDelay > Duration.zero) {
+            delay = tokenBasedDelay;
+          }
         }
       }
     } on AuthError catch (error) {

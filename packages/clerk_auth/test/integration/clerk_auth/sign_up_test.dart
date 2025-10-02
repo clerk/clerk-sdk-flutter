@@ -35,7 +35,7 @@ void main() {
         'password': 'Ab$id%',
         'username': 'user$id',
         'email': 'user$id+clerk_test@somedomain.com',
-        'phone_number': '+15555550179',
+        'phone_number': '+155555501${(testName.hashCode % 90) + 10}',
       },
     );
     httpService = TestHttpService('clerk_auth/sign_up_test', env)
@@ -45,10 +45,11 @@ void main() {
     httpService.expect(HttpMethod.get, '/v1/environment');
 
     auth = Auth(
-        config: TestAuthConfig(
-      publishableKey: env.publishableKey,
-      httpService: httpService,
-    ));
+      config: TestAuthConfig(
+        publishableKey: env.publishableKey,
+        httpService: httpService,
+      ),
+    );
     await auth.initialize();
   }
 

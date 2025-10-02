@@ -85,25 +85,30 @@ void main() {
           HttpMethod.get,
           '/v1/me?_clerk_session_id=SESSION_ID',
         );
-        httpService.expect(
-          HttpMethod.patch,
-          '/v1/me?_clerk_session_id=SESSION_ID',
-          params: {'first_name': 'Test', 'last_name': 'User'},
-        );
 
         response = await api.getUser();
         expect(response.client?.activeSession?.user is User, true);
+        final originalUser = response.client!.activeSession!.user;
 
-        user = response.client!.activeSession!.user;
-        response = await api.updateUser(firstName: 'FIRST', lastName: 'LAST');
+        response = await api.updateUser(firstName: 'New', lastName: 'Cognomen');
         expect(response.isOkay, true);
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
-        expect(user?.name, 'FIRST LAST');
+        expect(user?.name, 'New Cognomen');
 
-        user = response.client!.activeSession!.user;
-        response = await api.updateUser(firstName: 'Test', lastName: 'User');
+        httpService.expect(
+          HttpMethod.patch,
+          '/v1/me?_clerk_session_id=SESSION_ID',
+          params: {
+            'first_name': originalUser.firstName,
+            'last_name': originalUser.lastName,
+          },
+        );
+        response = await api.updateUser(
+          firstName: originalUser.firstName,
+          lastName: originalUser.lastName,
+        );
         expect(response.isOkay, true);
       });
     });

@@ -32,10 +32,10 @@ void main() {
         'password': 'Ab$id%',
         'username': 'user-$id',
         'email': 'user-$id+clerk_test@somedomain.com',
-        'phone_number': '+15555550179',
+        'phone_number': '+155555501${(testName.hashCode % 90) + 10}',
       },
     );
-    httpService = TestHttpService('clerk_auth/sign_up_test', env)
+    httpService = TestHttpService('clerk_api/sign_up_test', env)
       ..recordPath = testName;
 
     httpService.expect(HttpMethod.post, '/v1/client');

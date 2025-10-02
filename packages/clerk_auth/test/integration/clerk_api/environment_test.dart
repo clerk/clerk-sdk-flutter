@@ -1,18 +1,23 @@
 import 'package:clerk_auth/src/clerk_api/api.dart';
+import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
 void main() {
-  late final Api api;
-  late final TestEnv env;
-  final httpService = TestHttpService();
+  late Api api;
+  late TestEnv env;
+  late TestHttpService httpService;
 
-  setUpAll(() async {
+  setUp(() async {
     env = TestEnv('.env.test');
+    httpService = TestHttpService('clerk_api/environment_test', env);
     api = Api(
-      config: testAuthConfig(env.publishableKey, httpService),
+      config: TestAuthConfig(
+        publishableKey: env.publishableKey,
+        httpService: httpService,
+      ),
     );
     await api.initialize();
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
@@ -21,11 +26,8 @@ void main() {
   group('Environment:', () {
     test('can fetch', () async {
       await runWithLogging(() async {
-        httpService.expect(
-          'GET /v1/environment',
-          200,
-          '{}',
-        );
+        httpService.recordPath = 'can_fetch_env';
+        httpService.expect(HttpMethod.get, '/v1/environment');
         final data = await api.environment();
         expect(data.isEmpty, false);
       });

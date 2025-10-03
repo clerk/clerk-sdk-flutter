@@ -21,7 +21,7 @@ void main() {
   late final TestHttpService httpService;
 
   setUpAll(() async {
-    env = TestEnv('.env.test');
+    env = TestEnv('.env.test', overrides: {'use_open_identifiers': true});
     httpService = TestHttpService('clerk_api/user_details', env);
     api = Api(
       config: TestAuthConfig(

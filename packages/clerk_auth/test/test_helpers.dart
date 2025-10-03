@@ -3,11 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
-import 'package:clerk_auth/src/clerk_auth/http_service.dart';
-import 'package:clerk_auth/src/clerk_auth/persistor.dart';
-import 'package:clerk_auth/src/clerk_constants.dart';
-import 'package:clerk_auth/src/utils/logging.dart';
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:http/http.dart' show ByteStream, Response;
 
@@ -16,28 +12,30 @@ class TestEnv {
 
   factory TestEnv(
     String filename, {
-    Map<String, String>? overrides,
+    Map<String, dynamic>? overrides,
   }) {
     final dotEnv = DotEnv(filePath: filename);
     final map = {...dotEnv.getDotEnv(), ...?overrides};
-    return TestEnv._(map);
+    return TestEnv._(map.toStringMap());
   }
 
   final Map<String, String> _map;
 
-  bool get recording => _map['recording'] == 'true';
+  bool get recording => _map['recording'] == r'true';
 
-  String get email => _map['email'] ?? '';
+  bool get useOpenIdentifiers => _map['use_open_identifiers'] == 'true';
 
-  String get phoneNumber => _map['phone_number'] ?? '';
+  String get email => _map['email'] ?? r'user+clerk_test@somedomain.com';
 
-  String get password => _map['password'] ?? '';
+  String get phoneNumber => _map['phone_number'] ?? r'+5555550169';
 
-  String get code => _map['code'] ?? '';
+  String get password => _map['password'] ?? r'Password8$';
 
-  String get publishableKey => _map['publishable_key'] ?? '';
+  String get code => _map['code'] ?? r'424242';
 
-  String get username => _map['username'] ?? '';
+  String get publishableKey => _map['publishable_key'] ?? r'';
+
+  String get username => _map['username'] ?? r'userfortests';
 }
 
 class TestLogPrinter extends Printer {
@@ -59,9 +57,9 @@ class _Expectation {
 
   void increaseExpectation() => ++_expectation;
 
-  int get remaining => _expectation - _count;
+  int get count => _count;
 
-  String get count => _count.toString().padLeft(3, '0');
+  int get remaining => _expectation - _count;
 
   bool get isComplete => _count == _expectation;
 
@@ -77,6 +75,10 @@ class _ExpectationCollection {
 
   List<_Expectation> get unresolvedExpectations =>
       _expectations.values.where((e) => e.isNotComplete).toList();
+}
+
+extension on num {
+  String toPaddedString([int width = 3]) => toString().padLeft(width, '0');
 }
 
 class TestHttpService implements HttpService {
@@ -121,7 +123,7 @@ class TestHttpService implements HttpService {
   }
 
   File _file(String name) {
-    final count = _expectations.of(name).count;
+    final count = _expectations.of(name).count.toPaddedString();
     final filename = '${name.replaceAll('/', '.')}.$count';
     final path = '${_directory.path}/$filename';
     return File(path);
@@ -234,39 +236,50 @@ class TestHttpService implements HttpService {
     return item;
   }
 
+  static const _kFirstName = '%%FIRSTNAME%%';
+  static const _kLastName = '%%LASTNAME%%';
   static const _kEmailAddress = '%%EMAIL%%';
   static const _kPhoneNumber = '%%PHONE%%';
   static const _kUsername = '%%USERNAME%%';
 
   static final _fields = {
     RegExp(r'"jwt":"[^"]+"'): '"jwt":"e30=.e30=.e30="',
-    // RegExp(r'"first_name":"\w+"'): '"first_name":"FIRST"',
-    // RegExp(r'"last_name":"\w+"'): '"last_name":"LAST"',
-    // RegExp(r'identifier":"[^@"]+@[^@"]+"'): 'identifier":"$_kEmailAddress"',
-    // RegExp(r'identifier":"[+*0-9]+"'): 'identifier":"$_kPhoneNumber"',
-    // RegExp(r'identifier":"[^%"]+"'): 'identifier":"$_kUsername"',
-    // RegExp(r'"email_address":"[^"]+"'): '"email_address":"$_kEmailAddress"',
+  };
+
+  static final _obscuredIdentifierFields = {
+    RegExp(r'"first_name":"\w+"'): '"first_name":"$_kFirstName"',
+    RegExp(r'"last_name":"\w+"'): '"last_name":"$_kLastName"',
+    RegExp(r'"email_address":"[^"]+"'): '"email_address":"$_kEmailAddress"',
+    RegExp(r'identifier":"[^@"]+@[^@"]+"'): 'identifier":"$_kEmailAddress"',
+    RegExp(r'identifier":"[+*0-9]+"'): 'identifier":"$_kPhoneNumber"',
+    RegExp(r'identifier":"[^%"]+"'): 'identifier":"$_kUsername"',
   };
 
   static final _dateRE = RegExp(r'_at":-?(\d{13})[,}]');
-  static final _datetimeOffsetRE = RegExp(r'%%DATETIME (-?\d+)%%');
 
   String _deflateFromReality(String item) {
     item = _swapIdentifiers(item);
 
-    for (final MapEntry(:key, :value) in _fields.entries) {
+    final fields = {
+      ..._fields,
+      if (env.useOpenIdentifiers == false) //
+        ..._obscuredIdentifierFields,
+    };
+    for (final MapEntry(:key, :value) in fields.entries) {
       item = item.replaceAll(key, value);
     }
 
     final now = DateTime.timestamp().millisecondsSinceEpoch;
     for (final match in _dateRE.allMatches(item)) {
       if (int.tryParse(match.group(1)!) case int date) {
-        item = item.replaceAll(date.toString(), '%%DATETIME ${now - date}%%');
+        item = item.replaceAll(date.toString(), '"%%DATETIME ${now - date}%%"');
       }
     }
 
     return item;
   }
+
+  static final _datetimeOffsetRE = RegExp(r'"%%DATETIME (-?\d+)%%"');
 
   String _inflateForTests(String item, TestEnv env) {
     item = item.replaceAll(_kEmailAddress, env.email);

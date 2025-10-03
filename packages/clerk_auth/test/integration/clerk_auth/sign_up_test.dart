@@ -36,6 +36,7 @@ void main() {
         'username': 'user$id',
         'email': 'user$id+clerk_test@somedomain.com',
         'phone_number': '+155555501${(testName.hashCode % 90) + 10}',
+        'use_open_identifiers': true,
       },
     );
     httpService = TestHttpService('clerk_auth/sign_up_test', env)

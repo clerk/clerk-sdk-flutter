@@ -18,7 +18,7 @@ void main() {
     test('will fail unless encoded part follows underscore', () {
       expect(
         () => Api(
-          config: testAuthConfig('NOT A PUBLISHABLE KEY'),
+          config: const TestAuthConfig(publishableKey: 'NOT A PUBLISHABLE KEY'),
         ),
         throwsA(const TypeMatcher<FormatException>()),
       );
@@ -26,14 +26,14 @@ void main() {
 
     test('will pass when encoded part follows underscore', () {
       final result = Api(
-        config: testAuthConfig(publishableKey),
+        config: TestAuthConfig(publishableKey: publishableKey),
       );
       expect(result.domain, isA<String>());
     });
 
     test('will return correct domain from decoded key', () {
       final result = Api(
-        config: testAuthConfig(publishableKey),
+        config: TestAuthConfig(publishableKey: publishableKey),
       );
       expect(result.domain, domain);
     });

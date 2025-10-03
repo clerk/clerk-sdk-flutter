@@ -3,32 +3,39 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
-import 'package:clerk_auth/src/clerk_auth/http_service.dart';
-import 'package:clerk_auth/src/clerk_auth/persistor.dart';
-import 'package:clerk_auth/src/utils/logging.dart';
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:http/http.dart' show ByteStream, Response;
 
 class TestEnv {
   TestEnv._(this._map);
 
-  factory TestEnv(String filename) {
+  factory TestEnv(
+    String filename, {
+    Map<String, dynamic>? overrides,
+  }) {
     final dotEnv = DotEnv(filePath: filename);
-    return TestEnv._(dotEnv.getDotEnv());
+    final map = {...dotEnv.getDotEnv(), ...?overrides};
+    return TestEnv._(map.toStringMap());
   }
 
   final Map<String, String> _map;
 
-  String get email => _map['email'] ?? '';
+  bool get recording => _map['recording'] == r'true';
 
-  String get phoneNumber => _map['phone_number'] ?? '';
+  bool get useOpenIdentifiers => _map['use_open_identifiers'] == 'true';
 
-  String get password => _map['password'] ?? '';
+  String get email => _map['email'] ?? r'user+clerk_test@somedomain.com';
 
-  String get code => _map['code'] ?? '';
+  String get phoneNumber => _map['phone_number'] ?? r'+5555550169';
 
-  String get publishableKey => _map['publishable_key'] ?? '';
+  String get password => _map['password'] ?? r'Password8$';
+
+  String get code => _map['code'] ?? r'424242';
+
+  String get publishableKey => _map['publishable_key'] ?? r'';
+
+  String get username => _map['username'] ?? r'userfortests';
 }
 
 class TestLogPrinter extends Printer {
@@ -38,10 +45,67 @@ class TestLogPrinter extends Printer {
   }
 }
 
-class TestHttpService implements HttpService {
-  final _expectations = <String, List<Response>>{};
+class _Expectation {
+  _Expectation._(this.name);
+
+  final String name;
+
+  int _count = 0;
+  int _expectation = 0;
+
+  void hit() => ++_count;
+
+  void increaseExpectation() => ++_expectation;
+
+  int get count => _count;
+
+  int get remaining => _expectation - _count;
+
+  bool get isComplete => _count == _expectation;
+
+  bool get isNotComplete => isComplete == false;
+}
+
+class _ExpectationCollection {
+  final _expectations = <String, _Expectation>{};
 
   void reset() => _expectations.clear();
+
+  _Expectation of(String name) => _expectations[name] ??= _Expectation._(name);
+
+  List<_Expectation> get unresolvedExpectations =>
+      _expectations.values.where((e) => e.isNotComplete).toList();
+}
+
+extension on num {
+  String toPaddedString([int width = 3]) => toString().padLeft(width, '0');
+}
+
+class TestHttpService implements HttpService {
+  TestHttpService(this.recordDirectory, this.env);
+
+  final _expectations = _ExpectationCollection();
+  final String recordDirectory;
+  final TestEnv env;
+
+  String? _recordPath;
+
+  set recordPath(String? path) {
+    _recordPath = path;
+    if (path is String && env.recording) {
+      // if we're given a path when recording, delete what's there so we
+      // can start afresh
+      final dir = _directory;
+      if (dir.existsSync()) {
+        dir.deleteSync(recursive: true);
+      }
+    }
+  }
+
+  void reset() {
+    recordPath = null;
+    _expectations.reset();
+  }
 
   @override
   Future<void> initialize() async {}
@@ -52,6 +116,19 @@ class TestHttpService implements HttpService {
   @override
   Future<bool> ping(Uri _, {required Duration timeout}) => Future.value(true);
 
+  Directory get _directory {
+    return Directory(
+      ['./test/_responses', recordDirectory, _recordPath].nonNulls.join('/'),
+    );
+  }
+
+  File _file(String name) {
+    final count = _expectations.of(name).count.toPaddedString();
+    final filename = '${name.replaceAll('/', '.')}.$count';
+    final path = '${_directory.path}/$filename';
+    return File(path);
+  }
+
   @override
   Future<Response> send(
     HttpMethod method,
@@ -60,47 +137,170 @@ class TestHttpService implements HttpService {
     Map<String, dynamic>? params,
     String? body,
   }) async {
-    final key = _key(method, uri, headers, params);
+    _checkHeaders(method, uri, headers);
 
-    if (_expectations[key] case List<Response> resps when resps.isNotEmpty) {
-      final resp = resps.removeAt(0);
-      return Future.value(resp);
+    final key = _key(method, uri, bodyParams: params);
+    _expectations.of(key).hit();
+
+    final file = _file(key);
+
+    if (env.recording) {
+      const service = DefaultHttpService();
+      final resp = await service.send(
+        method,
+        uri,
+        headers: headers,
+        params: params,
+        body: body,
+      );
+      await _directory.create(recursive: true);
+      final respBody = _deflateFromReality(resp.body);
+      await file.writeAsString(respBody);
+      return resp;
     }
-    print('\x1B[31mNO RESPONSE AVAILABLE FOR: $key\x1B[0m');
-    throw TestHttpServiceError(message: 'No response available for $key');
+
+    if (await file.exists()) {
+      final responseBody = await file.readAsString();
+      return Response(_inflateForTests(responseBody, env), 200);
+    }
+
+    print('\x1B[31mNO RESPONSE AVAILABLE FOR: $key ($uri)\x1B[0m');
+    throw TestHttpServiceError(
+      message: 'No response available for $key ($uri)',
+    );
   }
 
-  void expect(String key, int status, String body) {
-    _expectations[key] ??= [];
-    _expectations[key]!.add(Response(body, status));
+  void expect(
+    HttpMethod method,
+    String path, {
+    Map<String, dynamic>? params,
+  }) {
+    if (env.recording == false) {
+      final key = _key(method, Uri.parse(path), bodyParams: params);
+      _expectations.of(key).increaseExpectation();
+    }
   }
 
   bool get isCompleted {
-    final remaining =
-        _expectations.entries.where((e) => e.value.isNotEmpty).toList();
-    for (final exp in remaining) {
-      print('\x1B[31mUNUSED CALL: ${exp.value.length} x ${exp.key}\x1B[0m');
+    if (env.recording) {
+      return true; // no way to tell
     }
+
+    final remaining = _expectations.unresolvedExpectations;
+    for (final exp in remaining) {
+      print('\x1B[31mUNUSED CALL: ${exp.remaining} x ${exp.name}\x1B[0m');
+    }
+
     return remaining.isEmpty;
+  }
+
+  void _checkHeaders(HttpMethod method, Uri uri, Map<String, String>? headers) {
+    if (headers case Map<String, String> headers) {
+      final expectedHeaders = {
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.acceptLanguageHeader: 'en',
+        HttpHeaders.contentTypeHeader: method.isGet
+            ? 'application/json'
+            : 'application/x-www-form-urlencoded',
+        'clerk-api-version': ClerkConstants.clerkApiVersion,
+        'x-flutter-sdk-version': ClerkConstants.flutterSdkVersion,
+        'x-mobile': '1',
+      };
+      for (final MapEntry(:key, :value) in expectedHeaders.entries) {
+        if (headers[key] != value) {
+          throw TestHttpServiceError(
+            message:
+                'Unacceptable ${key.toUpperCase()} header on $method $uri: '
+                '"${headers[key]}" should be "$value',
+          );
+        }
+      }
+    }
+  }
+
+  static final _identifiers = {
+    RegExp(r'sia_\w+'): 'SIGN_IN_ID',
+    RegExp(r'sua_\w+'): 'SIGN_UP_ID',
+    RegExp(r'idn_\w+'): 'IDENTIFIER_ID',
+    RegExp(r'sess_\w+'): 'SESSION_ID',
+    RegExp(r'user_\w{10,}'): 'USER_ID',
+    RegExp(r'client_\w{10,}'): 'CLIENT_ID',
+    RegExp(r'https://img\.clerk\.com/\w+'): 'IMAGE_URL',
+    RegExp(r'https://www\.gravatar\.com/avatar\?d=mp'): 'GRAVATAR_URL',
+  };
+
+  String _swapIdentifiers(String item) {
+    for (final MapEntry(:key, :value) in _identifiers.entries) {
+      item = item.replaceAll(key, value);
+    }
+    return item;
+  }
+
+  static const _kFirstName = '%%FIRSTNAME%%';
+  static const _kLastName = '%%LASTNAME%%';
+  static const _kEmailAddress = '%%EMAIL%%';
+  static const _kPhoneNumber = '%%PHONE%%';
+  static const _kUsername = '%%USERNAME%%';
+
+  static final _fields = {
+    RegExp(r'"jwt":"[^"]+"'): '"jwt":"e30=.e30=.e30="',
+  };
+
+  static final _obscuredIdentifierFields = {
+    RegExp(r'"first_name":"\w+"'): '"first_name":"$_kFirstName"',
+    RegExp(r'"last_name":"\w+"'): '"last_name":"$_kLastName"',
+    RegExp(r'"email_address":"[^"]+"'): '"email_address":"$_kEmailAddress"',
+    RegExp(r'identifier":"[^@"]+@[^@"]+"'): 'identifier":"$_kEmailAddress"',
+    RegExp(r'identifier":"[+*0-9]+"'): 'identifier":"$_kPhoneNumber"',
+    RegExp(r'identifier":"[^%"]+"'): 'identifier":"$_kUsername"',
+  };
+
+  static final _dateRE = RegExp(r'_at":-?(\d{13})[,}]');
+
+  String _deflateFromReality(String item) {
+    item = _swapIdentifiers(item);
+
+    final fields = {
+      ..._fields,
+      if (env.useOpenIdentifiers == false) //
+        ..._obscuredIdentifierFields,
+    };
+    for (final MapEntry(:key, :value) in fields.entries) {
+      item = item.replaceAll(key, value);
+    }
+
+    final now = DateTime.timestamp().millisecondsSinceEpoch;
+    for (final match in _dateRE.allMatches(item)) {
+      if (int.tryParse(match.group(1)!) case int date) {
+        item = item.replaceAll(date.toString(), '"%%DATETIME ${now - date}%%"');
+      }
+    }
+
+    return item;
+  }
+
+  static final _datetimeOffsetRE = RegExp(r'"%%DATETIME (-?\d+)%%"');
+
+  String _inflateForTests(String item, TestEnv env) {
+    item = item.replaceAll(_kEmailAddress, env.email);
+    item = item.replaceAll(_kPhoneNumber, env.phoneNumber);
+    item = item.replaceAll(_kUsername, env.username);
+
+    final now = DateTime.timestamp().millisecondsSinceEpoch;
+    for (final match in _datetimeOffsetRE.allMatches(item)) {
+      final matchString = match.group(0)!;
+      final offset = int.tryParse(match.group(1)!) ?? 0;
+      item = item.replaceAll(matchString, (now - offset).toString());
+    }
+
+    return item;
   }
 
   String _key(
     HttpMethod method,
-    Uri uri,
-    Map<String, String>? headers,
-    Map<String, dynamic>? body,
-  ) {
-    final hdrs = {...?headers}
-      ..remove(HttpHeaders.acceptHeader)
-      ..remove(HttpHeaders.acceptLanguageHeader)
-      ..remove(HttpHeaders.contentTypeHeader)
-      ..remove(HttpHeaders.authorizationHeader)
-      ..remove('clerk-api-version')
-      ..remove('x-flutter-sdk-version')
-      ..remove('x-native-device-id')
-      ..remove('x-clerk-client-id')
-      ..remove('x-mobile');
-
+    Uri uri, {
+    Map<String, dynamic>? bodyParams,
+  }) {
     final queryParams = {
       ...uri.queryParameters,
       if (uri.queryParameters.containsKey('_clerk_session_id')) //
@@ -109,23 +309,38 @@ class TestHttpService implements HttpService {
       ..remove('_is_native')
       ..remove('_clerk_js_version');
 
-    final path = Uri(
-      path: uri.path,
+    final normalisedPath = Uri(
+      path: _swapIdentifiers(uri.path),
       queryParameters: queryParams.isNotEmpty ? queryParams : null,
     ).toString();
 
     return [
       method,
-      path,
-      if (hdrs.isNotEmpty) //
-        _mapToString(hdrs),
-      if (body?.isNotEmpty == true) //
-        _mapToString(body!),
+      normalisedPath,
+      if (bodyParams case Map<String, dynamic> params when params.isNotEmpty) //
+        _mapToString(params),
     ].join(' ');
   }
 
-  String _mapToString(Map map) =>
-      map.entries.map((me) => '${me.key}=${me.value}').join('&');
+  String _mapToString(Map map) {
+    const privateIdentifiers = [
+      'identifier',
+      'email_address',
+      'phone_number',
+      'first_name',
+      'last_name',
+      'password',
+      'username',
+    ];
+    final pairs = map.entries.map((e) {
+      if (privateIdentifiers.contains(e.key)) {
+        return e.key;
+      }
+      return '${e.key}=${_swapIdentifiers(e.value.toString())}';
+    }).toList()
+      ..sort();
+    return pairs.join('&');
+  }
 
   @override
   Future<Response> sendByteStream(
@@ -149,19 +364,19 @@ class TestHttpServiceError extends Error {
   String toString() => '$runtimeType: $message';
 }
 
-AuthConfig testAuthConfig(
-  String publishableKey, [
-  HttpService httpService = const NoneHttpService(),
-]) {
-  return AuthConfig(
-    publishableKey: publishableKey,
-    sessionTokenPolling: false,
-    localesLookup: () => const <String>['en'],
-    persistor: Persistor.none,
-    httpService: httpService,
-    clientRefreshPeriod: Duration.zero,
-    telemetryPeriod: Duration.zero,
-  );
+class TestAuthConfig extends AuthConfig {
+  const TestAuthConfig({
+    required super.publishableKey,
+    super.httpService = const NoneHttpService(),
+  }) : super(
+          sessionTokenPolling: false,
+          localesLookup: _localesLookup,
+          persistor: Persistor.none,
+          clientRefreshPeriod: Duration.zero,
+          telemetryPeriod: Duration.zero,
+        );
+
+  static List<String> _localesLookup() => const <String>['en'];
 }
 
 class NoneHttpService implements HttpService {

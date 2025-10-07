@@ -647,19 +647,30 @@ class Auth {
         case SignUp signUp when hasInitialSignUp:
           // if we didn't create a SignUp object earlier,  now is the time to
           // update the preexisting SignUp object, in case of changes
-          await _api
-              .updateSignUp(
-                signUp,
-                strategy: strategy,
-                password: password,
-                firstName: firstName,
-                lastName: lastName,
-                username: username,
-                emailAddress: emailAddress,
-                phoneNumber: phoneNumber,
-                legalAccepted: legalAccepted,
-              )
-              .then(_housekeeping);
+          final needsUpdate = (password?.isNotEmpty == true) ||
+              (firstName is String && firstName != signUp.firstName) ||
+              (lastName is String && lastName != signUp.lastName) ||
+              (username is String && username != signUp.username) ||
+              (emailAddress is String && emailAddress != signUp.emailAddress) ||
+              (phoneNumber is String && phoneNumber != signUp.phoneNumber) ||
+              // We don't have current state for legalAccepted in SignUp;
+              // if provided, assume it's a change worth sending
+              (legalAccepted is bool);
+          if (needsUpdate) {
+            await _api
+                .updateSignUp(
+                  signUp,
+                  strategy: strategy,
+                  password: password,
+                  firstName: firstName,
+                  lastName: lastName,
+                  username: username,
+                  emailAddress: emailAddress,
+                  phoneNumber: phoneNumber,
+                  legalAccepted: legalAccepted,
+                )
+                .then(_housekeeping);
+          }
       }
     }
 

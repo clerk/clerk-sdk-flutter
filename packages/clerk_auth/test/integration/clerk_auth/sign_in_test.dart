@@ -79,7 +79,7 @@ void main() {
         httpService.expect(
           HttpMethod.post,
           '/v1/client/sign_ins/SIGN_IN_ID/attempt_first_factor',
-          params: {'strategy': 'email_code', 'code': '424242'},
+          params: {'strategy': 'email_code', 'code': env.code},
         );
 
         await auth.attemptSignIn(
@@ -104,7 +104,7 @@ void main() {
         httpService.expect(
           HttpMethod.post,
           '/v1/client/sign_ins',
-          params: {'identifier': env.email},
+          params: {'identifier': env.phoneNumber},
         );
         httpService.expect(
           HttpMethod.post,
@@ -117,11 +117,14 @@ void main() {
         httpService.expect(
           HttpMethod.post,
           '/v1/client/sign_ins/SIGN_IN_ID/attempt_first_factor',
-          params: {'strategy': 'phone_code', 'code': '424242'},
+          params: {'strategy': 'phone_code', 'code': env.code},
         );
 
         await auth.attemptSignIn(
-          identifier: env.email,
+          identifier: env.phoneNumber,
+          strategy: Strategy.phoneCode,
+        );
+        await auth.attemptSignIn(
           strategy: Strategy.phoneCode,
           code: env.code,
         );
@@ -139,7 +142,7 @@ void main() {
         httpService.expect(
           HttpMethod.post,
           '/v1/client/sign_ins',
-          params: {'identifier': env.email},
+          params: {'identifier': env.emailForLink},
         );
         httpService.expect(
           HttpMethod.post,

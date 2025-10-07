@@ -27,6 +27,8 @@ class TestEnv {
 
   String get email => _map['email'] ?? r'user+clerk_test@somedomain.com';
 
+  String get emailForLink => _map['email_for_link'] ?? email;
+
   String get phoneNumber => _map['phone_number'] ?? r'+5555550169';
 
   String get password => _map['password'] ?? r'Password8$';

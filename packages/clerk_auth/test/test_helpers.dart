@@ -36,6 +36,10 @@ class TestEnv {
   String get publishableKey => _map['publishable_key'] ?? r'';
 
   String get username => _map['username'] ?? r'userfortests';
+
+  String get firstName => _map['first_name'] ?? r'Testy';
+
+  String get lastName => _map['last_name'] ?? r'McTestface';
 }
 
 class TestLogPrinter extends Printer {
@@ -219,14 +223,26 @@ class TestHttpService implements HttpService {
   }
 
   static final _identifiers = {
-    RegExp(r'sia_\w+'): 'SIGN_IN_ID',
-    RegExp(r'sua_\w+'): 'SIGN_UP_ID',
-    RegExp(r'idn_\w+'): 'IDENTIFIER_ID',
-    RegExp(r'sess_\w+'): 'SESSION_ID',
-    RegExp(r'user_\w{10,}'): 'USER_ID',
-    RegExp(r'client_\w{10,}'): 'CLIENT_ID',
-    RegExp(r'https://img\.clerk\.com/\w+'): 'IMAGE_URL',
-    RegExp(r'https://www\.gravatar\.com/avatar\?d=mp'): 'GRAVATAR_URL',
+    RegExp(r'sia_\w+'): r'SIGN_IN_ID',
+    RegExp(r'sua_\w+'): r'SIGN_UP_ID',
+    RegExp(r'idn_\w+'): r'IDENTIFIER_ID',
+    RegExp(r'sess_\w+'): r'SESSION_ID',
+    RegExp(r'aac_\w+'): r'AUTH_CONFIG_ID',
+    RegExp(r'display_config_\w+'): r'DISPLAY_CONFIG_ID',
+    RegExp(r'img_\w+'): r'IMAGE_ID',
+    RegExp(r'user_\w{13,}'): r'USER_ID',
+    RegExp(r'client_\w{13,}'): r'CLIENT_ID',
+    RegExp(r'https://img\.clerk\.\w+/[^"]+"'): r'IMAGE_URL"',
+    RegExp(r'https://www\.gravatar\.\w+/avatar\?d=mp'): r'GRAVATAR_URL',
+    RegExp(r'_url":"[^"]+"'): r'_url":"URL"',
+    RegExp(r'"application_name":"[^"]+"'):
+        r'"application_name":"APPLICATION_NAME"',
+    RegExp(r'"google_one_tap_client_id":"[^"]+"'):
+        r'"google_one_tap_client_id":"GOOGLE_ONE_TAP_CLIENT_ID"',
+    RegExp(r'"allowed_special_characters":".+",'):
+        r'"allowed_special_characters":"+$-_",',
+    RegExp(r'"allowed_special_characters":".+"}'):
+        r'"allowed_special_characters":"+$-_"}',
   };
 
   String _swapIdentifiers(String item) {

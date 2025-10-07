@@ -34,12 +34,14 @@ void main() {
       overrides: {
         'password': 'Ab$id%',
         'username': 'user$id',
+        'first_name': 'User',
+        'last_name': id[0].toString() + id.substring(1),
         'email': 'user$id+clerk_test@somedomain.com',
         'phone_number': '+155555501${(testName.hashCode % 90) + 10}',
         'use_open_identifiers': true,
       },
     );
-    httpService = TestHttpService('clerk_auth/sign_up_test', env)
+    httpService = TestHttpService('integration/clerk_auth/sign_up_test', env)
       ..recordPath = testName;
 
     httpService.expect(HttpMethod.post, '/v1/client');
@@ -68,8 +70,8 @@ void main() {
             'password': env.password,
             'email_address': env.email,
             'phone_number': env.phoneNumber,
-            'first_name': env.username,
-            'last_name': env.username,
+            'first_name': env.firstName,
+            'last_name': env.lastName,
             'legal_accepted': true,
           },
         );
@@ -100,8 +102,8 @@ void main() {
           phoneNumber: env.phoneNumber,
           password: env.password,
           passwordConfirmation: env.password,
-          firstName: env.username,
-          lastName: env.username,
+          firstName: env.firstName,
+          lastName: env.lastName,
           legalAccepted: true,
         );
         expect(client.signUp?.status, Status.missingRequirements);
@@ -146,8 +148,8 @@ void main() {
             'email_address': typoEmailAddress,
             'phone_number': env.phoneNumber,
             'password': env.password,
-            'first_name': env.username,
-            'last_name': env.username,
+            'first_name': env.firstName,
+            'last_name': env.lastName,
             'legal_accepted': true,
           },
         );
@@ -188,8 +190,8 @@ void main() {
           phoneNumber: env.phoneNumber,
           password: env.password,
           passwordConfirmation: env.password,
-          firstName: env.username,
-          lastName: env.username,
+          firstName: env.firstName,
+          lastName: env.lastName,
           legalAccepted: true,
         );
         expect(client.signUp?.status, Status.missingRequirements);

@@ -14,7 +14,7 @@ void main() {
 
   setUpAll(() async {
     env = TestEnv('.env.test');
-    httpService = TestHttpService('clerk_api/sign_in_test', env);
+    httpService = TestHttpService('integration/clerk_api/sign_in_test', env);
     api = Api(
       config: TestAuthConfig(
         publishableKey: env.publishableKey,
@@ -81,7 +81,7 @@ void main() {
         httpService.expect(
           HttpMethod.post,
           '/v1/client/sign_ins',
-          params: {'identifier': 'user+clerk_test@somedomain.com'},
+          params: {'identifier': env.email},
         );
         httpService.expect(
           HttpMethod.post,
@@ -94,12 +94,10 @@ void main() {
         httpService.expect(
           HttpMethod.post,
           '/v1/client/sign_ins/SIGN_IN_ATTEMPT_ID/attempt_first_factor',
-          params: {'strategy': 'email_code', 'code': '424242'},
+          params: {'strategy': 'email_code', 'code': env.code},
         );
 
-        response = await api.createSignIn(
-          identifier: 'user+clerk_test@somedomain.com',
-        );
+        response = await api.createSignIn(identifier: env.email);
         expect(response.client?.signIn?.status, Status.needsFirstFactor);
 
         response = await api.prepareSignIn(
@@ -135,7 +133,7 @@ void main() {
         httpService.expect(
           HttpMethod.post,
           '/v1/client/sign_ins',
-          params: {'identifier': 'user+clerk_test@somedomain.com'},
+          params: {'identifier': env.email},
         );
         httpService.expect(
           HttpMethod.post,
@@ -147,8 +145,7 @@ void main() {
           },
         );
 
-        response = await api.createSignIn(
-            identifier: 'user+clerk_test@somedomain.com');
+        response = await api.createSignIn(identifier: env.email);
         expect(response.client?.signIn?.status, Status.needsFirstFactor);
 
         const redirectUrl = 'https://redirect.to.somewhere';
@@ -177,7 +174,7 @@ void main() {
         httpService.expect(
           HttpMethod.post,
           '/v1/client/sign_ins',
-          params: {'identifier': '+15555550100'},
+          params: {'identifier': env.phoneNumber},
         );
         httpService.expect(
           HttpMethod.post,

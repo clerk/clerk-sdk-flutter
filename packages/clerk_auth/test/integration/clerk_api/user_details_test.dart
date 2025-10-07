@@ -22,7 +22,7 @@ void main() {
 
   setUpAll(() async {
     env = TestEnv('.env.test', overrides: {'use_open_identifiers': true});
-    httpService = TestHttpService('clerk_api/user_details', env);
+    httpService = TestHttpService('integration/clerk_api/user_details', env);
     api = Api(
       config: TestAuthConfig(
         publishableKey: env.publishableKey,

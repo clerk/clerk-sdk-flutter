@@ -12,7 +12,8 @@ void main() {
 
   setUp(() async {
     env = TestEnv('.env.test');
-    httpService = TestHttpService('clerk_api/environment_test', env);
+    httpService =
+        TestHttpService('integration/clerk_api/environment_test', env);
     api = Api(
       config: TestAuthConfig(
         publishableKey: env.publishableKey,

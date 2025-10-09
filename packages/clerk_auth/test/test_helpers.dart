@@ -7,6 +7,13 @@ import 'dart:io';
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:http/http.dart' show ByteStream, Response;
+import 'package:test/test.dart' as test show expect;
+
+export 'package:test/test.dart' hide expect;
+
+void expect(dynamic actual, [dynamic matcher = true]) {
+  test.expect(actual, matcher);
+}
 
 class TestEnv {
   TestEnv._(this._map);
@@ -101,6 +108,8 @@ class _ExpectationCollection {
 
   _Expectation of(String name) => _expectations[name] ??= _Expectation._(name);
 
+  bool expects(String name) => _expectations[name]?.isNotComplete == true;
+
   List<_Expectation> get unresolvedExpectations =>
       _expectations.values.where((e) => e.isNotComplete).toList();
 }
@@ -167,7 +176,11 @@ class TestHttpService implements HttpService {
   }) async {
     _checkHeaders(method, uri, headers);
 
-    final key = _key(method, uri, bodyParams: params);
+    String key =
+        _key(method, uri, bodyParams: params, includeIdentifiers: true);
+    if (_expectations.expects(key) == false) {
+      key = _key(method, uri, bodyParams: params);
+    }
     _expectations.of(key).hit();
 
     final file = _file(key);
@@ -201,12 +214,16 @@ class TestHttpService implements HttpService {
   void expect(
     HttpMethod method,
     String path, {
+    bool includeIdentifiers = false,
     Map<String, dynamic>? params,
   }) {
-    if (env.recording == false) {
-      final key = _key(method, Uri.parse(path), bodyParams: params);
-      _expectations.of(key).increaseExpectation();
-    }
+    final key = _key(
+      method,
+      Uri.parse(path),
+      bodyParams: params,
+      includeIdentifiers: includeIdentifiers,
+    );
+    _expectations.of(key).increaseExpectation();
   }
 
   bool get isCompleted {
@@ -246,7 +263,7 @@ class TestHttpService implements HttpService {
     }
   }
 
-  static final _identifiers = {
+  final _identifiers = {
     RegExp(r'sia_\w+'): r'SIGN_IN_ID',
     RegExp(r'sua_\w+'): r'SIGN_UP_ID',
     RegExp(r'idn_\w+'): r'IDENTIFIER_ID',
@@ -290,6 +307,7 @@ class TestHttpService implements HttpService {
     RegExp(r'"first_name":"\w+"'): '"first_name":"$_kFirstName"',
     RegExp(r'"last_name":"\w+"'): '"last_name":"$_kLastName"',
     RegExp(r'"email_address":"[^"]+"'): '"email_address":"$_kEmailAddress"',
+    RegExp(r'"phone_number":"[^"]+"'): '"phone_number":"$_kPhoneNumber"',
     RegExp(r'identifier":"[^@"]+@[^@"]+"'): 'identifier":"$_kEmailAddress"',
     RegExp(r'identifier":"[+*0-9]+"'): 'identifier":"$_kPhoneNumber"',
     RegExp(r'identifier":"[^%"]+"'): 'identifier":"$_kUsername"',
@@ -300,11 +318,7 @@ class TestHttpService implements HttpService {
   String _deflateFromReality(String item) {
     item = _swapIdentifiers(item);
 
-    final fields = {
-      ..._fields,
-      if (env.useOpenIdentifiers == false) //
-        ..._obscuredIdentifierFields,
-    };
+    final fields = {..._fields, ..._obscuredIdentifierFields};
     for (final MapEntry(:key, :value) in fields.entries) {
       item = item.replaceAll(key, value);
     }
@@ -339,6 +353,7 @@ class TestHttpService implements HttpService {
   String _key(
     HttpMethod method,
     Uri uri, {
+    bool includeIdentifiers = false,
     Map<String, dynamic>? bodyParams,
   }) {
     final queryParams = {
@@ -357,12 +372,12 @@ class TestHttpService implements HttpService {
     return [
       method,
       normalisedPath,
-      if (bodyParams case Map<String, dynamic> params when params.isNotEmpty) //
-        _mapToString(params),
+      if (bodyParams case final params? when params.isNotEmpty) //
+        _mapToString(params, includeIdentifiers),
     ].join(' ');
   }
 
-  String _mapToString(Map map) {
+  String _mapToString(Map map, bool includeIdentifiers) {
     const privateIdentifiers = [
       'identifier',
       'email_address',
@@ -373,7 +388,7 @@ class TestHttpService implements HttpService {
       'username',
     ];
     final pairs = map.entries.map((e) {
-      if (privateIdentifiers.contains(e.key)) {
+      if (includeIdentifiers == false && privateIdentifiers.contains(e.key)) {
         return e.key;
       }
       return '${e.key}=${_swapIdentifiers(e.value.toString())}';

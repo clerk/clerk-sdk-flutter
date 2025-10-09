@@ -1,7 +1,6 @@
 import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 

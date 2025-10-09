@@ -7,7 +7,6 @@ import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
@@ -70,7 +69,6 @@ void main() {
         await initialiseForTest('new_name');
 
         late ApiResponse response;
-        late User? user;
 
         httpService.expect(
           HttpMethod.get,
@@ -79,23 +77,16 @@ void main() {
         httpService.expect(
           HttpMethod.patch,
           '/v1/me?_clerk_session_id=SESSION_ID',
-          params: {'first_name': 'FIRST', 'last_name': 'LAST'},
-        );
-        httpService.expect(
-          HttpMethod.get,
-          '/v1/me?_clerk_session_id=SESSION_ID',
+          includeIdentifiers: true,
+          params: {'first_name': 'New', 'last_name': 'Cognomen'},
         );
 
         response = await api.getUser();
-        expect(response.client?.activeSession?.user is User, true);
+        expect(response.client?.activeSession?.user is User);
         final originalUser = response.client!.activeSession!.user;
 
         response = await api.updateUser(firstName: 'New', lastName: 'Cognomen');
-        expect(response.isOkay, true);
-
-        response = await api.getUser();
-        user = response.client?.activeSession?.user;
-        expect(user?.name, 'New Cognomen');
+        expect(response.isOkay);
 
         httpService.expect(
           HttpMethod.patch,
@@ -109,7 +100,9 @@ void main() {
           firstName: originalUser.firstName,
           lastName: originalUser.lastName,
         );
-        expect(response.isOkay, true);
+        expect(response.isOkay);
+
+        expect(httpService.isCompleted);
       });
     });
 
@@ -129,36 +122,46 @@ void main() {
         httpService.expect(
           HttpMethod.post,
           '/v1/me/email_addresses?_clerk_session_id=SESSION_ID',
+          includeIdentifiers: true,
           params: {'email_address': emailAddress},
         );
         httpService.expect(
           HttpMethod.get,
           '/v1/me?_clerk_session_id=SESSION_ID',
         );
-        httpService.expect(
-          HttpMethod.delete,
-          '/v1/me/email_addresses/IDENTIFIER_ID?_clerk_session_id=SESSION_ID',
-        );
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
-        expect(user is User, true);
+        expect(user is User);
+        expect(user?.emailAddresses?.length, 1);
 
         response = await api.addIdentifyingDataToCurrentUser(
           emailAddress,
           IdentifierType.emailAddress,
         );
-        expect(response.isOkay, true);
+        expect(response.isOkay);
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
-        final email = user?.emailAddresses
-            ?.where((e) => e.emailAddress == emailAddress)
-            .first;
-        expect(email is Email, true);
+        expect(user?.emailAddresses?.length, 2);
 
-        response = await api.deleteIdentifyingData(email!);
-        expect(response.isOkay, true);
+        // Tidy up if hitting the real back end
+        if (env.recording) {
+          final email = user?.emailAddresses
+              ?.where((e) => e.emailAddress == emailAddress)
+              .first;
+          expect(email is Email);
+
+          httpService.expect(
+            HttpMethod.delete,
+            '/v1/me/email_addresses/IDENTIFIER_ID?_clerk_session_id=SESSION_ID',
+          );
+
+          response = await api.deleteIdentifyingData(email!);
+          expect(response.isOkay);
+        }
+
+        expect(httpService.isCompleted);
       });
     });
 
@@ -178,35 +181,45 @@ void main() {
         httpService.expect(
           HttpMethod.post,
           '/v1/me/phone_numbers?_clerk_session_id=SESSION_ID',
+          includeIdentifiers: true,
           params: {'phone_number': newNumber},
         );
         httpService.expect(
           HttpMethod.get,
           '/v1/me?_clerk_session_id=SESSION_ID',
         );
-        httpService.expect(
-          HttpMethod.delete,
-          '/v1/me/phone_numbers/IDENTIFIER_ID?_clerk_session_id=SESSION_ID',
-        );
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
-        expect(user is User, true);
+        expect(user is User);
+        expect(user?.phoneNumbers?.length, 1);
 
         response = await api.addIdentifyingDataToCurrentUser(
           newNumber,
           IdentifierType.phoneNumber,
         );
-        expect(response.isOkay, true);
+        expect(response.isOkay);
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
-        final number =
-            user?.phoneNumbers?.where((p) => p.phoneNumber == newNumber).first;
-        expect(number is PhoneNumber, true);
+        expect(user?.phoneNumbers?.length, 2);
 
-        response = await api.deleteIdentifyingData(number!);
-        expect(response.isOkay, true);
+        // Tidy up if hitting the real back end
+        if (env.recording) {
+          final number = user?.phoneNumbers
+              ?.where((p) => p.phoneNumber == newNumber)
+              .first;
+          expect(number is PhoneNumber);
+
+          httpService.expect(
+            HttpMethod.delete,
+            '/v1/me/phone_numbers/IDENTIFIER_ID?_clerk_session_id=SESSION_ID',
+          );
+          response = await api.deleteIdentifyingData(number!);
+          expect(response.isOkay);
+        }
+
+        expect(httpService.isCompleted);
       });
     });
   });

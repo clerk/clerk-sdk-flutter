@@ -3,7 +3,6 @@ import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/models/api/api_response.dart';
 import 'package:clerk_auth/src/models/models.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
@@ -26,9 +25,10 @@ void main() {
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });
 
-  setUp(() async {
+  Future<void> initialiseForTest(String testName) async {
     httpService.reset();
-  });
+    httpService.recordPath = testName;
+  }
 
   tearDown(() async {
     httpService.expect(HttpMethod.delete, '/client');
@@ -38,7 +38,7 @@ void main() {
   group('Can sign in:', () {
     test('with email and password', () async {
       await runWithLogging(() async {
-        httpService.recordPath = 'email_and_password';
+        await initialiseForTest('email_and_password');
 
         late ApiResponse response;
 
@@ -74,7 +74,7 @@ void main() {
 
     test('with email code', () async {
       await runWithLogging(() async {
-        httpService.recordPath = 'email_code';
+        await initialiseForTest('email_code');
 
         late ApiResponse response;
 
@@ -113,7 +113,7 @@ void main() {
           strategy: Strategy.emailCode,
           code: env.code,
         );
-        expect(response.client!.sessions.isNotEmpty, true);
+        expect(response.client!.sessions.isNotEmpty);
 
         final client = response.client;
         expect(client?.signIn, null);
@@ -125,7 +125,7 @@ void main() {
 
     test('with email link', () async {
       await runWithLogging(() async {
-        httpService.recordPath = 'email_link';
+        await initialiseForTest('email_link');
 
         late ApiResponse response;
         late SignIn signIn;
@@ -166,7 +166,7 @@ void main() {
 
     test('with phone code', () async {
       await runWithLogging(() async {
-        httpService.recordPath = 'phone_code';
+        await initialiseForTest('phone_code');
 
         late ApiResponse response;
         late SignIn signIn;
@@ -208,7 +208,7 @@ void main() {
           strategy: Strategy.phoneCode,
           code: env.code,
         );
-        expect(response.client!.sessions.isNotEmpty, true);
+        expect(response.client!.sessions.isNotEmpty);
 
         final client = response.client;
         expect(client?.signIn, null);

@@ -6,7 +6,6 @@ import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
@@ -113,9 +112,9 @@ void main() {
           code: env.code,
         );
         expect(client.signUp, null);
-        expect(client.user is User, true);
+        expect(client.user is User);
 
-        expect(httpService.isCompleted, true);
+        expect(httpService.isCompleted);
       });
     });
 
@@ -212,9 +211,9 @@ void main() {
           code: env.code,
         );
         expect(client.signUp, null);
-        expect(client.user is User, true);
+        expect(client.user is User);
 
-        expect(httpService.isCompleted, true);
+        expect(httpService.isCompleted);
       });
     });
   });

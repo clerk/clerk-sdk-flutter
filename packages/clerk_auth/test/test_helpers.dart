@@ -51,7 +51,7 @@ class TestEnv {
 
   String get emailForLink => _map['email_for_link'] ?? email;
 
-  String get phoneNumber => _map['phone_number'] ?? r'+5555550169';
+  String get phoneNumber => _map['phone_number'] ?? r'+15555550169';
 
   String get password => _map['password'] ?? r'Password8$';
 

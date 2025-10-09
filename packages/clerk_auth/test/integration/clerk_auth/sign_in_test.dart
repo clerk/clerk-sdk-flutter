@@ -150,16 +150,16 @@ void main() {
           params: {
             'strategy': 'email_link',
             'email_address_id': 'IDENTIFIER_ID',
-            'redirect_url': 'https://www.clerk.com'
+            'redirect_url': 'https://somedomain.com'
           },
         );
         httpService.expect(HttpMethod.get, '/v1/client');
         httpService.expect(HttpMethod.get, '/v1/client');
 
         await auth.attemptSignIn(
-          identifier: 'nicford+test@devangels.london', //env.email,
+          identifier: env.emailForLink,
           strategy: Strategy.emailLink,
-          redirectUrl: 'https://www.clerk.com',
+          redirectUrl: 'https://somedomain.com',
         );
         expect(auth.signIn?.status, Status.needsFirstFactor);
         while (auth.user == null) {

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:clerk_auth/src/clerk_auth/auth.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/models/client/client.dart';
@@ -28,19 +26,7 @@ void main() {
   });
 
   Future<void> initialiseForTest(String testName) async {
-    final id = base64Encode(testName.codeUnits).replaceAll('=', '');
-    env = TestEnv(
-      '.env.test',
-      overrides: {
-        'password': 'Ab$id%',
-        'username': 'user$id',
-        'first_name': 'User',
-        'last_name': id[0].toString() + id.substring(1),
-        'email': 'user$id+clerk_test@somedomain.com',
-        'phone_number': '+155555501${(testName.hashCode % 90) + 10}',
-        'use_open_identifiers': true,
-      },
-    );
+    env = TestEnv.withOpenIdentifiers('.env.test', testName);
     httpService = TestHttpService('integration/clerk_auth/sign_up_test', env)
       ..recordPath = testName;
 

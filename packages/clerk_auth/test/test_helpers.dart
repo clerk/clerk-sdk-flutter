@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
@@ -15,8 +16,29 @@ class TestEnv {
     Map<String, dynamic>? overrides,
   }) {
     final dotEnv = DotEnv(filePath: filename);
-    final map = {...dotEnv.getDotEnv(), ...?overrides};
-    return TestEnv._(map.toStringMap());
+    final map = {
+      ...dotEnv.getDotEnv(),
+      if (overrides case final overrides?) //
+        for (final entry in overrides.entries) //
+          entry.key: entry.value.toString(),
+    };
+    return TestEnv._(map);
+  }
+
+  factory TestEnv.withOpenIdentifiers(String filename, String name) {
+    final id = base64Encode(name.codeUnits).replaceAll('=', '').toLowerCase();
+    return TestEnv(
+      filename,
+      overrides: {
+        'password': 'Ab$id%',
+        'username': 'user-$id',
+        'first_name': 'User',
+        'last_name': id[0].toUpperCase() + id.substring(1),
+        'email': 'user-$id+clerk_test@somedomain.com',
+        'phone_number': '+155555501${(name.hashCode % 90) + 10}',
+        'use_open_identifiers': true,
+      },
+    );
   }
 
   final Map<String, String> _map;
@@ -37,11 +59,11 @@ class TestEnv {
 
   String get publishableKey => _map['publishable_key'] ?? r'';
 
-  String get username => _map['username'] ?? r'userfortests';
+  String get username => _map['username'] ?? r'testuser';
 
-  String get firstName => _map['first_name'] ?? r'Testy';
+  String get firstName => _map['first_name'] ?? r'Firstname';
 
-  String get lastName => _map['last_name'] ?? r'McTestface';
+  String get lastName => _map['last_name'] ?? r'Lastname';
 }
 
 class TestLogPrinter extends Printer {

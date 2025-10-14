@@ -1,8 +1,7 @@
 import 'dart:convert';
 
 import 'package:clerk_auth/src/clerk_api/api.dart';
-
-import '../../test_helpers.dart';
+import 'package:clerk_test/clerk_test.dart';
 
 void main() {
   group('Derive domain from publishable key', () {

@@ -1,8 +1,7 @@
 import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-
-import '../../test_helpers.dart';
+import 'package:clerk_test/clerk_test.dart';
 
 void main() {
   late Api api;

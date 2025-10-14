@@ -123,8 +123,7 @@ class DefaultHttpService extends HttpService {
     }
 
     final streamedResponse = await _client.send(request);
-    final resp = http.Response.fromStream(streamedResponse);
-    return resp;
+    return http.Response.fromStream(streamedResponse);
   }
 
   @override

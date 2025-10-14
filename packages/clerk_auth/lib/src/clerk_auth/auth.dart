@@ -247,7 +247,7 @@ class Auth {
         _api.environment().timeout(_initialisationTimeout),
       ]);
       return (client as Client, env as Environment);
-    } catch (e) {
+    } on Exception {
       // either get both or neither (shouldn't initialise with different
       // timestamped versions anyway)
       return (Client.empty, Environment.empty);

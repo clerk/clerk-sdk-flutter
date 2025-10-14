@@ -11,9 +11,9 @@ DateTime intToDateTime(dynamic input) {
 /// Convert a [DateTime] to an [int]. For JsonSerializable
 int dateTimeToInt(DateTime dt) => dt.millisecondsSinceEpoch;
 
-/// [true] if a value is ['on'] or ['required'], else [false]. For JsonSerializable
-/// For required fields it considered as 'on'
-bool isOn(dynamic on) => on == 'on' || on == 'required';
+/// [true] if a value is ['on'] or ['required'], else [false]. For
+/// JsonSerializable
+bool isOn(dynamic value) => value == 'on' || value == 'required';
 
 /// [true] if a value is [true], else [false]. For JsonSerializable
 bool isTrue(dynamic boolean) => boolean == true;

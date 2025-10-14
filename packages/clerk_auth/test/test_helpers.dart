@@ -8,6 +8,10 @@ import 'package:clerk_auth/clerk_auth.dart';
 import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:http/http.dart' show ByteStream, Response;
 
+// This adheres to the required Clerk publishable key format, and contains
+// a base64 encoding of the domain `somedomain.com`
+const _testPublishableKey = r'pk_c29tZWRvbWFpbi5jb20K';
+
 class TestEnv {
   TestEnv._(this._map);
 
@@ -36,7 +40,7 @@ class TestEnv {
 
   String get code => _map['code'] ?? r'424242';
 
-  String get publishableKey => _map['publishable_key'] ?? r'';
+  String get publishableKey => _map['publishable_key'] ?? _testPublishableKey;
 
   String get username => _map['username'] ?? r'userfortests';
 }

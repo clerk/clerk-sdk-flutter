@@ -24,7 +24,7 @@ void main() {
 
   Future<void> initialiseForTest(String testName) async {
     env = TestEnv('.env.test', overrides: {'use_open_identifiers': true});
-    httpService = TestHttpService('clerk_api/user_details', env)
+    httpService = TestHttpService('integration/clerk_api/user_details', env)
       ..recordPath = testName;
     api = Api(
       config: TestAuthConfig(

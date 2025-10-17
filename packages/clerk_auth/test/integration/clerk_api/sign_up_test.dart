@@ -17,7 +17,7 @@ void main() {
 
   Future<void> initialiseForTest(String testName) async {
     env = TestEnv.withOpenIdentifiers('.env.test', testName);
-    httpService = TestHttpService('clerk_api/sign_up_test', env)
+    httpService = TestHttpService('integration/clerk_api/sign_up_test', env)
       ..recordPath = testName;
 
     api = Api(

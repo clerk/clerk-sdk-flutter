@@ -19,7 +19,7 @@ void main() {
 
   Future<void> initialiseForTest(String testName) async {
     env = TestEnv.withOpenIdentifiers('.env.test', testName);
-    httpService = TestHttpService('clerk_auth/sign_up_test', env)
+    httpService = TestHttpService('integration/clerk_auth/sign_up_test', env)
       ..recordPath = testName;
 
     auth = Auth(
@@ -115,6 +115,58 @@ void main() {
         await auth.deleteUser();
 
         expect(httpService.isCompleted);
+      });
+    });
+
+    test('does not update SignUp when values are unchanged', () async {
+      await runWithLogging(() async {
+        await initialiseForTest('does_not_update_with_no_change');
+
+        // Initial create
+        Client client = await auth.attemptSignUp(
+          strategy: Strategy.emailCode,
+          emailAddress: env.email,
+        );
+        expect(client.signUp?.status, Status.missingRequirements);
+        expect(httpService.hitCount, 3);
+
+        // 2) Call attemptSignUp again with the same email
+        client = await auth.attemptSignUp(
+          strategy: Strategy.emailCode,
+          emailAddress: env.email, // unchanged
+        );
+
+        // State should remain in missing requirements; no extra PATCH occurred.
+        expect(client.signUp?.status, Status.missingRequirements);
+        expect(httpService.hitCount, 3);
+      });
+    });
+
+    test('updates SignUp when provided value changes', () async {
+      await runWithLogging(() async {
+        await initialiseForTest('updates_when_there_is_a_change');
+
+        final firstEmail = '${env.username}+first@somedomain.com';
+        final secondEmail = '${env.username}+second@somedomain.com';
+
+        // 1) Create initial sign up with first email
+        Client client = await auth.attemptSignUp(
+          strategy: Strategy.emailCode,
+          emailAddress: firstEmail,
+        );
+        expect(client.signUp?.status, Status.missingRequirements);
+        expect(httpService.hitCount, 3);
+
+        // 2) Provide a different email -> should PATCH
+        client = await auth.attemptSignUp(
+          strategy: Strategy.emailCode,
+          emailAddress: secondEmail,
+        );
+
+        // Still in missing requirements, but email reflected the change via PATCH
+        expect(client.signUp?.status, Status.missingRequirements);
+        expect(client.signUp?.emailAddress, secondEmail);
+        expect(httpService.hitCount, 4);
       });
     });
   });

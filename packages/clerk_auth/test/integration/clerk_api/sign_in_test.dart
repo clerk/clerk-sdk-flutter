@@ -16,7 +16,7 @@ void main() {
   });
 
   Future<void> initialiseForTest(String testName) async {
-    httpService = TestHttpService('clerk_api/sign_in_test', env)
+    httpService = TestHttpService('integration/clerk_api/sign_in_test', env)
       ..recordPath = testName;
     api = Api(
       config: TestAuthConfig(

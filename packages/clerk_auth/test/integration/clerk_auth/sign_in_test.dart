@@ -17,7 +17,7 @@ void main() {
 
   Future<void> initialiseForTest(String testName) async {
     env = TestEnv('.env.test');
-    httpService = TestHttpService('clerk_auth/sign_in_test', env)
+    httpService = TestHttpService('integration/clerk_auth/sign_in_test', env)
       ..recordPath = testName;
 
     auth = Auth(

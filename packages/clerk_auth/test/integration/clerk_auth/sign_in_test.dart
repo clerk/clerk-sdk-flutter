@@ -8,19 +8,17 @@ import '../../test_helpers.dart';
 
 void main() {
   late Auth auth;
-  late final TestEnv env;
-  late final TestHttpService httpService;
+  late TestEnv env;
+  late TestHttpService httpService;
 
   setUpAll(() async {
-    env = TestEnv('.env.test');
-    httpService = TestHttpService('clerk_auth/sign_in_test', env);
     await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
   });
 
   Future<void> initialiseForTest(String testName) async {
-    httpService.reset();
-
-    httpService.recordPath = testName;
+    env = TestEnv('.env.test');
+    httpService = TestHttpService('clerk_auth/sign_in_test', env)
+      ..recordPath = testName;
 
     auth = Auth(
         config: TestAuthConfig(

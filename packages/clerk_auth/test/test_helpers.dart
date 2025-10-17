@@ -111,11 +111,6 @@ class TestHttpService implements HttpService {
     }
   }
 
-  void reset() {
-    recordPath = null;
-    hitCount = 0;
-  }
-
   @override
   Future<void> initialize() async {}
 

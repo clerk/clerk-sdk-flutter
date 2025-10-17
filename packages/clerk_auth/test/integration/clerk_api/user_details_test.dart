@@ -14,13 +14,18 @@ import '../../test_helpers.dart';
 // allow users to change their first and last names
 
 void main() {
-  late final Api api;
-  late final TestEnv env;
-  late final TestHttpService httpService;
+  late Api api;
+  late TestEnv env;
+  late TestHttpService httpService;
 
   setUpAll(() async {
+    await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
+  });
+
+  Future<void> initialiseForTest(String testName) async {
     env = TestEnv('.env.test', overrides: {'use_open_identifiers': true});
-    httpService = TestHttpService('clerk_api/user_details', env);
+    httpService = TestHttpService('clerk_api/user_details', env)
+      ..recordPath = testName;
     api = Api(
       config: TestAuthConfig(
         publishableKey: env.publishableKey,
@@ -28,18 +33,6 @@ void main() {
       ),
     );
     await api.initialize();
-
-    await setUpLogging(printer: TestLogPrinter(), level: Level.SEVERE);
-  });
-
-  tearDown(() async {
-    await api.signOut();
-  });
-
-  Future<void> initialiseForTest(String testName) async {
-    httpService.reset();
-
-    httpService.recordPath = testName;
 
     final response = await api.createSignIn(identifier: env.email);
 

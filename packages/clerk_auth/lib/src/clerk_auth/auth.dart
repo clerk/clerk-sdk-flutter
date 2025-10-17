@@ -242,11 +242,9 @@ class Auth {
 
   Future<(Client, Environment)> _fetchClientAndEnv() async {
     try {
-      final [client, env] = await Future.wait([
-        _api.createClient().timeout(_initialisationTimeout),
-        _api.environment().timeout(_initialisationTimeout),
-      ]);
-      return (client as Client, env as Environment);
+      final client = await _api.createClient().timeout(_initialisationTimeout);
+      final env = await _api.environment().timeout(_initialisationTimeout);
+      return (client, env);
     } on Exception {
       // either get both or neither (shouldn't initialise with different
       // timestamped versions anyway)

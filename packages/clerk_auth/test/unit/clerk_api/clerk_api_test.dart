@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:clerk_auth/src/clerk_api/api.dart';
-import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 

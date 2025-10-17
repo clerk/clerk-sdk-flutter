@@ -2,7 +2,6 @@ import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:clerk_auth/src/models/api/api_response.dart';
 import 'package:clerk_auth/src/models/models.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
@@ -50,8 +49,7 @@ void main() {
         final client = response.client;
         expect(client?.signIn, null);
         expect(client?.activeSession?.status, Status.active);
-        expect(
-            client?.activeSession?.publicUserData.identifier?.isNotEmpty, true);
+        expect(client?.activeSession?.publicUserData.identifier?.isNotEmpty);
       });
     });
 
@@ -77,13 +75,12 @@ void main() {
           strategy: Strategy.emailCode,
           code: env.code,
         );
-        expect(response.client!.sessions.isNotEmpty, true);
+        expect(response.client!.sessions.isNotEmpty);
 
         final client = response.client;
         expect(client?.signIn, null);
         expect(client?.activeSession?.status, Status.active);
-        expect(
-            client?.activeSession?.publicUserData.identifier?.isNotEmpty, true);
+        expect(client?.activeSession?.publicUserData.identifier?.isNotEmpty);
       });
     });
 
@@ -138,7 +135,7 @@ void main() {
           strategy: Strategy.phoneCode,
           code: env.code,
         );
-        expect(response.client!.sessions.isNotEmpty, true);
+        expect(response.client!.sessions.isNotEmpty);
 
         final client = response.client;
         expect(client?.signIn, null);

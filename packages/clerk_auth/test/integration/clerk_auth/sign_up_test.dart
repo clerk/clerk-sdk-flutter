@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:clerk_auth/src/clerk_auth/auth.dart';
 import 'package:clerk_auth/src/models/client/client.dart';
 import 'package:clerk_auth/src/models/client/field.dart';
@@ -7,7 +5,6 @@ import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
@@ -21,17 +18,7 @@ void main() {
   });
 
   Future<void> initialiseForTest(String testName) async {
-    final id = base64Encode(testName.codeUnits).replaceAll('=', '');
-    env = TestEnv(
-      '.env.test',
-      overrides: {
-        'password': 'Ab$id%',
-        'username': 'user$id',
-        'email': 'user$id+clerk_test@somedomain.com',
-        'phone_number': '+155555501${(testName.hashCode % 90) + 10}',
-        'use_open_identifiers': true,
-      },
-    );
+    env = TestEnv.withOpenIdentifiers('.env.test', testName);
     httpService = TestHttpService('clerk_auth/sign_up_test', env)
       ..recordPath = testName;
 
@@ -61,31 +48,25 @@ void main() {
           legalAccepted: true,
         );
         expect(client.signUp?.status, Status.missingRequirements);
-        expect(
-          client.signUp?.unverifiedFields.contains(Field.emailAddress),
-          true,
-        );
+        expect(client.signUp?.unverifiedFields.contains(Field.emailAddress));
 
         client = await auth.attemptSignUp(
           strategy: Strategy.emailCode,
           code: env.code,
         );
         expect(client.signUp?.status, Status.missingRequirements);
-        expect(
-          client.signUp?.unverifiedFields.contains(Field.phoneNumber),
-          true,
-        );
+        expect(client.signUp?.unverifiedFields.contains(Field.phoneNumber));
 
         client = await auth.attemptSignUp(
           strategy: Strategy.phoneCode,
           code: env.code,
         );
         expect(client.signUp, null);
-        expect(client.user is User, true);
+        expect(client.user is User);
 
         await auth.deleteUser();
 
-        expect(httpService.isCompleted, true);
+        expect(httpService.isCompleted);
       });
     });
 
@@ -107,20 +88,14 @@ void main() {
           legalAccepted: true,
         );
         expect(client.signUp?.status, Status.missingRequirements);
-        expect(
-          client.signUp?.unverifiedFields.contains(Field.emailAddress),
-          true,
-        );
+        expect(client.signUp?.unverifiedFields.contains(Field.emailAddress));
 
         client = await auth.attemptSignUp(
           strategy: Strategy.emailCode,
           emailAddress: env.email,
         );
         expect(client.signUp?.status, Status.missingRequirements);
-        expect(
-          client.signUp?.unverifiedFields.contains(Field.emailAddress),
-          true,
-        );
+        expect(client.signUp?.unverifiedFields.contains(Field.emailAddress));
 
         client = await auth.attemptSignUp(
           strategy: Strategy.emailCode,
@@ -128,21 +103,18 @@ void main() {
           code: env.code,
         );
         expect(client.signUp?.status, Status.missingRequirements);
-        expect(
-          client.signUp?.unverifiedFields.contains(Field.phoneNumber),
-          true,
-        );
+        expect(client.signUp?.unverifiedFields.contains(Field.phoneNumber));
 
         client = await auth.attemptSignUp(
           strategy: Strategy.phoneCode,
           code: env.code,
         );
         expect(client.signUp, null);
-        expect(client.user is User, true);
+        expect(client.user is User);
 
         await auth.deleteUser();
 
-        expect(httpService.isCompleted, true);
+        expect(httpService.isCompleted);
       });
     });
   });

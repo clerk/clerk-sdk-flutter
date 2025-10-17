@@ -6,7 +6,6 @@ import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
@@ -61,11 +60,11 @@ void main() {
         late User? user;
 
         response = await api.getUser();
-        expect(response.client?.activeSession?.user is User, true);
+        expect(response.client?.activeSession?.user is User);
         final originalUser = response.client!.activeSession!.user;
 
         response = await api.updateUser(firstName: 'New', lastName: 'Cognomen');
-        expect(response.isOkay, true);
+        expect(response.isOkay);
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
@@ -75,7 +74,7 @@ void main() {
           firstName: originalUser.firstName,
           lastName: originalUser.lastName,
         );
-        expect(response.isOkay, true);
+        expect(response.isOkay);
       });
     });
 
@@ -90,23 +89,23 @@ void main() {
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
-        expect(user is User, true);
+        expect(user is User);
 
         response = await api.addIdentifyingDataToCurrentUser(
           emailAddress,
           IdentifierType.emailAddress,
         );
-        expect(response.isOkay, true);
+        expect(response.isOkay);
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
         final email = user?.emailAddresses
             ?.where((e) => e.emailAddress == emailAddress)
             .first;
-        expect(email is Email, true);
+        expect(email is Email);
 
         response = await api.deleteIdentifyingData(email!);
-        expect(response.isOkay, true);
+        expect(response.isOkay);
       });
     });
 
@@ -121,22 +120,22 @@ void main() {
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
-        expect(user is User, true);
+        expect(user is User);
 
         response = await api.addIdentifyingDataToCurrentUser(
           newNumber,
           IdentifierType.phoneNumber,
         );
-        expect(response.isOkay, true);
+        expect(response.isOkay);
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
         final number =
             user?.phoneNumbers?.where((p) => p.phoneNumber == newNumber).first;
-        expect(number is PhoneNumber, true);
+        expect(number is PhoneNumber);
 
         response = await api.deleteIdentifyingData(number!);
-        expect(response.isOkay, true);
+        expect(response.isOkay);
       });
     });
   });

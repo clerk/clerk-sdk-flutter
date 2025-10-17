@@ -3,7 +3,6 @@ import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
@@ -43,9 +42,9 @@ void main() {
           password: env.password,
         );
         expect(auth.signIn, null);
-        expect(auth.user is User, true);
+        expect(auth.user is User);
 
-        expect(httpService.isCompleted, true);
+        expect(httpService.isCompleted);
       });
     });
 
@@ -62,9 +61,9 @@ void main() {
           code: env.code,
         );
         expect(auth.signIn, null);
-        expect(auth.user is User, true);
+        expect(auth.user is User);
 
-        expect(httpService.isCompleted, true);
+        expect(httpService.isCompleted);
       });
     });
 
@@ -78,9 +77,9 @@ void main() {
           code: env.code,
         );
         expect(auth.signIn, null);
-        expect(auth.user is User, true);
+        expect(auth.user is User);
 
-        expect(httpService.isCompleted, true);
+        expect(httpService.isCompleted);
       });
     });
 
@@ -100,9 +99,9 @@ void main() {
           await Future.delayed(const Duration(milliseconds: 300));
         }
         expect(auth.signIn?.status, Status.complete);
-        expect(auth.user is User, true);
+        expect(auth.user is User);
 
-        expect(httpService.isCompleted, true);
+        expect(httpService.isCompleted);
       });
     });
   });

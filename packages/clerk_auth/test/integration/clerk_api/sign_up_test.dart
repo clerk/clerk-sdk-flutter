@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:clerk_auth/src/models/api/api_response.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
@@ -19,17 +16,7 @@ void main() {
   });
 
   Future<void> initialiseForTest(String testName) async {
-    final id = base64Encode(testName.codeUnits).replaceAll('=', '');
-    env = TestEnv(
-      '.env.test',
-      overrides: {
-        'password': 'Ab$id%',
-        'username': 'user-$id',
-        'email': 'user-$id+clerk_test@somedomain.com',
-        'phone_number': '+155555501${(testName.hashCode % 90) + 10}',
-        'use_open_identifiers': true,
-      },
-    );
+    env = TestEnv.withOpenIdentifiers('.env.test', testName);
     httpService = TestHttpService('clerk_api/sign_up_test', env)
       ..recordPath = testName;
 
@@ -90,8 +77,7 @@ void main() {
         final client = response.client;
         expect(client?.signUp, null);
         expect(client?.activeSession?.status, Status.active);
-        expect(
-            client?.activeSession?.publicUserData.identifier?.isNotEmpty, true);
+        expect(client?.activeSession?.publicUserData.identifier?.isNotEmpty);
       });
     });
 

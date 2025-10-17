@@ -7,6 +7,15 @@ import 'dart:io';
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:http/http.dart' show ByteStream, Response;
+import 'package:test/test.dart' as test show expect;
+
+export 'package:test/test.dart' hide expect;
+
+// Override for the standard expect that lets us leave out
+// the second parameter if it's simply `true`
+void expect(dynamic actual, [dynamic matcher = true]) {
+  test.expect(actual, matcher);
+}
 
 // This adheres to the required Clerk publishable key format, and contains
 // a base64 encoding of the domain `somedomain.com`
@@ -20,8 +29,29 @@ class TestEnv {
     Map<String, dynamic>? overrides,
   }) {
     final dotEnv = DotEnv(filePath: filename);
-    final map = {...dotEnv.getDotEnv(), ...?overrides};
-    return TestEnv._(map.toStringMap());
+    final map = {
+      ...dotEnv.getDotEnv(),
+      if (overrides case final overrides?) //
+        for (final entry in overrides.entries) //
+          entry.key: entry.value.toString(),
+    };
+    return TestEnv._(map);
+  }
+
+  factory TestEnv.withOpenIdentifiers(String filename, String name) {
+    final id = base64Encode(name.codeUnits).replaceAll('=', '').toLowerCase();
+    return TestEnv(
+      filename,
+      overrides: {
+        'password': 'Ab$id%',
+        'username': 'user-$id',
+        'first_name': 'User',
+        'last_name': id[0].toUpperCase() + id.substring(1),
+        'email': 'user-$id+clerk_test@somedomain.com',
+        'phone_number': '+155555501${(name.hashCode % 90) + 10}',
+        'use_open_identifiers': true,
+      },
+    );
   }
 
   final Map<String, String> _map;
@@ -42,7 +72,11 @@ class TestEnv {
 
   String get publishableKey => _map['publishable_key'] ?? _testPublishableKey;
 
-  String get username => _map['username'] ?? r'userfortests';
+  String get username => _map['username'] ?? r'testuser';
+
+  String get firstName => _map['first_name'] ?? r'Firstname';
+
+  String get lastName => _map['last_name'] ?? r'Lastname';
 }
 
 class TestLogPrinter extends Printer {

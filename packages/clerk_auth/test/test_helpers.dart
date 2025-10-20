@@ -254,6 +254,7 @@ class TestHttpService implements HttpService {
   };
 
   static final _dateRE = RegExp(r'_at":-?(\d{13})[,}]');
+  static final _datetimeOffsetRE = RegExp(r'"%%DATETIME (-?\d+)%%"');
 
   String _deflateFromReality(String item) {
     item = _swapIdentifiers(item);
@@ -267,17 +268,24 @@ class TestHttpService implements HttpService {
       item = item.replaceAll(key, value);
     }
 
+    // we change timestamps to arbitrary integer offsets that still retain the
+    // original order and are negative if past, positive if future. Hopefully
+    // this will mean that there are fewer recommits when response files are
+    // regenerated
     final now = DateTime.timestamp().millisecondsSinceEpoch;
+    final timestamps = <int>{now};
     for (final match in _dateRE.allMatches(item)) {
       if (int.tryParse(match.group(1)!) case int date) {
-        item = item.replaceAll(date.toString(), '"%%DATETIME ${now - date}%%"');
+        timestamps.add(date);
       }
+    }
+    int idx = -timestamps.where((d) => d < now).length;
+    for (final timestamp in timestamps.toList()..sort()) {
+      item = item.replaceAll('_at":$timestamp', '_at":"%%DATETIME ${idx++}%%"');
     }
 
     return item;
   }
-
-  static final _datetimeOffsetRE = RegExp(r'"%%DATETIME (-?\d+)%%"');
 
   String _inflateForTests(String item, TestEnv env) {
     item = item.replaceAll(_kEmailAddress, env.email);
@@ -288,7 +296,7 @@ class TestHttpService implements HttpService {
     for (final match in _datetimeOffsetRE.allMatches(item)) {
       final matchString = match.group(0)!;
       final offset = int.tryParse(match.group(1)!) ?? 0;
-      item = item.replaceAll(matchString, (now - offset).toString());
+      item = item.replaceAll(matchString, (now + offset * 1000).toString());
     }
 
     return item;

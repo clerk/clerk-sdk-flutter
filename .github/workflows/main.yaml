@@ -56,12 +56,6 @@ jobs:
         run: flutter analyze
         working-directory: packages/clerk_flutter
 
-      - name: Prepare the test environment
-        env:
-          TEST_ENV_BASE64: ${{ secrets.TEST_ENV_BASE64 }}
-        run: |
-          echo $TEST_ENV_BASE64 | base64 --decode > packages/clerk_auth/.env.test
-
       - name: Run tests in clerk_auth
         run: dart test --file-reporter=json:../../reports/clerk_auth.json
         working-directory: packages/clerk_auth

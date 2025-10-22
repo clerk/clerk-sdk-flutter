@@ -1,5 +1,5 @@
 class TestHttpServiceError extends Error {
-  TestHttpServiceError({required this.message});
+  TestHttpServiceError(this.message);
 
   final String message;
 

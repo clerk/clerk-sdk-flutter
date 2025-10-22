@@ -1,17 +1,19 @@
 name: clerk_test
-description: "Test support modules for clerk_auth and clerk_flutter"
-publish_to: 'none'
-version: 0.0.12-beta
+description: "Providing test infrastructure for clerk_auth and clerk_flutter"
+version: 0.0.13-beta
+publish_to: none
+homepage:
 
 environment:
   sdk: ^3.6.2
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  dart_dotenv: ^1.0.1
   clerk_auth:
     path: ../clerk_auth
-  dart_dotenv: ^1.0.1
   http: ^1.1.0
   test: ^1.25.5
 
@@ -19,6 +21,3 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-
-flutter:
-  uses-material-design: true

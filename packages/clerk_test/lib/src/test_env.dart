@@ -2,6 +2,10 @@ import 'dart:convert';
 
 import 'package:dart_dotenv/dart_dotenv.dart';
 
+// This adheres to the required Clerk publishable key format, and contains
+// a base64 encoding of the domain `somedomain.com`
+const _testPublishableKey = r'pk_c29tZWRvbWFpbi5jb20K';
+
 class TestEnv {
   TestEnv._(this._map);
 
@@ -45,13 +49,13 @@ class TestEnv {
 
   String get emailForLink => _map['email_for_link'] ?? email;
 
-  String get phoneNumber => _map['phone_number'] ?? r'+15555550169';
+  String get phoneNumber => _map['phone_number'] ?? r'+5555550169';
 
   String get password => _map['password'] ?? r'Password8$';
 
   String get code => _map['code'] ?? r'424242';
 
-  String get publishableKey => _map['publishable_key'] ?? r'';
+  String get publishableKey => _map['publishable_key'] ?? _testPublishableKey;
 
   String get username => _map['username'] ?? r'testuser';
 

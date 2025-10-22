@@ -1,5 +1,5 @@
 import 'package:clerk_auth/clerk_auth.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' show ByteStream, Response;
 
 class TestAuthConfig extends AuthConfig {
   const TestAuthConfig({

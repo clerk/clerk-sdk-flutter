@@ -6,7 +6,6 @@ import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-
 import 'package:clerk_test/clerk_test.dart';
 
 // Note that these are integration tests with a live backend. The configuration of the backend

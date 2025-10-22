@@ -5,86 +5,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
-import 'package:dart_dotenv/dart_dotenv.dart';
+import 'package:clerk_test/src/test_env.dart';
+import 'package:clerk_test/src/test_http_service_error.dart';
 import 'package:http/http.dart' show ByteStream, Response;
-import 'package:test/test.dart' as test show expect;
-
-export 'package:test/test.dart' hide expect;
-
-// Override for the standard expect that lets us leave out
-// the second parameter if it's simply `true`
-void expect(dynamic actual, [dynamic matcher = true]) {
-  test.expect(actual, matcher);
-}
-
-// This adheres to the required Clerk publishable key format, and contains
-// a base64 encoding of the domain `somedomain.com`
-const _testPublishableKey = r'pk_c29tZWRvbWFpbi5jb20K';
-
-class TestEnv {
-  TestEnv._(this._map);
-
-  factory TestEnv(
-    String filename, {
-    Map<String, dynamic>? overrides,
-  }) {
-    final dotEnv = DotEnv(filePath: filename);
-    final map = {
-      ...dotEnv.getDotEnv(),
-      if (overrides case final overrides?) //
-        for (final entry in overrides.entries) //
-          entry.key: entry.value.toString(),
-    };
-    return TestEnv._(map);
-  }
-
-  factory TestEnv.withOpenIdentifiers(String filename, String name) {
-    final id = base64Encode(name.codeUnits).replaceAll('=', '').toLowerCase();
-    return TestEnv(
-      filename,
-      overrides: {
-        'password': 'Ab$id%',
-        'username': 'user-$id',
-        'first_name': 'User',
-        'last_name': id[0].toUpperCase() + id.substring(1),
-        'email': 'user-$id+clerk_test@somedomain.com',
-        'phone_number': '+155555501${(name.hashCode % 90) + 10}',
-        'use_open_identifiers': true,
-      },
-    );
-  }
-
-  final Map<String, String> _map;
-
-  bool get recording => _map['recording'] == r'true';
-
-  bool get useOpenIdentifiers => _map['use_open_identifiers'] == 'true';
-
-  String get email => _map['email'] ?? r'user+clerk_test@somedomain.com';
-
-  String get emailForLink => _map['email_for_link'] ?? email;
-
-  String get phoneNumber => _map['phone_number'] ?? r'+5555550169';
-
-  String get password => _map['password'] ?? r'Password8$';
-
-  String get code => _map['code'] ?? r'424242';
-
-  String get publishableKey => _map['publishable_key'] ?? _testPublishableKey;
-
-  String get username => _map['username'] ?? r'testuser';
-
-  String get firstName => _map['first_name'] ?? r'Firstname';
-
-  String get lastName => _map['last_name'] ?? r'Lastname';
-}
-
-class TestLogPrinter extends Printer {
-  @override
-  void print(String output) {
-    Zone.root.print(output);
-  }
-}
 
 extension on num {
   String toPaddedString([int width = 3]) => toString().padLeft(width, '0');
@@ -358,64 +281,5 @@ class TestHttpService implements HttpService {
   ) {
     // TODO: add tests for sendFile
     throw UnimplementedError();
-  }
-}
-
-class TestHttpServiceError extends Error {
-  TestHttpServiceError(this.message);
-
-  final String message;
-
-  @override
-  String toString() => '$runtimeType: $message';
-}
-
-class TestAuthConfig extends AuthConfig {
-  const TestAuthConfig({
-    required super.publishableKey,
-    super.httpService = const NoneHttpService(),
-  }) : super(
-          sessionTokenPolling: false,
-          localesLookup: _localesLookup,
-          persistor: Persistor.none,
-          clientRefreshPeriod: Duration.zero,
-          telemetryPeriod: Duration.zero,
-        );
-
-  static List<String> _localesLookup() => const <String>['en'];
-}
-
-class NoneHttpService implements HttpService {
-  const NoneHttpService();
-
-  @override
-  Future<void> initialize() async {}
-
-  @override
-  void terminate() {}
-
-  @override
-  Future<bool> ping(Uri uri, {required Duration timeout}) => Future.value(true);
-
-  @override
-  Future<Response> send(
-    HttpMethod method,
-    Uri uri, {
-    Map<String, String>? headers,
-    Map<String, dynamic>? params,
-    String? body,
-  }) {
-    return Future.value(Response('', 200));
-  }
-
-  @override
-  Future<Response> sendByteStream(
-    HttpMethod method,
-    Uri uri,
-    ByteStream byteStream,
-    int length,
-    Map<String, String> headers,
-  ) {
-    return Future.value(Response('', 200));
   }
 }

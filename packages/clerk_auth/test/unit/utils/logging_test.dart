@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:clerk_test/clerk_test.dart';
 import 'package:mocktail/mocktail.dart';
+
+import '../../test_helpers.dart';
 
 void main() {
   late final Printer printer;

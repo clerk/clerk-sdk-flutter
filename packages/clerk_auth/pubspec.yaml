@@ -24,5 +24,4 @@ dev_dependencies:
   json_serializable: ^6.8.0
   lints: ^3.0.0
   mocktail: ^1.0.4
-  clerk_test:
-    path: ../clerk_test
+  test: ^1.25.5

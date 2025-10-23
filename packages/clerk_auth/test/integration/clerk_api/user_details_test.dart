@@ -6,7 +6,8 @@ import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
-import 'package:clerk_test/clerk_test.dart';
+
+import '../../test_helpers.dart';
 
 // Note that these are integration tests with a live backend. The configuration of the backend
 // will affect the outcome of the tests. It is assumed that the account has been configured to
@@ -77,7 +78,7 @@ void main() {
         late ApiResponse response;
         late User? user;
 
-        const emailAddress = 'newemail+clerk_test@somedomain.com';
+        const emailAddress = 'newemail+test_support@somedomain.com';
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;

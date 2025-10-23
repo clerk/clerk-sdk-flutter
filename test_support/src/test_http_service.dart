@@ -5,9 +5,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
-import 'package:clerk_test/src/test_env.dart';
-import 'package:clerk_test/src/test_http_service_error.dart';
 import 'package:http/http.dart' show ByteStream, Response;
+
+import 'test_env.dart';
+import 'test_http_service_error.dart';
 
 extension on num {
   String toPaddedString([int width = 3]) => toString().padLeft(width, '0');

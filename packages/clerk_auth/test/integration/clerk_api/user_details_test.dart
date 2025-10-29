@@ -78,7 +78,7 @@ void main() {
         late ApiResponse response;
         late User? user;
 
-        const emailAddress = 'newemail+test_support@somedomain.com';
+        const emailAddress = 'newemail+clerk_test@somedomain.com';
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;

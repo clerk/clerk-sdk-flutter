@@ -45,7 +45,7 @@ class TestEnv {
 
   bool get useOpenIdentifiers => _map['use_open_identifiers'] == 'true';
 
-  String get email => _map['email'] ?? r'user+test_support@somedomain.com';
+  String get email => _map['email'] ?? r'user+clerk_test@somedomain.com';
 
   String get emailForLink => _map['email_for_link'] ?? email;
 

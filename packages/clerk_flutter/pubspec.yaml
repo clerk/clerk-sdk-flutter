@@ -7,7 +7,6 @@ issue_tracker: https://github.com/clerk/clerk-sdk-flutter/labels/clerk_flutter
 topics:
   - authentication
 
-
 environment:
   sdk: '>=3.6.2 <4.0.0'
   flutter: '>=3.27.4'
@@ -32,6 +31,10 @@ dependencies:
 dev_dependencies:
   flutter_lints: ^3.0.1
   flutter_test:
+    sdk: flutter
+  dart_dotenv: ^1.0.1
+  test: ^1.25.5
+  integration_test:
     sdk: flutter
 
 flutter:

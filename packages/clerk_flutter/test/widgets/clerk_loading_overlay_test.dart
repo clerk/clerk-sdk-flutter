@@ -5,7 +5,8 @@ import 'package:clerk_flutter/src/utils/clerk_auth_config.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_loading_overlay.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_test/flutter_test.dart';
+
+import '../test_helpers.dart';
 
 const startupDuration = ClerkLoadingOverlay.startupDuration;
 const minOnScreenTime = ClerkLoadingOverlay.minimumOnScreenDuration;
@@ -18,9 +19,6 @@ extension on DateTime {
 
   int operator -(DateTime other) => difference(other).inMilliseconds;
 }
-
-void expectThat(bool result, {String? reason}) =>
-    expect(result, true, reason: reason);
 
 void main() {
   group('ClerkLoadingOverlay:', skip: true, () {

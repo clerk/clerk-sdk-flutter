@@ -30,29 +30,31 @@ extension AuthConfigExt on clerk.AuthConfig {
   }
 }
 
-FlutterExceptionHandler setIgnoreOverflowErrors(
-  FlutterExceptionHandler? override,
-) {
-  return (FlutterErrorDetails details, {bool forceReport = false}) {
-    final hasReportableError = switch (details.exception) {
-      FlutterError exception => exception.diagnostics.any(
-          (e) {
-            final value = e.toString();
-            return value.startsWith('A RenderFlex overflowed by') == false &&
-                value.startsWith('Unable to load asset') == false;
-          },
-        ),
-      _ => true,
-    };
+void setIgnoreOverflowErrors() {
+  final originalOnError = FlutterError.onError;
+  if (originalOnError != setIgnoreOverflowErrors) {
+    FlutterError.onError =
+        (FlutterErrorDetails details, {bool forceReport = false}) {
+      final hasReportableError = switch (details.exception) {
+        FlutterError exception => exception.diagnostics.any(
+            (e) {
+              final value = e.toString();
+              return value.startsWith('A RenderFlex overflowed by') == false &&
+                  value.startsWith('Unable to load asset') == false;
+            },
+          ),
+        _ => true,
+      };
 
-    if (hasReportableError) {
-      if (override case FlutterExceptionHandler override) {
-        override(details);
-      } else {
-        FlutterError.dumpErrorToConsole(details, forceReport: forceReport);
+      if (hasReportableError) {
+        if (originalOnError case FlutterExceptionHandler onError) {
+          onError(details);
+        } else {
+          FlutterError.dumpErrorToConsole(details, forceReport: forceReport);
+        }
       }
-    }
-  };
+    };
+  }
 }
 
 class _NoneFileCache implements ClerkFileCache {

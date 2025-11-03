@@ -291,7 +291,9 @@ class _FactorList extends StatelessWidget {
               child: StrategyButton(
                 key: ValueKey<clerk.Factor>(factor),
                 strategy: factor.strategy,
-                onClick: () => onSubmit(factor.strategy),
+                onClick: () {
+                  onSubmit(factor.strategy);
+                },
               ),
             ),
         ],

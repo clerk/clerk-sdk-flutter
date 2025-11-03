@@ -92,10 +92,11 @@ class _PhoneInput extends StatefulWidget {
 
 class _PhoneInputState extends State<_PhoneInput> {
   static const _kIsoCode = 'phone_number.iso_code';
+  static const _testNumberPrefix = '+155555501';
 
   late PhoneNumber _phoneNumber;
 
-  late List<String> _whiteList;
+  late final bool _isTestMode;
   late bool _isValid = _phoneNumber.isValid() == true;
   late IsoCode _isoCode;
 
@@ -109,8 +110,8 @@ class _PhoneInputState extends State<_PhoneInput> {
 
   Future<PhoneNumber> _getPhoneNumber() async {
     final config = ClerkAuth.of(context, listen: false).config;
+    _isTestMode = config.isTestMode;
     final persistor = config.persistor;
-    _whiteList = config.phoneNumberWhiteList;
     if (widget.initial case String initial) {
       _phoneNumber = PhoneNumber.parse(initial);
       _isoCode = _phoneNumber.isoCode;
@@ -132,8 +133,16 @@ class _PhoneInputState extends State<_PhoneInput> {
     }
   }
 
-  bool _validate(PhoneNumber phoneNumber) =>
-      _whiteList.contains(phoneNumber.international) || phoneNumber.isValid();
+  bool _validate(PhoneNumber phoneNumber) {
+    if (_isTestMode) {
+      final number = phoneNumber.international;
+      if (number.startsWith(_testNumberPrefix) &&
+          number.length == _testNumberPrefix.length + 2) {
+        return true;
+      }
+    }
+    return phoneNumber.isValid();
+  }
 
   @override
   Widget build(BuildContext context) {

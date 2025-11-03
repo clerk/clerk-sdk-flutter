@@ -1,7 +1,6 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/logging.dart';
 import 'package:clerk_flutter_example/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:integration_test/integration_test.dart';
 
 import '../test_helpers.dart';
@@ -32,28 +31,28 @@ void main() {
     await setUpLogging(printer: TestLogPrinter(), level: Level.INFO);
   });
 
-  Future<ClerkAuthConfig> initialiseForTest(String testName) async {
-    FlutterError.onError = setIgnoreOverflowErrors(FlutterError.onError);
+  Future<void> initialiseForTest(WidgetTester tester) async {
+    setIgnoreOverflowErrors();
 
     final httpService = TestHttpService('flow/sign_in_flow_test', env)
-      ..recordPath = testName;
+      ..recordPath = tester.testDescription.toLowerCase().replaceAll(' ', '_');
 
-    return TestAuthConfig(
+    final config = TestAuthConfig(
       publishableKey: env.publishableKey,
       httpService: httpService,
-      phoneNumberWhiteList: [env.phoneNumber],
     ).toClerkAuthConfig();
+
+    await tester.pumpWidget(ExampleApp(config: config));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Clerk UI Sign In'));
+    await tester.pumpAndSettle();
   }
 
-  group('sign in: ', () {
+  group('sign in with password: ', () {
     testWidgets('with email and password', (tester) async {
       // Load app widget.
-      final config = await initialiseForTest('with_email_and_password');
-      await tester.pumpWidget(ExampleApp(config: config));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Clerk UI Sign In'));
-      await tester.pumpAndSettle();
+      await initialiseForTest(tester);
 
       final emailInput = find.byKey(kIdentifierInputField);
       await tester.tap(emailInput);
@@ -77,12 +76,7 @@ void main() {
 
     testWidgets('with username and password', (tester) async {
       // Load app widget.
-      final config = await initialiseForTest('with_username_and_password');
-      await tester.pumpWidget(ExampleApp(config: config));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Clerk UI Sign In'));
-      await tester.pumpAndSettle();
+      await initialiseForTest(tester);
 
       final usernameInput = find.byKey(kIdentifierInputField);
       await tester.tap(usernameInput);
@@ -106,12 +100,7 @@ void main() {
 
     testWidgets('with phone number and password', (tester) async {
       // Load app widget.
-      final config = await initialiseForTest('with_phone_number_and_password');
-      await tester.pumpWidget(ExampleApp(config: config));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Clerk UI Sign In'));
-      await tester.pumpAndSettle();
+      await initialiseForTest(tester);
 
       await tester.tap(find.text('Switch to phone'));
       await tester.pumpAndSettle();
@@ -149,4 +138,33 @@ void main() {
       await _signOut(tester);
     });
   });
+
+  // group('sign in with code: ', () {
+  //   testWidgets('with email and code', (tester) async {
+  //     // Load app widget.
+  //     await initialiseForTest(tester);
+  //
+  //     final emailInput = find.byKey(kIdentifierInputField);
+  //     await tester.tap(emailInput);
+  //     tester.testTextInput.enterText(env.email);
+  //
+  //     await tester.tap(find.text('Continue'));
+  //     await tester.pumpAndSettle();
+  //
+  //     expect(find.text(env.email), findsOneWidget);
+  //
+  //     await tester.tap(
+  //       find.text('Sign in by entering a code sent to you by email'),
+  //     );
+  //     await tester.pumpAndSettle();
+  //
+  //     expect(find.text('Enter the code sent to ${env.email}'), findsOneWidget);
+  //     tester.testTextInput.enterText(env.code);
+  //     await tester.pumpAndSettle();
+  //
+  //     expect(find.text(env.email), findsOneWidget);
+  //
+  //     await _signOut(tester);
+  //   });
+  // });
 }

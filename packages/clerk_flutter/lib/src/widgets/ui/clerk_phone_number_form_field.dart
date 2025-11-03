@@ -92,10 +92,11 @@ class _PhoneInput extends StatefulWidget {
 
 class _PhoneInputState extends State<_PhoneInput> {
   static const _kIsoCode = 'phone_number.iso_code';
+  static const _testNumberPrefix = '+155555501';
 
   late PhoneNumber _phoneNumber;
 
-  // widget.initial is String ? PhoneNumber.parse(widget.initial!) : null;
+  late final bool _isTestMode;
   late bool _isValid = _phoneNumber.isValid() == true;
   late IsoCode _isoCode;
 
@@ -108,7 +109,9 @@ class _PhoneInputState extends State<_PhoneInput> {
   }
 
   Future<PhoneNumber> _getPhoneNumber() async {
-    final persistor = ClerkAuth.of(context, listen: false).config.persistor;
+    final config = ClerkAuth.of(context, listen: false).config;
+    _isTestMode = config.isTestMode;
+    final persistor = config.persistor;
     if (widget.initial case String initial) {
       _phoneNumber = PhoneNumber.parse(initial);
       _isoCode = _phoneNumber.isoCode;
@@ -130,6 +133,17 @@ class _PhoneInputState extends State<_PhoneInput> {
     }
   }
 
+  bool _validate(PhoneNumber phoneNumber) {
+    if (_isTestMode) {
+      final number = phoneNumber.international;
+      if (number.startsWith(_testNumberPrefix) &&
+          number.length == _testNumberPrefix.length + 2) {
+        return true;
+      }
+    }
+    return phoneNumber.isValid();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -148,7 +162,7 @@ class _PhoneInputState extends State<_PhoneInput> {
           focusNode: widget.focusNode,
           onChanged: (phoneNumber) {
             if (phoneNumber case PhoneNumber phoneNumber) {
-              final valid = phoneNumber.isValid();
+              final valid = _validate(phoneNumber);
               if (valid != _isValid) setState(() => _isValid = valid);
               if (valid) {
                 widget.onChanged(phoneNumber.international);

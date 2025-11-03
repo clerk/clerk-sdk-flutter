@@ -11,6 +11,7 @@ class TestAuthConfig extends AuthConfig {
           persistor: Persistor.none,
           clientRefreshPeriod: Duration.zero,
           telemetryPeriod: Duration.zero,
+          isTestMode: true,
         );
 
   static List<String> _localesLookup() => const <String>['en'];

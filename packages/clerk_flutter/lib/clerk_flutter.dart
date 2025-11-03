@@ -7,6 +7,7 @@ export 'src/clerk_user_action.dart';
 export 'src/utils/clerk_auth_config.dart';
 export 'src/utils/clerk_sdk_flags.dart';
 export 'src/widgets/authentication/clerk_authentication.dart';
+export 'src/widgets/clerk_keys.dart';
 export 'src/widgets/control/clerk_auth.dart';
 export 'src/widgets/control/clerk_auth_builder.dart';
 export 'src/widgets/control/clerk_error_listener.dart';

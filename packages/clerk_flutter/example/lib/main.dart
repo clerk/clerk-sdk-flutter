@@ -27,55 +27,55 @@ Future<void> main() async {
   }
 
   runApp(
-    const ExampleApp(
-      publishableKey: publishableKey,
-    ),
-  );
-}
-
-/// Example App
-class ExampleApp extends StatelessWidget {
-  /// Constructs an instance of Example App
-  const ExampleApp({super.key, required this.publishableKey});
-
-  /// Publishable Key
-  final String publishableKey;
-
-  /// This function maps a [Uri] into a [ClerkDeepLink], which is essentially
-  /// just a container for the [Uri]. The [ClerkDeepLink] can also
-  /// contain a [clerk.Strategy], to use in preference to a strategy
-  /// inferred from the [Uri]
-  ClerkDeepLink? createClerkLink(Uri uri) {
-    if (uri.pathSegments.first == 'auth') {
-      return ClerkDeepLink(uri: uri);
-    }
-
-    // If the host app deems the deep link to be not relevant to the Clerk SDK,
-    // we return [null] instead of a [ClerkDeepLink] to inhibit its processing.
-    return null;
-  }
-
-  /// A function that returns an appropriate deep link [Uri] for the oauth
-  /// redirect for a given [clerk.Strategy], or [null] if redirection should
-  /// be handled in-app
-  Uri? generateDeepLink(BuildContext context, clerk.Strategy strategy) {
-    return Uri.parse('clerk://example.com/auth/$strategy');
-
-    // if you want to use the default in-app SSO, just remove the
-    // [redirectionGenerator] parameter from the [ClerkAuthConfig] object
-    // below, or...
-
-    // return null;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ClerkAuth(
+    ExampleApp(
       config: ClerkAuthConfig(
         publishableKey: publishableKey,
         redirectionGenerator: generateDeepLink,
         deepLinkStream: AppLinks().allUriLinkStream.map(createClerkLink),
       ),
+    ),
+  );
+}
+
+/// This function maps a [Uri] into a [ClerkDeepLink], which is essentially
+/// just a container for the [Uri]. The [ClerkDeepLink] can also
+/// contain a [clerk.Strategy], to use in preference to a strategy
+/// inferred from the [Uri]
+ClerkDeepLink? createClerkLink(Uri uri) {
+  if (uri.pathSegments.first == 'auth') {
+    return ClerkDeepLink(uri: uri);
+  }
+
+  // If the host app deems the deep link to be not relevant to the Clerk SDK,
+  // we return [null] instead of a [ClerkDeepLink] to inhibit its processing.
+  return null;
+}
+
+/// A function that returns an appropriate deep link [Uri] for the oauth
+/// redirect for a given [clerk.Strategy], or [null] if redirection should
+/// be handled in-app
+Uri? generateDeepLink(BuildContext context, clerk.Strategy strategy) {
+  return Uri.parse('clerk://example.com/auth/$strategy');
+
+  // if you want to use the default in-app SSO, just remove the
+  // [redirectionGenerator] parameter from the [ClerkAuthConfig] object
+  // below, or...
+
+  // return null;
+}
+
+/// Example App
+class ExampleApp extends StatelessWidget {
+  /// Constructs an instance of Example App
+  const ExampleApp({super.key, required this.config});
+
+  /// Publishable Key
+  final ClerkAuthConfig config;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClerkAuth(
+      config: config,
       child: MaterialApp(
         theme: ThemeData.light(),
         debugShowCheckedModeBanner: false,

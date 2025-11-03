@@ -275,6 +275,7 @@ class _FactorList extends StatelessWidget {
           Padding(
             padding: topPadding8 + bottomPadding2,
             child: ClerkTextFormField(
+              key: kPasswordInputField,
               label: l10ns.password,
               obscureText: true,
               onChanged: onPasswordChanged,
@@ -290,7 +291,9 @@ class _FactorList extends StatelessWidget {
               child: StrategyButton(
                 key: ValueKey<clerk.Factor>(factor),
                 strategy: factor.strategy,
-                onClick: () => onSubmit(factor.strategy),
+                onClick: () {
+                  onSubmit(factor.strategy);
+                },
               ),
             ),
         ],

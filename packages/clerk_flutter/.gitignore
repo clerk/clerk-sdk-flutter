@@ -18,3 +18,5 @@ build/
 # Flutter auto-generated files
 .flutter-plugins
 .flutter-plugins-dependencies
+
+.env.*

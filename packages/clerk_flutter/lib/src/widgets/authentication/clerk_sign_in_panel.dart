@@ -275,6 +275,7 @@ class _FactorList extends StatelessWidget {
           Padding(
             padding: topPadding8 + bottomPadding2,
             child: ClerkTextFormField(
+              key: kPasswordInputField,
               label: l10ns.password,
               obscureText: true,
               onChanged: onPasswordChanged,

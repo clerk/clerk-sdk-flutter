@@ -108,7 +108,7 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
           Closeable(
             closed: widget.identifierType.value.isPhoneNumber,
             child: ClerkTextFormField(
-              key: const Key('identifier'),
+              key: kEmailInputField,
               initial: widget.initialValue,
               label: l10ns.grammar.toSentence(
                 l10ns.grammar.toLitany(
@@ -134,7 +134,7 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
           Closeable(
             closed: widget.identifierType.value.isEmailAddress,
             child: ClerkPhoneNumberFormField(
-              key: const Key('phoneIdentifier'),
+              key: kPhoneInputField,
               label: l10ns.grammar.toSentence(
                 l10ns.grammar.toLitany(
                   phoneStrategies

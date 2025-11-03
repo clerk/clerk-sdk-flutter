@@ -6,7 +6,7 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_loading_overlay.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:flutter/widgets.dart';
 
-import '../test_helpers.dart';
+import '../../example/test/test_helpers.dart';
 
 const startupDuration = ClerkLoadingOverlay.startupDuration;
 const minOnScreenTime = ClerkLoadingOverlay.minimumOnScreenDuration;

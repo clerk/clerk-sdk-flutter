@@ -95,7 +95,7 @@ class _PhoneInputState extends State<_PhoneInput> {
 
   late PhoneNumber _phoneNumber;
 
-  // widget.initial is String ? PhoneNumber.parse(widget.initial!) : null;
+  late List<String> _whiteList;
   late bool _isValid = _phoneNumber.isValid() == true;
   late IsoCode _isoCode;
 
@@ -108,7 +108,9 @@ class _PhoneInputState extends State<_PhoneInput> {
   }
 
   Future<PhoneNumber> _getPhoneNumber() async {
-    final persistor = ClerkAuth.of(context, listen: false).config.persistor;
+    final config = ClerkAuth.of(context, listen: false).config;
+    final persistor = config.persistor;
+    _whiteList = config.phoneNumberWhiteList;
     if (widget.initial case String initial) {
       _phoneNumber = PhoneNumber.parse(initial);
       _isoCode = _phoneNumber.isoCode;
@@ -130,6 +132,9 @@ class _PhoneInputState extends State<_PhoneInput> {
     }
   }
 
+  bool _validate(PhoneNumber phoneNumber) =>
+      _whiteList.contains(phoneNumber.international) || phoneNumber.isValid();
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -148,7 +153,7 @@ class _PhoneInputState extends State<_PhoneInput> {
           focusNode: widget.focusNode,
           onChanged: (phoneNumber) {
             if (phoneNumber case PhoneNumber phoneNumber) {
-              final valid = phoneNumber.isValid();
+              final valid = _validate(phoneNumber);
               if (valid != _isValid) setState(() => _isValid = valid);
               if (valid) {
                 widget.onChanged(phoneNumber.international);

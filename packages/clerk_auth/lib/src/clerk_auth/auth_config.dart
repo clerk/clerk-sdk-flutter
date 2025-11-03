@@ -90,6 +90,10 @@ class AuthConfig {
   /// The [HttpService] used to communicate with the backend.
   final HttpService httpService;
 
+  /// Phone number whitelist, for testing purposes. Must be overridden
+  /// by e.g. test config to change from empty list
+  final List<String> phoneNumberWhiteList = const [];
+
   /// Initialise
   Future<void> initialize() async {
     await persistor.initialize();

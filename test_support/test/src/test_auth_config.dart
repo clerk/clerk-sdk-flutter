@@ -4,14 +4,21 @@ import 'package:http/http.dart' show ByteStream, Response;
 class TestAuthConfig extends AuthConfig {
   const TestAuthConfig({
     required super.publishableKey,
+    List<String> phoneNumberWhiteList = const [],
     super.httpService = const _NoneHttpService(),
-  }) : super(
+  })  : _phoneNumberWhiteList = phoneNumberWhiteList,
+        super(
           sessionTokenPolling: false,
           localesLookup: _localesLookup,
           persistor: Persistor.none,
           clientRefreshPeriod: Duration.zero,
           telemetryPeriod: Duration.zero,
         );
+
+  final List<String> _phoneNumberWhiteList;
+
+  @override
+  List<String> get phoneNumberWhiteList => _phoneNumberWhiteList;
 
   static List<String> _localesLookup() => const <String>['en'];
 }

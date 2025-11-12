@@ -1,6 +1,21 @@
 ## 0.0.13-beta
 
-* change: session token polling now defaults to ON (previous versions had it defaulting to OFF)
+* feat: make test helpers globally available [#292]
+* fix: make updates only happen when details change [#286]
+* fix: accept 'required' fields [#285]
+* fix: test framework [#281]
+* fix: set polling periods to zero for testing [#283]
+* feat: improve email link sign in up [#267]
+* fix: only poll when signed in [#275]
+* fix: add housekeeping where missing [#279]
+* fix: move session token polling from api to auth for better error reporting [#244]
+* feat: bring sign up ux in line with other sdks [#246]
+* fix: force org creation when needed [#271]
+* change: session token polling now defaults to ON (previous versions had it defaulting to OFF) [#263]
+* fix: bring session token polling with orgs inline with other SDKs [#263]
+* fix: remove unnecessary email etc update [#265]
+* feat: enable sign up with enterprise sso [#247]
+* fix: enable sign in using enterprise sso [#248]
 
 ## 0.0.12-beta
 

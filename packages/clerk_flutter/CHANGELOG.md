@@ -1,3 +1,16 @@
+## 0.0.13-beta
+
+* feat: make test helpers globally available [#292]
+* feat: improve email link sign in up [#267]
+* fix: move session token polling from api to auth for better error reporting [#244]
+* feat: bring sign up ux in line with other sdks [#246]
+* fix: force org creation when needed [#271]
+* change: session token polling now defaults to ON (previous versions had it defaulting to OFF) [#263]
+* fix: bring session token polling with orgs inline with other SDKs [#263]
+* fix: enable re-initialisation of clerksdkgrammar [#261]
+* feat: enable sign up with enterprise sso [#247]
+* fix: enable sign in using enterprise sso [#248]
+
 ## 0.0.12-beta
 
 * chore: align release version with `clerk_auth` 0.0.12-beta package

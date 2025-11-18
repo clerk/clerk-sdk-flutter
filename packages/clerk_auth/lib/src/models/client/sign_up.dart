@@ -127,8 +127,8 @@ class SignUp extends AuthObject with InformativeToStringMixin {
   /// is [field] unverified?
   bool unverified(Field? field) => unverifiedFields.contains(field);
 
-  /// Is this [SignUp] transferrable to a [SignIn]?
-  bool get isTransferrable => verifications.values
+  /// Is this [SignUp] transferable to a [SignIn]?
+  bool get isTransferable => verifications.values
       .any((verification) => verification.status.isTransferable);
 }
 

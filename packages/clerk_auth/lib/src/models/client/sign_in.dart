@@ -11,6 +11,7 @@ import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'sign_up.dart';
 
 part 'sign_in.g.dart';
 
@@ -85,6 +86,9 @@ class SignIn extends AuthObject with InformativeToStringMixin {
 
   /// Do we have a verification in operation>?
   bool get hasVerification => verification is Verification;
+
+  /// Is this [SignIn] transferrable to a [SignUp]?
+  bool get isTransferrable => verification?.status.isTransferable == true;
 
   /// fromJson
   static SignIn fromJson(Map<String, dynamic> json) => _$SignInFromJson(json);

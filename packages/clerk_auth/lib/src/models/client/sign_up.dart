@@ -6,6 +6,7 @@ import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'sign_in.dart';
 part 'sign_up.g.dart';
 
 /// [SignUp] Clerk object
@@ -125,6 +126,10 @@ class SignUp extends AuthObject with InformativeToStringMixin {
 
   /// is [field] unverified?
   bool unverified(Field? field) => unverifiedFields.contains(field);
+
+  /// Is this [SignUp] transferrable to a [SignIn]?
+  bool get isTransferrable => verifications.values
+      .any((verification) => verification.status.isTransferable);
 }
 
 Map<Field, Verification> _toFieldVerificationMap(dynamic data) {

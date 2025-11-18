@@ -419,7 +419,7 @@ class Auth {
   /// );
   ///
   /// // Check if transfer needed
-  /// if (clerk_auth.signIn?.verification?.status.isTransferable == true) {
+  /// if (clerk_auth.signIn?.isTransferable == true) {
   ///   await clerk_auth.transfer();
   /// }
   /// ```
@@ -462,7 +462,7 @@ class Auth {
   /// );
   ///
   /// // Check if transfer needed
-  /// if (clerk_auth.signUp?.verifications[Field.externalAccount]?.status.isTransferable == true) {
+  /// if (clerk_auth.signUp?.isTransferable == true) {
   ///   await clerk_auth.transfer();
   /// }
   /// ```

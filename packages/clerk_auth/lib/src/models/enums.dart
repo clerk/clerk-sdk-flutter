@@ -165,3 +165,22 @@ enum IdentifierType {
     };
   }
 }
+
+/// Supported identity providers for ID token authentication
+enum IdTokenProvider {
+  /// Sign in with Apple
+  apple;
+
+  /// Returns the corresponding Clerk strategy for this provider
+  Strategy get strategy => switch (this) {
+        IdTokenProvider.apple => Strategy.oauthTokenApple,
+      };
+
+  /// Parse from strategy string (reverse mapping)
+  static IdTokenProvider? fromStrategy(Strategy strategy) {
+    return switch (strategy) {
+      Strategy.oauthTokenApple => IdTokenProvider.apple,
+      _ => null,
+    };
+  }
+}

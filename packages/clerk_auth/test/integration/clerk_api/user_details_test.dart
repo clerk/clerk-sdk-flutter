@@ -131,5 +131,136 @@ void main() {
         expect(response.isOkay);
       });
     });
+
+    test('with primary email address', () async {
+      await runWithLogging(() async {
+        await initialiseForTest('set_primary_email');
+
+        late ApiResponse response;
+        late User? user;
+
+        response = await api.getUser();
+        user = response.client?.activeSession?.user;
+        expect(user is User);
+
+        final originalPrimaryEmailId = user!.primaryEmailAddressId;
+        expect(originalPrimaryEmailId, isNotNull);
+
+        // Find a different email to set as primary
+        final otherEmail = user.emailAddresses?.firstWhere(
+          (e) => e.id != originalPrimaryEmailId,
+        );
+        expect(otherEmail, isNotNull);
+
+        final newEmailId = otherEmail!.id;
+        expect(newEmailId != originalPrimaryEmailId, isTrue);
+
+        // Set the other email as primary
+        response = await api.updateUser(primaryEmailAddressId: newEmailId);
+        expect(response.isOkay);
+
+        // Verify it changed
+        user = response.client?.activeSession?.user;
+        expect(user?.primaryEmailAddressId, newEmailId);
+
+        // Restore original primary email
+        response =
+            await api.updateUser(primaryEmailAddressId: originalPrimaryEmailId);
+        expect(response.isOkay);
+        expect(response.client?.activeSession?.user?.primaryEmailAddressId,
+            originalPrimaryEmailId);
+
+        expect(httpService.isCompleted);
+      });
+    });
+
+    test('with primary phone number', () async {
+      await runWithLogging(() async {
+        await initialiseForTest('set_primary_phone');
+
+        late ApiResponse response;
+        late User? user;
+
+        response = await api.getUser();
+        user = response.client?.activeSession?.user;
+        expect(user is User);
+
+        final originalPrimaryPhoneId = user!.primaryPhoneNumberId;
+        expect(originalPrimaryPhoneId, isNotNull);
+
+        // Find a different phone to set as primary
+        final otherPhone = user.phoneNumbers?.firstWhere(
+          (p) => p.id != originalPrimaryPhoneId,
+        );
+        expect(otherPhone, isNotNull);
+
+        final newPhoneId = otherPhone!.id;
+        expect(newPhoneId != originalPrimaryPhoneId, isTrue);
+
+        // Set the other phone as primary
+        response = await api.updateUser(primaryPhoneNumberId: newPhoneId);
+        expect(response.isOkay);
+
+        // Verify it changed
+        user = response.client?.activeSession?.user;
+        expect(user?.primaryPhoneNumberId, newPhoneId);
+
+        // Restore original primary phone
+        response =
+            await api.updateUser(primaryPhoneNumberId: originalPrimaryPhoneId);
+        expect(response.isOkay);
+        expect(response.client?.activeSession?.user?.primaryPhoneNumberId,
+            originalPrimaryPhoneId);
+
+        expect(httpService.isCompleted);
+      });
+    });
+
+    test(
+      'with primary web3 wallet',
+      skip: 'Requires web3 wallet configured in test Clerk instance',
+      () async {
+        await runWithLogging(() async {
+          await initialiseForTest('set_primary_web3_wallet');
+
+          late ApiResponse response;
+          late User? user;
+
+          response = await api.getUser();
+          user = response.client?.activeSession?.user;
+          expect(user is User);
+
+          final originalPrimaryWeb3WalletId = user!.primaryWeb3WalletId;
+          expect(originalPrimaryWeb3WalletId, isNotNull);
+
+          // Find a different web3 wallet to set as primary
+          final otherWallet = user.web3Wallets?.firstWhere(
+            (w) => w.id != originalPrimaryWeb3WalletId,
+          );
+          expect(otherWallet, isNotNull);
+
+          final newWalletId = otherWallet!.id;
+          expect(newWalletId != originalPrimaryWeb3WalletId, isTrue);
+
+          // Set the other wallet as primary
+          response = await api.updateUser(primaryWeb3WalletId: newWalletId);
+          expect(response.isOkay);
+
+          // Verify it changed
+          user = response.client?.activeSession?.user;
+          expect(user?.primaryWeb3WalletId, newWalletId);
+
+          // Restore original primary wallet
+          response = await api.updateUser(
+              primaryWeb3WalletId: originalPrimaryWeb3WalletId);
+          expect(response.isOkay);
+          expect(
+              response.client?.activeSession?.user?.primaryWeb3WalletId,
+              originalPrimaryWeb3WalletId);
+
+          expect(httpService.isCompleted);
+        });
+      },
+    );
   });
 }

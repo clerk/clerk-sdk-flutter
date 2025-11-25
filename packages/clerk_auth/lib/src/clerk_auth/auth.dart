@@ -932,6 +932,15 @@ class Auth {
     update();
   }
 
+  /// Attempt to delete some [UserIdentifyingData]
+  ///
+  Future<void> deleteIdentifyingData(
+    UserIdentifyingData uid,
+  ) async {
+    await _api.deleteIdentifyingData(uid).then(_housekeeping);
+    update();
+  }
+
   /// Update the avatar of the current [User]
   ///
   Future<void> updateUserImage(File file) async {

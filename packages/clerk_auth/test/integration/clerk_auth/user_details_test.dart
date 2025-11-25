@@ -1,4 +1,6 @@
 import 'package:clerk_auth/src/clerk_auth/auth.dart';
+import 'package:clerk_auth/src/models/client/strategy.dart';
+import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/client/email.dart';
 import 'package:clerk_auth/src/models/client/phone_number.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
@@ -81,6 +83,42 @@ void main() {
         expect(deletedEmail, null);
 
         await auth.deleteUser();
+    // Sign in to get a valid session
+    await auth.attemptSignIn(
+      identifier: env.email,
+      strategy: Strategy.password,
+      password: env.password,
+    );
+  }
+
+  group('Auth.updateUser', () {
+    test('can set primary email address', () async {
+      await runWithLogging(() async {
+        await initialiseForTest('set_primary_email');
+
+        expect(auth.user is User);
+        final originalPrimaryEmailId = auth.user!.primaryEmailAddressId;
+
+        const newEmail = 'secondary+clerk_test@somedomain.com';
+
+        // Get the new email's ID
+        final newEmailId = auth.user!.emailAddresses
+            ?.firstWhere(
+              (e) => e.emailAddress == newEmail,
+            )
+            .id;
+        expect(newEmailId != null);
+        expect(newEmailId != originalPrimaryEmailId);
+
+        // Set the new email as primary
+        await auth.updateUser(primaryEmailAddressId: newEmailId!);
+
+        // Verify primary changed
+        expect(auth.user!.primaryEmailAddressId, newEmailId);
+        expect(auth.user!.primaryEmailAddressId != originalPrimaryEmailId);
+
+        // Cleanup: restore original primary and delete test email
+        await auth.updateUser(primaryEmailAddressId: originalPrimaryEmailId);
 
         expect(httpService.isCompleted);
       });
@@ -112,6 +150,25 @@ void main() {
         expect(deletedPhone, null);
 
         await auth.deleteUser();
+    test('can set primary phone number', () async {
+      await runWithLogging(() async {
+        await initialiseForTest('set_primary_phone');
+
+        expect(auth.user is User);
+
+        const newNumber = '+447950999999';
+
+        // Get the phone's ID
+        final phone = auth.user!.phoneNumbers?.firstWhere(
+          (p) => p.phoneNumber == newNumber,
+        );
+        expect(phone != null);
+
+        // Set the phone as primary
+        await auth.updateUser(primaryPhoneNumberId: phone!.id);
+
+        // Verify primary was set
+        expect(auth.user!.primaryPhoneNumberId, phone.id);
 
         expect(httpService.isCompleted);
       });

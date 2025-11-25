@@ -496,6 +496,9 @@ class Api with Logging {
     String? username,
     String? firstName,
     String? lastName,
+    String? primaryEmailAddressId,
+    String? primaryPhoneNumberId,
+    String? primaryWeb3WalletId,
     Map<String, dynamic>? metadata,
   }) async {
     return await _fetchApiResponse(
@@ -506,6 +509,9 @@ class Api with Logging {
         'username': username,
         'first_name': firstName,
         'last_name': lastName,
+        'primary_email_address_id': primaryEmailAddressId,
+        'primary_phone_number_id': primaryPhoneNumberId,
+        'primary_web3_wallet_id': primaryWeb3WalletId,
         'unsafe_metadata': metadata != null ? json.encode(metadata) : null,
       },
     );

@@ -869,7 +869,7 @@ class Auth {
               username != user.username) ||
           (config.allowsFirstName &&
               firstName is String &&
-              firstName != user.username) ||
+              firstName != user.firstName) ||
           (config.allowsLastName &&
               lastName is String &&
               lastName != user.lastName) ||

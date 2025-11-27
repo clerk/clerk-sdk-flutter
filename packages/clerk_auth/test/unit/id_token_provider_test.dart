@@ -10,18 +10,10 @@ void main() {
         equals(Strategy.oauthTokenApple),
       );
     });
-
-    test('fromStrategy returns apple for oauthTokenApple', () {
+    test('google returns correct strategy', () {
       expect(
-        IdTokenProvider.fromStrategy(Strategy.oauthTokenApple),
-        equals(IdTokenProvider.apple),
-      );
-    });
-
-    test('fromStrategy returns null for non-id-token strategies', () {
-      expect(
-        IdTokenProvider.fromStrategy(Strategy.password),
-        isNull,
+        IdTokenProvider.google.strategy,
+        equals(Strategy.oauthTokenGoogle),
       );
     });
   });

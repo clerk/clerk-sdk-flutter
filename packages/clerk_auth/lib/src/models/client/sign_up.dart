@@ -6,7 +6,7 @@ import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'sign_in.dart';
+
 part 'sign_up.g.dart';
 
 /// [SignUp] Clerk object

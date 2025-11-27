@@ -307,15 +307,12 @@ class Auth {
   /// Transfer an oAuth authentication into a [User]
   ///
   Future<void> transfer() async {
-    if (signIn?.verification?.status.isTransferable == true) {
+    if (signIn?.isTransferable == true) {
       await _api.transferSignUp().then(_housekeeping);
       update();
-    } else {
-      final verifications = signUp?.verifications.values ?? const [];
-      if (verifications.any((v) => v.status.isTransferable)) {
-        await _api.transferSignIn().then(_housekeeping);
-        update();
-      }
+    } else if (signUp?.isTransferable == true) {
+      await _api.transferSignIn().then(_housekeeping);
+      update();
     }
   }
 
@@ -434,13 +431,7 @@ class Auth {
     required IdTokenProvider provider,
     required String idToken,
   }) async {
-    await _api
-        .createSignIn(
-          strategy: provider.strategy,
-          token: idToken,
-        )
-        .then(_housekeeping);
-    update();
+    await attemptSignIn(strategy: provider.strategy, token: idToken);
   }
 
   /// Sign up with an ID token from a provider (e.g., Apple)
@@ -481,15 +472,12 @@ class Auth {
     String? firstName,
     String? lastName,
   }) async {
-    await _api
-        .createSignUp(
-          strategy: provider.strategy,
-          token: idToken,
-          firstName: firstName,
-          lastName: lastName,
-        )
-        .then(_housekeeping);
-    update();
+    await attemptSignUp(
+      strategy: provider.strategy,
+      token: idToken,
+      firstName: firstName,
+      lastName: lastName,
+    );
   }
 
   /// Delete an external account
@@ -637,6 +625,7 @@ class Auth {
     String? password,
     String? passwordConfirmation,
     String? code,
+    String? token,
     String? signature,
     String? redirectUrl,
     bool? legalAccepted,
@@ -661,6 +650,7 @@ class Auth {
             username: username,
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
+            token: token,
             legalAccepted: legalAccepted,
           )
           .then(_housekeeping);

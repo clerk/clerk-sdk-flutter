@@ -65,8 +65,8 @@
       "last_authentication_strategy": null,
       "cookie_expires_at": null,
       "captcha_bypass": false,
-      "created_at": "%%DATETIME -2%%",
-      "updated_at": "%%DATETIME -1%%"
+      "created_at": "%%DATETIME -4%%",
+      "updated_at": "%%DATETIME -2%%"
     },
     "client": null
   }

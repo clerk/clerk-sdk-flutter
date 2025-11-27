@@ -7,19 +7,19 @@
       "status": "missing_requirements",
       "required_fields": [
         "email_address",
-        "phone_number",
-        "last_name",
         "first_name",
+        "last_name",
+        "legal_accepted",
         "password",
-        "legal_accepted"
+        "phone_number"
       ],
       "optional_fields": [
+        "oauth_apple",
+        "oauth_facebook",
+        "oauth_github",
         "oauth_google",
         "oauth_linkedin_oidc",
-        "oauth_apple",
-        "username",
-        "oauth_facebook",
-        "oauth_github"
+        "username"
       ],
       "missing_fields": [],
       "unverified_fields": [
@@ -56,7 +56,7 @@
       "created_session_id": null,
       "created_user_id": null,
       "abandon_at": "%%DATETIME 2%%",
-      "legal_accepted_at": "%%DATETIME -1%%",
+      "legal_accepted_at": "%%DATETIME 1%%",
       "locale": null
     },
     "client": {
@@ -69,19 +69,19 @@
         "id": "SIGN_UP_ID",
         "status": "missing_requirements",
         "required_fields": [
-          "password",
+          "email_address",
           "first_name",
           "last_name",
           "legal_accepted",
-          "email_address",
+          "password",
           "phone_number"
         ],
         "optional_fields": [
-          "oauth_google",
-          "oauth_linkedin_oidc",
           "oauth_apple",
           "oauth_facebook",
           "oauth_github",
+          "oauth_google",
+          "oauth_linkedin_oidc",
           "username"
         ],
         "missing_fields": [],
@@ -119,14 +119,14 @@
         "created_session_id": null,
         "created_user_id": null,
         "abandon_at": "%%DATETIME 2%%",
-        "legal_accepted_at": "%%DATETIME -1%%",
+        "legal_accepted_at": "%%DATETIME 1%%",
         "locale": null
       },
       "last_active_session_id": null,
       "last_authentication_strategy": null,
       "cookie_expires_at": null,
       "captcha_bypass": false,
-      "created_at": "%%DATETIME -3%%",
+      "created_at": "%%DATETIME -4%%",
       "updated_at": "%%DATETIME -2%%"
     }
   }

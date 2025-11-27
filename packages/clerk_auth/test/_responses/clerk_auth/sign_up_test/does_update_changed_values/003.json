@@ -7,11 +7,11 @@
       "status": "missing_requirements",
       "required_fields": [
         "email_address",
-        "phone_number",
-        "password",
         "first_name",
         "last_name",
-        "legal_accepted"
+        "legal_accepted",
+        "password",
+        "phone_number"
       ],
       "optional_fields": [
         "oauth_apple",
@@ -22,11 +22,11 @@
         "username"
       ],
       "missing_fields": [
-        "phone_number",
-        "password",
         "first_name",
         "last_name",
-        "legal_accepted"
+        "legal_accepted",
+        "password",
+        "phone_number"
       ],
       "unverified_fields": [
         "email_address"
@@ -74,27 +74,27 @@
         "id": "SIGN_UP_ID",
         "status": "missing_requirements",
         "required_fields": [
-          "legal_accepted",
           "email_address",
-          "phone_number",
+          "first_name",
           "last_name",
+          "legal_accepted",
           "password",
-          "first_name"
+          "phone_number"
         ],
         "optional_fields": [
-          "username",
-          "oauth_google",
-          "oauth_linkedin_oidc",
           "oauth_apple",
           "oauth_facebook",
-          "oauth_github"
+          "oauth_github",
+          "oauth_google",
+          "oauth_linkedin_oidc",
+          "username"
         ],
         "missing_fields": [
-          "legal_accepted",
-          "phone_number",
+          "first_name",
           "last_name",
+          "legal_accepted",
           "password",
-          "first_name"
+          "phone_number"
         ],
         "unverified_fields": [
           "email_address"
@@ -136,8 +136,8 @@
       "last_authentication_strategy": null,
       "cookie_expires_at": null,
       "captcha_bypass": false,
-      "created_at": "%%DATETIME -2%%",
-      "updated_at": "%%DATETIME -1%%"
+      "created_at": "%%DATETIME -4%%",
+      "updated_at": "%%DATETIME -2%%"
     }
   }
 }

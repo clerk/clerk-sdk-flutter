@@ -47,7 +47,7 @@
       "identifier": "%%PHONE%%",
       "user_data": null,
       "created_session_id": null,
-      "abandon_at": "%%DATETIME 1%%",
+      "abandon_at": "%%DATETIME 2%%",
       "locale": null
     },
     "client": {
@@ -100,7 +100,7 @@
         "identifier": "%%PHONE%%",
         "user_data": null,
         "created_session_id": null,
-        "abandon_at": "%%DATETIME 1%%",
+        "abandon_at": "%%DATETIME 2%%",
         "locale": null
       },
       "sign_up": null,
@@ -108,8 +108,8 @@
       "last_authentication_strategy": null,
       "cookie_expires_at": null,
       "captcha_bypass": false,
-      "created_at": "%%DATETIME -2%%",
-      "updated_at": "%%DATETIME -1%%"
+      "created_at": "%%DATETIME -4%%",
+      "updated_at": "%%DATETIME -2%%"
     }
   }
 }

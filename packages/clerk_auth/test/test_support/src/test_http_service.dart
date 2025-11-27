@@ -142,6 +142,14 @@ class TestHttpService implements HttpService {
     RegExp(r'https://img\.clerk\.\w+/[^"]+"'): r'IMAGE_URL"',
     RegExp(r'https://www\.gravatar\.\w+/avatar\?d=mp'): r'GRAVATAR_URL',
     RegExp(r'_url":"[^"]+"'): r'_url":"URL"',
+    RegExp(r'"created_at":\d+'): r'"created_at":"%%DATETIME -4%%"',
+    RegExp(r'"last_active_at":\d+'): r'"last_active_at":"%%DATETIME -3%%"',
+    RegExp(r'"updated_at":\d+'): r'"updated_at":"%%DATETIME -2%%"',
+    RegExp(r'"claimed_at":\d+'): r'"claimed_at":"%%DATETIME -1%%"',
+    RegExp(r'"expire_at":\d+'): r'"expire_at":"%%DATETIME 1%%"',
+    RegExp(r'"legal_accepted_at":\d+'): r'"legal_accepted_at":"%%DATETIME 1%%"',
+    RegExp(r'"abandon_at":\d+'): r'"abandon_at":"%%DATETIME 2%%"',
+    RegExp(r'"cookie_expires_at":\d+'): r'"cookie_expires_at":"%%DATETIME 3%%"',
     RegExp(r'"application_name":"[^"]+"'):
         r'"application_name":"APPLICATION_NAME"',
     RegExp(r'"google_one_tap_client_id":"[^"]+"'):
@@ -180,6 +188,7 @@ class TestHttpService implements HttpService {
 
   static final _dateRE = RegExp(r'_at":-?(\d{13})[,}]');
   static final _datetimeOffsetRE = RegExp(r'"%%DATETIME (-?\d+)%%"');
+  static final _listRE = RegExp(r'_(fields|identifiers)":(\[.*?\])');
 
   String _deflateFromReality(String item) {
     item = _swapIdentifiers(item);
@@ -193,20 +202,10 @@ class TestHttpService implements HttpService {
       item = item.replaceAll(key, value);
     }
 
-    // we change timestamps to arbitrary integer offsets that still retain the
-    // original order and are negative if past, positive if future. Hopefully
-    // this will mean that there are fewer recommits when response files are
-    // regenerated
-    final now = DateTime.timestamp().millisecondsSinceEpoch;
-    final timestamps = <int>{now};
-    for (final match in _dateRE.allMatches(item)) {
-      if (int.tryParse(match.group(1)!) case int date) {
-        timestamps.add(date);
-      }
-    }
-    int idx = -timestamps.where((d) => d < now).length;
-    for (final timestamp in timestamps.toList()..sort()) {
-      item = item.replaceAll('_at":$timestamp', '_at":"%%DATETIME ${idx++}%%"');
+    for (final match in _listRE.allMatches(item)) {
+      final data = match.group(2)!;
+      final list = (jsonDecode(data) as List)..sort();
+      item = item.replaceAll(data, jsonEncode(list));
     }
 
     return item;

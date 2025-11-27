@@ -71,6 +71,7 @@ class TestHttpService implements HttpService {
 
     if (env.recording) {
       const service = DefaultHttpService();
+      const _encoder = JsonEncoder.withIndent('  ');
       final resp = await service.send(
         method,
         uri,
@@ -79,8 +80,8 @@ class TestHttpService implements HttpService {
         body: body,
       );
       await _directory.create(recursive: true);
-      final respBody = _deflateFromReality(resp.body);
-      final json = jsonEncode({'key': key, 'body': respBody});
+      final respBody = jsonDecode(_deflateFromReality(resp.body));
+      final json = _encoder.convert({'key': key, 'body': respBody});
       await file.writeAsString(json);
       return resp;
     }
@@ -97,7 +98,7 @@ class TestHttpService implements HttpService {
       );
     }
 
-    return Response(_inflateForTests(data['body'], env), 200);
+    return Response(_inflateForTests(jsonEncode(data['body']), env), 200);
   }
 
   bool get isCompleted {

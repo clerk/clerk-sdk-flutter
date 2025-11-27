@@ -71,7 +71,7 @@ class TestHttpService implements HttpService {
 
     if (env.recording) {
       const service = DefaultHttpService();
-      const _encoder = JsonEncoder.withIndent('  ');
+      const encoder = JsonEncoder.withIndent('  ');
       final resp = await service.send(
         method,
         uri,
@@ -81,7 +81,7 @@ class TestHttpService implements HttpService {
       );
       await _directory.create(recursive: true);
       final respBody = jsonDecode(_deflateFromReality(resp.body));
-      final json = _encoder.convert({'key': key, 'body': respBody});
+      final json = encoder.convert({'key': key, 'body': respBody});
       await file.writeAsString(json);
       return resp;
     }

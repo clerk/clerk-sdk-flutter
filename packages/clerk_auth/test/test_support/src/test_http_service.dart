@@ -186,7 +186,6 @@ class TestHttpService implements HttpService {
     RegExp(r'identifier":"[^%"]+"'): 'identifier":"$_kUsername"',
   };
 
-  static final _dateRE = RegExp(r'_at":-?(\d{13})[,}]');
   static final _datetimeOffsetRE = RegExp(r'"%%DATETIME (-?\d+)%%"');
   static final _listRE = RegExp(r'_(fields|identifiers)":(\[.*?\])');
 

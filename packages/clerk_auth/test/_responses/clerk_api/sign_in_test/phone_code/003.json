@@ -64,17 +64,6 @@
                 "object": "email_address",
                 "email_address": "%%EMAIL%%",
                 "reserved": false,
-                "verification": null,
-                "linked_to": [],
-                "matches_sso_connection": false,
-                "created_at": "%%DATETIME -4%%",
-                "updated_at": "%%DATETIME -2%%"
-              },
-              {
-                "id": "IDENTIFIER_ID",
-                "object": "email_address",
-                "email_address": "%%EMAIL%%",
-                "reserved": false,
                 "verification": {
                   "object": "verification_admin",
                   "status": "verified",
@@ -118,7 +107,7 @@
             "public_metadata": {},
             "unsafe_metadata": {},
             "external_id": null,
-            "last_sign_in_at": 1764260334279,
+            "last_sign_in_at": 1764601375771,
             "banned": false,
             "locked": false,
             "lockout_expires_in_seconds": null,

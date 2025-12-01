@@ -1,12 +1,12 @@
 {
-  "key": "PATCH /v1/me?_clerk_session_id=SESSION_ID first_name&last_name",
+  "key": "GET /v1/me?_clerk_session_id=SESSION_ID",
   "body": {
     "response": {
       "id": "USER_ID",
       "object": "user",
-      "username": "userfortests",
-      "first_name": "Testy",
-      "last_name": "McTestface",
+      "username": null,
+      "first_name": "User",
+      "last_name": "Bmv3x25hbwu",
       "locale": null,
       "image_url": "URL",
       "has_image": false,
@@ -21,14 +21,14 @@
         {
           "id": "IDENTIFIER_ID",
           "object": "email_address",
-          "email_address": "testy+clerk_test@somedomain.com",
+          "email_address": "user-bmv3x25hbwu+clerk_test@somedomain.com",
           "reserved": false,
           "verification": {
-            "object": "verification_admin",
+            "object": "verification_otp",
             "status": "verified",
-            "strategy": "admin",
-            "attempts": null,
-            "expire_at": null
+            "strategy": "email_code",
+            "attempts": 1,
+            "expire_at": "%%DATETIME 1%%"
           },
           "linked_to": [],
           "matches_sso_connection": false,
@@ -40,16 +40,17 @@
         {
           "id": "IDENTIFIER_ID",
           "object": "phone_number",
-          "phone_number": "+15555550105",
+          "phone_number": "+15555550127",
           "reserved_for_second_factor": false,
           "default_second_factor": false,
           "reserved": false,
           "verification": {
-            "object": "verification_admin",
+            "object": "verification_otp",
             "status": "verified",
-            "strategy": "admin",
-            "attempts": null,
-            "expire_at": null
+            "strategy": "phone_code",
+            "channel": "sms",
+            "attempts": 1,
+            "expire_at": "%%DATETIME 1%%"
           },
           "linked_to": [],
           "backup_codes": null,
@@ -62,11 +63,11 @@
       "external_accounts": [],
       "saml_accounts": [],
       "enterprise_accounts": [],
-      "password_last_updated_at": 1760014484249,
+      "password_last_updated_at": 1764601374379,
       "public_metadata": {},
       "unsafe_metadata": {},
       "external_id": null,
-      "last_sign_in_at": 1764260332926,
+      "last_sign_in_at": 1764601374395,
       "banned": false,
       "locked": false,
       "lockout_expires_in_seconds": null,
@@ -97,9 +98,9 @@
           "user": {
             "id": "USER_ID",
             "object": "user",
-            "username": "userfortests",
-            "first_name": "Testy",
-            "last_name": "McTestface",
+            "username": null,
+            "first_name": "User",
+            "last_name": "Bmv3x25hbwu",
             "locale": null,
             "image_url": "URL",
             "has_image": false,
@@ -114,14 +115,14 @@
               {
                 "id": "IDENTIFIER_ID",
                 "object": "email_address",
-                "email_address": "testy+clerk_test@somedomain.com",
+                "email_address": "user-bmv3x25hbwu+clerk_test@somedomain.com",
                 "reserved": false,
                 "verification": {
-                  "object": "verification_admin",
+                  "object": "verification_otp",
                   "status": "verified",
-                  "strategy": "admin",
-                  "attempts": null,
-                  "expire_at": null
+                  "strategy": "email_code",
+                  "attempts": 1,
+                  "expire_at": "%%DATETIME 1%%"
                 },
                 "linked_to": [],
                 "matches_sso_connection": false,
@@ -133,16 +134,17 @@
               {
                 "id": "IDENTIFIER_ID",
                 "object": "phone_number",
-                "phone_number": "+15555550105",
+                "phone_number": "+15555550127",
                 "reserved_for_second_factor": false,
                 "default_second_factor": false,
                 "reserved": false,
                 "verification": {
-                  "object": "verification_admin",
+                  "object": "verification_otp",
                   "status": "verified",
-                  "strategy": "admin",
-                  "attempts": null,
-                  "expire_at": null
+                  "strategy": "phone_code",
+                  "channel": "sms",
+                  "attempts": 1,
+                  "expire_at": "%%DATETIME 1%%"
                 },
                 "linked_to": [],
                 "backup_codes": null,
@@ -155,11 +157,11 @@
             "external_accounts": [],
             "saml_accounts": [],
             "enterprise_accounts": [],
-            "password_last_updated_at": 1760014484249,
+            "password_last_updated_at": 1764601374379,
             "public_metadata": {},
             "unsafe_metadata": {},
             "external_id": null,
-            "last_sign_in_at": 1764260332926,
+            "last_sign_in_at": 1764601374395,
             "banned": false,
             "locked": false,
             "lockout_expires_in_seconds": null,
@@ -176,12 +178,12 @@
             "organization_memberships": []
           },
           "public_user_data": {
-            "first_name": "Testy",
-            "last_name": "McTestface",
+            "first_name": "User",
+            "last_name": "Bmv3x25hbwu",
             "image_url": "URL",
             "has_image": false,
-            "identifier": "testy+clerk_test@somedomain.com",
-            "username": "userfortests",
+            "identifier": "user-bmv3x25hbwu+clerk_test@somedomain.com",
+            "username": null,
             "profile_image_url": "URL"
           },
           "factor_verification_age": [

@@ -18,7 +18,7 @@ void main() {
   });
 
   Future<void> initialiseForTest(String testName) async {
-    env = TestEnv('.env.test', overrides: {'use_open_identifiers': true});
+    env = TestEnv.withOpenIdentifiers('.env.test', testName);
     httpService = TestHttpService('clerk_auth/user_details_test', env)
       ..recordPath = testName;
 
@@ -29,11 +29,24 @@ void main() {
     ));
     await auth.initialize();
 
-    // Sign in to have an active session
-    await auth.attemptSignIn(
-      identifier: env.email,
+    // Sign up to have an active session
+    await auth.attemptSignUp(
       strategy: Strategy.password,
+      emailAddress: env.email,
+      firstName: env.firstName,
+      lastName: env.lastName,
+      phoneNumber: env.phoneNumber,
+      legalAccepted: true,
       password: env.password,
+      passwordConfirmation: env.password,
+    );
+    await auth.attemptSignUp(
+      strategy: Strategy.emailCode,
+      code: '424242',
+    );
+    await auth.attemptSignUp(
+      strategy: Strategy.phoneCode,
+      code: '424242',
     );
   }
 
@@ -46,7 +59,9 @@ void main() {
 
         // First add an email address
         await auth.addIdentifyingData(
-            emailAddress, IdentifierType.emailAddress);
+          emailAddress,
+          IdentifierType.emailAddress,
+        );
 
         // Verify email was added
         expect(auth.user is User);
@@ -63,6 +78,8 @@ void main() {
             ?.where((e) => e.emailAddress == emailAddress)
             .firstOrNull;
         expect(deletedEmail, null);
+
+        await auth.deleteUser();
 
         expect(httpService.isCompleted);
       });
@@ -92,6 +109,8 @@ void main() {
             ?.where((p) => p.phoneNumber == phoneNumber)
             .firstOrNull;
         expect(deletedPhone, null);
+
+        await auth.deleteUser();
 
         expect(httpService.isCompleted);
       });

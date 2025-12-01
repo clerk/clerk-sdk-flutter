@@ -86,6 +86,9 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   /// Do we have a verification in operation>?
   bool get hasVerification => verification is Verification;
 
+  /// Is this [SignIn] transferable to a [SignUp]?
+  bool get isTransferable => verification?.status.isTransferable == true;
+
   /// fromJson
   static SignIn fromJson(Map<String, dynamic> json) => _$SignInFromJson(json);
 

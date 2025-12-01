@@ -165,3 +165,17 @@ enum IdentifierType {
     };
   }
 }
+
+/// Supported identity providers for ID token authentication
+enum IdTokenProvider {
+  /// Sign in with Apple
+  apple(Strategy.oauthTokenApple),
+
+  /// Sign in with Google
+  google(Strategy.oauthTokenGoogle);
+
+  const IdTokenProvider(this.strategy);
+
+  /// The strategy associated with this provider
+  final Strategy strategy;
+}

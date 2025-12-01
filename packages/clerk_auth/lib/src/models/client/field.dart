@@ -33,6 +33,9 @@ class Field {
   /// enterprise sso
   static const enterpriseSSO = Field._('enterprise_sso');
 
+  /// external accounts
+  static const externalAccount = Field._('external_account');
+
   static final _values = <String, Field>{
     phoneNumber.name: phoneNumber,
     emailAddress.name: emailAddress,
@@ -40,6 +43,7 @@ class Field {
     password.name: password,
     saml.name: saml,
     enterpriseSSO.name: enterpriseSSO,
+    externalAccount.name: externalAccount,
   };
 
   /// The [values] of the Fields

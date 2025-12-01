@@ -307,15 +307,12 @@ class Auth {
   /// Transfer an oAuth authentication into a [User]
   ///
   Future<void> transfer() async {
-    if (signIn?.verification?.status.isTransferable == true) {
+    if (signIn?.isTransferable == true) {
       await _api.transferSignUp().then(_housekeeping);
       update();
-    } else {
-      final verifications = signUp?.verifications.values ?? const [];
-      if (verifications.any((v) => v.status.isTransferable)) {
-        await _api.transferSignIn().then(_housekeeping);
-        update();
-      }
+    } else if (signUp?.isTransferable == true) {
+      await _api.transferSignIn().then(_housekeeping);
+      update();
     }
   }
 
@@ -400,6 +397,87 @@ class Auth {
         .addExternalAccount(strategy: strategy, redirectUrl: redirectUrl)
         .then(_housekeeping);
     update();
+  }
+
+  /// Sign in with an ID token from a provider (e.g., Apple)
+  ///
+  /// This method attempts to sign in an existing user using an ID token
+  /// obtained from an identity provider like Apple.
+  ///
+  /// **Transfer Flow:**
+  /// If the user doesn't exist, the verification status will be `transferable`.
+  /// Call [transfer] to switch to the sign-up flow.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// await clerk_auth.idTokenSignIn(
+  ///   provider: IdTokenProvider.apple,
+  ///   idToken: credential.identityToken!,
+  /// );
+  ///
+  /// // Check if transfer needed
+  /// if (clerk_auth.signIn?.isTransferable == true) {
+  ///   await clerk_auth.transfer();
+  /// }
+  /// ```
+  ///
+  /// **Parameters:**
+  /// - [provider]: The identity provider (e.g., [IdTokenProvider.apple])
+  /// - [idToken]: The ID token string obtained from the provider
+  ///
+  /// **Throws:**
+  /// [AuthError] if the API request fails. Errors are also sent to [errorStream].
+  Future<void> idTokenSignIn({
+    required IdTokenProvider provider,
+    required String idToken,
+  }) async {
+    await attemptSignIn(strategy: provider.strategy, token: idToken);
+  }
+
+  /// Sign up with an ID token from a provider (e.g., Apple)
+  ///
+  /// This method attempts to sign up a new user using an ID token
+  /// obtained from an identity provider like Apple.
+  ///
+  /// **Transfer Flow:**
+  /// If the user already exists, the verification status will be `transferable`.
+  /// Call [transfer] to switch to the sign-in flow.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// await clerk_auth.idTokenSignUp(
+  ///   provider: IdTokenProvider.apple,
+  ///   idToken: credential.identityToken!,
+  ///   firstName: credential.givenName,
+  ///   lastName: credential.familyName,
+  /// );
+  ///
+  /// // Check if transfer needed
+  /// if (clerk_auth.signUp?.isTransferable == true) {
+  ///   await clerk_auth.transfer();
+  /// }
+  /// ```
+  ///
+  /// **Parameters:**
+  /// - [provider]: The identity provider (e.g., [IdTokenProvider.apple])
+  /// - [idToken]: The ID token string obtained from the provider
+  /// - [firstName]: Optional first name from the provider's credential
+  /// - [lastName]: Optional last name from the provider's credential
+  ///
+  /// **Throws:**
+  /// [AuthError] if the API request fails. Errors are also sent to [errorStream].
+  Future<void> idTokenSignUp({
+    required IdTokenProvider provider,
+    required String idToken,
+    String? firstName,
+    String? lastName,
+  }) async {
+    await attemptSignUp(
+      strategy: provider.strategy,
+      token: idToken,
+      firstName: firstName,
+      lastName: lastName,
+    );
   }
 
   /// Delete an external account
@@ -547,6 +625,7 @@ class Auth {
     String? password,
     String? passwordConfirmation,
     String? code,
+    String? token,
     String? signature,
     String? redirectUrl,
     bool? legalAccepted,
@@ -571,6 +650,7 @@ class Auth {
             username: username,
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
+            token: token,
             legalAccepted: legalAccepted,
           )
           .then(_housekeeping);

@@ -73,7 +73,6 @@ void main() {
 
         response = await api.getUser();
         expect(response.client?.activeSession?.user is User);
-        final originalUser = response.client!.activeSession!.user;
 
         response = await api.updateUser(firstName: 'New', lastName: 'Cognomen');
         expect(response.isOkay);

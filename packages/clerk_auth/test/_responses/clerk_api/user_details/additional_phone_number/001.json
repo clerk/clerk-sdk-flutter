@@ -1,109 +1,127 @@
 {
-  "key": "POST /v1/client/sign_ins identifier",
+  "key": "POST /v1/client/sign_ups email_address&first_name&last_name&legal_accepted=true&password&phone_number&strategy=email_code",
   "body": {
     "response": {
-      "object": "sign_in_attempt",
-      "id": "SIGN_IN_ID",
-      "status": "needs_first_factor",
-      "supported_identifiers": [
+      "object": "sign_up_attempt",
+      "id": "SIGN_UP_ID",
+      "status": "missing_requirements",
+      "required_fields": [
         "email_address",
-        "passkey",
+        "first_name",
+        "last_name",
+        "legal_accepted",
         "password",
-        "phone_number",
+        "phone_number"
+      ],
+      "optional_fields": [
+        "oauth_apple",
+        "oauth_facebook",
+        "oauth_github",
+        "oauth_google",
+        "oauth_linkedin_oidc",
         "username"
       ],
-      "supported_first_factors": [
-        {
-          "strategy": "password"
-        },
-        {
-          "strategy": "phone_code",
-          "safe_identifier": "+*********05",
-          "phone_number_id": "IDENTIFIER_ID",
-          "primary": true
-        },
-        {
-          "strategy": "email_code",
-          "safe_identifier": "testy+clerk_test@somedomain.com",
-          "email_address_id": "IDENTIFIER_ID",
-          "primary": true
-        },
-        {
-          "strategy": "email_link",
-          "safe_identifier": "testy+clerk_test@somedomain.com",
-          "email_address_id": "IDENTIFIER_ID",
-          "primary": true
-        },
-        {
-          "strategy": "reset_password_email_code",
-          "safe_identifier": "testy+clerk_test@somedomain.com",
-          "email_address_id": "IDENTIFIER_ID",
-          "primary": true
-        }
+      "missing_fields": [],
+      "unverified_fields": [
+        "email_address",
+        "phone_number"
       ],
-      "supported_second_factors": null,
-      "first_factor_verification": null,
-      "second_factor_verification": null,
-      "identifier": "testy+clerk_test@somedomain.com",
-      "user_data": null,
+      "verifications": {
+        "email_address": {
+          "object": "verification_otp",
+          "status": "unverified",
+          "strategy": "email_code",
+          "attempts": 0,
+          "expire_at": "%%DATETIME 1%%",
+          "next_action": "needs_attempt",
+          "supported_strategies": [
+            "email_code"
+          ]
+        },
+        "phone_number": null,
+        "web3_wallet": null,
+        "external_account": null
+      },
+      "username": null,
+      "email_address": "user-ywrkaxrpb25hbf9wag9uzv9udw1izxi+clerk_test@somedomain.com",
+      "phone_number": "+15555550124",
+      "web3_wallet": null,
+      "password_enabled": true,
+      "first_name": "User",
+      "last_name": "Ywrkaxrpb25hbf9wag9uzv9udw1izxi",
+      "unsafe_metadata": {},
+      "public_metadata": {},
+      "custom_action": false,
+      "external_id": null,
       "created_session_id": null,
+      "created_user_id": null,
       "abandon_at": "%%DATETIME 2%%",
+      "legal_accepted_at": "%%DATETIME 1%%",
       "locale": null
     },
     "client": {
       "object": "client",
       "id": "CLIENT_ID",
       "sessions": [],
-      "sign_in": {
-        "object": "sign_in_attempt",
-        "id": "SIGN_IN_ID",
-        "status": "needs_first_factor",
-        "supported_identifiers": [
+      "sign_in": null,
+      "sign_up": {
+        "object": "sign_up_attempt",
+        "id": "SIGN_UP_ID",
+        "status": "missing_requirements",
+        "required_fields": [
           "email_address",
-          "passkey",
+          "first_name",
+          "last_name",
+          "legal_accepted",
           "password",
-          "phone_number",
+          "phone_number"
+        ],
+        "optional_fields": [
+          "oauth_apple",
+          "oauth_facebook",
+          "oauth_github",
+          "oauth_google",
+          "oauth_linkedin_oidc",
           "username"
         ],
-        "supported_first_factors": [
-          {
-            "strategy": "password"
-          },
-          {
-            "strategy": "phone_code",
-            "safe_identifier": "+*********05",
-            "phone_number_id": "IDENTIFIER_ID",
-            "primary": true
-          },
-          {
-            "strategy": "email_code",
-            "safe_identifier": "testy+clerk_test@somedomain.com",
-            "email_address_id": "IDENTIFIER_ID",
-            "primary": true
-          },
-          {
-            "strategy": "email_link",
-            "safe_identifier": "testy+clerk_test@somedomain.com",
-            "email_address_id": "IDENTIFIER_ID",
-            "primary": true
-          },
-          {
-            "strategy": "reset_password_email_code",
-            "safe_identifier": "testy+clerk_test@somedomain.com",
-            "email_address_id": "IDENTIFIER_ID",
-            "primary": true
-          }
+        "missing_fields": [],
+        "unverified_fields": [
+          "email_address",
+          "phone_number"
         ],
-        "supported_second_factors": null,
-        "first_factor_verification": null,
-        "second_factor_verification": null,
-        "identifier": "testy+clerk_test@somedomain.com",
-        "user_data": null,
+        "verifications": {
+          "email_address": {
+            "object": "verification_otp",
+            "status": "unverified",
+            "strategy": "email_code",
+            "attempts": 0,
+            "expire_at": "%%DATETIME 1%%",
+            "next_action": "needs_attempt",
+            "supported_strategies": [
+              "email_code"
+            ]
+          },
+          "phone_number": null,
+          "web3_wallet": null,
+          "external_account": null
+        },
+        "username": null,
+        "email_address": "user-ywrkaxrpb25hbf9wag9uzv9udw1izxi+clerk_test@somedomain.com",
+        "phone_number": "+15555550124",
+        "web3_wallet": null,
+        "password_enabled": true,
+        "first_name": "User",
+        "last_name": "Ywrkaxrpb25hbf9wag9uzv9udw1izxi",
+        "unsafe_metadata": {},
+        "public_metadata": {},
+        "custom_action": false,
+        "external_id": null,
         "created_session_id": null,
+        "created_user_id": null,
         "abandon_at": "%%DATETIME 2%%",
+        "legal_accepted_at": "%%DATETIME 1%%",
         "locale": null
       },
-      "sign_up": null,
       "last_active_session_id": null,
       "last_authentication_strategy": null,
       "cookie_expires_at": null,

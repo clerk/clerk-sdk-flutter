@@ -23,7 +23,7 @@ void main() {
   });
 
   Future<void> initialiseForTest(String testName) async {
-    env = TestEnv('.env.test', overrides: {'use_open_identifiers': true});
+    env = TestEnv.withOpenIdentifiers('.env.test', testName);
     httpService = TestHttpService('clerk_api/user_details', env)
       ..recordPath = testName;
     api = Api(
@@ -34,13 +34,32 @@ void main() {
     );
     await api.initialize();
 
-    final response = await api.createSignIn(identifier: env.email);
-
-    await api.attemptSignIn(
-      response.client!.signIn!,
-      stage: Stage.first,
-      strategy: Strategy.password,
+    ApiResponse response = await api.createSignUp(
+      strategy: Strategy.emailCode,
+      emailAddress: env.email,
+      firstName: env.firstName,
+      lastName: env.lastName,
+      phoneNumber: env.phoneNumber,
+      legalAccepted: true,
       password: env.password,
+    );
+    response = await api.prepareSignUp(
+      response.client!.signUp!,
+      strategy: Strategy.emailCode,
+    );
+    response = await api.attemptSignUp(
+      response.client!.signUp!,
+      strategy: Strategy.emailCode,
+      code: '424242',
+    );
+    response = await api.prepareSignUp(
+      response.client!.signUp!,
+      strategy: Strategy.phoneCode,
+    );
+    response = await api.attemptSignUp(
+      response.client!.signUp!,
+      strategy: Strategy.phoneCode,
+      code: '424242',
     );
   }
 
@@ -54,7 +73,6 @@ void main() {
 
         response = await api.getUser();
         expect(response.client?.activeSession?.user is User);
-        final originalUser = response.client!.activeSession!.user;
 
         response = await api.updateUser(firstName: 'New', lastName: 'Cognomen');
         expect(response.isOkay);
@@ -63,11 +81,8 @@ void main() {
         user = response.client?.activeSession?.user;
         expect(user?.name, 'New Cognomen');
 
-        response = await api.updateUser(
-          firstName: originalUser.firstName,
-          lastName: originalUser.lastName,
-        );
-        expect(response.isOkay);
+        final client = await api.deleteUser();
+        expect(client.user is! User);
       });
     });
 
@@ -99,6 +114,9 @@ void main() {
 
         response = await api.deleteIdentifyingData(email!);
         expect(response.isOkay);
+
+        final client = await api.deleteUser();
+        expect(client.user is! User);
       });
     });
 
@@ -109,7 +127,7 @@ void main() {
         late ApiResponse response;
         late User? user;
 
-        const newNumber = '+447950777777';
+        const newNumber = '+15555550168';
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
@@ -129,6 +147,9 @@ void main() {
 
         response = await api.deleteIdentifyingData(number!);
         expect(response.isOkay);
+
+        final client = await api.deleteUser();
+        expect(client.user is! User);
       });
     });
   });

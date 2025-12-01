@@ -89,7 +89,7 @@ void main() {
       await runWithLogging(() async {
         await initialiseForTest('delete_phone');
 
-        const phoneNumber = '+447950881234';
+        const phoneNumber = '+15555550168';
 
         // First add a phone number
         await auth.addIdentifyingData(phoneNumber, IdentifierType.phoneNumber);

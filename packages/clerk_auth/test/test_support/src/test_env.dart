@@ -25,7 +25,7 @@ class TestEnv {
         'first_name': 'User',
         'last_name': id[0].toUpperCase() + id.substring(1),
         'email': 'user-$id+clerk_test@somedomain.com',
-        'phone_number': '+155555501${(name.hashCode % 90) + 10}',
+        'phone_number': '+15555550167',
       },
       useOpenIdentifiers: true,
     );

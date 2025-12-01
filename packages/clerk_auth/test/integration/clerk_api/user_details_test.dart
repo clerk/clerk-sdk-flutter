@@ -127,7 +127,7 @@ void main() {
         late ApiResponse response;
         late User? user;
 
-        const newNumber = '+447950777777';
+        const newNumber = '+15555550168';
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;

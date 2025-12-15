@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// Example of how to use clerk auth with provided sign in form.
 @immutable
-class ClerkSignInExample extends StatelessWidget {
+class ClerkSignInExample extends StatefulWidget {
   /// Constructs an instance of [ClerkSignInExample].
   const ClerkSignInExample({super.key});
 
@@ -11,26 +11,45 @@ class ClerkSignInExample extends StatelessWidget {
   static const path = '/clerk-sign-in-example';
 
   @override
+  State<ClerkSignInExample> createState() => _ClerkSignInExampleState();
+}
+
+class _ClerkSignInExampleState extends State<ClerkSignInExample> {
+  bool bright = true;
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Clerk UI Sign In'),
-      ),
-      body: SafeArea(
-        child: ClerkErrorListener(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: ClerkAuthBuilder(
-              signedInBuilder: (context, authState) {
-                if (authState.env.organization.isEnabled == false ||
-                    authState.user!.hasOrganizations == false) {
-                  return const ClerkUserButton();
-                }
-                return const _UserAndOrgTabs();
-              },
-              signedOutBuilder: (context, authState) {
-                return const ClerkAuthentication();
-              },
+    return Theme(
+      data: bright ? ThemeData.light() : ThemeData.dark(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Clerk UI Sign In'),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: GestureDetector(
+                onTap: () => setState(() => bright = !bright),
+                child: const Icon(Icons.brightness_4),
+              ),
+            ),
+          ],
+        ),
+        body: SafeArea(
+          child: ClerkErrorListener(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: ClerkAuthBuilder(
+                signedInBuilder: (context, authState) {
+                  if (authState.env.organization.isEnabled == false ||
+                      authState.user!.hasOrganizations == false) {
+                    return const ClerkUserButton();
+                  }
+                  return const _UserAndOrgTabs();
+                },
+                signedOutBuilder: (context, authState) {
+                  return const ClerkAuthentication();
+                },
+              ),
             ),
           ),
         ),

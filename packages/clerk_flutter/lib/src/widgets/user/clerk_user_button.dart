@@ -15,8 +15,6 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/platform_styled_dialog.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:clerk_flutter/src/widgets/user/add_account_panel.dart';
 import 'package:clerk_flutter/src/widgets/user/clerk_user_profile.dart';
 import 'package:flutter/material.dart';
@@ -212,6 +210,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
             authState.env.organization.forceOrganizationSelection &&
                 authState.user!.hasOrganizations == false;
 
+        final themeExtension = ClerkAuth.themeExtensionOf(context);
         return ClerkVerticalCard(
           topPortion: Column(
             mainAxisSize: MainAxisSize.min,
@@ -258,7 +257,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
                               horizontalMargin32,
                               Text(
                                 action.label,
-                                style: ClerkTextStyle.buttonTitleDark,
+                                style: themeExtension.styles.text,
                               ),
                             ],
                           ),
@@ -278,15 +277,15 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
                 onTap: _signOutOfAllAccounts,
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.logout,
-                      color: ClerkColors.grey,
+                      color: themeExtension.colors.text,
                       size: 16,
                     ),
                     horizontalMargin8,
                     Text(
                       localizations.signOutOfAllAccounts,
-                      style: ClerkTextStyle.buttonTitle,
+                      style: themeExtension.styles.text,
                     )
                   ],
                 ),
@@ -341,6 +340,7 @@ class _SessionRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
     final user = session.user;
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Closeable(
       closed: closed,
       onEnd: onEnd,
@@ -365,14 +365,14 @@ class _SessionRow extends StatelessWidget {
                         if (showName && user.hasName)
                           Text(
                             user.name,
-                            style: ClerkTextStyle.buttonTitleDark,
+                            style: themeExtension.styles.text,
                           ),
                         if (user.email is String || user.phoneNumber is String)
                           Text(
                             user.email ??
                                 PhoneNumber.parse(user.phoneNumber!)
                                     .intlFormattedNsn,
-                            style: ClerkTextStyle.buttonTitle,
+                            style: themeExtension.styles.text,
                           ),
                       ],
                     )
@@ -406,7 +406,7 @@ class _SessionRow extends StatelessWidget {
                                     padding: topPadding2,
                                     child: Text(
                                       action.label,
-                                      style: ClerkTextStyle.buttonTitleDark,
+                                      style: themeExtension.styles.text,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -421,7 +421,7 @@ class _SessionRow extends StatelessWidget {
                   ),
                 ),
               ),
-            const Divider(height: 1, color: ClerkColors.dawnPink),
+            Divider(height: 1, color: themeExtension.colors.borderSide),
           ],
         ),
       ),

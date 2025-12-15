@@ -8,8 +8,6 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -58,6 +56,7 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Center(
       child: Padding(
         padding: allPadding24,
@@ -71,7 +70,7 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
             ),
             Text(
               _l10ns.logo,
-              style: ClerkTextStyle.inputBoxLabel,
+              style: themeExtension.styles.text,
               maxLines: 1,
             ),
             verticalMargin4,
@@ -121,6 +120,7 @@ class _LogoPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10ns = ClerkAuth.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -156,9 +156,9 @@ class _LogoPicker extends StatelessWidget {
                     child: ClerkMaterialButton(
                       style: ClerkMaterialButtonStyle.light,
                       onPressed: () => openPicker(ImageSource.camera),
-                      label: const Icon(
+                      label: Icon(
                         Icons.camera_alt,
-                        color: ClerkColors.midGrey,
+                        color: themeExtension.colors.lightweightText,
                       ),
                     ),
                   ),
@@ -169,9 +169,9 @@ class _LogoPicker extends StatelessWidget {
                     child: ClerkMaterialButton(
                       style: ClerkMaterialButtonStyle.light,
                       onPressed: () => openPicker(ImageSource.gallery),
-                      label: const Icon(
+                      label: Icon(
                         Icons.collections,
-                        color: ClerkColors.midGrey,
+                        color: themeExtension.colors.lightweightText,
                       ),
                     ),
                   ),
@@ -181,7 +181,7 @@ class _LogoPicker extends StatelessWidget {
               Text(
                 l10ns.recommendSize,
                 maxLines: 2,
-                style: ClerkTextStyle.buttonTitle,
+                style: themeExtension.styles.text,
               ),
             ],
           ),

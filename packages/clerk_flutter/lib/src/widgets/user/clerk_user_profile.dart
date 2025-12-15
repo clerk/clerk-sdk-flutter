@@ -16,8 +16,6 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_row_label.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/editable_profile_data.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:clerk_flutter/src/widgets/user/connect_account_panel.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -161,6 +159,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
       child: ClerkAuthBuilder(
         builder: (_, __) => emptyWidget,
         signedInBuilder: (context, authState) {
+          final themeExtension = ClerkAuth.themeExtensionOf(context);
           final user = authState.user!;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -170,9 +169,9 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
               Text(
                 localizations.profileDetails,
                 maxLines: 1,
-                style: ClerkTextStyle.title,
+                style: themeExtension.styles.heading,
               ),
-              const Padding(padding: topPadding16, child: divider),
+              Padding(padding: topPadding16, child: divider(context)),
               Expanded(
                 child: ListView(
                   children: [
@@ -185,7 +184,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                       ),
                     ),
                     if (authState.env.config.allowsEmailAddress) ...[
-                      const Padding(padding: topPadding16, child: divider),
+                      Padding(padding: topPadding16, child: divider(context)),
                       _ProfileRow(
                         title: localizations.emailAddress,
                         child: _IdentifierList(
@@ -205,7 +204,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                       ),
                     ],
                     if (authState.env.config.allowsPhoneNumber) ...[
-                      const Padding(padding: topPadding16, child: divider),
+                      Padding(padding: topPadding16, child: divider(context)),
                       _ProfileRow(
                         title: localizations.phoneNumber,
                         child: _IdentifierList(
@@ -227,7 +226,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                         ),
                       ),
                     ],
-                    const Padding(padding: topPadding16, child: divider),
+                    Padding(padding: topPadding16, child: divider(context)),
                     _ProfileRow(
                       title: localizations.connectedAccounts,
                       child: _ExternalAccountList(
@@ -285,6 +284,7 @@ class _ExternalAccountList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -309,7 +309,7 @@ class _ExternalAccountList extends StatelessWidget {
                         account.emailAddress,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: ClerkTextStyle.subtitle,
+                        style: themeExtension.styles.subheading,
                       ),
                     ),
                     if (account.isVerified == false) //
@@ -358,6 +358,7 @@ class _IdentifierList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -378,7 +379,7 @@ class _IdentifierList extends StatelessWidget {
                   if (uid.isUnverified) //
                     ClerkRowLabel(
                       label: localizations.unverified,
-                      color: ClerkColors.incarnadine,
+                      color: themeExtension.colors.error,
                       onTap: () => onIdentifierUnverified.call(uid.identifier),
                     ),
                   if (user.isPrimary(uid)) //

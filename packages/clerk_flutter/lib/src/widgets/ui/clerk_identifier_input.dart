@@ -6,7 +6,6 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart'
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/widgets.dart';
 
 /// A class that allows an identifier to be input, depending on what the
@@ -174,6 +173,7 @@ class _SwapIdentifierButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10ns = ClerkAuth.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Align(
       alignment: AlignmentDirectional.centerEnd,
       child: GestureDetector(
@@ -187,7 +187,7 @@ class _SwapIdentifierButton extends StatelessWidget {
             note: l10ns.switchTo,
             context: context,
           ),
-          style: ClerkTextStyle.clickable,
+          style: themeExtension.styles.clickableText,
         ),
       ),
     );

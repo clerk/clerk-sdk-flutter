@@ -1,5 +1,5 @@
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -371,28 +371,29 @@ class _CodeDigit extends StatelessWidget {
   final bool hasCursor;
   final String? label;
 
-  static const _decoration = BoxDecoration(
-    borderRadius: BorderRadius.all(Radius.circular(4)),
-    border: Border.fromBorderSide(
-      BorderSide(color: ClerkColors.dawnPink),
-    ),
-  );
-  static const _textStyle = TextStyle(
-    color: ClerkColors.midGrey,
-    fontWeight: FontWeight.bold,
-  );
-
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
+    final decoration = BoxDecoration(
+      borderRadius: const BorderRadius.all(Radius.circular(4)),
+      border: Border.fromBorderSide(
+        BorderSide(color: themeExtension.colors.borderSide),
+      ),
+    );
+    final textStyle = TextStyle(
+      color: themeExtension.colors.lightweightText,
+      fontWeight: FontWeight.bold,
+    );
+
     final children = [
       if (label case String label) //
-        Align(child: Text(label, style: _textStyle)),
+        Align(child: Text(label, style: textStyle)),
       if (hasCursor) //
         _PulsingCursor(height: isSmall ? 1.0 : 2.0),
     ];
 
     return DecoratedBox(
-      decoration: _decoration,
+      decoration: decoration,
       child: SizedBox.square(
         dimension: isSmall ? 18.0 : 38.0,
         child: switch (children.length) {

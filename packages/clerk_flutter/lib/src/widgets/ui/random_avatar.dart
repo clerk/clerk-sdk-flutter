@@ -1,4 +1,4 @@
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -19,10 +19,11 @@ class RandomAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return SizedBox.square(
       dimension: size,
       child: CircleAvatar(
-        backgroundColor: ClerkColors.brightGrey,
+        backgroundColor: themeExtension.colors.lightweightText,
         radius: size / 2.0,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(size),

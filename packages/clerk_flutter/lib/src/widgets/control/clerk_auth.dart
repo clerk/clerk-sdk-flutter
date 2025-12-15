@@ -6,6 +6,7 @@ import 'package:clerk_flutter/src/utils/clerk_file_cache.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/style/clerk_theme.dart';
 import 'package:flutter/material.dart';
 
 /// A class to transport [Uri]s from deep links into the app into the Clerk
@@ -101,6 +102,15 @@ class ClerkAuth extends StatefulWidget {
   /// get the [ClerkFileCache] of the [ClerkAuthConfig]
   static ClerkFileCache fileCacheOf(BuildContext context) =>
       of(context, listen: false).config.fileCache;
+
+  /// get the [ClerkThemeExtension]
+  static ClerkThemeExtension themeExtensionOf(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.extension<ClerkThemeExtension>() ??
+        (theme.brightness == Brightness.dark
+            ? ClerkThemeExtension.dark
+            : ClerkThemeExtension.light);
+  }
 }
 
 class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {

@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// Clerk Error Handler
@@ -47,6 +45,7 @@ class _ClerkErrorListenerState extends State<ClerkErrorListener> {
     try {
       final messenger = ScaffoldMessenger.of(context);
       final localizations = ClerkAuth.localizationsOf(context);
+      final themeExtension = ClerkAuth.themeExtensionOf(context);
       final message = error.localizedMessage(localizations);
       final controller = messenger.showSnackBar(
         SnackBar(
@@ -58,8 +57,8 @@ class _ClerkErrorListenerState extends State<ClerkErrorListener> {
           ),
           content: Text(
             message,
-            style: ClerkTextStyle.subtitle.copyWith(
-              color: ClerkColors.white,
+            style: themeExtension.styles.subheading.copyWith(
+              color: themeExtension.colors.background,
             ),
           ),
         ),

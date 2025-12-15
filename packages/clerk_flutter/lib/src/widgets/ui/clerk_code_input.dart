@@ -1,6 +1,6 @@
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/multi_digit_code_input.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// Widget which wraps a [MultiDigitCodeInput] widget, providing
@@ -37,6 +37,7 @@ class ClerkCodeInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -47,8 +48,8 @@ class ClerkCodeInput extends StatelessWidget {
               textAlign: TextAlign.start,
               maxLines: 2,
               style: subtitle is String
-                  ? ClerkTextStyle.title
-                  : ClerkTextStyle.subtitleDark,
+                  ? themeExtension.styles.heading
+                  : themeExtension.styles.subheading,
             ),
           ),
         if (subtitle case String subtitle)
@@ -58,7 +59,7 @@ class ClerkCodeInput extends StatelessWidget {
               subtitle,
               textAlign: TextAlign.start,
               maxLines: 2,
-              style: ClerkTextStyle.subtitleDark,
+              style: themeExtension.styles.subheading,
             ),
           ),
         verticalMargin12,

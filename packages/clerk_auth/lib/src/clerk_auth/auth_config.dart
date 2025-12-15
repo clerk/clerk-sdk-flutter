@@ -4,6 +4,7 @@ import 'package:clerk_auth/src/clerk_auth/auth.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_auth/persistor.dart';
 import 'package:clerk_auth/src/clerk_auth/sdk_flags.dart';
+// ignore: deprecated_member_use_from_same_package
 import 'package:clerk_auth/src/models/enums.dart' show SessionTokenPollMode;
 import 'package:meta/meta.dart';
 
@@ -21,6 +22,7 @@ class AuthConfig {
     required this.persistor,
     this.flags = const SdkFlags(),
     this.sessionTokenPolling = true,
+    // ignore: deprecated_member_use_from_same_package
     SessionTokenPollMode? sessionTokenPollMode, // deprecated
     LocalesLookup? localesLookup,
     bool? isTestMode,

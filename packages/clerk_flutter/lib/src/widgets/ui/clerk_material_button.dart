@@ -1,5 +1,5 @@
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 
 /// Style of [ClerkMaterialButton].
@@ -48,16 +48,13 @@ class ClerkMaterialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = style == ClerkMaterialButtonStyle.dark;
-    final color = dark ? ClerkColors.charcoalGrey : ClerkColors.white;
-    final textColor = dark ? ClerkColors.white : ClerkColors.stormGrey;
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
+    final color =
+        dark ? themeExtension.colors.text : themeExtension.colors.background;
+    final textColor =
+        dark ? themeExtension.colors.background : themeExtension.colors.text;
     final child = DefaultTextStyle(
-      style: TextStyle(
-        color: textColor,
-        fontSize: 12.0,
-        fontWeight: FontWeight.w500,
-        height: 1.0,
-        overflow: TextOverflow.ellipsis,
-      ),
+      style: themeExtension.styles.button.copyWith(color: textColor),
       child: IconTheme(
         data: IconThemeData(color: textColor, size: 16.0),
         child: Padding(
@@ -66,6 +63,7 @@ class ClerkMaterialButton extends StatelessWidget {
         ),
       ),
     );
+
     return SizedBox(
       height: height,
       width: square ? height : null,
@@ -78,7 +76,7 @@ class ClerkMaterialButton extends StatelessWidget {
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(height / 6),
-              side: const BorderSide(color: ClerkColors.dawnPink),
+              side: themeExtension.borderSide,
             ),
           ),
         ),

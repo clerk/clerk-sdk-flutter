@@ -1,6 +1,5 @@
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// Clerk-branded profile navigation tile.
@@ -30,10 +29,12 @@ class ProfileNavTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Material(
       borderRadius: borderRadius12,
       clipBehavior: Clip.antiAlias,
-      color: selected ? ClerkColors.dawnPink : Colors.transparent,
+      color:
+          selected ? themeExtension.colors.altBackground : Colors.transparent,
       child: InkWell(
         onTap: () => onTap?.call(),
         child: Padding(
@@ -45,9 +46,9 @@ class ProfileNavTile extends StatelessWidget {
               Text(
                 title,
                 style: selected
-                    ? ClerkTextStyle.subtitle
-                        .copyWith(color: ClerkColors.darkJungleGreen)
-                    : ClerkTextStyle.subtitle,
+                    ? themeExtension.styles.subheading
+                        .copyWith(color: themeExtension.colors.text)
+                    : themeExtension.styles.subheading,
                 maxLines: 1,
               ),
             ],

@@ -1,7 +1,5 @@
 import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// A row providing a label for an input box
@@ -31,6 +29,7 @@ class InputLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,15 +40,15 @@ class InputLabel extends StatelessWidget {
               label,
               textAlign: TextAlign.start,
               maxLines: 2,
-              style: ClerkTextStyle.inputBoxLabel.copyWith(
-                color: isRequired == true ? ClerkColors.incarnadine : null,
+              style: themeExtension.styles.text.copyWith(
+                color: isRequired == true ? themeExtension.colors.error : null,
               ),
             ),
           ),
         if (isRequired == true) //
           _LabelModifier(
             localizations.requiredField,
-            color: ClerkColors.incarnadine,
+            color: themeExtension.colors.error,
           )
         else if (isOptional == true) //
           _LabelModifier(localizations.optional),
@@ -61,27 +60,23 @@ class InputLabel extends StatelessWidget {
 }
 
 class _LabelModifier extends StatelessWidget {
-  const _LabelModifier(
-    this.label, {
-    this.color = ClerkColors.stormGrey,
-  });
+  const _LabelModifier(this.label, {this.color});
 
-  final Color color;
+  final Color? color;
 
   final String label;
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
+    final color = this.color ?? themeExtension.colors.text;
     return Padding(
       padding: leftPadding4,
       child: Text(
         label,
         textAlign: TextAlign.end,
         maxLines: 1,
-        style: ClerkTextStyle.inputText.copyWith(
-          color: color,
-          fontSize: 12.0,
-        ),
+        style: themeExtension.styles.inputText.copyWith(color: color),
       ),
     );
   }

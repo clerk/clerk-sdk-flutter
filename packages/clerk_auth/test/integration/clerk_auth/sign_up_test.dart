@@ -32,43 +32,45 @@ void main() {
   }
 
   group('SignUp', () {
-    test('can sign up with emailCode and phoneCode in separate steps',
-        () async {
-      await runWithLogging(() async {
-        await initialiseForTest('sign_up_with_email_and_phone_code');
+    test(
+      'can sign up with emailCode and phoneCode in separate steps',
+      () async {
+        await runWithLogging(() async {
+          await initialiseForTest('sign_up_with_email_and_phone_code');
 
-        Client client = await auth.attemptSignUp(
-          strategy: Strategy.emailCode,
-          emailAddress: env.email,
-          phoneNumber: env.phoneNumber,
-          password: env.password,
-          passwordConfirmation: env.password,
-          firstName: env.username,
-          lastName: env.username,
-          legalAccepted: true,
-        );
-        expect(client.signUp?.status, Status.missingRequirements);
-        expect(client.signUp?.unverifiedFields.contains(Field.emailAddress));
+          Client client = await auth.attemptSignUp(
+            strategy: Strategy.emailCode,
+            emailAddress: env.email,
+            phoneNumber: env.phoneNumber,
+            password: env.password,
+            passwordConfirmation: env.password,
+            firstName: env.username,
+            lastName: env.username,
+            legalAccepted: true,
+          );
+          expect(client.signUp?.status, Status.missingRequirements);
+          expect(client.signUp?.unverifiedFields.contains(Field.emailAddress));
 
-        client = await auth.attemptSignUp(
-          strategy: Strategy.emailCode,
-          code: env.code,
-        );
-        expect(client.signUp?.status, Status.missingRequirements);
-        expect(client.signUp?.unverifiedFields.contains(Field.phoneNumber));
+          client = await auth.attemptSignUp(
+            strategy: Strategy.emailCode,
+            code: env.code,
+          );
+          expect(client.signUp?.status, Status.missingRequirements);
+          expect(client.signUp?.unverifiedFields.contains(Field.phoneNumber));
 
-        client = await auth.attemptSignUp(
-          strategy: Strategy.phoneCode,
-          code: env.code,
-        );
-        expect(client.signUp, null);
-        expect(client.user is User);
+          client = await auth.attemptSignUp(
+            strategy: Strategy.phoneCode,
+            code: env.code,
+          );
+          expect(client.signUp, null);
+          expect(client.user is User);
 
-        await auth.deleteUser();
+          await auth.deleteUser();
 
-        expect(httpService.isCompleted);
-      });
-    });
+          expect(httpService.isCompleted);
+        });
+      },
+    );
 
     test('can sign up with emailCode with typo in first email', () async {
       await runWithLogging(() async {

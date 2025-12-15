@@ -7,43 +7,34 @@ import 'package:dart_dotenv/dart_dotenv.dart';
 const _testPublishableKey = r'pk_c29tZWRvbWFpbi5jb20K';
 
 class TestEnv {
-  TestEnv._(this._map);
+  TestEnv._(this._map, {this.useOpenIdentifiers = false});
 
-  factory TestEnv(
-    String filename, {
-    Map<String, dynamic>? overrides,
-  }) {
+  factory TestEnv(String filename) {
     final dotEnv = DotEnv(filePath: filename);
-    final map = {
-      ...dotEnv.getDotEnv(),
-      if (overrides case final overrides?) //
-        for (final entry in overrides.entries) //
-          entry.key: entry.value.toString(),
-    };
-    return TestEnv._(map);
+    return TestEnv._(dotEnv.getDotEnv());
   }
 
   factory TestEnv.withOpenIdentifiers(String filename, String name) {
+    final dotEnv = DotEnv(filePath: filename);
     final id = base64Encode(name.codeUnits).replaceAll('=', '').toLowerCase();
-    return TestEnv(
-      filename,
-      overrides: {
+    return TestEnv._(
+      {
+        ...dotEnv.getDotEnv(),
         'password': 'Ab$id%',
         'username': 'user-$id',
         'first_name': 'User',
         'last_name': id[0].toUpperCase() + id.substring(1),
         'email': 'user-$id+clerk_test@somedomain.com',
         'phone_number': '+155555501${(name.hashCode % 90) + 10}',
-        'use_open_identifiers': true,
       },
+      useOpenIdentifiers: true,
     );
   }
 
   final Map<String, String> _map;
+  final bool useOpenIdentifiers;
 
   bool get recording => _map['recording'] == r'true';
-
-  bool get useOpenIdentifiers => _map['use_open_identifiers'] == 'true';
 
   String get email => _map['email'] ?? r'user+clerk_test@somedomain.com';
 

@@ -1,10 +1,87 @@
 {
-  "key": "DELETE /v1/me/email_addresses/IDENTIFIER_ID?_clerk_session_id=SESSION_ID",
+  "key": "GET /v1/me?_clerk_session_id=SESSION_ID",
   "body": {
     "response": {
-      "id": "IDENTIFIER_ID",
-      "object": "email_address",
-      "deleted": true
+      "id": "USER_ID",
+      "object": "user",
+      "username": null,
+      "first_name": "User",
+      "last_name": "Ywrkaxrpb25hbf9lbwfpba",
+      "locale": null,
+      "image_url": "URL",
+      "has_image": false,
+      "primary_email_address_id": "IDENTIFIER_ID",
+      "primary_phone_number_id": "IDENTIFIER_ID",
+      "primary_web3_wallet_id": null,
+      "password_enabled": true,
+      "two_factor_enabled": false,
+      "totp_enabled": false,
+      "backup_code_enabled": false,
+      "email_addresses": [
+        {
+          "id": "IDENTIFIER_ID",
+          "object": "email_address",
+          "email_address": "user-ywrkaxrpb25hbf9lbwfpba+clerk_test@somedomain.com",
+          "reserved": false,
+          "verification": {
+            "object": "verification_otp",
+            "status": "verified",
+            "strategy": "email_code",
+            "attempts": 1,
+            "expire_at": "%%DATETIME 1%%"
+          },
+          "linked_to": [],
+          "matches_sso_connection": false,
+          "created_at": "%%DATETIME -4%%",
+          "updated_at": "%%DATETIME -2%%"
+        }
+      ],
+      "phone_numbers": [
+        {
+          "id": "IDENTIFIER_ID",
+          "object": "phone_number",
+          "phone_number": "+15555550131",
+          "reserved_for_second_factor": false,
+          "default_second_factor": false,
+          "reserved": false,
+          "verification": {
+            "object": "verification_otp",
+            "status": "verified",
+            "strategy": "phone_code",
+            "channel": "sms",
+            "attempts": 1,
+            "expire_at": "%%DATETIME 1%%"
+          },
+          "linked_to": [],
+          "backup_codes": null,
+          "created_at": "%%DATETIME -4%%",
+          "updated_at": "%%DATETIME -2%%"
+        }
+      ],
+      "web3_wallets": [],
+      "passkeys": [],
+      "external_accounts": [],
+      "saml_accounts": [],
+      "enterprise_accounts": [],
+      "password_last_updated_at": "%%DATETIME -2%%",
+      "public_metadata": {},
+      "unsafe_metadata": {},
+      "external_id": null,
+      "last_sign_in_at": "%%DATETIME -2%%",
+      "banned": false,
+      "locked": false,
+      "lockout_expires_in_seconds": null,
+      "verification_attempts_remaining": 100,
+      "created_at": "%%DATETIME -4%%",
+      "updated_at": "%%DATETIME -2%%",
+      "delete_self_enabled": true,
+      "bypass_client_trust": false,
+      "create_organization_enabled": true,
+      "last_active_at": "%%DATETIME -3%%",
+      "mfa_enabled_at": null,
+      "mfa_disabled_at": null,
+      "legal_accepted_at": "%%DATETIME 1%%",
+      "profile_image_url": "URL"
     },
     "client": {
       "object": "client",
@@ -22,9 +99,9 @@
           "user": {
             "id": "USER_ID",
             "object": "user",
-            "username": "userfortests",
-            "first_name": "Testy",
-            "last_name": "McTestface",
+            "username": null,
+            "first_name": "User",
+            "last_name": "Ywrkaxrpb25hbf9lbwfpba",
             "locale": null,
             "image_url": "URL",
             "has_image": false,
@@ -39,14 +116,14 @@
               {
                 "id": "IDENTIFIER_ID",
                 "object": "email_address",
-                "email_address": "testy+clerk_test@somedomain.com",
+                "email_address": "user-ywrkaxrpb25hbf9lbwfpba+clerk_test@somedomain.com",
                 "reserved": false,
                 "verification": {
-                  "object": "verification_admin",
+                  "object": "verification_otp",
                   "status": "verified",
-                  "strategy": "admin",
-                  "attempts": null,
-                  "expire_at": null
+                  "strategy": "email_code",
+                  "attempts": 1,
+                  "expire_at": "%%DATETIME 1%%"
                 },
                 "linked_to": [],
                 "matches_sso_connection": false,
@@ -58,16 +135,17 @@
               {
                 "id": "IDENTIFIER_ID",
                 "object": "phone_number",
-                "phone_number": "+15555550105",
+                "phone_number": "+15555550131",
                 "reserved_for_second_factor": false,
                 "default_second_factor": false,
                 "reserved": false,
                 "verification": {
-                  "object": "verification_admin",
+                  "object": "verification_otp",
                   "status": "verified",
-                  "strategy": "admin",
-                  "attempts": null,
-                  "expire_at": null
+                  "strategy": "phone_code",
+                  "channel": "sms",
+                  "attempts": 1,
+                  "expire_at": "%%DATETIME 1%%"
                 },
                 "linked_to": [],
                 "backup_codes": null,
@@ -80,11 +158,11 @@
             "external_accounts": [],
             "saml_accounts": [],
             "enterprise_accounts": [],
-            "password_last_updated_at": 1760014484249,
+            "password_last_updated_at": "%%DATETIME -2%%",
             "public_metadata": {},
             "unsafe_metadata": {},
             "external_id": null,
-            "last_sign_in_at": 1764260334279,
+            "last_sign_in_at": "%%DATETIME -2%%",
             "banned": false,
             "locked": false,
             "lockout_expires_in_seconds": null,
@@ -92,6 +170,7 @@
             "created_at": "%%DATETIME -4%%",
             "updated_at": "%%DATETIME -2%%",
             "delete_self_enabled": true,
+            "bypass_client_trust": false,
             "create_organization_enabled": true,
             "last_active_at": "%%DATETIME -3%%",
             "mfa_enabled_at": null,
@@ -101,12 +180,12 @@
             "organization_memberships": []
           },
           "public_user_data": {
-            "first_name": "Testy",
-            "last_name": "McTestface",
+            "first_name": "User",
+            "last_name": "Ywrkaxrpb25hbf9lbwfpba",
             "image_url": "URL",
             "has_image": false,
-            "identifier": "testy+clerk_test@somedomain.com",
-            "username": "userfortests",
+            "identifier": "user-ywrkaxrpb25hbf9lbwfpba+clerk_test@somedomain.com",
+            "username": null,
             "profile_image_url": "URL"
           },
           "factor_verification_age": [

@@ -145,6 +145,9 @@ class TestHttpService implements HttpService {
     RegExp(r'"created_at":\d+'): r'"created_at":"%%DATETIME -4%%"',
     RegExp(r'"last_active_at":\d+'): r'"last_active_at":"%%DATETIME -3%%"',
     RegExp(r'"updated_at":\d+'): r'"updated_at":"%%DATETIME -2%%"',
+    RegExp(r'"password_last_updated_at":\d+'):
+        r'"password_last_updated_at":"%%DATETIME -2%%"',
+    RegExp(r'"last_sign_in_at":\d+'): r'"last_sign_in_at":"%%DATETIME -2%%"',
     RegExp(r'"claimed_at":\d+'): r'"claimed_at":"%%DATETIME -1%%"',
     RegExp(r'"expire_at":\d+'): r'"expire_at":"%%DATETIME 1%%"',
     RegExp(r'"legal_accepted_at":\d+'): r'"legal_accepted_at":"%%DATETIME 1%%"',

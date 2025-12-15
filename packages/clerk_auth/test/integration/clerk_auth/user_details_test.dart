@@ -23,10 +23,11 @@ void main() {
       ..recordPath = testName;
 
     auth = Auth(
-        config: TestAuthConfig(
-      publishableKey: env.publishableKey,
-      httpService: httpService,
-    ));
+      config: TestAuthConfig(
+        publishableKey: env.publishableKey,
+        httpService: httpService,
+      ),
+    );
     await auth.initialize();
 
     // Sign up to have an active session
@@ -42,11 +43,11 @@ void main() {
     );
     await auth.attemptSignUp(
       strategy: Strategy.emailCode,
-      code: '424242',
+      code: env.code,
     );
     await auth.attemptSignUp(
       strategy: Strategy.phoneCode,
-      code: '424242',
+      code: env.code,
     );
   }
 

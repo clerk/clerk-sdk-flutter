@@ -12,8 +12,6 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart'
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -215,6 +213,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     password?.associated =
         _Attribute(clerk.UserAttribute.passwordConfirmation, password.data);
 
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -252,7 +251,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 3,
-                  style: ClerkTextStyle.subtitle,
+                  style: themeExtension.styles.subheading,
                 ),
                 verticalMargin16,
                 defaultLoadingWidget,
@@ -396,7 +395,12 @@ class _FormField extends StatelessWidget {
 class _LegalAcceptanceConfirmation extends StatelessWidget {
   const _LegalAcceptanceConfirmation();
 
-  List<TextSpan> _subSpans(String text, String target, String? url) {
+  List<TextSpan> _subSpans(
+    String text,
+    String target,
+    String? url,
+    ClerkThemeExtension themeExtension,
+  ) {
     if (url case String url when url.isNotEmpty) {
       final segments = text.split(target);
       final spans = [TextSpan(text: segments.first)];
@@ -407,7 +411,7 @@ class _LegalAcceptanceConfirmation extends StatelessWidget {
         spans.add(
           TextSpan(
             text: target,
-            style: const TextStyle(color: ClerkColors.azure),
+            style: TextStyle(color: themeExtension.colors.link),
             recognizer: recognizer,
           ),
         );
@@ -433,13 +437,23 @@ class _LegalAcceptanceConfirmation extends StatelessWidget {
     final authState = ClerkAuth.of(context, listen: false);
     final display = authState.env.display;
     final l10ns = authState.localizationsOf(context);
-    final spans =
-        _subSpans(l10ns.acceptTerms, l10ns.termsOfService, display.termsUrl);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
+    final spans = _subSpans(
+      l10ns.acceptTerms,
+      l10ns.termsOfService,
+      display.termsUrl,
+      themeExtension,
+    );
 
     return [
       for (final span in spans) //
         if (span.text case String text when span.recognizer == null) //
-          ..._subSpans(text, l10ns.privacyPolicy, display.privacyPolicyUrl)
+          ..._subSpans(
+            text,
+            l10ns.privacyPolicy,
+            display.privacyPolicyUrl,
+            themeExtension,
+          )
         else //
           span,
     ];
@@ -447,10 +461,11 @@ class _LegalAcceptanceConfirmation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Text.rich(
       TextSpan(children: _spans(context)),
       maxLines: 2,
-      style: ClerkTextStyle.subtitleDark,
+      style: themeExtension.styles.subheading,
     );
   }
 }

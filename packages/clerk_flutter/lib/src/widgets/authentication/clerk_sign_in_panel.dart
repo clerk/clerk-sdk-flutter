@@ -12,7 +12,6 @@ import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/or_divider.dart';
 import 'package:clerk_flutter/src/widgets/ui/strategy_button.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// The [ClerkSignInPanel] renders a UI for signing in users.
@@ -119,6 +118,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final canResetPassword =
         env.config.firstFactors.any((f) => f.isPasswordResetter);
 
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -151,7 +151,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         ),
         Openable(
           open: signIn.status.needsFactor,
-          child: Text(_identifier, style: ClerkTextStyle.title),
+          child: Text(_identifier, style: themeExtension.styles.heading),
         ),
         verticalMargin8,
         Openable(
@@ -163,7 +163,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                 l10ns.clickOnTheLinkThatsBeenSentTo(_identifier),
                 textAlign: TextAlign.center,
                 maxLines: 3,
-                style: ClerkTextStyle.subtitle,
+                style: themeExtension.styles.subheading,
               ),
               verticalMargin16,
               defaultLoadingWidget,

@@ -1,6 +1,5 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 
 /// Sign in to an additional account
@@ -37,13 +36,14 @@ class ClerkPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return ClerkAuth(
       authState: authState,
       child: Scaffold(
-        backgroundColor: ClerkColors.whiteSmoke,
+        backgroundColor: themeExtension.colors.background,
         appBar: AppBar(
           forceMaterialTransparency: true,
-          foregroundColor: ClerkColors.stormGrey,
+          foregroundColor: themeExtension.colors.text,
         ),
         body: Padding(
           padding: hor24bottom16,

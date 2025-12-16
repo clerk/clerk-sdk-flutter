@@ -4,8 +4,6 @@ import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_avatar.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_row_label.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -81,6 +79,7 @@ class _EditableProfileDataState extends State<EditableProfileData> {
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -129,7 +128,7 @@ class _EditableProfileDataState extends State<EditableProfileData> {
           child: isEditing
               ? TextFormField(
                   controller: _controller,
-                  style: ClerkTextStyle.inputText,
+                  style: themeExtension.styles.inputText,
                   autofocus: true,
                   decoration: const InputDecoration(
                     isCollapsed: true,
@@ -142,7 +141,7 @@ class _EditableProfileDataState extends State<EditableProfileData> {
                   widget.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: ClerkTextStyle.inputText,
+                  style: themeExtension.styles.inputText,
                 ),
         ),
         if (widget.editable) ...[
@@ -181,20 +180,21 @@ class _ImageUploadButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onChooseImage,
       child: DecoratedBox(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: ClerkColors.dawnPink,
+          color: themeExtension.colors.borderSide,
         ),
         child: SizedBox.square(
           dimension: 15,
           child: Icon(
             icon,
             size: 12,
-            color: ClerkColors.charcoalGrey,
+            color: themeExtension.colors.text,
           ),
         ),
       ),

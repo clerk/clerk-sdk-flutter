@@ -15,8 +15,6 @@ import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/editable_profile_data.dart';
 import 'package:clerk_flutter/src/widgets/ui/platform_styled_dialog.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// [ClerkOrganizationProfile] displays user details
@@ -84,6 +82,7 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
         final org = membership.organization;
         final showDomains = authState.env.organization.domains.isEnabled &&
             membership.hasPermission(clerk.Permission.domainsManage);
+        final themeExtension = ClerkAuth.themeExtensionOf(context);
         return ClerkPanel(
           padding: horizontalPadding24,
           child: ListView(
@@ -92,9 +91,9 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
               Text(
                 _localizations.generalDetails,
                 maxLines: 1,
-                style: ClerkTextStyle.title,
+                style: themeExtension.styles.heading,
               ),
-              const Padding(padding: topPadding16, child: divider),
+              Padding(padding: topPadding16, child: divider(context)),
               _ProfileRow(
                 title: _localizations.organizationProfile,
                 child: EditableProfileData(
@@ -108,13 +107,13 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
                 ),
               ),
               if (showDomains) ...[
-                const Padding(padding: topPadding16, child: divider),
+                Padding(padding: topPadding16, child: divider(context)),
                 _ProfileRow(
                   title: _localizations.verifiedDomains,
                   child: _DomainsList(membership),
                 ),
               ],
-              const Padding(padding: topPadding16, child: divider),
+              Padding(padding: topPadding16, child: divider(context)),
               _ProfileRow(
                 title: _localizations.leaveOrganization,
                 child: GestureDetector(
@@ -122,7 +121,7 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
                   onTap: () => _leaveOrganization(org),
                   child: Text(
                     _localizations.leave,
-                    style: ClerkTextStyle.error,
+                    style: themeExtension.styles.error,
                   ),
                 ),
               ),
@@ -203,6 +202,7 @@ class _DomainsListState extends State<_DomainsList> {
   Future<void> _addDomain(BuildContext context) async {
     final authState = ClerkAuth.of(context, listen: false);
     final localizations = authState.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
 
     String domainName = '';
     clerk.EnrollmentMode mode = clerk.EnrollmentMode.manualInvitation;
@@ -229,7 +229,7 @@ class _DomainsListState extends State<_DomainsList> {
               Expanded(
                 child: Text(
                   localizations.enrollmentMode,
-                  style: ClerkTextStyle.subtitleDark,
+                  style: themeExtension.styles.subheading,
                   maxLines: 4,
                 ),
               ),
@@ -295,25 +295,26 @@ class _DomainRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             Expanded(
-              child: Text(domain.name, style: ClerkTextStyle.subtitleDark),
+              child: Text(domain.name, style: themeExtension.styles.subheading),
             ),
             if (domain.isVerified == false) //
               ClerkRowLabel(
                 label: localizations.unverified.toUpperCase(),
-                color: ClerkColors.incarnadine,
+                color: themeExtension.colors.error,
               ),
           ],
         ),
         verticalMargin2,
         Text(
           domain.enrollmentMode.viaInvitationMessage(localizations),
-          style: ClerkTextStyle.buttonSubtitle,
+          style: themeExtension.styles.subtext,
         ),
         verticalMargin8,
       ],
@@ -342,6 +343,7 @@ class _ModeSelectorState extends State<_ModeSelector> {
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return DropdownButton<clerk.EnrollmentMode>(
       value: mode,
       items: [
@@ -351,7 +353,7 @@ class _ModeSelectorState extends State<_ModeSelector> {
             child: Text(mode.localizedName(localizations)),
           ),
       ],
-      style: ClerkTextStyle.subtitleDark,
+      style: themeExtension.styles.subheading,
       onChanged: (mode) {
         if (mode is clerk.EnrollmentMode) {
           widget.onChange(mode);

@@ -1,5 +1,5 @@
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// Create a [ClerkPanel] with rounded corners and shadow
@@ -21,10 +21,11 @@ class ClerkPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return DefaultTextStyle(
-      style: ClerkTextStyle.subtitleDark.copyWith(height: 1.0),
+      style: themeExtension.styles.subheading.copyWith(height: 1.0),
       child: DecoratedBox(
-        decoration: inputBoxBorderDecoration,
+        decoration: inputBoxBorderDecoration(context),
         child: Padding(padding: padding, child: child),
       ),
     );

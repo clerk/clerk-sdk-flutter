@@ -1,8 +1,7 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// The [SocialConnectionButton] is to be used with the authentication flow when working with
@@ -27,15 +26,16 @@ class SocialConnectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return MaterialButton(
       onPressed: onPressed,
       elevation: 2.0,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: borderRadius4,
-        side: BorderSide(color: ClerkColors.dawnPink),
+        side: BorderSide(color: themeExtension.colors.borderSide),
       ),
       padding: allPadding12,
-      textColor: ClerkColors.brightGrey,
+      textColor: themeExtension.colors.lightweightText,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final logo = SizedBox.square(
@@ -46,7 +46,7 @@ class SocialConnectionButton extends StatelessWidget {
                   : Text(
                       connection.name.initials,
                       textAlign: TextAlign.center,
-                      style: ClerkTextStyle.title.copyWith(
+                      style: themeExtension.styles.heading.copyWith(
                         height: .1,
                         fontSize: 16,
                       ),
@@ -64,7 +64,7 @@ class SocialConnectionButton extends StatelessWidget {
               Text(
                 connection.name,
                 maxLines: 1,
-                style: ClerkTextStyle.buttonTitle,
+                style: themeExtension.styles.text,
               ),
             ],
           );

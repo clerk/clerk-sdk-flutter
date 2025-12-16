@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/input_label.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -150,12 +149,14 @@ class _TextFieldState extends State<_TextField> {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return TextFormField(
       initialValue: widget.initial,
       autofocus: widget.autofocus,
       focusNode: widget.focusNode,
-      style: ClerkTextStyle.inputText.copyWith(
-        color: _valid ? ClerkColors.charcoalGrey : ClerkColors.incarnadine,
+      style: themeExtension.styles.inputText.copyWith(
+        color:
+            _valid ? themeExtension.colors.text : themeExtension.colors.error,
       ),
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onSubmit,
@@ -172,10 +173,10 @@ class _TextFieldState extends State<_TextField> {
       decoration: InputDecoration(
         isCollapsed: true,
         hintText: widget.hint,
-        hintStyle: const TextStyle(color: ClerkColors.mountainMist),
-        border: outlineInputBorder,
-        enabledBorder: outlineInputBorder,
-        focusedBorder: outlineInputBorder,
+        hintStyle: themeExtension.styles.inputText,
+        border: outlineInputBorder(context),
+        enabledBorder: outlineInputBorder(context),
+        focusedBorder: outlineInputBorder(context),
         contentPadding: allPadding8,
         errorStyle: const TextStyle(fontSize: 0),
         suffixIconConstraints: const BoxConstraints(maxHeight: 16),

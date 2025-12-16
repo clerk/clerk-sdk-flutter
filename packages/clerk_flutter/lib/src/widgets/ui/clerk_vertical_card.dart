@@ -1,8 +1,6 @@
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -27,17 +25,18 @@ class ClerkVerticalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context, listen: false);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     final displayConfig = authState.env.display;
     final l10ns = displayConfig.showDevmodeWarning
         ? authState.localizationsOf(context)
         : null;
     return DecoratedBox(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         borderRadius: borderRadius12,
         boxShadow: [
           BoxShadow(
-            color: ClerkColors.dropShadowGrey,
-            offset: Offset(0.0, 6.0),
+            color: themeExtension.colors.altBackground,
+            offset: const Offset(0.0, 6.0),
             blurRadius: 12,
           )
         ],
@@ -45,7 +44,7 @@ class ClerkVerticalCard extends StatelessWidget {
       child: Material(
         borderRadius: borderRadius12,
         clipBehavior: Clip.antiAlias,
-        color: ClerkColors.lightGrey,
+        color: themeExtension.colors.background,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -53,9 +52,9 @@ class ClerkVerticalCard extends StatelessWidget {
               Material(
                 borderRadius: borderRadius6,
                 clipBehavior: Clip.antiAlias,
-                color: ClerkColors.white,
+                color: themeExtension.colors.background,
                 elevation: 1.0,
-                shadowColor: ClerkColors.seashell,
+                shadowColor: themeExtension.colors.altBackground,
                 child: topPortion,
               ),
               bottomPortion,
@@ -75,7 +74,8 @@ class ClerkVerticalCard extends StatelessWidget {
                 Center(
                   child: Text(
                     l10ns.developmentMode,
-                    style: ClerkTextStyle.title.copyWith(color: Colors.orange),
+                    style: themeExtension.styles.heading
+                        .copyWith(color: Colors.orange),
                   ),
                 ),
                 verticalMargin12,

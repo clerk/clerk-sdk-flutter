@@ -7,7 +7,6 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 enum _ResetFlowState {
@@ -251,15 +250,13 @@ class _ActionButton extends StatelessWidget {
       return defaultLoadingWidget;
     }
 
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return ClerkMaterialButton(
       style: ClerkMaterialButtonStyle.light,
       onPressed: onPressed,
       label: Padding(
         padding: horizontalPadding8,
-        child: Text(
-          label,
-          style: ClerkTextStyle.buttonSubtitle.copyWith(fontSize: 11),
-        ),
+        child: Text(label, style: themeExtension.styles.subtext),
       ),
     );
   }

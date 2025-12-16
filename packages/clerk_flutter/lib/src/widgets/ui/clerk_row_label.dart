@@ -1,6 +1,5 @@
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// A label to sit at the end of a row or tile
@@ -9,13 +8,13 @@ class ClerkRowLabel extends StatelessWidget {
   /// Construct a [ClerkRowLabel]
   const ClerkRowLabel({
     super.key,
-    this.color = ClerkColors.charcoalGrey,
+    this.color,
     required this.label,
     this.onTap,
   });
 
   /// The [Color]
-  final Color color;
+  final Color? color;
 
   /// The contents of the label
   final String label;
@@ -25,6 +24,8 @@ class ClerkRowLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
+    final color = this.color ?? themeExtension.colors.text;
     return Padding(
       padding: topPadding2,
       child: GestureDetector(
@@ -38,7 +39,7 @@ class ClerkRowLabel extends StatelessWidget {
               padding: horizontalPadding4 + verticalPadding2,
               child: Text(
                 label.toUpperCase(),
-                style: ClerkTextStyle.rowLabel.copyWith(color: color),
+                style: themeExtension.styles.rowLabel.copyWith(color: color),
               ),
             ),
           ),

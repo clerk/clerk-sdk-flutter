@@ -1,8 +1,6 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 /// The [StrategyButton] is to be used with the authentication flow when working with
@@ -63,25 +61,25 @@ class StrategyButton extends StatelessWidget {
     }
 
     final localizations = ClerkAuth.localizationsOf(context);
-
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return MaterialButton(
       onPressed: onClick,
       elevation: 2.0,
       padding: allPadding8,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: borderRadius4,
-        side: BorderSide(color: ClerkColors.dawnPink),
+        side: BorderSide(color: themeExtension.colors.borderSide),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(_icons[strategy], color: ClerkColors.midGrey),
+          Icon(_icons[strategy], color: themeExtension.colors.lightweightText),
           horizontalMargin8,
           Flexible(
             child: Text(
               _label(localizations),
               maxLines: 2,
-              style: ClerkTextStyle.subtitle,
+              style: themeExtension.styles.subheading,
             ),
           ),
         ],

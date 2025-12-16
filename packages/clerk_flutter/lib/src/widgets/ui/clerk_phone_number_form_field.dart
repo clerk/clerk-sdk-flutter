@@ -1,8 +1,6 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/input_label.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_input/phone_input_package.dart';
 
@@ -60,7 +58,7 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
         ),
         verticalMargin4,
         DecoratedBox(
-          decoration: inputBoxBorderDecoration,
+          decoration: inputBoxBorderDecoration(context),
           child: _PhoneInput(
             initial: initial,
             onChanged: onChanged,
@@ -135,6 +133,8 @@ class _PhoneInputState extends State<_PhoneInput> {
     return FutureBuilder(
       future: _phoneNumberFuture,
       builder: (context, snapshot) {
+        final themeExtension = ClerkAuth.themeExtensionOf(context);
+
         if (snapshot.hasData == false) {
           return emptyWidget;
         }
@@ -157,10 +157,10 @@ class _PhoneInputState extends State<_PhoneInput> {
             }
           },
           onSubmitted: widget.onSubmit,
-          style: ClerkTextStyle.inputText.copyWith(
+          style: themeExtension.styles.inputText.copyWith(
             color: _isValid //
-                ? ClerkColors.charcoalGrey
-                : ClerkColors.incarnadine,
+                ? themeExtension.colors.text
+                : themeExtension.colors.error,
           ),
           decoration: const InputDecoration(
             errorStyle: TextStyle(

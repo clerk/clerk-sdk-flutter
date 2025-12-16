@@ -17,12 +17,8 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_row_label.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-
-const _borderSide = BorderSide(width: 0.5, color: ClerkColors.dawnPink);
 
 /// The [ClerkOrganizationList] renders a list of all users from
 /// [clerk.Session]s currently signed in, plus controls to sign
@@ -204,7 +200,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
             mainAxisSize: MainAxisSize.min,
             children: [
               ClerkPanelHeader(subtitle: _localizations.selectAccount),
-              narrowDivider,
+              narrowDivider(context),
               if (_currentOrg case _Organization current) //
                 Closeable(
                   key: Key('current:${current.orgId}'),
@@ -259,7 +255,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
                 ),
               for (final action in actions) ...[
                 ClerkActionRow(action: action),
-                narrowDivider,
+                narrowDivider(context),
               ],
             ],
           ),
@@ -284,18 +280,20 @@ class _OrganizationRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context, listen: false);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     final imageUrl = organization.isPersonal
         ? authState.user?.imageUrl
         : organization.imageUrl;
     final name = organization.isPersonal
         ? authState.localizationsOf(context).personalAccount
         : organization.name;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => onTap?.call(organization),
       child: DecoratedBox(
-        decoration: const BoxDecoration(
-          border: Border(bottom: _borderSide),
+        decoration: BoxDecoration(
+          border: Border(bottom: themeExtension.borderSide),
         ),
         child: Padding(
           padding: verticalPadding12 + horizontalPadding16,
@@ -323,14 +321,14 @@ class _OrganizationRow extends StatelessWidget {
                       name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: ClerkTextStyle.buttonTitleDark,
+                      style: themeExtension.styles.text,
                     ),
                     if (organization.roleName case String roleName) //
                       Text(
                         roleName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: ClerkTextStyle.buttonTitle,
+                        style: themeExtension.styles.text,
                       ),
                   ],
                 ),

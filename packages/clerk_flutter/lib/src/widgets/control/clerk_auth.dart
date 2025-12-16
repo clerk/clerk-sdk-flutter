@@ -101,6 +101,21 @@ class ClerkAuth extends StatefulWidget {
   /// get the [ClerkFileCache] of the [ClerkAuthConfig]
   static ClerkFileCache fileCacheOf(BuildContext context) =>
       of(context, listen: false).config.fileCache;
+
+  /// Find an enclosing [ClerkThemeExtension] from the widget tree. If no
+  /// such extension is found, default to the standard light or dark version
+  /// based on the current theme's brightness.
+  ///
+  /// To change the colors and text styles used by the Clerk furniture,
+  /// override the [ClerkThemeExtension] in your app's theme.
+  ///
+  static ClerkThemeExtension themeExtensionOf(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.extension<ClerkThemeExtension>() ??
+        (theme.brightness == Brightness.dark
+            ? ClerkThemeExtension.dark
+            : ClerkThemeExtension.light);
+  }
 }
 
 class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {

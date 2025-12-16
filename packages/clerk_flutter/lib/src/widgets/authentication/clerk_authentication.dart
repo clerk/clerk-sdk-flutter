@@ -8,8 +8,6 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_vertical_card.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/or_divider.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/text_style.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -123,6 +121,7 @@ class _BottomPortion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = ClerkAuth.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -137,15 +136,15 @@ class _BottomPortion extends StatelessWidget {
                   text: state.isSigningIn
                       ? localizations.dontHaveAnAccount
                       : localizations.alreadyHaveAnAccount,
-                  style: ClerkTextStyle.subtitle,
+                  style: themeExtension.styles.subheading,
                 ),
                 const WidgetSpan(child: SizedBox(width: 6)),
                 TextSpan(
                   text: state.isSigningIn
                       ? localizations.signUp
                       : localizations.signIn,
-                  style: ClerkTextStyle.subtitle
-                      .copyWith(color: ClerkColors.darkJungleGreen),
+                  style: themeExtension.styles.subheading
+                      .copyWith(color: themeExtension.colors.text),
                   recognizer: TapGestureRecognizer()..onTap = onChange,
                 ),
               ],

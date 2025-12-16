@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:clerk_flutter/src/assets.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/colors.dart';
+import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:phone_input/phone_input_package.dart';
@@ -30,24 +30,40 @@ const emptyWidgetWide = SizedBox(width: double.infinity);
 
 const spacer = Spacer();
 
-const inputBorderSide = BorderSide(color: ClerkColors.dawnPink, width: 1.0);
+BorderSide inputBorderSide(BuildContext context) {
+  final themeExtension = ClerkAuth.themeExtensionOf(context);
+  return BorderSide(color: themeExtension.colors.borderSide, width: 1.0);
+}
 
-const outlineInputBorder = OutlineInputBorder(borderSide: inputBorderSide);
+OutlineInputBorder outlineInputBorder(BuildContext context) =>
+    OutlineInputBorder(borderSide: inputBorderSide(context));
 
-const inputBoxBorder =
-    RoundedRectangleBorder(side: inputBorderSide, borderRadius: borderRadius4);
+OutlinedBorder inputBoxBorder(BuildContext context) => RoundedRectangleBorder(
+    side: inputBorderSide(context), borderRadius: borderRadius4);
 
-const inputBoxBorderDecoration = ShapeDecoration(shape: inputBoxBorder);
+ShapeDecoration inputBoxBorderDecoration(BuildContext context) =>
+    ShapeDecoration(shape: inputBoxBorder(context));
 
 const firstColumnWidth = 215.0;
 const secondColumnWidth = 280.0;
 
-const divider =
-    Divider(color: ClerkColors.dawnPink, thickness: 2.0, height: 2.0);
+Divider divider(BuildContext context) {
+  final themeExtension = ClerkAuth.themeExtensionOf(context);
+  return Divider(
+    color: themeExtension.colors.borderSide,
+    thickness: 1.0,
+    height: 1.0,
+  );
+}
 
-const narrowDivider =
-    Divider(color: ClerkColors.dawnPink, thickness: 0.0, height: 1.0);
-
+Divider narrowDivider(BuildContext context) {
+  final themeExtension = ClerkAuth.themeExtensionOf(context);
+  return Divider(
+    color: themeExtension.colors.borderSide,
+    thickness: 0.0,
+    height: 1.0,
+  );
+}
 // Margins
 
 const horizontalMargin4 = SizedBox(width: 4.0);

@@ -50,7 +50,7 @@ void main() {
     response = await api.attemptSignUp(
       response.client!.signUp!,
       strategy: Strategy.emailCode,
-      code: '424242',
+      code: env.code,
     );
     response = await api.prepareSignUp(
       response.client!.signUp!,
@@ -59,7 +59,7 @@ void main() {
     response = await api.attemptSignUp(
       response.client!.signUp!,
       strategy: Strategy.phoneCode,
-      code: '424242',
+      code: env.code,
     );
   }
 
@@ -160,6 +160,18 @@ void main() {
         late ApiResponse response;
         late User? user;
 
+        const emailAddress = 'secondary+clerk_test@somedomain.com';
+        response = await api.addIdentifyingDataToCurrentUser(
+          emailAddress,
+          IdentifierType.emailAddress,
+        );
+        user = response.client?.activeSession?.user;
+        expect(user is User);
+        final ident = user!.identifierFrom(emailAddress)!;
+
+        await api.prepareIdentifyingDataVerification(ident);
+        await api.verifyIdentifyingData(ident, env.code);
+
         response = await api.getUser();
         user = response.client?.activeSession?.user;
         expect(user is User);
@@ -185,11 +197,8 @@ void main() {
         expect(user?.primaryEmailAddressId, newEmailId);
 
         // Restore original primary email
-        response =
-            await api.updateUser(primaryEmailAddressId: originalPrimaryEmailId);
-        expect(response.isOkay);
-        expect(response.client?.activeSession?.user?.primaryEmailAddressId,
-            originalPrimaryEmailId);
+        final client = await api.deleteUser();
+        expect(client.user == null);
 
         expect(httpService.isCompleted);
       });
@@ -201,6 +210,18 @@ void main() {
 
         late ApiResponse response;
         late User? user;
+
+        const phoneNumber = '+15555550109';
+        response = await api.addIdentifyingDataToCurrentUser(
+          phoneNumber,
+          IdentifierType.phoneNumber,
+        );
+        user = response.client?.activeSession?.user;
+        expect(user is User);
+        final ident = user!.identifierFrom(phoneNumber)!;
+
+        await api.prepareIdentifyingDataVerification(ident);
+        await api.verifyIdentifyingData(ident, env.code);
 
         response = await api.getUser();
         user = response.client?.activeSession?.user;
@@ -227,11 +248,8 @@ void main() {
         expect(user?.primaryPhoneNumberId, newPhoneId);
 
         // Restore original primary phone
-        response =
-            await api.updateUser(primaryPhoneNumberId: originalPrimaryPhoneId);
-        expect(response.isOkay);
-        expect(response.client?.activeSession?.user?.primaryPhoneNumberId,
-            originalPrimaryPhoneId);
+        final client = await api.deleteUser();
+        expect(client.user == null);
 
         expect(httpService.isCompleted);
       });
@@ -275,8 +293,7 @@ void main() {
           response = await api.updateUser(
               primaryWeb3WalletId: originalPrimaryWeb3WalletId);
           expect(response.isOkay);
-          expect(
-              response.client?.activeSession?.user?.primaryWeb3WalletId,
+          expect(response.client?.activeSession?.user.primaryWeb3WalletId,
               originalPrimaryWeb3WalletId);
 
           expect(httpService.isCompleted);

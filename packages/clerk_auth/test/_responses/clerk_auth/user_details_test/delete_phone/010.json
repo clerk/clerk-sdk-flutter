@@ -1,10 +1,25 @@
 {
-  "key": "DELETE /v1/me/phone_numbers/IDENTIFIER_ID?_clerk_session_id=SESSION_ID",
+  "key": "POST /v1/me/phone_numbers/idn_36vl5pmzsTtUXe6BNij77ptaHiO/attempt_verification?_clerk_session_id=SESSION_ID code=424242",
   "body": {
     "response": {
-      "id": "IDENTIFIER_ID",
+      "id": "idn_36vl5pmzsTtUXe6BNij77ptaHiO",
       "object": "phone_number",
-      "deleted": true
+      "phone_number": "+15555550109",
+      "reserved_for_second_factor": false,
+      "default_second_factor": false,
+      "reserved": false,
+      "verification": {
+        "object": "verification_otp",
+        "status": "verified",
+        "strategy": "phone_code",
+        "channel": "sms",
+        "attempts": 1,
+        "expire_at": "%%DATETIME 1%%"
+      },
+      "linked_to": [],
+      "backup_codes": null,
+      "created_at": "%%DATETIME -4%%",
+      "updated_at": "%%DATETIME -2%%"
     },
     "client": {
       "object": "client",
@@ -28,8 +43,8 @@
             "locale": null,
             "image_url": "URL",
             "has_image": false,
-            "primary_email_address_id": "IDENTIFIER_ID",
-            "primary_phone_number_id": "IDENTIFIER_ID",
+            "primary_email_address_id": "idn_36vl5ble03WSSUOUh1aUPZmeS01",
+            "primary_phone_number_id": "idn_36vl5d5HLrKPYK9Lhh10VHQwQnk",
             "primary_web3_wallet_id": null,
             "password_enabled": true,
             "two_factor_enabled": false,
@@ -37,7 +52,7 @@
             "backup_code_enabled": false,
             "email_addresses": [
               {
-                "id": "IDENTIFIER_ID",
+                "id": "idn_36vl5ble03WSSUOUh1aUPZmeS01",
                 "object": "email_address",
                 "email_address": "user-zgvszxrlx3bob25l+clerk_test@somedomain.com",
                 "reserved": false,
@@ -56,7 +71,27 @@
             ],
             "phone_numbers": [
               {
-                "id": "IDENTIFIER_ID",
+                "id": "idn_36vl5pmzsTtUXe6BNij77ptaHiO",
+                "object": "phone_number",
+                "phone_number": "+15555550109",
+                "reserved_for_second_factor": false,
+                "default_second_factor": false,
+                "reserved": false,
+                "verification": {
+                  "object": "verification_otp",
+                  "status": "verified",
+                  "strategy": "phone_code",
+                  "channel": "sms",
+                  "attempts": 1,
+                  "expire_at": "%%DATETIME 1%%"
+                },
+                "linked_to": [],
+                "backup_codes": null,
+                "created_at": "%%DATETIME -4%%",
+                "updated_at": "%%DATETIME -2%%"
+              },
+              {
+                "id": "idn_36vl5d5HLrKPYK9Lhh10VHQwQnk",
                 "object": "phone_number",
                 "phone_number": "+15555550146",
                 "reserved_for_second_factor": false,

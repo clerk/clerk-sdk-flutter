@@ -1,7 +1,12 @@
 {
-  "key": "GET /v1/client",
+  "key": "DELETE /v1/me?_clerk_session_id=SESSION_ID",
   "body": {
     "response": {
+      "id": "USER_ID",
+      "object": "user",
+      "deleted": true
+    },
+    "client": {
       "object": "client",
       "id": "CLIENT_ID",
       "sessions": [],
@@ -13,7 +18,6 @@
       "captcha_bypass": false,
       "created_at": "%%DATETIME -4%%",
       "updated_at": "%%DATETIME -2%%"
-    },
-    "client": null
+    }
   }
 }

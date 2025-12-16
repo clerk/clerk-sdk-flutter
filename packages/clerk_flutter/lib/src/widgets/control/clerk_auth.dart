@@ -6,7 +6,6 @@ import 'package:clerk_flutter/src/utils/clerk_file_cache.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
-import 'package:clerk_flutter/src/widgets/ui/style/clerk_theme.dart';
 import 'package:flutter/material.dart';
 
 /// A class to transport [Uri]s from deep links into the app into the Clerk

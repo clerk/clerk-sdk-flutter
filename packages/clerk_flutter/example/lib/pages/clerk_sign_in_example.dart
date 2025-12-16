@@ -15,12 +15,21 @@ class ClerkSignInExample extends StatefulWidget {
 }
 
 class _ClerkSignInExampleState extends State<ClerkSignInExample> {
-  bool bright = true;
+  bool isLight = true;
+
+  /// Light and dark themes. [ClerkThemeExtension]s should be overridden as
+  /// needed to change colors and text styles used by the Clerk furniture.
+  static final lightTheme = ThemeData.light().copyWith(
+    extensions: [ClerkThemeExtension.light],
+  );
+  static final darkTheme = ThemeData.dark().copyWith(
+    extensions: [ClerkThemeExtension.dark],
+  );
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: bright ? ThemeData.light() : ThemeData.dark(),
+      data: isLight ? lightTheme : darkTheme,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Clerk UI Sign In'),
@@ -28,7 +37,7 @@ class _ClerkSignInExampleState extends State<ClerkSignInExample> {
             Padding(
               padding: const EdgeInsets.only(right: 16),
               child: GestureDetector(
-                onTap: () => setState(() => bright = !bright),
+                onTap: () => setState(() => isLight = !isLight),
                 child: const Icon(Icons.brightness_4),
               ),
             ),

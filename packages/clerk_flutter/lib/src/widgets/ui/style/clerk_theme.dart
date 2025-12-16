@@ -119,7 +119,7 @@ class ClerkThemeColors {
   }
 }
 
-/// An extension for the Clerk theme
+/// Text styles used by Clerk furniture
 ///
 class ClerkThemeStyles {
   /// Constructor

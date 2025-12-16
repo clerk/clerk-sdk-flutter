@@ -1,10 +1,22 @@
 {
-  "key": "DELETE /v1/me/email_addresses/IDENTIFIER_ID?_clerk_session_id=SESSION_ID",
+  "key": "POST /v1/me/email_addresses/idn_36vl5VnVgDbcmSAAFrplsa4eFxw/attempt_verification?_clerk_session_id=SESSION_ID code=424242",
   "body": {
     "response": {
-      "id": "IDENTIFIER_ID",
+      "id": "idn_36vl5VnVgDbcmSAAFrplsa4eFxw",
       "object": "email_address",
-      "deleted": true
+      "email_address": "deleteme+clerk_test@somedomain.com",
+      "reserved": false,
+      "verification": {
+        "object": "verification_otp",
+        "status": "verified",
+        "strategy": "email_code",
+        "attempts": 1,
+        "expire_at": "%%DATETIME 1%%"
+      },
+      "linked_to": [],
+      "matches_sso_connection": false,
+      "created_at": "%%DATETIME -4%%",
+      "updated_at": "%%DATETIME -2%%"
     },
     "client": {
       "object": "client",
@@ -28,8 +40,8 @@
             "locale": null,
             "image_url": "URL",
             "has_image": false,
-            "primary_email_address_id": "IDENTIFIER_ID",
-            "primary_phone_number_id": "IDENTIFIER_ID",
+            "primary_email_address_id": "idn_36vl5Gb96CC7eAoCwFR8tV6n5N1",
+            "primary_phone_number_id": "idn_36vl5JavQPTrEmXzSQnrpaKYMEq",
             "primary_web3_wallet_id": null,
             "password_enabled": true,
             "two_factor_enabled": false,
@@ -37,7 +49,24 @@
             "backup_code_enabled": false,
             "email_addresses": [
               {
-                "id": "IDENTIFIER_ID",
+                "id": "idn_36vl5VnVgDbcmSAAFrplsa4eFxw",
+                "object": "email_address",
+                "email_address": "deleteme+clerk_test@somedomain.com",
+                "reserved": false,
+                "verification": {
+                  "object": "verification_otp",
+                  "status": "verified",
+                  "strategy": "email_code",
+                  "attempts": 1,
+                  "expire_at": "%%DATETIME 1%%"
+                },
+                "linked_to": [],
+                "matches_sso_connection": false,
+                "created_at": "%%DATETIME -4%%",
+                "updated_at": "%%DATETIME -2%%"
+              },
+              {
+                "id": "idn_36vl5Gb96CC7eAoCwFR8tV6n5N1",
                 "object": "email_address",
                 "email_address": "user-zgvszxrlx2vtywls+clerk_test@somedomain.com",
                 "reserved": false,
@@ -56,7 +85,7 @@
             ],
             "phone_numbers": [
               {
-                "id": "IDENTIFIER_ID",
+                "id": "idn_36vl5JavQPTrEmXzSQnrpaKYMEq",
                 "object": "phone_number",
                 "phone_number": "+15555550161",
                 "reserved_for_second_factor": false,

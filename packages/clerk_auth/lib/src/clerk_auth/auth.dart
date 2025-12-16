@@ -936,6 +936,9 @@ class Auth {
     String? username,
     String? firstName,
     String? lastName,
+    String? primaryEmailAddressId,
+    String? primaryPhoneNumberId,
+    String? primaryWeb3WalletId,
     Map<String, dynamic>? metadata,
     File? avatar,
   }) async {
@@ -946,11 +949,17 @@ class Auth {
               username != user.username) ||
           (config.allowsFirstName &&
               firstName is String &&
-              firstName != user.username) ||
+              firstName != user.firstName) ||
           (config.allowsLastName &&
               lastName is String &&
               lastName != user.lastName) ||
-          metadata?.isNotEmpty == true;
+          (primaryEmailAddressId is String &&
+              primaryEmailAddressId != user.primaryEmailAddressId) ||
+          (primaryPhoneNumberId is String &&
+              primaryPhoneNumberId != user.primaryPhoneNumberId) ||
+          (primaryWeb3WalletId is String &&
+              primaryWeb3WalletId != user.primaryWeb3WalletId) ||
+          (metadata?.isNotEmpty == true);
       if (needsUpdate || avatar is File) {
         if (needsUpdate) {
           await _api
@@ -958,6 +967,9 @@ class Auth {
                 username: config.allowsUsername ? username : null,
                 firstName: config.allowsFirstName ? firstName : null,
                 lastName: config.allowsLastName ? lastName : null,
+                primaryEmailAddressId: primaryEmailAddressId,
+                primaryPhoneNumberId: primaryPhoneNumberId,
+                primaryWeb3WalletId: primaryWeb3WalletId,
                 metadata: metadata,
               )
               .then(_housekeeping);

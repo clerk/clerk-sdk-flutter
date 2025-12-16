@@ -1,0 +1,157 @@
+{
+  "key": "POST /v1/me/phone_numbers?_clerk_session_id=SESSION_ID phone_number",
+  "body": {
+    "response": {
+      "id": "idn_36vl55P96lOXDWaGBqNSuxGJSyE",
+      "object": "phone_number",
+      "phone_number": "+15555550109",
+      "reserved_for_second_factor": false,
+      "default_second_factor": false,
+      "reserved": false,
+      "verification": null,
+      "linked_to": [],
+      "backup_codes": null,
+      "created_at": "%%DATETIME -4%%",
+      "updated_at": "%%DATETIME -2%%"
+    },
+    "client": {
+      "object": "client",
+      "id": "CLIENT_ID",
+      "sessions": [
+        {
+          "object": "session",
+          "id": "SESSION_ID",
+          "status": "active",
+          "expire_at": "%%DATETIME 1%%",
+          "abandon_at": "%%DATETIME 2%%",
+          "last_active_at": "%%DATETIME -3%%",
+          "last_active_organization_id": null,
+          "actor": null,
+          "user": {
+            "id": "USER_ID",
+            "object": "user",
+            "username": null,
+            "first_name": "User",
+            "last_name": "C2v0x3byaw1hcnlfcghvbmu",
+            "locale": null,
+            "image_url": "URL",
+            "has_image": false,
+            "primary_email_address_id": "idn_36vl4plVeyKB4xvZvlTEzwdssfh",
+            "primary_phone_number_id": "idn_36vl4pwoKCVIsg1us8DZCLwY1oM",
+            "primary_web3_wallet_id": null,
+            "password_enabled": true,
+            "two_factor_enabled": false,
+            "totp_enabled": false,
+            "backup_code_enabled": false,
+            "email_addresses": [
+              {
+                "id": "idn_36vl4plVeyKB4xvZvlTEzwdssfh",
+                "object": "email_address",
+                "email_address": "user-c2v0x3byaw1hcnlfcghvbmu+clerk_test@somedomain.com",
+                "reserved": false,
+                "verification": {
+                  "object": "verification_otp",
+                  "status": "verified",
+                  "strategy": "email_code",
+                  "attempts": 1,
+                  "expire_at": "%%DATETIME 1%%"
+                },
+                "linked_to": [],
+                "matches_sso_connection": false,
+                "created_at": "%%DATETIME -4%%",
+                "updated_at": "%%DATETIME -2%%"
+              }
+            ],
+            "phone_numbers": [
+              {
+                "id": "idn_36vl55P96lOXDWaGBqNSuxGJSyE",
+                "object": "phone_number",
+                "phone_number": "+15555550109",
+                "reserved_for_second_factor": false,
+                "default_second_factor": false,
+                "reserved": false,
+                "verification": null,
+                "linked_to": [],
+                "backup_codes": null,
+                "created_at": "%%DATETIME -4%%",
+                "updated_at": "%%DATETIME -2%%"
+              },
+              {
+                "id": "idn_36vl4pwoKCVIsg1us8DZCLwY1oM",
+                "object": "phone_number",
+                "phone_number": "+15555550123",
+                "reserved_for_second_factor": false,
+                "default_second_factor": false,
+                "reserved": false,
+                "verification": {
+                  "object": "verification_otp",
+                  "status": "verified",
+                  "strategy": "phone_code",
+                  "channel": "sms",
+                  "attempts": 1,
+                  "expire_at": "%%DATETIME 1%%"
+                },
+                "linked_to": [],
+                "backup_codes": null,
+                "created_at": "%%DATETIME -4%%",
+                "updated_at": "%%DATETIME -2%%"
+              }
+            ],
+            "web3_wallets": [],
+            "passkeys": [],
+            "external_accounts": [],
+            "saml_accounts": [],
+            "enterprise_accounts": [],
+            "password_last_updated_at": "%%DATETIME -2%%",
+            "public_metadata": {},
+            "unsafe_metadata": {},
+            "external_id": null,
+            "last_sign_in_at": "%%DATETIME -2%%",
+            "banned": false,
+            "locked": false,
+            "lockout_expires_in_seconds": null,
+            "verification_attempts_remaining": 100,
+            "created_at": "%%DATETIME -4%%",
+            "updated_at": "%%DATETIME -2%%",
+            "delete_self_enabled": true,
+            "bypass_client_trust": false,
+            "create_organization_enabled": true,
+            "last_active_at": "%%DATETIME -3%%",
+            "mfa_enabled_at": null,
+            "mfa_disabled_at": null,
+            "legal_accepted_at": "%%DATETIME 1%%",
+            "profile_image_url": "URL",
+            "organization_memberships": []
+          },
+          "public_user_data": {
+            "first_name": "User",
+            "last_name": "C2v0x3byaw1hcnlfcghvbmu",
+            "image_url": "URL",
+            "has_image": false,
+            "identifier": "user-c2v0x3byaw1hcnlfcghvbmu+clerk_test@somedomain.com",
+            "username": null,
+            "profile_image_url": "URL"
+          },
+          "factor_verification_age": [
+            0,
+            -1
+          ],
+          "created_at": "%%DATETIME -4%%",
+          "updated_at": "%%DATETIME -2%%",
+          "last_active_token": {
+            "object": "token",
+            "jwt": "e30=.e30=.e30="
+          }
+        }
+      ],
+      "sign_in": null,
+      "sign_up": null,
+      "last_active_session_id": "SESSION_ID",
+      "last_authentication_strategy": null,
+      "cookie_expires_at": null,
+      "captcha_bypass": false,
+      "created_at": "%%DATETIME -4%%",
+      "updated_at": "%%DATETIME -2%%"
+    }
+  }
+}

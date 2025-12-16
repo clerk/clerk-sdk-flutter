@@ -132,7 +132,6 @@ class TestHttpService implements HttpService {
   static final _identifiers = {
     RegExp(r'sia_\w+'): r'SIGN_IN_ID',
     RegExp(r'sua_\w+'): r'SIGN_UP_ID',
-    RegExp(r'idn_\w+'): r'IDENTIFIER_ID',
     RegExp(r'sess_\w+'): r'SESSION_ID',
     RegExp(r'aac_\w+'): r'AUTH_CONFIG_ID',
     RegExp(r'display_config_\w+'): r'DISPLAY_CONFIG_ID',
@@ -166,6 +165,9 @@ class TestHttpService implements HttpService {
   String _swapIdentifiers(String item) {
     for (final MapEntry(:key, :value) in _identifiers.entries) {
       item = item.replaceAll(key, value);
+    }
+    if (env.useOpenIdentifiers == false) {
+      item = item.replaceAll(RegExp(r'idn_\w+'), r'IDENTIFIER_ID');
     }
     return item;
   }

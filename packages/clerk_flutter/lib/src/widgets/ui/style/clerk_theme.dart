@@ -32,24 +32,30 @@ class ClerkThemeExtension extends ThemeExtension<ClerkThemeExtension> {
   /// Constructor
   ClerkThemeExtension({
     required this.colors,
-    ClerkThemeStylesBuilder stylesBuilder =
-        ClerkThemeStyles.defaultStylesBuilder,
-  }) : _stylesBuilder = stylesBuilder;
+    this.stylesBuilder = ClerkThemeStyles.defaultStylesBuilder,
+  });
 
   /// Colors to be used by the theme
   final ClerkThemeColors colors;
 
   /// Styles to be used by the theme
-  late final ClerkThemeStyles styles = _stylesBuilder(colors);
+  late final ClerkThemeStyles styles = stylesBuilder(colors);
 
   /// Border side
   late final borderSide = BorderSide(width: 0.5, color: colors.borderSide);
 
-  final ClerkThemeStylesBuilder _stylesBuilder;
+  /// Builder for styles
+  final ClerkThemeStylesBuilder stylesBuilder;
 
   @override
-  ClerkThemeExtension copyWith({ClerkThemeColors? colors}) {
-    return ClerkThemeExtension(colors: colors ?? this.colors);
+  ClerkThemeExtension copyWith({
+    ClerkThemeColors? colors,
+    ClerkThemeStylesBuilder? stylesBuilder,
+  }) {
+    return ClerkThemeExtension(
+      colors: colors ?? this.colors,
+      stylesBuilder: stylesBuilder ?? this.stylesBuilder,
+    );
   }
 
   @override
@@ -58,7 +64,10 @@ class ClerkThemeExtension extends ThemeExtension<ClerkThemeExtension> {
     double t,
   ) {
     if (other case ClerkThemeExtension other) {
-      return ClerkThemeExtension(colors: colors.lerp(other.colors, t));
+      return ClerkThemeExtension(
+        colors: colors.lerp(other.colors, t),
+        stylesBuilder: t < 0.5 ? stylesBuilder : other.stylesBuilder,
+      );
     }
     return this;
   }

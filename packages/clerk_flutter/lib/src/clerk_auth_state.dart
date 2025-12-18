@@ -142,17 +142,12 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   Future<void> ssoSignIn(
     BuildContext context,
     clerk.Strategy strategy, {
-    String? identifier,
     ClerkErrorCallback? onError,
   }) async {
     final redirect = config.redirectionGenerator?.call(context, strategy);
     await safelyCall(
       context,
-      () => oauthSignIn(
-        strategy: strategy,
-        identifier: identifier,
-        redirect: redirect,
-      ),
+      () => oauthSignIn(strategy: strategy, redirect: redirect),
       onError: onError,
     );
     final url =

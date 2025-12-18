@@ -107,7 +107,7 @@ class _PhoneInputState extends State<_PhoneInput> {
 
   Future<PhoneNumber> _getPhoneNumber() async {
     final persistor = ClerkAuth.of(context, listen: false).config.persistor;
-    if (widget.initial case String initial) {
+    if (widget.initial case String initial when initial.isNotEmpty) {
       _phoneNumber = PhoneNumber.parse(initial);
       _isoCode = _phoneNumber.isoCode;
       persistor.write(_kIsoCode, _isoCode.name);
@@ -151,7 +151,7 @@ class _PhoneInputState extends State<_PhoneInput> {
               final valid = phoneNumber.isValid();
               if (valid != _isValid) setState(() => _isValid = valid);
               if (valid) {
-                widget.onChanged(phoneNumber.international);
+                widget.onChanged(phoneNumber.intlFormattedNsn);
               }
               _checkIsoCode(phoneNumber.isoCode);
             }

@@ -349,15 +349,10 @@ class Auth {
   Future<void> oauthSignIn({
     required Strategy strategy,
     required Uri? redirect,
-    String? identifier,
   }) async {
     final redirectUrl = redirect?.toString() ?? ClerkConstants.oauthRedirect;
     await _api
-        .createSignIn(
-          strategy: strategy,
-          identifier: identifier,
-          redirectUrl: redirectUrl,
-        )
+        .createSignIn(strategy: strategy, redirectUrl: redirectUrl)
         .then(_housekeeping);
     if (client.signIn case SignIn signIn when signIn.hasVerification == false) {
       await _api
@@ -491,6 +486,8 @@ class Auth {
     required String identifier,
     required Strategy strategy,
   }) async {
+    identifier = _sanitizeIdentifier(identifier)!;
+
     if (strategy.isPasswordResetter) {
       await _api
           .createSignIn(identifier: identifier, strategy: strategy)
@@ -519,6 +516,8 @@ class Auth {
     String? token,
     String? redirectUrl,
   }) async {
+    identifier = _sanitizeIdentifier(identifier);
+
     if (strategy.isOauthToken) {
       if (token?.isNotEmpty == true || code?.isNotEmpty == true) {
         await _api
@@ -630,6 +629,8 @@ class Auth {
     String? redirectUrl,
     bool? legalAccepted,
   }) async {
+    phoneNumber = _sanitizeIdentifier(phoneNumber);
+
     final hasVerificationCredential = code is String || signature is String;
     final hasInitialSignUp = client.signUp is SignUp;
 
@@ -1005,6 +1006,8 @@ class Auth {
     String identifier,
     IdentifierType type,
   ) async {
+    identifier = _sanitizeIdentifier(identifier)!;
+
     await _api
         .addIdentifyingDataToCurrentUser(identifier, type)
         .then(_housekeeping);
@@ -1083,5 +1086,26 @@ class Auth {
         }
       }
     }
+  }
+
+  // potential numerals in phone number strings: western, Arabic and Persian
+  static const _numerals = '0123456789٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹';
+
+  // RE for the start of a phone number
+  static final _phoneNumberRE =
+      RegExp('^\\(?\\+?[$_numerals \\.\\,\\-\\(\\)]+\$');
+
+  String? _sanitizeIdentifier(String? identifier) {
+    if (identifier?.trim() case String phoneNumber
+        when _phoneNumberRE.hasMatch(phoneNumber)) {
+      final buf = StringBuffer();
+      for (final char in phoneNumber.split('')) {
+        if (_numerals.indexOf(char) case final index when index >= 0) {
+          buf.writeCharCode(0x30 + index % 10);
+        }
+      }
+      return '+$buf';
+    }
+    return identifier;
   }
 }

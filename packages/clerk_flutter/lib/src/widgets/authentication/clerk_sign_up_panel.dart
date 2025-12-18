@@ -46,7 +46,6 @@ class ClerkSignUpPanel extends StatefulWidget {
 
 class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     with ClerkTelemetryStateMixin {
-  static final _phoneNumberRE = RegExp(r'[^0-9+]');
   final Map<clerk.UserAttribute, String?> _values = {};
   _SignUpPanelState _state = _SignUpPanelState.input;
   bool _needsLegalAcceptance = true;
@@ -138,9 +137,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     final username = _valueOrNull(clerk.UserAttribute.username);
     final emailAddress = _valueOrNull(clerk.UserAttribute.emailAddress);
     final redirectUri = authState.emailVerificationRedirectUri(context);
-    final phoneNumber = _valueOrNull(clerk.UserAttribute.phoneNumber)
-        ?.replaceAll(_phoneNumberRE, '')
-        .orNullIfEmpty;
+    final phoneNumber = _valueOrNull(clerk.UserAttribute.phoneNumber);
 
     await authState.safelyCall(
       context,

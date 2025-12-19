@@ -10,9 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-/// Function type used to report [clerk.AuthError]s
+/// Function type used to report [clerk.ClerkError]s
 ///
-typedef ClerkErrorCallback = void Function(clerk.AuthError);
+typedef ClerkErrorCallback = void Function(clerk.ClerkError);
 
 /// An extension of [clerk.Auth] with [ChangeNotifier] so that
 /// updates to the auth state can be propagated out into the UI
@@ -302,7 +302,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     _loadingOverlay.insertInto(overlay);
     try {
       result = await fn();
-    } on clerk.AuthError catch (error) {
+    } on clerk.ClerkError catch (error) {
       _onError(error, onError);
     } finally {
       _loadingOverlay.removeFrom(overlay);
@@ -310,7 +310,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     return result;
   }
 
-  void _onError(clerk.AuthError error, ClerkErrorCallback? onError) {
+  void _onError(clerk.ClerkError error, ClerkErrorCallback? onError) {
     addError(error);
     onError?.call(error);
   }
@@ -419,8 +419,8 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
         NavigationDelegate(
           onPageFinished: (_) => _updateTitle(),
           onWebResourceError: (e) => widget.onError(
-            clerk.AuthError(
-              code: clerk.AuthErrorCode.webviewErrorResponse,
+            clerk.ClerkError(
+              code: clerk.ClerkErrorCode.webviewErrorResponse,
               message: e.description,
             ),
           ),
@@ -435,7 +435,7 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
                 return NavigationDecision.prevent;
               }
               return NavigationDecision.navigate;
-            } on clerk.AuthError catch (error) {
+            } on clerk.ClerkError catch (error) {
               widget.onError(error);
               return NavigationDecision.navigate;
             }

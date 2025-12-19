@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/clerk_auth/clerk_error.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -89,10 +89,10 @@ enum Stage {
     return switch (status) {
       Status.needsFirstFactor => first,
       Status.needsSecondFactor => second,
-      _ => throw AuthError(
+      _ => throw ClerkError(
           message: 'No Stage for {arg}',
           argument: status.toString(),
-          code: AuthErrorCode.noStageForStatus,
+          code: ClerkErrorCode.noStageForStatus,
         ),
     };
   }

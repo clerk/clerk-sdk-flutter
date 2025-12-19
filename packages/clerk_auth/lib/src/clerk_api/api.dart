@@ -4,11 +4,11 @@ import 'dart:io' show File, HttpHeaders, HttpStatus, SocketException;
 
 import 'package:clerk_auth/src/clerk_api/token_cache.dart';
 import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
-import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/clerk_auth/clerk_error.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
 import 'package:clerk_auth/src/clerk_constants.dart';
-import 'package:clerk_auth/src/models/api/api_error.dart';
 import 'package:clerk_auth/src/models/api/api_response.dart';
+import 'package:clerk_auth/src/models/api/external_error.dart';
 import 'package:clerk_auth/src/models/models.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
@@ -840,12 +840,13 @@ class Api with Logging {
       if (resp.statusCode == HttpStatus.ok) {
         final token = body[_kJwtKey] as String;
         return _tokenCache.makeAndCacheSessionToken(token, templateName);
-      } else if (_extractErrorCollection(body) case ApiErrorCollection errors) {
-        throw AuthError.from(errors);
+      } else if (_extractErrorCollection(body)
+          case ExternalErrorCollection errors) {
+        throw ClerkError.from(errors);
       } else {
-        throw const AuthError(
+        throw const ClerkError(
           message: 'No session token retrieved',
-          code: AuthErrorCode.noSessionTokenRetrieved,
+          code: ClerkErrorCode.noSessionTokenRetrieved,
         );
       }
     }
@@ -869,7 +870,7 @@ class Api with Logging {
     } catch (error, stacktrace) {
       logSevere('Error during fetch', error, stacktrace);
       return ApiResponse.fatal(
-        error: ApiError(message: error.toString()),
+        error: ExternalError(message: error.toString()),
       );
     }
   }
@@ -896,15 +897,18 @@ class Api with Logging {
     } on SocketException catch (error, stacktrace) {
       logSevere('Connection issue', error, stacktrace);
       return ApiResponse.fatal(
-        error: ApiError(
+        error: ExternalError(
           message: error.toString(),
-          authErrorCode: AuthErrorCode.problemsConnecting,
+          code: 'socket_exception',
         ),
       );
     } catch (error, stacktrace) {
       logSevere('Error during fetch', error, stacktrace);
       return ApiResponse.fatal(
-        error: ApiError(message: error.toString()),
+        error: ExternalError(
+          message: error.toString(),
+          code: 'unknown_exception',
+        ),
       );
     }
   }
@@ -924,7 +928,9 @@ class Api with Logging {
       );
     } else {
       return ApiResponse(
-          status: resp.statusCode, errorCollection: errorCollection);
+        status: resp.statusCode,
+        errorCollection: errorCollection,
+      );
     }
   }
 
@@ -942,13 +948,12 @@ class Api with Logging {
     }
   }
 
-  ApiErrorCollection? _extractErrorCollection(Map<String, dynamic>? data) {
+  ExternalErrorCollection? _extractErrorCollection(Map<String, dynamic>? data) {
     if (data?[_kErrorsKey] == null) {
       return null;
     }
 
-    logSevere(data);
-    return ApiErrorCollection.fromJson(data);
+    return ExternalErrorCollection.fromJson(data);
   }
 
   dynamic _ensureNotNullOrEmpty(dynamic param) {

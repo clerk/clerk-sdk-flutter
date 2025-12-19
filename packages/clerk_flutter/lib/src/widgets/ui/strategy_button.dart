@@ -45,8 +45,8 @@ class StrategyButton extends StatelessWidget {
       case clerk.Strategy.enterpriseSSO:
         return localizations.signInUsingEnterpriseSSO;
       default:
-        throw clerk.AuthError(
-          code: clerk.AuthErrorCode.noAssociatedStrategy,
+        throw clerk.ClerkError(
+          code: clerk.ClerkErrorCode.noAssociatedStrategy,
           message: localizations.noAssociatedCodeRetrievalMethod(
             strategy.toString(),
           ),

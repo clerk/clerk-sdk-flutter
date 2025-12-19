@@ -46,16 +46,16 @@ class Auth {
   Timer? _pollTimer;
   Map<String, dynamic> _persistableData = {};
 
-  /// Stream of errors reported by the SDK of type [AuthError]
-  Stream<AuthError> get errorStream => _errors.stream;
-  final _errors = StreamController<AuthError>.broadcast();
+  /// Stream of errors reported by the SDK of type [ClerkError]
+  Stream<ClerkError> get errorStream => _errors.stream;
+  final _errors = StreamController<ClerkError>.broadcast();
 
   /// Stream of [SessionToken]s as they renew
   Stream<SessionToken> get sessionTokenStream => _sessionTokens.stream;
   final _sessionTokens = StreamController<SessionToken>.broadcast();
 
   /// Adds [error] to [errorStream]
-  void addError(AuthError error) => _errors.add(error);
+  void addError(ClerkError error) => _errors.add(error);
 
   /// Are we not yet initialised?
   bool get isNotAvailable => env.isEmpty;
@@ -213,12 +213,12 @@ class Auth {
           }
         }
       }
-    } on AuthError catch (error) {
+    } on ClerkError catch (error) {
       addError(error);
     } catch (error) {
       addError(
-        AuthError(
-          code: AuthErrorCode.noSessionTokenRetrieved,
+        ClerkError(
+          code: ClerkErrorCode.noSessionTokenRetrieved,
           message: error.toString(),
         ),
       );
@@ -254,7 +254,7 @@ class Auth {
 
   ApiResponse _housekeeping(ApiResponse resp) {
     if (resp.isError) {
-      addError(AuthError.from(resp.errorCollection));
+      addError(ClerkError.from(resp.errorCollection));
     } else if (resp.client case Client client) {
       this.client = client;
     }
@@ -334,9 +334,9 @@ class Auth {
       if (token is SessionToken) {
         _sessionTokens.add(token);
       } else {
-        throw const AuthError(
+        throw const ClerkError(
           message: 'No session token retrieved',
-          code: AuthErrorCode.noSessionTokenRetrieved,
+          code: ClerkErrorCode.noSessionTokenRetrieved,
         );
       }
     }
@@ -426,7 +426,7 @@ class Auth {
   /// - [idToken]: The ID token string obtained from the provider
   ///
   /// **Throws:**
-  /// [AuthError] if the API request fails. Errors are also sent to [errorStream].
+  /// [ClerkError] if the API request fails. Errors are also sent to [errorStream].
   Future<void> idTokenSignIn({
     required IdTokenProvider provider,
     required String idToken,
@@ -465,7 +465,7 @@ class Auth {
   /// - [lastName]: Optional last name from the provider's credential
   ///
   /// **Throws:**
-  /// [AuthError] if the API request fails. Errors are also sent to [errorStream].
+  /// [ClerkError] if the API request fails. Errors are also sent to [errorStream].
   Future<void> idTokenSignUp({
     required IdTokenProvider provider,
     required String idToken,
@@ -497,8 +497,8 @@ class Auth {
           .then(_housekeeping);
     } else {
       addError(
-        AuthError(
-          code: AuthErrorCode.passwordResetStrategyError,
+        ClerkError(
+          code: ClerkErrorCode.passwordResetStrategyError,
           message: 'Unsupported password reset strategy: {arg}',
           argument: strategy.toString(),
         ),
@@ -634,9 +634,9 @@ class Auth {
     final hasInitialSignUp = client.signUp is SignUp;
 
     if (password != passwordConfirmation) {
-      throw const AuthError(
+      throw const ClerkError(
         message: "Password and password confirmation must match",
-        code: AuthErrorCode.passwordMatchError,
+        code: ClerkErrorCode.passwordMatchError,
       );
     }
 
@@ -991,8 +991,8 @@ class Auth {
       update();
     } else {
       addError(
-        const AuthError(
-          code: AuthErrorCode.cannotDeleteSelf,
+        const ClerkError(
+          code: ClerkErrorCode.cannotDeleteSelf,
           message: 'You are not authorized to delete your user',
         ),
       );

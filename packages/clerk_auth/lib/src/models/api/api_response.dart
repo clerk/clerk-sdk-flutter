@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:clerk_auth/src/models/api/api_error.dart';
+import 'package:clerk_auth/src/models/api/external_error.dart';
 import 'package:clerk_auth/src/models/client/client.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:meta/meta.dart';
@@ -11,19 +11,19 @@ class ApiResponse with InformativeToStringMixin {
   /// Constructs an instance of [ApiResponse]
   const ApiResponse({
     required this.status,
-    ApiErrorCollection? errorCollection,
+    ExternalErrorCollection? errorCollection,
     this.client,
     this.response,
-  }) : errorCollection = errorCollection ?? const ApiErrorCollection();
+  }) : errorCollection = errorCollection ?? const ExternalErrorCollection();
 
   /// Constructs an [ApiResponse] for situations in which the backend
   /// failed to respond
-  factory ApiResponse.fatal({required ApiError error}) {
+  factory ApiResponse.fatal({required ExternalError error}) {
     return ApiResponse(
       status: 0,
       response: null,
       client: null,
-      errorCollection: ApiErrorCollection(errors: [error]),
+      errorCollection: ExternalErrorCollection(errors: [error]),
     );
   }
 
@@ -34,7 +34,7 @@ class ApiResponse with InformativeToStringMixin {
   final Client? client;
 
   /// List of errors returned by the call
-  final ApiErrorCollection errorCollection;
+  final ExternalErrorCollection errorCollection;
 
   /// Specific response data from the API call
   final Map<String, dynamic>? response;

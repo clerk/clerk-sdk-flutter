@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/clerk_auth/clerk_error.dart';
 import 'package:clerk_auth/src/models/client/auth_object.dart';
 import 'package:clerk_auth/src/models/client/factor.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
@@ -137,16 +137,16 @@ class SignIn extends AuthObject with InformativeToStringMixin {
     }
     switch (stage) {
       case Stage.first:
-        throw AuthError(
+        throw ClerkError(
           message: 'Strategy {arg} unsupported for first factor',
           argument: strategy.toString(),
-          code: AuthErrorCode.noSuchFirstFactorStrategy,
+          code: ClerkErrorCode.noSuchFirstFactorStrategy,
         );
       case Stage.second:
-        throw AuthError(
+        throw ClerkError(
           message: 'Strategy {arg} unsupported for second factor',
           argument: strategy.toString(),
-          code: AuthErrorCode.noSuchSecondFactorStrategy,
+          code: ClerkErrorCode.noSuchSecondFactorStrategy,
         );
     }
   }

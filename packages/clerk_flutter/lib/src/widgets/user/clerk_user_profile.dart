@@ -43,8 +43,8 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
           return PhoneNumber.parse(identifier).isValid();
         default:
           final localizations = ClerkAuth.localizationsOf(context);
-          throw clerk.AuthError(
-            code: clerk.AuthErrorCode.typeInvalid,
+          throw clerk.ClerkError(
+            code: clerk.ClerkErrorCode.typeInvalid,
             message: localizations.typeTypeInvalid(type.name),
           );
       }
@@ -108,8 +108,8 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
             onChanged: (text) => identifier = text,
             onSubmit: (_) => Navigator.of(context).pop(true),
           ),
-        _ => throw clerk.AuthError(
-            code: clerk.AuthErrorCode.typeInvalid,
+        _ => throw clerk.ClerkError(
+            code: clerk.ClerkErrorCode.typeInvalid,
             message: localizations.typeTypeInvalid(type.name),
           ),
       },
@@ -123,8 +123,8 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
           await _verifyIdentifyingData(context, authState, identifier);
         }
       } else {
-        throw clerk.AuthError(
-          code: clerk.AuthErrorCode.typeInvalid,
+        throw clerk.ClerkError(
+          code: clerk.ClerkErrorCode.typeInvalid,
           message: type == clerk.IdentifierType.phoneNumber
               ? localizations.invalidPhoneNumber(identifier)
               : localizations.invalidEmailAddress(identifier),
@@ -267,9 +267,9 @@ class _ExternalAccountList extends StatelessWidget {
             for (final account in accounts) {
               if (account.verification.errorMessage case String errorMessage) {
                 auth.addError(
-                  clerk.AuthError(
+                  clerk.ClerkError(
                     message: errorMessage,
-                    code: clerk.AuthErrorCode.serverErrorResponse,
+                    code: clerk.ClerkErrorCode.serverErrorResponse,
                   ),
                 );
                 await auth.deleteExternalAccount(account: account);

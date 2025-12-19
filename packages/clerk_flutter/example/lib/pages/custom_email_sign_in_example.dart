@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
+import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
 /// Example of how to use clerk auth with custom ui.
@@ -38,7 +38,7 @@ class _CustomEmailSignInExampleState extends State<CustomEmailSignInExample> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  late final StreamSubscription<clerk.AuthError> _errorSubscription;
+  late final StreamSubscription<clerk.ClerkError> _errorSubscription;
   late final ClerkAuthState _authState;
 
   @override
@@ -58,7 +58,7 @@ class _CustomEmailSignInExampleState extends State<CustomEmailSignInExample> {
     _user.value = user;
   }
 
-  void _onError(clerk.AuthError error) {
+  void _onError(clerk.ClerkError error) {
     ScaffoldMessenger.of(_scaffoldKey.currentContext!).showSnackBar(
       SnackBar(
         content: Text(error.message),

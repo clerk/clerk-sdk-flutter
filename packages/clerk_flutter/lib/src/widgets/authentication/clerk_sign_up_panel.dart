@@ -369,7 +369,8 @@ class _FormField extends StatelessWidget {
             label: attribute.title(localizations),
             isMissing: _isMissing(authState, attribute),
             isOptional: attribute.isOptional,
-            onChanged: (value) => values[attribute.attr] = value,
+            onChanged: (identifier) =>
+                values[attribute.attr] = identifier.identifier,
           ),
         _Attribute attribute when attribute.associated is _Attribute => Flex(
             direction: attribute.isFirstName ? Axis.horizontal : Axis.vertical,

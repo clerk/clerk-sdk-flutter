@@ -105,7 +105,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
           ),
         clerk.IdentifierType.phoneNumber => ClerkPhoneNumberFormField(
             label: localizations.phoneNumber,
-            onChanged: (text) => identifier = text,
+            onChanged: (ident) => identifier = ident.identifier,
             onSubmit: (_) => Navigator.of(context).pop(true),
           ),
         _ => throw clerk.AuthError(

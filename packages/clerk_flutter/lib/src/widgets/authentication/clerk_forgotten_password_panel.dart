@@ -153,7 +153,8 @@ class _ClerkForgottenPasswordPanelState
                 ClerkIdentifierInput(
                   strategies: factors,
                   identifierType: _identifierType,
-                  onChanged: (identifier) => _identifier = identifier,
+                  onChanged: (identifier) =>
+                      _identifier = identifier.identifier,
                   onSubmit: (_) => _initiatePasswordReset(authState),
                 ),
                 verticalMargin8,

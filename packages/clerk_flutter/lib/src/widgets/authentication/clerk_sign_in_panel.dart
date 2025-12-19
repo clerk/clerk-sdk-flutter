@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/utils/identifier.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_forgotten_password_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_identifier_input.dart';
@@ -32,7 +33,7 @@ class ClerkSignInPanel extends StatefulWidget {
 class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     with ClerkTelemetryStateMixin {
   clerk.Strategy _strategy = clerk.Strategy.password;
-  String _identifier = '';
+  Identifier _identifier = const Identifier('');
   String _password = '';
   String _code = '';
 
@@ -74,7 +75,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
       () async {
         await authState.attemptSignIn(
           strategy: strategy!,
-          identifier: _identifier.orNullIfEmpty,
+          identifier: _identifier.identifier.orNullIfEmpty,
           password: _password.orNullIfEmpty,
           code: code?.orNullIfEmpty,
           redirectUrl: redirectUri?.toString(),
@@ -82,11 +83,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
         if (authState.client.signIn?.factors case List<clerk.Factor> factors
             when mounted && factors.any((f) => f.strategy.isEnterpriseSSO)) {
-          await authState.ssoSignIn(
-            context,
-            clerk.Strategy.enterpriseSSO,
-            identifier: _identifier.orNullIfEmpty,
-          );
+          await authState.ssoSignIn(context, clerk.Strategy.enterpriseSSO);
         }
       },
       onError: _onError,
@@ -151,7 +148,10 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         ),
         Openable(
           open: signIn.status.needsFactor,
-          child: Text(_identifier, style: themeExtension.styles.heading),
+          child: Text(
+            _identifier.prettyIdentifier,
+            style: themeExtension.styles.heading,
+          ),
         ),
         verticalMargin8,
         Openable(
@@ -160,7 +160,9 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           child: Column(
             children: [
               Text(
-                l10ns.clickOnTheLinkThatsBeenSentTo(_identifier),
+                l10ns.clickOnTheLinkThatsBeenSentTo(
+                  _identifier.prettyIdentifier,
+                ),
                 textAlign: TextAlign.center,
                 maxLines: 3,
                 style: themeExtension.styles.subheading,
@@ -176,8 +178,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
             padding: verticalPadding8,
             child: ClerkCodeInput(
               key: const Key('code'),
-              title: _identifier.isNotEmpty
-                  ? l10ns.enterTheCodeSentTo(_identifier)
+              title: _identifier.identifier.isNotEmpty
+                  ? l10ns.enterTheCodeSentTo(_identifier.prettyIdentifier)
                   : l10ns.enterTheCodeSentToYou,
               onSubmit: (code) async {
                 await _continue(

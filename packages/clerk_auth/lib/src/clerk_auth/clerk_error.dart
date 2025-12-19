@@ -1,27 +1,42 @@
-import 'package:clerk_auth/src/models/api/api_error.dart';
+import 'package:clerk_auth/src/models/api/external_error.dart';
+
+/// Error class renamed this is for backwards compatibility
+@Deprecated('Use ClerkError instead.')
+typedef AuthError = ClerkError;
+
+/// Error class renamed this is for backwards compatibility
+@Deprecated('Use ClerkErrorCode instead.')
+typedef AuthErrorCode = ClerkErrorCode;
 
 /// Container for errors encountered during Clerk auth(entication|orization)
 ///
-class AuthError implements Exception {
-  /// Construct an [AuthError]
-  const AuthError({
+class ClerkError implements Exception {
+  /// Construct an [ClerkError]
+  const ClerkError({
     required this.code,
     required this.message,
     this.argument,
+    this.errors,
   });
 
-  /// Construct from an [ApiErrorCollection]
-  factory AuthError.from(ApiErrorCollection errors) =>
-      AuthError(code: errors.authErrorCode, message: errors.errorMessage);
+  /// Construct from an [ExternalErrorCollection]
+  factory ClerkError.from(ExternalErrorCollection errors) => ClerkError(
+        code: ClerkErrorCode.serverErrorResponse,
+        message: errors.errorMessage,
+        errors: errors,
+      );
 
   /// Error code
-  final AuthErrorCode? code;
+  final ClerkErrorCode? code;
 
   /// The associated [message]
   final String message;
 
   /// Any arguments
   final String? argument;
+
+  /// Any associated [ExternalErrorCollection]
+  final ExternalErrorCollection? errors;
 
   @override
   String toString() {
@@ -33,7 +48,7 @@ class AuthError implements Exception {
 }
 
 /// Code to enable consuming apps to identify the error
-enum AuthErrorCode {
+enum ClerkErrorCode {
   /// Server error response
   serverErrorResponse,
 

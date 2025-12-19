@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/clerk_auth/clerk_error.dart';
 import 'package:clerk_auth/src/models/client/organization.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
@@ -31,10 +31,10 @@ class SessionToken with InformativeToStringMixin {
 
   late final _parts = switch (jwt.split('.')) {
     List<String> parts when parts.length == 3 => parts,
-    _ => throw AuthError(
+    _ => throw ClerkError(
         message: "JWT poorly formatted: {arg}",
         argument: jwt,
-        code: AuthErrorCode.jwtPoorlyFormatted,
+        code: ClerkErrorCode.jwtPoorlyFormatted,
       ),
   };
 

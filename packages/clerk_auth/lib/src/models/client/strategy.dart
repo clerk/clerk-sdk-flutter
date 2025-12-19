@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/clerk_auth/clerk_error.dart';
 import 'package:clerk_auth/src/models/enums.dart';
 import 'package:meta/meta.dart';
 
@@ -256,10 +256,10 @@ class Strategy {
     return switch (attr) {
       UserAttribute.phoneNumber => Strategy.phoneCode,
       UserAttribute.emailAddress => Strategy.emailCode,
-      _ => throw AuthError(
+      _ => throw ClerkError(
           message: 'No strategy associated with {arg}',
           argument: attr.name,
-          code: AuthErrorCode.noAssociatedStrategy,
+          code: ClerkErrorCode.noAssociatedStrategy,
         ),
     };
   }

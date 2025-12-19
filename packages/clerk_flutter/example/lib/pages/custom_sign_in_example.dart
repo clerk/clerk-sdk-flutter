@@ -37,7 +37,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
   final _user = ValueNotifier<clerk.User?>(null);
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late final StreamSubscription<clerk.AuthError> _errorSubscription;
+  late final StreamSubscription<clerk.ClerkError> _errorSubscription;
   late final ClerkAuthState _authState;
 
   @override
@@ -57,7 +57,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     _user.value = user;
   }
 
-  void _onError(clerk.AuthError error) {
+  void _onError(clerk.ClerkError error) {
     ScaffoldMessenger.of(_scaffoldKey.currentContext!).showSnackBar(
       SnackBar(
         content: Text(error.message),

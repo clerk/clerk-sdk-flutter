@@ -4,34 +4,35 @@ import 'package:clerk_flutter/generated/clerk_sdk_localizations.dart';
 /// Function that performs localization
 typedef LocalizedMessage = String Function(ClerkSdkLocalizations l10ns);
 
-/// An extension class to enable localization of [clerk.AuthError]
+/// An extension class to enable localization of [clerk.ClerkError]
 ///
-extension ClerkAuthErrorExtension on clerk.AuthError {
-  /// Allow localization of an [clerk.AuthError]
+extension ClerkAuthErrorExtension on clerk.ClerkError {
+  /// Allow localization of an [clerk.ClerkError]
   String localizedMessage(ClerkSdkLocalizations l10ns) {
     return switch (code) {
-      clerk.AuthErrorCode.actionNotTimely => l10ns.actionNotTimely,
-      clerk.AuthErrorCode.cannotDeleteSelf => l10ns.cannotDeleteSelf,
-      clerk.AuthErrorCode.jwtPoorlyFormatted =>
+      clerk.ClerkErrorCode.actionNotTimely => l10ns.actionNotTimely,
+      clerk.ClerkErrorCode.cannotDeleteSelf => l10ns.cannotDeleteSelf,
+      clerk.ClerkErrorCode.jwtPoorlyFormatted =>
         l10ns.jwtPoorlyFormatted(argument.toString()),
-      clerk.AuthErrorCode.noAssociatedStrategy =>
+      clerk.ClerkErrorCode.noAssociatedStrategy =>
         l10ns.noAssociatedStrategy(argument.toString()),
-      clerk.AuthErrorCode.noSessionFoundForUser =>
+      clerk.ClerkErrorCode.noSessionFoundForUser =>
         l10ns.noSessionFoundForUser(argument.toString()),
-      clerk.AuthErrorCode.noSessionTokenRetrieved =>
+      clerk.ClerkErrorCode.noSessionTokenRetrieved =>
         l10ns.noSessionTokenRetrieved,
-      clerk.AuthErrorCode.noStageForStatus =>
+      clerk.ClerkErrorCode.noStageForStatus =>
         l10ns.noStageForStatus(argument.toString()),
-      clerk.AuthErrorCode.noSuchFirstFactorStrategy =>
+      clerk.ClerkErrorCode.noSuchFirstFactorStrategy =>
         l10ns.noSuchFirstFactorStrategy(argument.toString()),
-      clerk.AuthErrorCode.noSuchSecondFactorStrategy =>
+      clerk.ClerkErrorCode.noSuchSecondFactorStrategy =>
         l10ns.noSuchSecondFactorStrategy(argument.toString()),
-      clerk.AuthErrorCode.passwordMatchError =>
+      clerk.ClerkErrorCode.passwordMatchError =>
         l10ns.passwordAndPasswordConfirmationMustMatch,
-      clerk.AuthErrorCode.passwordResetStrategyError =>
+      clerk.ClerkErrorCode.passwordResetStrategyError =>
         l10ns.unsupportedPasswordResetStrategy(argument.toString()),
-      clerk.AuthErrorCode.problemsConnecting => l10ns.problemsConnecting,
-      clerk.AuthErrorCode.signInError => l10ns.signInError(argument.toString()),
+      clerk.ClerkErrorCode.problemsConnecting => l10ns.problemsConnecting,
+      clerk.ClerkErrorCode.signInError =>
+        l10ns.signInError(argument.toString()),
       _ => toString(),
     };
   }

@@ -9,6 +9,7 @@ export 'src/clerk_auth/http_service.dart';
 export 'src/clerk_auth/persistor.dart';
 export 'src/clerk_auth/sdk_flags.dart';
 export 'src/clerk_constants.dart';
+export 'src/models/api/api_response.dart';
 export 'src/models/models.dart';
 export 'src/utils/extensions.dart';
 export 'src/utils/logging.dart';

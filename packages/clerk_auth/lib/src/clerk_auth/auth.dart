@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/clerk_api/api.dart';
-import 'package:clerk_auth/src/models/api/api_response.dart';
 import 'package:meta/meta.dart';
 
 /// [Auth] provides more abstracted access to the Clerk API.
@@ -1083,5 +1082,42 @@ class Auth {
         }
       }
     }
+  }
+
+  /// Low level access to the API
+  ///
+  /// While this SDK is in beta and feature-incomplete, these functions
+  /// provide access to the underlying Clerk API for advanced use cases.
+  ///
+  /// Note that this method will be deprecated in a future version.
+  ///
+  /// [url]: the component of the url after '/v1'
+  /// [method]: HTTP method to use
+  /// [headers]: additional headers to send (most necessary headers are set up
+  ///   automatically inside the `fetchApiResponse` method)
+  /// [params]: query parameters to send. NB only non-null [params] are
+  ///   stringified and sent
+  /// [nullableParams]: query parameters to send that should be sent as null
+  ///   if they are null
+  /// [withSession]: whether to include the session token in the request
+  ///
+  Future<ApiResponse> fetchApiResponse(
+    String url, {
+    HttpMethod method = HttpMethod.post,
+    Map<String, String>? headers,
+    Map<String, dynamic>? params,
+    Map<String, dynamic>? nullableParams,
+    bool withSession = false,
+  }) async {
+    return await _api
+        .fetchApiResponse(
+          url,
+          method: method,
+          headers: headers,
+          params: params,
+          nullableParams: nullableParams,
+          withSession: withSession,
+        )
+        .then(_housekeeping);
   }
 }

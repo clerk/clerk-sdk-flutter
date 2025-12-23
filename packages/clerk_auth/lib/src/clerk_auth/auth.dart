@@ -46,6 +46,17 @@ class Auth {
   Timer? _pollTimer;
   Map<String, dynamic> _persistableData = {};
 
+  final _lastErrors = <AuthError>[];
+
+  /// The last errors encountered by an API call
+  List<AuthError> get lastErrors => _lastErrors;
+
+  /// Did the last API call encounter one or more errors?
+  bool get inError => _lastErrors.isNotEmpty;
+
+  /// Are we not in error?
+  bool get notInError => inError == false;
+
   /// Stream of errors reported by the SDK of type [AuthError]
   Stream<AuthError> get errorStream => _errors.stream;
   final _errors = StreamController<AuthError>.broadcast();
@@ -55,7 +66,10 @@ class Auth {
   final _sessionTokens = StreamController<SessionToken>.broadcast();
 
   /// Adds [error] to [errorStream]
-  void addError(AuthError error) => _errors.add(error);
+  void addError(AuthError error) {
+    _lastErrors.add(error);
+    _errors.add(error);
+  }
 
   /// Are we not yet initialised?
   bool get isNotAvailable => env.isEmpty;
@@ -252,6 +266,10 @@ class Auth {
     }
   }
 
+  void _resetErrorState() {
+    _lastErrors.clear();
+  }
+
   ApiResponse _housekeeping(ApiResponse resp) {
     if (resp.isError) {
       addError(AuthError.from(resp.errorCollection));
@@ -278,6 +296,8 @@ class Auth {
   /// Refresh the current [Client]
   ///
   Future<void> refreshClient() async {
+    _resetErrorState();
+
     client = await _api.currentClient();
     update();
   }
@@ -285,6 +305,8 @@ class Auth {
   /// Reset the current [Client]: clear any [SignUp] or [SignIn] object
   ///
   Future<void> resetClient() async {
+    _resetErrorState();
+
     client = await _api.resetClient();
     update();
   }
@@ -292,6 +314,8 @@ class Auth {
   /// Refresh the current [Environment]
   ///
   Future<void> refreshEnvironment() async {
+    _resetErrorState();
+
     env = await _api.environment();
     update();
   }
@@ -299,6 +323,8 @@ class Auth {
   /// Sign out of all [Session]s and delete the current [Client]
   ///
   Future<void> signOut() async {
+    _resetErrorState();
+
     client = await _api.signOut();
     await config.persistor.delete(_kClientKey);
     update();
@@ -307,6 +333,8 @@ class Auth {
   /// Transfer an oAuth authentication into a [User]
   ///
   Future<void> transfer() async {
+    _resetErrorState();
+
     if (signIn?.isTransferable == true) {
       await _api.transferSignUp().then(_housekeeping);
       update();
@@ -323,6 +351,8 @@ class Auth {
     Organization? organization,
     String? templateName,
   }) async {
+    _resetErrorState();
+
     final org = env.organization.isEnabled ? organization : null;
     SessionToken? token = _api.sessionToken(org, templateName);
     if (token is! SessionToken) {
@@ -351,6 +381,8 @@ class Auth {
     required Uri? redirect,
     String? identifier,
   }) async {
+    _resetErrorState();
+
     final redirectUrl = redirect?.toString() ?? ClerkConstants.oauthRedirect;
     await _api
         .createSignIn(
@@ -378,6 +410,8 @@ class Auth {
     required Strategy strategy,
     required String token,
   }) async {
+    _resetErrorState();
+
     if (signIn ?? signUp case AuthObject authObject) {
       await _api
           .sendOauthToken(authObject, strategy: strategy, token: token)
@@ -392,6 +426,8 @@ class Auth {
     required Strategy strategy,
     required Uri? redirect,
   }) async {
+    _resetErrorState();
+
     final redirectUrl = redirect?.toString() ?? ClerkConstants.oauthRedirect;
     await _api
         .addExternalAccount(strategy: strategy, redirectUrl: redirectUrl)
@@ -482,6 +518,8 @@ class Auth {
 
   /// Delete an external account
   Future<void> deleteExternalAccount({required ExternalAccount account}) async {
+    _resetErrorState();
+
     await _api.deleteExternalAccount(account: account).then(_housekeeping);
     update();
   }
@@ -491,6 +529,8 @@ class Auth {
     required String identifier,
     required Strategy strategy,
   }) async {
+    _resetErrorState();
+
     if (strategy.isPasswordResetter) {
       await _api
           .createSignIn(identifier: identifier, strategy: strategy)
@@ -519,6 +559,8 @@ class Auth {
     String? token,
     String? redirectUrl,
   }) async {
+    _resetErrorState();
+
     if (strategy.isOauthToken) {
       if (token?.isNotEmpty == true || code?.isNotEmpty == true) {
         await _api
@@ -630,6 +672,8 @@ class Auth {
     String? redirectUrl,
     bool? legalAccepted,
   }) async {
+    _resetErrorState();
+
     final hasVerificationCredential = code is String || signature is String;
     final hasInitialSignUp = client.signUp is SignUp;
 
@@ -761,6 +805,8 @@ class Auth {
   /// Sign out of the given [Session]
   ///
   Future<void> signOutOf(Session session) async {
+    _resetErrorState();
+
     await _api.signOutOf(session).then(_housekeeping);
     update();
   }
@@ -768,6 +814,8 @@ class Auth {
   /// Make an [Organization] active
   ///
   Future<void> setActiveOrganization(Organization organization) async {
+    _resetErrorState();
+
     if (session case Session session) {
       await _api
           .setActiveOrganization(session.id, organization.id)
@@ -783,6 +831,8 @@ class Auth {
     String? slug,
     File? logo,
   }) async {
+    _resetErrorState();
+
     await _api.createOrganization(name).then(_housekeeping);
 
     if (user?.organizationNamed(name) case Organization org) {
@@ -808,6 +858,8 @@ class Auth {
     String? name,
     File? logo,
   }) async {
+    _resetErrorState();
+
     final hasName =
         name is String && name.isNotEmpty && name != organization.name;
     if (hasName || logo is File) {
@@ -831,6 +883,8 @@ class Auth {
     required Organization organization,
     Session? session,
   }) async {
+    _resetErrorState();
+
     final result = await _api
         .leaveOrganization(organization, session: session)
         .then(_housekeeping);
@@ -843,6 +897,8 @@ class Auth {
   /// Get all the [Organization] invitations awaiting the user
   ///
   Future<List<OrganizationInvitation>> fetchOrganizationInvitations() async {
+    _resetErrorState();
+
     final invitations = <OrganizationInvitation>[];
 
     for (int offset = 0; true; offset += _page) {
@@ -870,6 +926,8 @@ class Auth {
   Future<List<OrganizationDomain>> fetchOrganizationDomains({
     required Organization organization,
   }) async {
+    _resetErrorState();
+
     final domains = <OrganizationDomain>[];
 
     for (int offset = 0; true; offset += _page) {
@@ -901,6 +959,8 @@ class Auth {
   Future<ApiResponse> acceptOrganizationInvitation(
     OrganizationInvitation invitation,
   ) async {
+    _resetErrorState();
+
     return await _api
         .acceptOrganizationInvitation(invitation)
         .then(_housekeeping);
@@ -913,6 +973,8 @@ class Auth {
     required String name,
     required EnrollmentMode mode,
   }) async {
+    _resetErrorState();
+
     final response =
         await _api.createDomain(organization, name).then(_housekeeping);
     if (mode != EnrollmentMode.manualInvitation) {
@@ -926,6 +988,8 @@ class Auth {
   /// Activate the given [Session]
   ///
   Future<void> activate(Session session) async {
+    _resetErrorState();
+
     await _api.activate(session).then(_housekeeping);
     update();
   }
@@ -942,6 +1006,8 @@ class Auth {
     Map<String, dynamic>? metadata,
     File? avatar,
   }) async {
+    _resetErrorState();
+
     final config = env.config;
     if (user case User user) {
       final needsUpdate = (config.allowsUsername &&
@@ -985,6 +1051,8 @@ class Auth {
   /// Delete the current [User]
   ///
   Future<void> deleteUser() async {
+    _resetErrorState();
+
     if (env.user.actions.deleteSelf) {
       await _api.deleteUser();
       client = await _api.currentClient();
@@ -1005,6 +1073,8 @@ class Auth {
     String identifier,
     IdentifierType type,
   ) async {
+    _resetErrorState();
+
     await _api
         .addIdentifyingDataToCurrentUser(identifier, type)
         .then(_housekeeping);
@@ -1020,6 +1090,8 @@ class Auth {
     UserIdentifyingData uid,
     String code,
   ) async {
+    _resetErrorState();
+
     await _api.verifyIdentifyingData(uid, code).then(_housekeeping);
     update();
   }
@@ -1029,6 +1101,8 @@ class Auth {
   Future<void> deleteIdentifyingData(
     UserIdentifyingData uid,
   ) async {
+    _resetErrorState();
+
     await _api.deleteIdentifyingData(uid).then(_housekeeping);
     update();
   }
@@ -1036,6 +1110,8 @@ class Auth {
   /// Update the avatar of the current [User]
   ///
   Future<void> updateUserImage(File file) async {
+    _resetErrorState();
+
     await _api.updateAvatar(file).then(_housekeeping);
     update();
   }
@@ -1043,6 +1119,8 @@ class Auth {
   /// Delete the avatar of the current [User]
   ///
   Future<void> deleteUserImage() async {
+    _resetErrorState();
+
     await _api.deleteAvatar().then(_housekeeping);
     update();
   }
@@ -1054,6 +1132,8 @@ class Auth {
     String newPassword, {
     bool signOut = true,
   }) async {
+    _resetErrorState();
+
     await _api
         .updatePassword(currentPassword, newPassword, signOut)
         .then(_housekeeping);
@@ -1063,6 +1143,8 @@ class Auth {
   /// Delete the password of the current [User]
   ///
   Future<void> deleteUserPassword(String currentPassword) async {
+    _resetErrorState();
+
     await _api.deletePassword(currentPassword).then(_housekeeping);
     update();
   }

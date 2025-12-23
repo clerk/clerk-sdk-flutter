@@ -874,6 +874,31 @@ class Api with Logging {
     }
   }
 
+  /// Fetch an API response
+  ///
+  /// This is a wrapper for `_fetchApiResponse` that can be used by
+  /// [Auth.fetchApiResponse] to provide access low-level access to the
+  /// Clerk http Frontend API while the SDK is in beta and feature-incomplete
+  ///
+  /// Note that this method will be deprecated in a future version.
+  ///
+  Future<ApiResponse> fetchApiResponse(
+    String url, {
+    HttpMethod method = HttpMethod.post,
+    Map<String, String>? headers,
+    Map<String, dynamic>? params,
+    Map<String, dynamic>? nullableParams,
+    bool withSession = false,
+  }) =>
+      _fetchApiResponse(
+        url,
+        method: method,
+        headers: headers,
+        params: params,
+        nullableParams: nullableParams,
+        withSession: withSession,
+      );
+
   Future<ApiResponse> _fetchApiResponse(
     String url, {
     HttpMethod method = HttpMethod.post,

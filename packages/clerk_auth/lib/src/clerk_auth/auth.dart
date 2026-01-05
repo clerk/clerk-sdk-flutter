@@ -46,13 +46,13 @@ class Auth {
   Timer? _pollTimer;
   Map<String, dynamic> _persistableData = {};
 
-  final _lastErrors = <AuthError>[];
+  final _recentErrors = <AuthError>[];
 
   /// The last errors encountered by an API call
-  List<AuthError> get lastErrors => _lastErrors;
+  List<AuthError> get recentErrors => _recentErrors;
 
   /// Did the last API call encounter one or more errors?
-  bool get inError => _lastErrors.isNotEmpty;
+  bool get inError => _recentErrors.isNotEmpty;
 
   /// Are we not in error?
   bool get notInError => inError == false;
@@ -67,7 +67,7 @@ class Auth {
 
   /// Adds [error] to [errorStream]
   void addError(AuthError error) {
-    _lastErrors.add(error);
+    _recentErrors.add(error);
     _errors.add(error);
   }
 
@@ -267,7 +267,7 @@ class Auth {
   }
 
   void _resetErrorState() {
-    _lastErrors.clear();
+    _recentErrors.clear();
   }
 
   ApiResponse _housekeeping(ApiResponse resp) {

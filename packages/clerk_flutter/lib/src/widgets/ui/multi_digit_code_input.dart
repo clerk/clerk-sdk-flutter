@@ -206,11 +206,11 @@ class _MultiDigitCodeInputState extends State<MultiDigitCodeInput>
   }
 
   void requestKeyboard() {
-    if (!_focusNode.hasFocus) {
-      FocusScope.of(context).requestFocus(_focusNode);
-    } else {
-      _openInputConnection();
-    }
+    // if (!_focusNode.hasFocus) {
+    FocusScope.of(context).requestFocus(_focusNode);
+    // } else {
+    _openInputConnection();
+    // }
   }
 
   void _openInputConnection() {

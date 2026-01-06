@@ -87,7 +87,7 @@ extension ClerkStatusLocalization on clerk.Status {
 /// An extension class to enable localization of [clerk.Strategy]
 ///
 extension ClerkStrategyLocalization on clerk.Strategy {
-  /// Allow localization of an [clerk.Strategy]
+  /// Allow localization of a [clerk.Strategy]
   String localizedMessage(
     ClerkSdkLocalizations l10ns, {
     bool concise = false,

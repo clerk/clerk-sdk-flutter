@@ -1,4 +1,5 @@
 import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/multi_digit_code_input.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +11,13 @@ class ClerkCodeInput extends StatelessWidget {
   const ClerkCodeInput({
     super.key,
     required this.onSubmit,
+    this.onChanged,
     this.focusNode,
     this.title,
     this.subtitle,
     this.isSmall = false,
     this.code = '',
+    this.isTextual = false,
   });
 
   /// Title for the input
@@ -26,6 +29,9 @@ class ClerkCodeInput extends StatelessWidget {
   /// Function to call when code is submitted
   final Future<bool> Function(String) onSubmit;
 
+  /// Function to call when code is changed
+  final ValueChanged<String>? onChanged;
+
   /// Should the input boxes be compressed?
   final bool isSmall;
 
@@ -34,6 +40,9 @@ class ClerkCodeInput extends StatelessWidget {
 
   /// Kicker to update the code from outside
   final String code;
+
+  /// Requires textual rather than six-digit code
+  final bool isTextual;
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +72,20 @@ class ClerkCodeInput extends StatelessWidget {
             ),
           ),
         verticalMargin12,
-        MultiDigitCodeInput(
-          onSubmit: onSubmit,
-          isSmall: isSmall,
-          focusNode: focusNode,
-          code: code,
-        ),
+        if (isTextual) //
+          ClerkTextFormField(
+            autofocus: true,
+            focusNode: focusNode,
+            onSubmit: onSubmit,
+            onChanged: onChanged,
+          )
+        else //
+          MultiDigitCodeInput(
+            isSmall: isSmall,
+            focusNode: focusNode,
+            code: code,
+            onSubmit: onSubmit,
+          ),
       ],
     );
   }

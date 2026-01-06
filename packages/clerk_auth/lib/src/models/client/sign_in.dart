@@ -80,11 +80,26 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   );
 
   /// The currently most important verification
-  Verification? get verification =>
-      firstFactorVerification ?? secondFactorVerification;
+  Verification? get verification {
+    return switch (status) {
+      Status.needsFirstFactor => firstFactorVerification,
+      Status.needsSecondFactor => secondFactorVerification,
+      _ => null,
+    };
+  }
+
+  /// Does this [SignIn] require preparation for the given [Strategy]?
+  bool requiresPreparationFor(Strategy strategy) =>
+      strategy.requiresPreparation && verification is! Verification;
 
   /// Do we have a verification in operation>?
   bool get hasVerification => verification is Verification;
+
+  /// Do we need a first factor?
+  bool get needsFirstFactor => status == Status.needsFirstFactor;
+
+  /// Do we need a second factor?
+  bool get needsSecondFactor => status == Status.needsSecondFactor;
 
   /// Is this [SignIn] transferable to a [SignUp]?
   bool get isTransferable => verification?.status.isTransferable == true;

@@ -36,7 +36,6 @@ class Auth {
   static const _refetchDelay = Duration(seconds: 10);
   static const _kClientKey = '\$client';
   static const _kEnvKey = '\$env';
-  static const _codeLength = 6;
   static const _defaultPollDelay = Duration(seconds: 53);
 
   Timer? _clientTimer;
@@ -546,7 +545,7 @@ class Auth {
 
       case SignIn signIn
           when strategy.isPasswordResetter &&
-              code?.length == _codeLength &&
+              code?.length == Strategy.numericalCodeLength &&
               password is String:
         await _api
             .attemptSignIn(
@@ -584,19 +583,22 @@ class Auth {
             .then(_housekeeping);
 
       case SignIn signIn
-          when signIn.status.needsFactor && strategy.requiresCode:
+          when signIn.status.needsFactor && strategy.mightAccept(code):
         final stage = Stage.forStatus(signIn.status);
-        if (signIn.verificationFor(stage) is! Verification) {
+        if (signIn.requiresPreparationFor(strategy)) {
           await _api
               .prepareSignIn(signIn, stage: stage, strategy: strategy)
               .then(_housekeeping);
         }
         if (client.signIn case SignIn signIn
-            when signIn.verificationFor(stage) is Verification &&
-                code?.length == _codeLength) {
+            when signIn.requiresPreparationFor(strategy) == false) {
           await _api
-              .attemptSignIn(signIn,
-                  stage: stage, strategy: strategy, code: code)
+              .attemptSignIn(
+                signIn,
+                stage: stage,
+                strategy: strategy,
+                code: code,
+              )
               .then(_housekeeping);
         }
     }
@@ -1066,9 +1068,10 @@ class Auth {
       await Future.delayed(const Duration(seconds: 1));
 
       final client = await _api.currentClient();
-      if (client.user is User) {
+      if (client.user is User || client.signIn?.needsSecondFactor == true) {
         this.client = client;
         update();
+        break;
       } else {
         final expiry = client.signIn?.firstFactorVerification?.expireAt ??
             client.signUp?.verifications[Field.emailAddress]?.expireAt;

@@ -21,6 +21,12 @@ class Strategy {
   /// provider
   final String? provider;
 
+  /// The length of a numerical code
+  static const numericalCodeLength = 6;
+
+  /// The length of a backup code
+  static const textualCodeLength = 8;
+
   static const _oauthTokenGoogleName = 'google_one_tap';
   static const _oauthToken = 'oauth_token';
   static const _oauthCustom = 'oauth_custom';
@@ -143,10 +149,23 @@ class Strategy {
     username.name: username,
   };
 
+  /// totp strategy
+  static const totp = Strategy(name: 'totp');
+
+  /// backup code strategy
+  static const backupCode = Strategy(name: 'backup_code');
+
+  /// the collected secondary authentication strategies
+  static final secondaryAuthenticationStrategies = {
+    backupCode.name: backupCode,
+    totp.name: totp,
+  };
+
   static final _strategies = {
     ...oauthStrategies,
     ...verificationStrategies,
     ...identificationStrategies,
+    ...secondaryAuthenticationStrategies,
   };
 
   /// is unknown?
@@ -186,12 +205,29 @@ class Strategy {
         resetPasswordPhoneCode
       ].contains(this);
 
-  /// requires code?
-  bool get requiresCode => const [
+  /// requires six digit code?
+  bool get requiresNumericalCode => const [
         emailCode,
         phoneCode,
         resetPasswordEmailCode,
-        resetPasswordPhoneCode
+        resetPasswordPhoneCode,
+        totp
+      ].contains(this);
+
+  /// requires textual code?
+  bool get requiresTextualCode => const [
+        backupCode,
+      ].contains(this);
+
+  /// requires code?
+  bool get requiresCode => requiresNumericalCode || requiresTextualCode;
+
+  /// requires preparation?
+  bool get requiresPreparation => const [
+        emailCode,
+        phoneCode,
+        resetPasswordEmailCode,
+        resetPasswordPhoneCode,
       ].contains(this);
 
   /// requires signature?
@@ -213,6 +249,17 @@ class Strategy {
   /// requires redirect?
   bool get requiresRedirect =>
       name == _oauth || const [emailLink, enterpriseSSO].contains(this);
+
+  /// Is this code acceptable for validation against the Frontend API?
+  bool mightAccept(String? code) {
+    if (requiresNumericalCode) {
+      return code?.length == numericalCodeLength;
+    }
+    if (requiresTextualCode) {
+      return code?.length == textualCodeLength;
+    }
+    return false;
+  }
 
   /// For a given [name] return the [Strategy] it identifies.
   /// Create one if necessary and possible

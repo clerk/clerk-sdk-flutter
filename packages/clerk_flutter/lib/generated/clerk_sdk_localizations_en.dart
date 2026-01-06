@@ -164,6 +164,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
       'Enter your organization details to continue';
 
   @override
+  String get enterYourPassword => 'Enter your password';
+
+  @override
   String get expired => 'expired';
 
   @override

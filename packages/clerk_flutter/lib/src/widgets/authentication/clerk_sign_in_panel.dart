@@ -323,7 +323,7 @@ class _FactorList extends StatelessWidget {
             padding: topPadding8 + bottomPadding2,
             child: ClerkTextFormField(
               label: l10ns.password,
-              hint: 'Enter your password',
+              hint: l10ns.enterYourPassword,
               obscureText: true,
               onChanged: onPasswordChanged,
               onSubmit: (_) => onSubmit(clerk.Strategy.password),

@@ -372,6 +372,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Enter your organization details to continue'**
   String get enterYourOrganizationDetailsToContinue;
 
+  /// No description provided for @enterYourPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get enterYourPassword;
+
   /// No description provided for @expired.
   ///
   /// In en, this message translates to:

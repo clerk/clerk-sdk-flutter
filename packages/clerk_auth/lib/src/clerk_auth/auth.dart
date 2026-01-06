@@ -538,6 +538,12 @@ class Auth {
       await _api
           .createSignIn(identifier: identifier, password: password)
           .then(_housekeeping);
+
+      // attemptSignIn needs to be called again with the second factor
+      if (signIn?.status == Status.needsSecondFactor) {
+        update();
+        return;
+      }
     }
 
     switch (client.signIn) {

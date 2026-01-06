@@ -97,10 +97,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     );
   }
 
-  Future<void> _openPasswordResetFlow() async {
-    await ClerkForgottenPasswordPanel.show(context);
-  }
-
   bool _requiresBack(clerk.SignIn signIn) => signIn.status.isUnknown == false;
 
   bool _requiresContinue(clerk.SignIn signIn) =>
@@ -120,10 +116,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
     final signIn = authState.signIn ?? clerk.SignIn.empty;
     final l10ns = authState.localizationsOf(context);
-    final canResetPassword =
-        env.config.firstFactors.any((f) => f.isPasswordResetter);
-    final firstFactors = signIn.factorsFor(clerk.Stage.first);
-    final secondFactors = signIn.factorsFor(clerk.Stage.second);
+    final firstFactors = signIn.supportedFirstFactors;
+    final secondFactors = signIn.supportedSecondFactors;
 
     if (signIn.needsSecondFactor && secondFactors.length == 1) {
       _strategy = secondFactors.first.strategy;
@@ -139,28 +133,11 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         // Identifier input
         Openable(
           open: signIn.status.isUnknown,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ClerkIdentifierInput(
-                initialValue: _identifier,
-                strategies: env.identificationStrategies.toList(),
-                onChanged: (identifier) => _identifier = identifier,
-                onSubmit: (_) => _continue(authState),
-              ),
-              if (canResetPassword) ...[
-                verticalMargin8,
-                ClerkMaterialButton(
-                  label: Padding(
-                    padding: horizontalPadding8,
-                    child: Text(l10ns.forgottenPassword),
-                  ),
-                  style: ClerkMaterialButtonStyle.light,
-                  onPressed: _openPasswordResetFlow,
-                ),
-              ],
-            ],
+          child: ClerkIdentifierInput(
+            initialValue: _identifier,
+            strategies: env.identificationStrategies.toList(),
+            onChanged: (identifier) => _identifier = identifier,
+            onSubmit: (_) => _continue(authState),
           ),
         ),
 
@@ -324,11 +301,19 @@ class _FactorList extends StatelessWidget {
 
   final clerk.Stage stage;
 
+  Future<void> _openPasswordResetFlow(BuildContext context) async {
+    await ClerkForgottenPasswordPanel.show(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final l10ns = ClerkAuth.localizationsOf(context);
+    final authState = ClerkAuth.of(context, listen: false);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
+    final l10ns = authState.localizationsOf(context);
     final hasPassword = factors.any((f) => f.strategy.isPassword);
     final otherFactors = factors.where(StrategyButton.supports).toList();
+    final canResetPassword =
+        authState.env.config.firstFactors.any((s) => s.isPasswordResetter);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,9 +323,20 @@ class _FactorList extends StatelessWidget {
             padding: topPadding8 + bottomPadding2,
             child: ClerkTextFormField(
               label: l10ns.password,
+              hint: 'Enter your password',
               obscureText: true,
               onChanged: onPasswordChanged,
               onSubmit: (_) => onSubmit(clerk.Strategy.password),
+              trailing: canResetPassword
+                  ? GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => _openPasswordResetFlow(context),
+                      child: Text(
+                        l10ns.forgottenPassword,
+                        style: themeExtension.styles.clickableText,
+                      ),
+                    )
+                  : null,
             ),
           ),
         if (otherFactors.isNotEmpty) ...[

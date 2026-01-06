@@ -5,9 +5,10 @@ const _lightColors = ClerkThemeColors(
   altBackground: Color(0xFFdddddd),
   borderSide: Color(0xFFdddddd),
   text: Color(0xFF3c3c3d),
-  lightweightText: Color(0xFF5e5f6e),
+  icon: Color(0xFFaaaaaa),
+  lightweightText: Color(0xFFaaaaaa),
   error: Color(0xFFff3333),
-  link: Color(0xFF0066ff),
+  accent: Color(0xFF6c47ff),
 );
 
 const _darkColors = ClerkThemeColors(
@@ -15,9 +16,10 @@ const _darkColors = ClerkThemeColors(
   altBackground: Color(0xFF333333),
   borderSide: Color(0xFF333333),
   text: Colors.white,
-  lightweightText: Color(0xFFdddddd),
+  icon: Colors.white,
+  lightweightText: Color(0xFF555555),
   error: Color(0xFFff3333),
-  link: Color(0xFF0066ff),
+  accent: Color(0xFF6c47ff),
 );
 
 /// Builder for styles object
@@ -88,9 +90,10 @@ class ClerkThemeColors {
     required this.altBackground,
     required this.borderSide,
     required this.text,
+    required this.icon,
     required this.lightweightText,
     required this.error,
-    required this.link,
+    required this.accent,
   });
 
   /// background color
@@ -105,6 +108,9 @@ class ClerkThemeColors {
   /// text color
   final Color text;
 
+  /// icon color
+  final Color icon;
+
   /// lightweight text color
   final Color lightweightText;
 
@@ -112,7 +118,7 @@ class ClerkThemeColors {
   final Color error;
 
   /// link color
-  final Color link;
+  final Color accent;
 
   /// lerp
   ClerkThemeColors lerp(ClerkThemeColors other, double t) {
@@ -121,9 +127,10 @@ class ClerkThemeColors {
       altBackground: Color.lerp(altBackground, other.altBackground, t)!,
       borderSide: Color.lerp(borderSide, other.borderSide, t)!,
       text: Color.lerp(text, other.text, t)!,
+      icon: Color.lerp(icon, other.icon, t)!,
       lightweightText: Color.lerp(lightweightText, other.lightweightText, t)!,
       error: Color.lerp(error, other.error, t)!,
-      link: Color.lerp(link, other.link, t)!,
+      accent: Color.lerp(accent, other.accent, t)!,
     );
   }
 }
@@ -166,7 +173,7 @@ class ClerkThemeStyles {
   /// input field labels
   late final inputText = TextStyle(
     fontSize: 14.0,
-    color: _colors.text,
+    color: _colors.lightweightText,
     letterSpacing: 0.1,
     height: 1.2,
   );
@@ -191,7 +198,7 @@ class ClerkThemeStyles {
 
   /// clickable text
   late final clickableText = text.copyWith(
-    color: _colors.link,
+    color: _colors.accent,
   );
 
   /// row labels

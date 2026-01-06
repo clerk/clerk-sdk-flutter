@@ -121,16 +121,6 @@ class SignIn extends AuthObject with InformativeToStringMixin {
     };
   }
 
-  /// Find the [Factor]s for this [SignIn] that match
-  /// the [stage]
-  ///
-  List<Factor> factorsFor(Stage stage) {
-    return switch (stage) {
-      Stage.first => supportedFirstFactors,
-      Stage.second => supportedSecondFactors,
-    };
-  }
-
   /// The factors for the current stage
   List<Factor> get factors => switch (status) {
         Status.needsFirstFactor => supportedFirstFactors,
@@ -147,7 +137,11 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   /// Throw an error on failure
   ///
   Factor factorFor(Strategy strategy, Stage stage) {
-    for (final factor in factorsFor(stage)) {
+    final factors = switch (stage) {
+      Stage.first => supportedFirstFactors,
+      Stage.second => supportedSecondFactors,
+    };
+    for (final factor in factors) {
       if (factor.strategy == strategy) return factor;
     }
     switch (stage) {

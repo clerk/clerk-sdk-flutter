@@ -94,7 +94,7 @@ class StrategyButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(_icons[strategy], color: themeExtension.colors.lightweightText),
+          Icon(_icons[strategy], color: themeExtension.colors.icon),
           horizontalMargin8,
           Flexible(
             child: Text(

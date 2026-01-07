@@ -17,8 +17,9 @@ class ClerkSignInExample extends StatefulWidget {
 }
 
 class _ClerkSignInExampleState extends State<ClerkSignInExample> {
-  bool isLight = true;
   final resetCompleter = Completer<void>();
+
+  bool isLight = true;
 
   /// Light and dark themes. [ClerkThemeExtension]s should be overridden as
   /// needed to change colors and text styles used by the Clerk furniture.
@@ -31,6 +32,8 @@ class _ClerkSignInExampleState extends State<ClerkSignInExample> {
 
   @override
   void initState() {
+    isLight = WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+        Brightness.light;
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
         final authState = ClerkAuth.of(context, listen: false);

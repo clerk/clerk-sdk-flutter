@@ -91,6 +91,8 @@ class ExampleApp extends StatelessWidget {
       ),
       child: MaterialApp(
         theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         initialRoute: ExamplesList.path,
         routes: {

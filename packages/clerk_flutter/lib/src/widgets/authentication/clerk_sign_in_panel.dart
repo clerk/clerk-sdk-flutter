@@ -71,7 +71,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     }
 
     if (_strategy.isKnown) {
-      final redirectUri = strategy == clerk.Strategy.emailLink
+      final redirectUri = _strategy.isEmailLink
           ? authState.emailVerificationRedirectUri(context)
           : null;
 
@@ -82,7 +82,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
             strategy: strategy!,
             identifier: _identifier.identifier.orNullIfEmpty,
             password: _password.orNullIfEmpty,
-            code: code?.orNullIfEmpty,
+            code: _code.orNullIfEmpty,
             redirectUrl: redirectUri?.toString(),
           );
 
@@ -110,7 +110,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
       _strategy.mightAccept(_code) ||
       (signIn.verification == null &&
           signIn.canUsePassword &&
-          _strategy != clerk.Strategy.emailLink);
+          _strategy.isEmailLink == false);
 
   @override
   Widget build(BuildContext context) {

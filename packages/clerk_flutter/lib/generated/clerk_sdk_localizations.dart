@@ -831,7 +831,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @signInWithOneOfYourBackupCodes.
   ///
   /// In en, this message translates to:
-  /// **'Sign in with one of your backup codes'**
+  /// **'Use one of your backup codes'**
   String get signInWithOneOfYourBackupCodes;
 
   /// No description provided for @signOut.

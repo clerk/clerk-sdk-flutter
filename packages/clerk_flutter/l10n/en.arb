@@ -265,7 +265,7 @@
   },
   "signInUsingEnterpriseSSO": "Sign in using Enterprise SSO",
   "signInUsingYourAuthenticatorApp": "Use your authenticator app",
-  "signInWithOneOfYourBackupCodes": "Sign in with one of your backup codes",
+  "signInWithOneOfYourBackupCodes": "Use one of your backup codes",
   "signOut": "Sign out",
   "signOutIdentifier": "Sign out {identifier}",
   "@signOutIdentifier": {

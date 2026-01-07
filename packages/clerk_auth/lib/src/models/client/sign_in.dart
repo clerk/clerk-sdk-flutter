@@ -136,27 +136,23 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   ///
   /// Throw an error on failure
   ///
-  Factor factorFor(Strategy strategy, Stage stage) {
+  Factor? factorFor(
+    Strategy strategy, [
+    Stage? stage,
+  ]) {
     final factors = switch (stage) {
       Stage.first => supportedFirstFactors,
       Stage.second => supportedSecondFactors,
+      null => switch (status) {
+          Status.needsFirstFactor => supportedFirstFactors,
+          Status.needsSecondFactor => supportedSecondFactors,
+          _ => const [],
+        },
     };
     for (final factor in factors) {
       if (factor.strategy == strategy) return factor;
     }
-    switch (stage) {
-      case Stage.first:
-        throw ClerkError(
-          message: 'Strategy {arg} unsupported for first factor',
-          argument: strategy.toString(),
-          code: ClerkErrorCode.noSuchFirstFactorStrategy,
-        );
-      case Stage.second:
-        throw ClerkError(
-          message: 'Strategy {arg} unsupported for second factor',
-          argument: strategy.toString(),
-          code: ClerkErrorCode.noSuchSecondFactorStrategy,
-        );
-    }
+
+    return null;
   }
 }

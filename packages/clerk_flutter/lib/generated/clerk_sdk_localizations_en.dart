@@ -428,8 +428,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get signInUsingYourAuthenticatorApp => 'Use your authenticator app';
 
   @override
-  String get signInWithOneOfYourBackupCodes =>
-      'Sign in with one of your backup codes';
+  String get signInWithOneOfYourBackupCodes => 'Use one of your backup codes';
 
   @override
   String get signOut => 'Sign out';

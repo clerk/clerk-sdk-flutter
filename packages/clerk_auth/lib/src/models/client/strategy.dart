@@ -177,6 +177,9 @@ class Strategy {
   /// is password?
   bool get isPassword => this == password;
 
+  /// is email link?
+  bool get isEmailLink => this == emailLink;
+
   /// is some variety of oauth?
   bool get isOauth => name == _oauth || isOauthCustom || isOauthToken;
 
@@ -250,10 +253,12 @@ class Strategy {
   bool get requiresRedirect =>
       name == _oauth || const [emailLink, enterpriseSSO].contains(this);
 
+  static final _numericalCodeRE = RegExp('^\\d{$numericalCodeLength}\$');
+
   /// Is this code acceptable for validation against the Frontend API?
   bool mightAccept(String? code) {
     if (requiresNumericalCode) {
-      return code?.length == numericalCodeLength;
+      return code is String && _numericalCodeRE.hasMatch(code);
     }
     if (requiresTextualCode) {
       return code?.length == textualCodeLength;

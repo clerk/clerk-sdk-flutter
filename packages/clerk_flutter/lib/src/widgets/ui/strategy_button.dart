@@ -13,7 +13,6 @@ class StrategyButton extends StatelessWidget {
     required this.strategy,
     required this.onClick,
     this.safeIdentifier,
-    this.stage = clerk.Stage.first,
   });
 
   /// The oAuth provider this button represents.
@@ -21,9 +20,6 @@ class StrategyButton extends StatelessWidget {
 
   /// The function called when a button is tapped
   final VoidCallback onClick;
-
-  /// The [clerk.Stage] we are working with
-  final clerk.Stage stage;
 
   /// The safe identifier for the strategy
   final String? safeIdentifier;

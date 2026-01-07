@@ -32,7 +32,7 @@ class ClerkSignInPanel extends StatefulWidget {
 
 class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     with ClerkTelemetryStateMixin {
-  clerk.Strategy _strategy = clerk.Strategy.password;
+  clerk.Strategy _strategy = clerk.Strategy.unknown;
   Identifier _identifier = const Identifier('');
   String _password = '';
   String _code = '';
@@ -40,14 +40,13 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   void _onError(clerk.ClerkError _) {
     setState(() {
       _password = _code = '';
-      _strategy = clerk.Strategy.password;
+      _strategy = clerk.Strategy.unknown;
     });
   }
 
-  Future<void> _reset() async {
-    final authState = ClerkAuth.of(context, listen: false);
+  Future<void> _reset(ClerkAuthState authState) async {
     _password = _code = '';
-    _strategy = clerk.Strategy.password;
+    _strategy = clerk.Strategy.unknown;
     await authState.resetClient();
   }
 
@@ -56,6 +55,11 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     clerk.Strategy? strategy,
     String? code,
   }) async {
+    if (_strategy.isUnknown == true) {
+      // By this stage, if we don't know a strategy assume password
+      _strategy = clerk.Strategy.password;
+    }
+
     strategy ??= _strategy;
     code ??= _code;
 
@@ -66,40 +70,42 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
       });
     }
 
-    final redirectUri = strategy == clerk.Strategy.emailLink
-        ? authState.emailVerificationRedirectUri(context)
-        : null;
+    if (_strategy.isKnown) {
+      final redirectUri = strategy == clerk.Strategy.emailLink
+          ? authState.emailVerificationRedirectUri(context)
+          : null;
 
-    await authState.safelyCall(
-      context,
-      () async {
-        await authState.attemptSignIn(
-          strategy: strategy!,
-          identifier: _identifier.identifier.orNullIfEmpty,
-          password: _password.orNullIfEmpty,
-          code: code?.orNullIfEmpty,
-          redirectUrl: redirectUri?.toString(),
-        );
+      await authState.safelyCall(
+        context,
+        () async {
+          await authState.attemptSignIn(
+            strategy: strategy!,
+            identifier: _identifier.identifier.orNullIfEmpty,
+            password: _password.orNullIfEmpty,
+            code: code?.orNullIfEmpty,
+            redirectUrl: redirectUri?.toString(),
+          );
 
-        if (authState.client.signIn case clerk.SignIn signIn when mounted) {
-          final factors = signIn.factors;
-          if (factors.any((f) => f.strategy.isEnterpriseSSO)) {
-            await authState.ssoSignIn(
-              context,
-              clerk.Strategy.enterpriseSSO,
-            );
-          } else if (signIn.needsSecondFactor && factors.length == 1) {
-            await authState.attemptSignIn(strategy: factors.first.strategy);
+          if (authState.client.signIn case clerk.SignIn signIn when mounted) {
+            final factors = signIn.factors;
+            if (factors.any((f) => f.strategy.isEnterpriseSSO)) {
+              await authState.ssoSignIn(
+                context,
+                clerk.Strategy.enterpriseSSO,
+              );
+            } else if (signIn.needsSecondFactor && factors.length == 1) {
+              await authState.attemptSignIn(strategy: factors.first.strategy);
+            }
           }
-        }
-      },
-      onError: _onError,
-    );
+        },
+        onError: _onError,
+      );
+    }
   }
 
-  bool _requiresBack(clerk.SignIn signIn) => signIn.status.isUnknown == false;
+  bool _needsBack(clerk.SignIn signIn) => signIn.status.isUnknown == false;
 
-  bool _requiresContinue(clerk.SignIn signIn) =>
+  bool _needsCont(clerk.SignIn signIn) =>
       signIn.status.isUnknown ||
       _strategy.mightAccept(_code) ||
       (signIn.verification == null &&
@@ -114,24 +120,25 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
       return emptyWidget;
     }
 
-    final signIn = authState.signIn ?? clerk.SignIn.empty;
     final l10ns = authState.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
+
+    final signIn = authState.signIn ?? clerk.SignIn.empty;
     final firstFactors = signIn.supportedFirstFactors;
     final secondFactors = signIn.supportedSecondFactors;
+    final safeIdentifier = signIn.factorFor(_strategy)?.safeIdentifier;
 
     if (signIn.needsSecondFactor && secondFactors.length == 1) {
       _strategy = secondFactors.first.strategy;
     }
 
-    _strategy = signIn.verification?.strategy ?? _strategy;
-
-    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         // Identifier input
         Openable(
+          key: const Key('identifierInput'),
           open: signIn.status.isUnknown,
           child: ClerkIdentifierInput(
             initialValue: _identifier,
@@ -143,143 +150,195 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
         // Identifier
         Openable(
+          key: const Key('heading'),
           open: signIn.status.needsFactor,
           child: Text(
             signIn.needsSecondFactor ? l10ns.twoStepVerification : _identifier,
             style: themeExtension.styles.heading,
           ),
         ),
+
         verticalMargin8,
 
         // Email link message
-        Openable(
+        _EmailLinkMessage(
           key: const Key('emailLinkMessage'),
-          open:
-              _strategy == clerk.Strategy.emailLink && signIn.needsFirstFactor,
-          child: Column(
-            children: [
-              Text(
-                l10ns.clickOnTheLinkThatsBeenSentTo(
-                  _identifier.prettyIdentifier,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 3,
-                style: themeExtension.styles.subheading,
-              ),
-              verticalMargin16,
-              defaultLoadingWidget,
-              verticalMargin16,
-            ],
-          ),
+          open: signIn.needsFirstFactor && _strategy.isEmailLink,
+          identifier: safeIdentifier ?? _identifier,
         ),
 
         // Code input
-        Openable(
-          key: const Key('code'),
-          open: _strategy.requiresCode,
-          child: Padding(
-            padding: verticalPadding8,
-            child: ClerkCodeInput(
-              title: switch (_strategy) {
-                clerk.Strategy.emailCode ||
-                clerk.Strategy.resetPasswordEmailCode =>
-                  l10ns.enterTheCodeSentToYouByEmail,
-                clerk.Strategy.phoneCode ||
-                clerk.Strategy.resetPasswordPhoneCode =>
-                  l10ns.enterTheCodeSentToYouByTextMessage,
-                clerk.Strategy.backupCode => l10ns.enterOneOfYourBackupCodes,
-                clerk.Strategy.totp =>
-                  l10ns.enterTheCodeFromYourAuthenticatorApp,
-                _ => null,
-              },
-              onChanged: (code) => setState(() => _code = code),
-              onSubmit: (code) async {
-                await _continue(authState, code: code);
-                _strategy = clerk.Strategy.unknown;
-                return false;
-              },
-              isTextual: _strategy.requiresTextualCode,
-            ),
-          ),
+        _CodeInput(
+          key: const Key('codeInput'),
+          strategy: _strategy,
+          onChanged: (code) => setState(() => _code = code),
+          onSubmit: (code) async {
+            await _continue(authState, code: code);
+            _strategy = clerk.Strategy.unknown;
+            return false;
+          },
         ),
 
         // First factors
         if (firstFactors.isNotEmpty) //
-          Openable(
-            key: const ValueKey<clerk.Stage>(clerk.Stage.first),
+          _FactorList(
+            key: const Key('firstFactors'),
             open: signIn.needsFirstFactor && _strategy.isPassword,
-            child: Column(
-              children: [
-                _FactorList(
-                  factors: firstFactors,
-                  onPasswordChanged: (password) => _password = password,
-                  onSubmit: (strategy) =>
-                      _continue(authState, strategy: strategy),
-                ),
-                verticalMargin16,
-              ],
-            ),
+            factors: firstFactors,
+            onPasswordChanged: (password) => _password = password,
+            onSubmit: (strategy) => _continue(authState, strategy: strategy),
           ),
 
         // Second factors
         if (secondFactors.length > 1) //
-          Openable(
-            key: const ValueKey<clerk.Stage>(clerk.Stage.second),
+          _FactorList(
+            key: const Key('secondFactors'),
             open: signIn.needsSecondFactor && _strategy.requiresCode == false,
-            child: Column(
-              children: [
-                _FactorList(
-                  factors: secondFactors,
-                  stage: clerk.Stage.second,
-                  onSubmit: (strategy) =>
-                      _continue(authState, strategy: strategy),
-                ),
-                verticalMargin16,
-              ],
-            ),
+            factors: secondFactors,
+            onSubmit: (strategy) => _continue(authState, strategy: strategy),
           ),
 
         verticalMargin8,
 
         // Buttons
-        Row(
-          children: [
-            if (_requiresBack(signIn)) //
-              Expanded(
-                child: ClerkMaterialButton(
-                  onPressed: _reset,
-                  label: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Icon(Icons.arrow_left_sharp),
-                      horizontalMargin4,
-                      Center(child: Text(l10ns.back)),
-                    ],
-                  ),
-                ),
-              ),
-            if (_requiresContinue(signIn)) ...[
-              if (_requiresBack(signIn)) //
-                horizontalMargin8,
-              Expanded(
-                child: ClerkMaterialButton(
-                  onPressed: () => _continue(authState),
-                  label: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Center(child: Text(l10ns.cont)),
-                      horizontalMargin4,
-                      const Icon(Icons.arrow_right_sharp),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ],
+        _ControlButtons(
+          onContinue: _needsCont(signIn) ? () => _continue(authState) : null,
+          onBack: _needsBack(signIn) ? () => _reset(authState) : null,
         ),
+
         verticalMargin32,
+      ],
+    );
+  }
+}
+
+class _EmailLinkMessage extends StatelessWidget {
+  const _EmailLinkMessage({
+    super.key,
+    required this.identifier,
+    required this.open,
+  });
+
+  final bool open;
+  final String identifier;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10ns = ClerkAuth.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
+    return Openable(
+      open: open,
+      child: Column(
+        children: [
+          Text(
+            l10ns.clickOnTheLinkThatsBeenSentTo(identifier),
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            style: themeExtension.styles.subheading,
+          ),
+          verticalMargin16,
+          defaultLoadingWidget,
+          verticalMargin16,
+        ],
+      ),
+    );
+  }
+}
+
+class _CodeInput extends StatelessWidget {
+  const _CodeInput({
+    super.key,
+    required this.strategy,
+    required this.onChanged,
+    required this.onSubmit,
+  });
+
+  final clerk.Strategy strategy;
+
+  final ValueChanged<String> onChanged;
+
+  final Future<bool> Function(String) onSubmit;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10ns = ClerkAuth.localizationsOf(context);
+    return Openable(
+      open: strategy.requiresCode,
+      child: Padding(
+        padding: verticalPadding8,
+        child: ClerkCodeInput(
+          title: switch (strategy) {
+            clerk.Strategy.emailCode ||
+            clerk.Strategy.resetPasswordEmailCode =>
+              l10ns.enterTheCodeSentToYouByEmail,
+            clerk.Strategy.phoneCode ||
+            clerk.Strategy.resetPasswordPhoneCode =>
+              l10ns.enterTheCodeSentToYouByTextMessage,
+            clerk.Strategy.backupCode => l10ns.enterOneOfYourBackupCodes,
+            clerk.Strategy.totp => l10ns.enterTheCodeFromYourAuthenticatorApp,
+            _ => null,
+          },
+          isTextual: strategy.requiresTextualCode,
+          onChanged: onChanged,
+          onSubmit: onSubmit,
+        ),
+      ),
+    );
+  }
+}
+
+class _ControlButtons extends StatelessWidget {
+  const _ControlButtons({
+    required this.onContinue,
+    required this.onBack,
+  });
+
+  final VoidCallback? onContinue;
+
+  final VoidCallback? onBack;
+
+  bool get requiresContinue => onContinue is VoidCallback;
+
+  bool get requiresBack => onBack is VoidCallback;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10ns = ClerkAuth.localizationsOf(context);
+    return Row(
+      children: [
+        if (requiresBack) //
+          Expanded(
+            child: ClerkMaterialButton(
+              onPressed: onBack,
+              label: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Icon(Icons.arrow_left_sharp),
+                  horizontalMargin4,
+                  Center(child: Text(l10ns.back)),
+                ],
+              ),
+            ),
+          ),
+        if (requiresContinue) ...[
+          if (requiresBack) //
+            horizontalMargin8,
+          Expanded(
+            child: ClerkMaterialButton(
+              onPressed: onContinue,
+              label: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(child: Text(l10ns.cont)),
+                  horizontalMargin4,
+                  const Icon(Icons.arrow_right_sharp),
+                ],
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -287,19 +346,20 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
 class _FactorList extends StatelessWidget {
   const _FactorList({
+    super.key,
     required this.factors,
-    this.onPasswordChanged,
     required this.onSubmit,
-    this.stage = clerk.Stage.first,
+    required this.open,
+    this.onPasswordChanged,
   });
 
   final List<clerk.Factor> factors;
 
-  final ValueChanged<String>? onPasswordChanged;
+  final bool open;
 
   final ValueChanged<clerk.Strategy> onSubmit;
 
-  final clerk.Stage stage;
+  final ValueChanged<String>? onPasswordChanged;
 
   Future<void> _openPasswordResetFlow(BuildContext context) async {
     await ClerkForgottenPasswordPanel.show(context);
@@ -315,47 +375,50 @@ class _FactorList extends StatelessWidget {
     final canResetPassword =
         authState.env.config.firstFactors.any((s) => s.isPasswordResetter);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (onPasswordChanged case final onPasswordChanged? when hasPassword) //
-          Padding(
-            padding: topPadding8 + bottomPadding2,
-            child: ClerkTextFormField(
-              label: l10ns.password,
-              hint: l10ns.enterYourPassword,
-              obscureText: true,
-              onChanged: onPasswordChanged,
-              onSubmit: (_) => onSubmit(clerk.Strategy.password),
-              trailing: canResetPassword
-                  ? GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => _openPasswordResetFlow(context),
-                      child: Text(
-                        l10ns.forgottenPassword,
-                        style: themeExtension.styles.clickableText,
-                      ),
-                    )
-                  : null,
-            ),
-          ),
-        if (otherFactors.isNotEmpty) ...[
-          if (hasPassword) //
-            const OrDivider(),
-          for (final factor in otherFactors)
+    return Openable(
+      open: open,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (onPasswordChanged case final onPasswordChanged?
+              when hasPassword) //
             Padding(
-              padding: topPadding4,
-              child: StrategyButton(
-                key: ValueKey<clerk.Factor>(factor),
-                strategy: factor.strategy,
-                safeIdentifier: factor.safeIdentifier,
-                stage: stage,
-                onClick: () => onSubmit(factor.strategy),
+              padding: topPadding8 + bottomPadding2,
+              child: ClerkTextFormField(
+                label: l10ns.password,
+                hint: l10ns.enterYourPassword,
+                obscureText: true,
+                onChanged: onPasswordChanged,
+                onSubmit: (_) => onSubmit(clerk.Strategy.password),
+                trailing: canResetPassword
+                    ? GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => _openPasswordResetFlow(context),
+                        child: Text(
+                          l10ns.forgottenPassword,
+                          style: themeExtension.styles.clickableText,
+                        ),
+                      )
+                    : null,
               ),
             ),
+          if (otherFactors.isNotEmpty) ...[
+            if (hasPassword) //
+              const OrDivider(),
+            for (final factor in otherFactors)
+              Padding(
+                padding: topPadding4,
+                child: StrategyButton(
+                  key: ValueKey<clerk.Factor>(factor),
+                  strategy: factor.strategy,
+                  safeIdentifier: factor.safeIdentifier,
+                  onClick: () => onSubmit(factor.strategy),
+                ),
+              ),
+          ],
+          verticalMargin24,
         ],
-        verticalMargin8,
-      ],
+      ),
     );
   }
 }

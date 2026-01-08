@@ -55,7 +55,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     clerk.Strategy? strategy,
     String? code,
   }) async {
-    if (_strategy.isUnknown == true) {
+    if (_strategy.isUnknown) {
       // By this stage, if we don't know a strategy assume password
       _strategy = clerk.Strategy.password;
     }
@@ -96,6 +96,9 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
             } else if (signIn.needsSecondFactor && factors.length == 1) {
               await authState.attemptSignIn(strategy: factors.first.strategy);
             }
+            if (signIn.needsFactor && signIn.factors.length == 1) {
+              _strategy = signIn.factors.first.strategy;
+            }
           }
         },
         onError: _onError,
@@ -107,10 +110,35 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
   bool _needsCont(clerk.SignIn signIn) =>
       signIn.status.isUnknown ||
-      _strategy.mightAccept(_code) ||
-      (signIn.verification == null &&
-          signIn.canUsePassword &&
-          _strategy.isEmailLink == false);
+      (_strategy.isPassword && _password.isNotEmpty) ||
+      _strategy.mightAccept(_code);
+
+  bool _externalActionFactorChosen(List<clerk.Factor> factors) =>
+      _strategy.requiresExternalAction
+          ? factors.any((f) => f.strategy == _strategy)
+          : false;
+
+  void _checkForRebuild(String newValue, String oldValue) {
+    if (newValue.isEmpty != oldValue.isEmpty) {
+      setState(() {});
+    }
+  }
+
+  void _updatePassword(String password) {
+    _checkForRebuild(password, _password);
+    _password = password;
+  }
+
+  void _updateCode(String code) {
+    _checkForRebuild(code, _code);
+    _code = code;
+  }
+
+  Future<bool> _submitCode(String code, ClerkAuthState authState) async {
+    await _continue(authState, code: code);
+    _strategy = clerk.Strategy.unknown;
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,10 +155,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final firstFactors = signIn.supportedFirstFactors;
     final secondFactors = signIn.supportedSecondFactors;
     final safeIdentifier = signIn.factorFor(_strategy)?.safeIdentifier;
-
-    if (signIn.needsSecondFactor && secondFactors.length == 1) {
-      _strategy = secondFactors.first.strategy;
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,21 +195,18 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         _CodeInput(
           key: const Key('codeInput'),
           strategy: _strategy,
-          onChanged: (code) => setState(() => _code = code),
-          onSubmit: (code) async {
-            await _continue(authState, code: code);
-            _strategy = clerk.Strategy.unknown;
-            return false;
-          },
+          onChanged: _updateCode,
+          onSubmit: (code) => _submitCode(code, authState),
         ),
 
         // First factors
         if (firstFactors.isNotEmpty) //
           _FactorList(
             key: const Key('firstFactors'),
-            open: signIn.needsFirstFactor && _strategy.isPassword,
+            open: signIn.needsFirstFactor &&
+                _externalActionFactorChosen(firstFactors) == false,
             factors: firstFactors,
-            onPasswordChanged: (password) => _password = password,
+            onPasswordChanged: _updatePassword,
             onSubmit: (strategy) => _continue(authState, strategy: strategy),
           ),
 
@@ -193,8 +214,10 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         if (secondFactors.length > 1) //
           _FactorList(
             key: const Key('secondFactors'),
-            open: signIn.needsSecondFactor && _strategy.requiresCode == false,
+            open: signIn.needsSecondFactor &&
+                _externalActionFactorChosen(secondFactors) == false,
             factors: secondFactors,
+            onPasswordChanged: _updatePassword,
             onSubmit: (strategy) => _continue(authState, strategy: strategy),
           ),
 

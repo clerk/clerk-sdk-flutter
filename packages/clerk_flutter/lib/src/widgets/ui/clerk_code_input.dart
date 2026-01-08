@@ -30,6 +30,7 @@ class ClerkCodeInput extends StatelessWidget {
   final Future<bool> Function(String) onSubmit;
 
   /// Function to call when code is changed
+  /// Note that this is only invoked when [isTextual] is true
   final ValueChanged<String>? onChanged;
 
   /// Should the input boxes be compressed?

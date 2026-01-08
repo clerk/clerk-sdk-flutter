@@ -225,6 +225,9 @@ class Strategy {
   /// requires code?
   bool get requiresCode => requiresNumericalCode || requiresTextualCode;
 
+  /// requires user to take some action outside of the app?
+  bool get requiresExternalAction => requiresCode || isEmailLink;
+
   /// requires preparation?
   bool get requiresPreparation => const [
         emailCode,
@@ -253,7 +256,12 @@ class Strategy {
   bool get requiresRedirect =>
       name == _oauth || const [emailLink, enterpriseSSO].contains(this);
 
+  /// numerical code regex - [numericalCodeLength] digits
   static final _numericalCodeRE = RegExp('^\\d{$numericalCodeLength}\$');
+
+  /// textual code regex - [textualCodeLength] lowercase characters or digits
+  /// the format used for Clerk backup codes
+  static final _textualCodeRE = RegExp('^[a-z\\d]{$textualCodeLength}\$');
 
   /// Is this code acceptable for validation against the Frontend API?
   bool mightAccept(String? code) {
@@ -261,8 +269,9 @@ class Strategy {
       return code is String && _numericalCodeRE.hasMatch(code);
     }
     if (requiresTextualCode) {
-      return code?.length == textualCodeLength;
+      return code is String && _textualCodeRE.hasMatch(code);
     }
+
     return false;
   }
 

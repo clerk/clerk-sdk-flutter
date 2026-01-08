@@ -101,6 +101,9 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   /// Do we need a second factor?
   bool get needsSecondFactor => status == Status.needsSecondFactor;
 
+  /// Do we need a factor?
+  bool get needsFactor => needsFirstFactor || needsSecondFactor;
+
   /// Is this [SignIn] transferable to a [SignUp]?
   bool get isTransferable => verification?.status.isTransferable == true;
 
@@ -137,17 +140,13 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   /// Throw an error on failure
   ///
   Factor? factorFor(
-    Strategy strategy, [
+    Strategy strategy, {
     Stage? stage,
-  ]) {
+  }) {
     final factors = switch (stage) {
       Stage.first => supportedFirstFactors,
       Stage.second => supportedSecondFactors,
-      null => switch (status) {
-          Status.needsFirstFactor => supportedFirstFactors,
-          Status.needsSecondFactor => supportedSecondFactors,
-          _ => const [],
-        },
+      null => this.factors,
     };
     for (final factor in factors) {
       if (factor.strategy == strategy) return factor;

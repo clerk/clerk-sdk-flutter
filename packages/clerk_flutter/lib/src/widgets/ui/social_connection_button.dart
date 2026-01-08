@@ -42,7 +42,10 @@ class SocialConnectionButton extends StatelessWidget {
             dimension: 12,
             child: Center(
               child: connection.logoUrl.isNotEmpty
-                  ? ClerkCachedImage(connection.logoUrl)
+                  ? ClerkCachedImage(
+                      connection.logoUrl,
+                      useMonochrome: connection.useMonochromeLogo,
+                    )
                   : Text(
                       connection.name.initials,
                       textAlign: TextAlign.center,
@@ -72,4 +75,27 @@ class SocialConnectionButton extends StatelessWidget {
       ),
     );
   }
+}
+
+extension on clerk.SocialConnection {
+  /// does this connection have a monochrome logo?
+  ///
+  /// If a provider's logo is dark and single colour, we want to use a
+  /// monochrome version so that it can be contrasted properly in dark themed
+  /// apps.
+  ///
+  /// This is a bit of a hack, relying on dead reckoning against
+  /// the list of known providers with blackish logos from the Clerk dashboard.
+  ///
+  /// [TODO] This, but much, much better
+  ///
+  bool get useMonochromeLogo => const [
+        'Apple',
+        'GitHub',
+        'X / Twitter',
+        'TikTok',
+        'Notion',
+        'Vercel',
+        'Okta Workforce'
+      ].contains(name);
 }

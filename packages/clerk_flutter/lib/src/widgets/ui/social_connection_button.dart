@@ -88,25 +88,35 @@ class SocialConnectionButton extends StatelessWidget {
 class _ConnectionLogo extends StatelessWidget {
   _ConnectionLogo({
     super.key,
-    required this.url,
     required this.themeExtension,
-    required this.cache,
+    required ClerkFileCache cache,
+    required String url,
   }) {
-    _loadLogo();
+    if (_imageData[url] case final imageData?) {
+      _completer.complete(imageData);
+    } else {
+      _calculateBrightness(cache, url).then(
+        (imageData) {
+          _imageData[url] = imageData;
+          _completer.complete(imageData);
+        },
+      );
+    }
   }
 
   final ClerkThemeExtension themeExtension;
 
-  final ClerkFileCache cache;
-
-  final String url;
-
-  final _completer = Completer<Image>();
+  final _completer = Completer<(Uint8List, double)>();
 
   static const _brightnessThreshold = 0.2;
-  static final _brightnesses = <String, double>{};
+  static final _imageData = <String, (Uint8List, double)>{};
 
-  Future<double> _calculateBrightness(Uint8List bytes) async {
+  Future<(Uint8List, double)> _calculateBrightness(
+    ClerkFileCache cache,
+    String url,
+  ) async {
+    final file = await cache.stream(Uri.parse(url)).first;
+    final bytes = await file.readAsBytes();
     final codec =
         await ui.instantiateImageCodec(bytes, targetWidth: 4, targetHeight: 4);
     final image = (await codec.getNextFrame()).image;
@@ -129,38 +139,31 @@ class _ConnectionLogo extends StatelessWidget {
       }
     }
 
-    return (r + b + g) / count;
-  }
-
-  Future<void> _loadLogo() async {
-    final file = await cache.stream(Uri.parse(url)).first;
-    final bytes = await file.readAsBytes();
-
-    /// calculate the brightness of the logo (and cache for next time
-    /// cos expensive)
-    final brightness = _brightnesses[url] ??= await _calculateBrightness(bytes);
-
-    // derive a contrasting monochrome color to render the logo shape as
-    // if we now think the visible parts of the logo won't show up
-    // on the background
-    final color = switch (themeExtension.brightness) {
-      Brightness.light when brightness > 1 - _brightnessThreshold =>
-        themeExtension.colors.text,
-      Brightness.dark when brightness < _brightnessThreshold =>
-        themeExtension.colors.text,
-      _ => null,
-    };
-
-    _completer.complete(
-      Image.memory(bytes, color: color),
-    );
+    return (bytes, (r + b + g) / count);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _completer.future,
-      builder: (context, snapshot) => snapshot.data ?? emptyWidget,
+      builder: (context, snapshot) {
+        if (snapshot.data case (Uint8List bytes, double brightness)) {
+          // derive a contrasting monochrome color to render the logo shape as,
+          // if we now think the visible parts of the logo won't show up
+          // on the background
+          final color = switch (themeExtension.brightness) {
+            Brightness.light when brightness > 1 - _brightnessThreshold =>
+              themeExtension.colors.text,
+            Brightness.dark when brightness < _brightnessThreshold =>
+              themeExtension.colors.text,
+            _ => null,
+          };
+
+          return Image.memory(bytes, color: color);
+        }
+
+        return emptyWidget;
+      },
     );
   }
 }

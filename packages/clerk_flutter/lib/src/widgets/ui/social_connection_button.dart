@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
@@ -103,10 +104,9 @@ class _ConnectionLogo extends StatelessWidget {
   final _completer = Completer<Image>();
 
   static const _brightnessThreshold = 0.2;
+  static final _brightnesses = <String, double>{};
 
-  Future<void> _loadLogo() async {
-    final file = await cache.stream(Uri.parse(url)).first;
-    final bytes = await file.readAsBytes();
+  Future<double> _calculateBrightness(Uint8List bytes) async {
     final codec =
         await ui.instantiateImageCodec(bytes, targetWidth: 4, targetHeight: 4);
     final image = (await codec.getNextFrame()).image;
@@ -128,15 +128,25 @@ class _ConnectionLogo extends StatelessWidget {
         count++;
       }
     }
-    final result = (r + b + g) / count;
+
+    return (r + b + g) / count;
+  }
+
+  Future<void> _loadLogo() async {
+    final file = await cache.stream(Uri.parse(url)).first;
+    final bytes = await file.readAsBytes();
+
+    /// calculate the brightness of the logo (and cache for next time
+    /// cos expensive)
+    final brightness = _brightnesses[url] ??= await _calculateBrightness(bytes);
 
     // derive a contrasting monochrome color to render the logo shape as
     // if we now think the visible parts of the logo won't show up
     // on the background
     final color = switch (themeExtension.brightness) {
-      Brightness.light when result > 1 - _brightnessThreshold =>
+      Brightness.light when brightness > 1 - _brightnessThreshold =>
         themeExtension.colors.text,
-      Brightness.dark when result < _brightnessThreshold =>
+      Brightness.dark when brightness < _brightnessThreshold =>
         themeExtension.colors.text,
       _ => null,
     };

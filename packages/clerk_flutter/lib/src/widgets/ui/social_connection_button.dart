@@ -27,52 +27,32 @@ class SocialConnectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeExtension = ClerkAuth.themeExtensionOf(context);
-    return MaterialButton(
-      onPressed: onPressed,
-      elevation: 2.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: borderRadius4,
-        side: BorderSide(color: themeExtension.colors.borderSide),
-      ),
-      padding: allPadding12,
-      textColor: themeExtension.colors.lightweightText,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          final logo = SizedBox.square(
-            dimension: 12,
-            child: Center(
-              child: connection.logoUrl.isNotEmpty
-                  ? ClerkCachedImage(
-                      connection.logoUrl,
-                      invertColors: connection.invertLogoForDarkMode &&
-                          themeExtension.brightness == Brightness.dark,
-                    )
-                  : Text(
-                      connection.name.initials,
-                      textAlign: TextAlign.center,
-                      style: themeExtension.styles.heading.copyWith(
-                        height: .1,
-                        fontSize: 16,
-                      ),
-                    ),
-            ),
-          );
-          if (constraints.maxWidth < 100.0) {
-            return logo;
-          }
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              logo,
-              horizontalMargin8,
-              Text(
-                connection.name,
-                maxLines: 1,
-                style: themeExtension.styles.text,
+    return SizedBox(
+      width: 45,
+      height: 30,
+      child: MaterialButton(
+        onPressed: onPressed,
+        elevation: 2.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: borderRadius4,
+          side: BorderSide(color: themeExtension.colors.borderSide),
+        ),
+        textColor: themeExtension.colors.lightweightText,
+        child: connection.logoUrl.isNotEmpty
+            ? ClerkCachedImage(
+                connection.logoUrl,
+                invertColors: connection.invertLogoForDarkMode &&
+                    themeExtension.brightness == Brightness.dark,
+                width: 14,
+              )
+            : Text(
+                connection.name.initials,
+                textAlign: TextAlign.center,
+                style: themeExtension.styles.heading.copyWith(
+                  height: .1,
+                  fontSize: 16,
+                ),
               ),
-            ],
-          );
-        },
       ),
     );
   }

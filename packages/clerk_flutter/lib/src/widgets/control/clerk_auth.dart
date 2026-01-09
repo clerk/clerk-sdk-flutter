@@ -109,13 +109,8 @@ class ClerkAuth extends StatefulWidget {
   /// To change the colors and text styles used by the Clerk furniture,
   /// override the [ClerkThemeExtension] in your app's theme.
   ///
-  static ClerkThemeExtension themeExtensionOf(BuildContext context) {
-    final theme = Theme.of(context);
-    return theme.extension<ClerkThemeExtension>() ??
-        (theme.brightness == Brightness.dark
-            ? ClerkThemeExtension.dark
-            : ClerkThemeExtension.light);
-  }
+  static ClerkThemeExtension themeExtensionOf(BuildContext context) =>
+      Theme.of(context).clerkThemeExtension;
 }
 
 class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
@@ -194,4 +189,14 @@ class _ClerkAuthData extends InheritedWidget {
   bool updateShouldNotify(_ClerkAuthData old) {
     return old.client != client || old.env != env;
   }
+}
+
+/// Extension on [ThemeData] to get the [ClerkThemeExtension]
+extension ThemeDataExtension on ThemeData {
+  /// Get the [ClerkThemeExtension] from the theme or a suitable default
+  ClerkThemeExtension get clerkThemeExtension =>
+      extension<ClerkThemeExtension>() ??
+      (brightness == Brightness.dark
+          ? ClerkThemeExtension.dark
+          : ClerkThemeExtension.light);
 }

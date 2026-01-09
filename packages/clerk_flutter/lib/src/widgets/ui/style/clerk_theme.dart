@@ -40,14 +40,18 @@ class ClerkThemeExtension extends ThemeExtension<ClerkThemeExtension> {
   /// Colors to be used by the theme
   final ClerkThemeColors colors;
 
+  /// Builder for styles
+  final ClerkThemeStylesBuilder stylesBuilder;
+
   /// Styles to be used by the theme
-  late final ClerkThemeStyles styles = stylesBuilder(colors);
+  late final styles = stylesBuilder(colors);
 
   /// Border side
   late final borderSide = BorderSide(width: 0.5, color: colors.borderSide);
 
-  /// Builder for styles
-  final ClerkThemeStylesBuilder stylesBuilder;
+  /// Brightness
+  late final brightness =
+      ThemeData.estimateBrightnessForColor(colors.background);
 
   @override
   ClerkThemeExtension copyWith({

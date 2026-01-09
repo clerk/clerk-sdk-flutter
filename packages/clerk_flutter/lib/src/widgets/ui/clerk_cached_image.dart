@@ -12,7 +12,7 @@ class ClerkCachedImage extends StatelessWidget {
     this.fit,
     this.width,
     this.height,
-    this.color,
+    this.renderAsMonochrome,
   ) : super(key: key);
 
   /// Constructor
@@ -23,9 +23,10 @@ class ClerkCachedImage extends StatelessWidget {
     double? width,
     double? height,
     Color? color,
+    bool renderAsMonochrome = false,
   }) {
     final uri = Uri.parse(url);
-    return ClerkCachedImage._(key, uri, fit, width, height, color);
+    return ClerkCachedImage._(key, uri, fit, width, height, renderAsMonochrome);
   }
 
   /// The [uri] of the image
@@ -40,12 +41,14 @@ class ClerkCachedImage extends StatelessWidget {
   /// The optional [height] of the image
   final double? height;
 
-  /// The optional [color] of the image
-  final Color? color;
+  /// Should the image be rendered as monochrome?
+  final bool renderAsMonochrome;
 
   @override
   Widget build(BuildContext context) {
     final cache = ClerkAuth.fileCacheOf(context);
+    final themeExtension =
+        renderAsMonochrome ? ClerkAuth.themeExtensionOf(context) : null;
     return StreamBuilder(
       stream: cache.stream(uri),
       builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
@@ -55,7 +58,7 @@ class ClerkCachedImage extends StatelessWidget {
             height: height,
             width: width,
             fit: fit,
-            color: color,
+            color: themeExtension?.colors.text,
           );
         }
 

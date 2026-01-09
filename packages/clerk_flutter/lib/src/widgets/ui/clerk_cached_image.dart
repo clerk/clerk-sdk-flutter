@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 /// A widget that returns an image using the [ClerkAuthState] file cache
 ///
@@ -12,7 +12,7 @@ class ClerkCachedImage extends StatelessWidget {
     this.fit,
     this.width,
     this.height,
-    this.renderAsMonochrome,
+    this.invertColors,
   ) : super(key: key);
 
   /// Constructor
@@ -23,10 +23,10 @@ class ClerkCachedImage extends StatelessWidget {
     double? width,
     double? height,
     Color? color,
-    bool renderAsMonochrome = false,
+    bool invertColors = false,
   }) {
     final uri = Uri.parse(url);
-    return ClerkCachedImage._(key, uri, fit, width, height, renderAsMonochrome);
+    return ClerkCachedImage._(key, uri, fit, width, height, invertColors);
   }
 
   /// The [uri] of the image
@@ -42,23 +42,23 @@ class ClerkCachedImage extends StatelessWidget {
   final double? height;
 
   /// Should the image be rendered as monochrome?
-  final bool renderAsMonochrome;
+  final bool invertColors;
 
   @override
   Widget build(BuildContext context) {
     final cache = ClerkAuth.fileCacheOf(context);
-    final themeExtension =
-        renderAsMonochrome ? ClerkAuth.themeExtensionOf(context) : null;
     return StreamBuilder(
       stream: cache.stream(uri),
       builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
         if (snapshot.hasData) {
-          return Image.file(
-            snapshot.data!,
-            height: height,
-            width: width,
-            fit: fit,
-            color: themeExtension?.colors.text,
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(invertColors: invertColors),
+            child: Image.file(
+              snapshot.data!,
+              height: height,
+              width: width,
+              fit: fit,
+            ),
           );
         }
 

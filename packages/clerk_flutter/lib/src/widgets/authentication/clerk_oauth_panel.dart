@@ -41,12 +41,13 @@ class _ClerkOAuthPanelState extends State<ClerkOAuthPanel>
           return emptyWidget;
         }
 
-        return Row(
+        return Wrap(
+          spacing: 8,
+          runSpacing: 0,
           children: [
-            for (final (index, connection) in socialConnections.indexed) ...[
-              if (index > 0) //
-                horizontalMargin8,
-              Expanded(
+            for (final (connection) in socialConnections) ...[
+              SizedBox(
+                width: 50,
                 child: SocialConnectionButton(
                   key: ValueKey<clerk.SocialConnection>(connection),
                   connection: connection,

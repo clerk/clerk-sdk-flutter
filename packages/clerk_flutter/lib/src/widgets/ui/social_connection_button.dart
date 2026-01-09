@@ -44,7 +44,8 @@ class SocialConnectionButton extends StatelessWidget {
               child: connection.logoUrl.isNotEmpty
                   ? ClerkCachedImage(
                       connection.logoUrl,
-                      renderAsMonochrome: connection.useMonochromeLogo,
+                      invertColors: connection.invertLogoForDarkMode &&
+                          themeExtension.brightness == Brightness.dark,
                     )
                   : Text(
                       connection.name.initials,
@@ -78,7 +79,7 @@ class SocialConnectionButton extends StatelessWidget {
 }
 
 extension on clerk.SocialConnection {
-  bool get useMonochromeLogo => const [
+  bool get invertLogoForDarkMode => const [
         'Apple',
         'GitHub',
         'X / Twitter',

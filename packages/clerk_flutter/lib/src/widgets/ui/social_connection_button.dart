@@ -119,10 +119,10 @@ class _ConnectionLogo extends StatelessWidget {
     double r = 0, b = 0, g = 0, count = 0;
     for (final value in imageBytes!.buffer.asUint32List()) {
       final opacity = (value & 0xff000000) / 0xff000000;
-      if (opacity > 0) {
-        r += ((value & 0x00ff0000) >> 16) * opacity * (0.299 / 255.0);
-        g += ((value & 0x0000ff00) >> 8) * opacity * (0.587 / 255.0);
-        b += (value & 0x000000ff) * opacity * (0.114 / 255.0);
+      if (opacity > 0.0) {
+        r += (value & 0x00ff0000) * opacity * (0.299 / 0x00ff0000);
+        g += (value & 0x0000ff00) * opacity * (0.587 / 0x0000ff00);
+        b += (value & 0x000000ff) * opacity * (0.114 / 0x000000ff);
         count++;
       }
     }

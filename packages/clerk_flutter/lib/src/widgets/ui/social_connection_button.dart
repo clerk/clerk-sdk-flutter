@@ -116,6 +116,8 @@ class _ConnectionLogo extends StatelessWidget {
     codec.dispose();
     image.dispose();
 
+    // calculate the brightness of visible pixels (ignore transparent
+    // background)
     double r = 0, b = 0, g = 0, count = 0;
     for (final value in imageBytes!.buffer.asUint32List()) {
       final opacity = (value & 0xff000000) / 0xff000000;
@@ -127,10 +129,15 @@ class _ConnectionLogo extends StatelessWidget {
       }
     }
     final result = (r + b + g) / count;
-    final textColor = themeExtension.colors.text;
+
+    // derive a contrasting monochrome color to render the logo shape as
+    // if we now think the visible parts of the logo won't show up
+    // on the background
     final color = switch (themeExtension.brightness) {
-      Brightness.light when result > 1 - _brightnessThreshold => textColor,
-      Brightness.dark when result < _brightnessThreshold => textColor,
+      Brightness.light when result > 1 - _brightnessThreshold =>
+        themeExtension.colors.text,
+      Brightness.dark when result < _brightnessThreshold =>
+        themeExtension.colors.text,
       _ => null,
     };
 

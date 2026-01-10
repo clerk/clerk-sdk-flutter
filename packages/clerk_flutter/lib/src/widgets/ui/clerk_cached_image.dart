@@ -51,15 +51,28 @@ class ClerkCachedImage extends StatelessWidget {
       stream: cache.stream(uri),
       builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
         if (snapshot.hasData) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(invertColors: invertColors),
-            child: Image.file(
-              snapshot.data!,
-              height: height,
-              width: width,
-              fit: fit,
-            ),
+          final image = Image.file(
+            snapshot.data!,
+            height: height,
+            width: width,
+            fit: fit,
           );
+
+          if (invertColors) {
+            return ColorFiltered(
+              colorFilter: const ColorFilter.matrix(
+                [
+                  -1, 0, 0, 0, 255, //
+                  0, -1, 0, 0, 255, //
+                  0, 0, -1, 0, 255, //
+                  0, 0, 0, 1, 0,
+                ],
+              ),
+              child: image,
+            );
+          }
+
+          return image;
         }
 
         return SizedBox(width: width, height: height);

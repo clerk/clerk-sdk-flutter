@@ -46,13 +46,12 @@ class _ClerkOAuthPanelState extends State<ClerkOAuthPanel>
           runSpacing: 12,
           alignment: WrapAlignment.center,
           children: [
-            for (final (connection) in socialConnections) ...[
+            for (final (connection) in socialConnections) //
               SocialConnectionButton(
                 key: ValueKey<clerk.SocialConnection>(connection),
                 connection: connection,
                 onPressed: () => widget.onStrategyChosen(connection.strategy),
               ),
-            ]
           ],
         );
       },

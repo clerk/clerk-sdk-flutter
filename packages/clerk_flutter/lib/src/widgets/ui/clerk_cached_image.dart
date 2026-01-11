@@ -44,6 +44,13 @@ class ClerkCachedImage extends StatelessWidget {
   /// Should the image be rendered as monochrome?
   final bool invertColors;
 
+  static const _inversionFilter = ColorFilter.matrix(
+    [-1, 0, 0, 0, 255, 0, -1, 0, 0, 255, 0, 0, -1, 0, 255, 0, 0, 0, 1, 0],
+  );
+
+  Widget _invert(BuildContext context, Widget child, int? _, bool __) =>
+      ColorFiltered(colorFilter: _inversionFilter, child: child);
+
   @override
   Widget build(BuildContext context) {
     final cache = ClerkAuth.fileCacheOf(context);
@@ -51,28 +58,13 @@ class ClerkCachedImage extends StatelessWidget {
       stream: cache.stream(uri),
       builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
         if (snapshot.hasData) {
-          final image = Image.file(
+          return Image.file(
             snapshot.data!,
             height: height,
             width: width,
             fit: fit,
+            frameBuilder: invertColors ? _invert : null,
           );
-
-          if (invertColors) {
-            return ColorFiltered(
-              colorFilter: const ColorFilter.matrix(
-                [
-                  -1, 0, 0, 0, 255, //
-                  0, -1, 0, 0, 255, //
-                  0, 0, -1, 0, 255, //
-                  0, 0, 0, 1, 0,
-                ],
-              ),
-              child: image,
-            );
-          }
-
-          return image;
         }
 
         return SizedBox(width: width, height: height);

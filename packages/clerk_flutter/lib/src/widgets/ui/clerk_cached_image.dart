@@ -44,9 +44,12 @@ class ClerkCachedImage extends StatelessWidget {
   /// Should the image be rendered as monochrome?
   final bool invertColors;
 
-  static const _inversionFilter = ColorFilter.matrix(
-    [-1, 0, 0, 0, 255, 0, -1, 0, 0, 255, 0, 0, -1, 0, 255, 0, 0, 0, 1, 0],
-  );
+  static const _inversionFilter = ColorFilter.matrix([
+    -1, 0, 0, 0, 255, //
+    0, -1, 0, 0, 255, //
+    0, 0, -1, 0, 255, //
+    0, 0, 0, 1, 0, //
+  ]);
 
   Widget _invert(BuildContext context, Widget child, int? _, bool __) =>
       ColorFiltered(colorFilter: _inversionFilter, child: child);

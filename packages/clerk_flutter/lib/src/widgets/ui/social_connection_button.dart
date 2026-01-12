@@ -4,11 +4,24 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/material.dart';
 
+/// should we invert the logo for dark mode?
+extension on clerk.SocialConnection {
+  // TODO(shinyford): update to use keyed-id
+  bool get invertLogoForDarkMode => const [
+        'Apple',
+        'GitHub',
+        'X / Twitter',
+        'TikTok',
+        'Notion',
+        'Vercel',
+        'Okta Workforce'
+      ].contains(name);
+}
+
 /// The [SocialConnectionButton] is to be used with the authentication flow when working with
 /// a an oAuth provider. When there is sufficient space, an [Icon] and [Text] description of
 /// the provider. Else, just the [Icon].
 ///
-
 @immutable
 class SocialConnectionButton extends StatelessWidget {
   /// Constructs a new [SocialConnectionButton].
@@ -52,20 +65,9 @@ class SocialConnectionButton extends StatelessWidget {
                   height: .1,
                   fontSize: 16,
                 ),
+                textScaler: TextScaler.noScaling,
               ),
       ),
     );
   }
-}
-
-extension on clerk.SocialConnection {
-  bool get invertLogoForDarkMode => const [
-        'Apple',
-        'GitHub',
-        'X / Twitter',
-        'TikTok',
-        'Notion',
-        'Vercel',
-        'Okta Workforce'
-      ].contains(name);
 }

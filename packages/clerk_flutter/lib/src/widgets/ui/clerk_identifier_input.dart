@@ -1,12 +1,14 @@
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';
+import 'package:clerk_flutter/src/utils/identifier.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/widgets.dart';
+import 'package:phone_input/phone_input_package.dart';
 
 /// A class that allows an identifier to be input, depending on what the
 /// env allows
@@ -15,38 +17,45 @@ import 'package:flutter/widgets.dart';
 ///
 class ClerkIdentifierInput extends StatefulWidget {
   /// Constructor
-  ClerkIdentifierInput({
+  const ClerkIdentifierInput({
     super.key,
     required this.onChanged,
     required this.strategies,
-    ValueNotifier<clerk.IdentifierType>? identifierType,
+    this.identifierType,
     this.initialValue,
     this.onSubmit,
-  }) : identifierType =
-            identifierType ?? ValueNotifier(clerk.IdentifierType.emailAddress);
+  });
 
   /// The method to call when the input text changes
-  final ValueChanged<String> onChanged;
+  final ValueChanged<Identifier> onChanged;
+
+  /// The method to call when the input text is submitted
+  final ValueChanged<Identifier?>? onSubmit;
 
   /// Available strategies
   final List<clerk.Strategy> strategies;
 
   /// The method to toggle phone/email input
-  final ValueNotifier<clerk.IdentifierType> identifierType;
-
-  /// The method to call when the input text is submitted
-  final ValueChanged<String>? onSubmit;
+  final ValueNotifier<clerk.IdentifierType>? identifierType;
 
   /// The value with which to initialise the field
-  final String? initialValue;
+  final Identifier? initialValue;
 
   @override
   State<ClerkIdentifierInput> createState() => _ClerkIdentifierInputState();
 }
 
 class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
+  late ValueNotifier<clerk.IdentifierType> identifierType =
+      widget.identifierType ?? ValueNotifier(clerk.IdentifierType.emailAddress);
   late List<clerk.Strategy> phoneStrategies;
   late List<clerk.Strategy> emailStrategies;
+
+  final _identifiers = <clerk.IdentifierType, Identifier?>{};
+
+  bool get hasEmailStrategies => emailStrategies.isNotEmpty;
+
+  bool get hasPhoneStrategies => phoneStrategies.isNotEmpty;
 
   final _emailFocusNode = FocusNode();
   final _phoneFocusNode = FocusNode();
@@ -57,14 +66,47 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
     phoneStrategies = widget.strategies.where((f) => f.isPhone).toList();
     emailStrategies =
         widget.strategies.where((f) => f.isPhone == false).toList();
-    widget.identifierType.value = hasEmailStrategies //
-        ? clerk.IdentifierType.emailAddress
-        : clerk.IdentifierType.phoneNumber;
+
+    if (_checkPhoneNumber(widget.initialValue?.identifier) case final ident?) {
+      identifierType.value = clerk.IdentifierType.phoneNumber;
+      _identifiers[clerk.IdentifierType.phoneNumber] = ident;
+    } else {
+      identifierType.value = clerk.IdentifierType.emailAddress;
+      _identifiers[clerk.IdentifierType.emailAddress] = widget.initialValue;
+    }
+
     _setFocus();
   }
 
+  void _onChanged(Identifier identifier) {
+    _identifiers[identifierType.value] = identifier;
+    widget.onChanged(identifier);
+  }
+
+  void _onSubmit(String _) {
+    widget.onSubmit?.call(_identifiers[identifierType.value]);
+  }
+
+  Identifier? _checkPhoneNumber(String? identifier) {
+    if (identifier?.trim() case String identifier when identifier.isNotEmpty) {
+      try {
+        if (PhoneNumber.parse(identifier) case PhoneNumber number
+            when number.isValid()) {
+          return PhoneNumberIdentifier(
+            number.international,
+            number.intlFormattedNsn,
+          );
+        }
+      } on Exception {
+        // Should be [PhoneNumberException] but it's annoyingly not exported
+        // ignore
+      }
+    }
+    return null;
+  }
+
   void _setFocus() {
-    if (widget.identifierType.value.isPhoneNumber) {
+    if (identifierType.value.isPhoneNumber) {
       _phoneFocusNode.requestFocus();
     } else {
       _emailFocusNode.requestFocus();
@@ -79,19 +121,15 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
   }
 
   void _onToggle() {
-    final type = switch (widget.identifierType.value) {
+    final type = switch (identifierType.value) {
       clerk.IdentifierType.phoneNumber when emailStrategies.isNotEmpty =>
         clerk.IdentifierType.emailAddress,
       _ => clerk.IdentifierType.phoneNumber,
     };
-    widget.onChanged('');
-    setState(() => widget.identifierType.value = type);
+    widget.onChanged(_identifiers[type] ?? const Identifier(''));
+    setState(() => identifierType.value = type);
     _setFocus();
   }
-
-  bool get hasEmailStrategies => emailStrategies.isNotEmpty;
-
-  bool get hasPhoneStrategies => phoneStrategies.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -105,10 +143,11 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
       children: [
         if (hasEmailStrategies) //
           Closeable(
-            closed: widget.identifierType.value.isPhoneNumber,
+            closed: identifierType.value.isPhoneNumber,
             child: ClerkTextFormField(
               key: const Key('identifier'),
-              initial: widget.initialValue,
+              initial:
+                  _identifiers[clerk.IdentifierType.emailAddress]?.identifier,
               label: l10ns.grammar.toSentence(
                 l10ns.grammar.toLitany(
                   emailStrategies
@@ -117,8 +156,8 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
                   context: context,
                 ),
               ),
-              onChanged: widget.onChanged,
-              onSubmit: widget.onSubmit,
+              onChanged: (ident) => _onChanged(Identifier(ident)),
+              onSubmit: _onSubmit,
               focusNode: _emailFocusNode,
               trailing: hasPhoneStrategies
                   ? _SwapIdentifierButton(
@@ -131,9 +170,11 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
           ),
         if (hasPhoneStrategies) //
           Closeable(
-            closed: widget.identifierType.value.isEmailAddress,
+            closed: identifierType.value.isEmailAddress,
             child: ClerkPhoneNumberFormField(
               key: const Key('phoneIdentifier'),
+              initial:
+                  _identifiers[clerk.IdentifierType.phoneNumber]?.identifier,
               label: l10ns.grammar.toSentence(
                 l10ns.grammar.toLitany(
                   phoneStrategies
@@ -142,8 +183,8 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
                   context: context,
                 ),
               ),
-              onChanged: widget.onChanged,
-              onSubmit: widget.onSubmit,
+              onChanged: _onChanged,
+              onSubmit: _onSubmit,
               focusNode: _phoneFocusNode,
               trailing: hasEmailStrategies
                   ? _SwapIdentifierButton(

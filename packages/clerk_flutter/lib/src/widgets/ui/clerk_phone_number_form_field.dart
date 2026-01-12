@@ -1,4 +1,5 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:clerk_flutter/src/utils/identifier.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/input_label.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class ClerkPhoneNumberFormField extends StatelessWidget {
   });
 
   /// Report changes back to calling widget
-  final ValueChanged<String> onChanged;
+  final ValueChanged<Identifier> onChanged;
 
   /// Report submission back to calling widget
   final ValueChanged<String>? onSubmit;
@@ -80,7 +81,7 @@ class _PhoneInput extends StatefulWidget {
   });
 
   final String? initial;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<Identifier> onChanged;
   final ValueChanged<String>? onSubmit;
   final FocusNode? focusNode;
 
@@ -107,7 +108,7 @@ class _PhoneInputState extends State<_PhoneInput> {
 
   Future<PhoneNumber> _getPhoneNumber() async {
     final persistor = ClerkAuth.of(context, listen: false).config.persistor;
-    if (widget.initial case String initial) {
+    if (widget.initial case String initial when initial.isNotEmpty) {
       _phoneNumber = PhoneNumber.parse(initial);
       _isoCode = _phoneNumber.isoCode;
       persistor.write(_kIsoCode, _isoCode.name);
@@ -151,7 +152,12 @@ class _PhoneInputState extends State<_PhoneInput> {
               final valid = phoneNumber.isValid();
               if (valid != _isValid) setState(() => _isValid = valid);
               if (valid) {
-                widget.onChanged(phoneNumber.international);
+                widget.onChanged(
+                  PhoneNumberIdentifier(
+                    phoneNumber.international,
+                    phoneNumber.intlFormattedNsn,
+                  ),
+                );
               }
               _checkIsoCode(phoneNumber.isoCode);
             }

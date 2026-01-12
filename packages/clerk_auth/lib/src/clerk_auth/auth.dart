@@ -349,15 +349,10 @@ class Auth {
   Future<void> oauthSignIn({
     required Strategy strategy,
     required Uri? redirect,
-    String? identifier,
   }) async {
     final redirectUrl = redirect?.toString() ?? ClerkConstants.oauthRedirect;
     await _api
-        .createSignIn(
-          strategy: strategy,
-          identifier: identifier,
-          redirectUrl: redirectUrl,
-        )
+        .createSignIn(strategy: strategy, redirectUrl: redirectUrl)
         .then(_housekeeping);
     if (client.signIn case SignIn signIn when signIn.hasVerification == false) {
       await _api

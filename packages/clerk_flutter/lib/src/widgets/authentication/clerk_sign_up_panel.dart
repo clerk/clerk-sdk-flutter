@@ -46,7 +46,6 @@ class ClerkSignUpPanel extends StatefulWidget {
 
 class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     with ClerkTelemetryStateMixin {
-  static final _phoneNumberRE = RegExp(r'[^0-9+]');
   final Map<clerk.UserAttribute, String?> _values = {};
   _SignUpPanelState _state = _SignUpPanelState.input;
   bool _needsLegalAcceptance = true;
@@ -138,9 +137,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     final username = _valueOrNull(clerk.UserAttribute.username);
     final emailAddress = _valueOrNull(clerk.UserAttribute.emailAddress);
     final redirectUri = authState.emailVerificationRedirectUri(context);
-    final phoneNumber = _valueOrNull(clerk.UserAttribute.phoneNumber)
-        ?.replaceAll(_phoneNumberRE, '')
-        .orNullIfEmpty;
+    final phoneNumber = _valueOrNull(clerk.UserAttribute.phoneNumber);
 
     await authState.safelyCall(
       context,
@@ -372,7 +369,8 @@ class _FormField extends StatelessWidget {
             label: attribute.title(localizations),
             isMissing: _isMissing(authState, attribute),
             isOptional: attribute.isOptional,
-            onChanged: (value) => values[attribute.attr] = value,
+            onChanged: (identifier) =>
+                values[attribute.attr] = identifier.identifier,
           ),
         _Attribute attribute when attribute.associated is _Attribute => Flex(
             direction: attribute.isFirstName ? Axis.horizontal : Axis.vertical,

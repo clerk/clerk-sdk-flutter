@@ -107,15 +107,8 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   /// Is this [SignIn] transferable to a [SignUp]?
   bool get isTransferable => verification?.status.isTransferable == true;
 
-  /// fromJson
-  static SignIn fromJson(Map<String, dynamic> json) => _$SignInFromJson(json);
-
-  /// toJson
-  @override
-  Map<String, dynamic> toJson() => _$SignInToJson(this);
-
   /// Find a [Verification] if one exists for this [SignIn]
-  /// at the giver [Stage]
+  /// at the given [Stage]
   ///
   Verification? verificationFor(Stage stage) {
     return switch (stage) {
@@ -124,7 +117,26 @@ class SignIn extends AuthObject with InformativeToStringMixin {
     };
   }
 
-  /// The factors for the current stage
+  /// Find a list of [Factor]s for this [SignIn]
+  /// at the given [Stage]
+  ///
+  List<Factor> factorsFor(Stage stage) {
+    return switch (stage) {
+      Stage.first => supportedFirstFactors,
+      Stage.second => supportedSecondFactors,
+    };
+  }
+
+  /// Do we need factors for the given [Stage]?
+  ///
+  bool needsFactorsFor(Stage stage) {
+    return switch (stage) {
+      Stage.first => needsFirstFactor,
+      Stage.second => needsSecondFactor,
+    };
+  }
+
+  /// The factors for the current status
   List<Factor> get factors => switch (status) {
         Status.needsFirstFactor => supportedFirstFactors,
         Status.needsSecondFactor => supportedSecondFactors,
@@ -135,9 +147,7 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   bool get canUsePassword => factors.any((f) => f.strategy.isPassword);
 
   /// Find the [Factor] for this [SignIn] that matches
-  /// the [strategy] and [stage]
-  ///
-  /// Throw an error on failure
+  /// the [strategy] and optional [stage], or null
   ///
   Factor? factorFor(
     Strategy strategy, {
@@ -154,4 +164,11 @@ class SignIn extends AuthObject with InformativeToStringMixin {
 
     return null;
   }
+
+  /// fromJson
+  static SignIn fromJson(Map<String, dynamic> json) => _$SignInFromJson(json);
+
+  /// toJson
+  @override
+  Map<String, dynamic> toJson() => _$SignInToJson(this);
 }

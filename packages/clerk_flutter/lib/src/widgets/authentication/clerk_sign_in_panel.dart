@@ -93,7 +93,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                 context,
                 clerk.Strategy.enterpriseSSO,
               );
-            } else if (signIn.needsSecondFactor && factors.length == 1) {
+            } else if (signIn.needsFactor && factors.length == 1) {
               await authState.attemptSignIn(strategy: factors.first.strategy);
             }
             if (signIn.needsFactor && signIn.factors.length == 1) {
@@ -152,8 +152,6 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final themeExtension = ClerkAuth.themeExtensionOf(context);
 
     final signIn = authState.signIn ?? clerk.SignIn.empty;
-    final firstFactors = signIn.supportedFirstFactors;
-    final secondFactors = signIn.supportedSecondFactors;
     final safeIdentifier = signIn.factorFor(_strategy)?.safeIdentifier;
 
     return Column(
@@ -199,27 +197,18 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           onSubmit: (code) => _submitCode(code, authState),
         ),
 
-        // First factors
-        if (firstFactors.isNotEmpty) //
-          _FactorList(
-            key: const Key('firstFactors'),
-            open: signIn.needsFirstFactor &&
-                _externalActionFactorChosen(firstFactors) == false,
-            factors: firstFactors,
-            onPasswordChanged: _updatePassword,
-            onSubmit: (strategy) => _continue(authState, strategy: strategy),
-          ),
-
-        // Second factors
-        if (secondFactors.length > 1) //
-          _FactorList(
-            key: const Key('secondFactors'),
-            open: signIn.needsSecondFactor &&
-                _externalActionFactorChosen(secondFactors) == false,
-            factors: secondFactors,
-            onPasswordChanged: _updatePassword,
-            onSubmit: (strategy) => _continue(authState, strategy: strategy),
-          ),
+        // Factors for each stage
+        for (final stage in clerk.Stage.values) //
+          if (signIn.factorsFor(stage) case final factors
+              when factors.isNotEmpty) //
+            _FactorList(
+              key: ValueKey<clerk.Stage>(stage),
+              open: signIn.needsFactorsFor(stage) &&
+                  _externalActionFactorChosen(factors) == false,
+              factors: factors,
+              onPasswordChanged: _updatePassword,
+              onSubmit: (strategy) => _continue(authState, strategy: strategy),
+            ),
 
         verticalMargin8,
 

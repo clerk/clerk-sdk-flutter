@@ -36,7 +36,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
   String _password = '';
   String _code = '';
 
-  void _onError(clerk.AuthError _) {
+  void _onError(clerk.ClerkError _) {
     setState(() {
       _password = _code = '';
       _strategy = clerk.Strategy.password;

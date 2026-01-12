@@ -4,7 +4,7 @@ library clerk_auth;
 export 'src/clerk_api/telemetry.dart';
 export 'src/clerk_auth/auth.dart';
 export 'src/clerk_auth/auth_config.dart';
-export 'src/clerk_auth/auth_error.dart';
+export 'src/clerk_auth/clerk_error.dart';
 export 'src/clerk_auth/http_service.dart';
 export 'src/clerk_auth/persistor.dart';
 export 'src/clerk_auth/sdk_flags.dart';

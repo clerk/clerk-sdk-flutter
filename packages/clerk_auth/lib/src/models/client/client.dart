@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/clerk_auth/auth_error.dart';
+import 'package:clerk_auth/src/clerk_auth/clerk_error.dart';
 import 'package:clerk_auth/src/models/client.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
@@ -85,10 +85,10 @@ class Client with InformativeToStringMixin {
         return session;
       }
     }
-    throw AuthError(
+    throw ClerkError(
       message: 'No session found for {arg}',
       argument: user.name,
-      code: AuthErrorCode.noSessionFoundForUser,
+      code: ClerkErrorCode.noSessionFoundForUser,
     );
   }
 

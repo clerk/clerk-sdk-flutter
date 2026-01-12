@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 /// Clerk Error Handler
 typedef ClerkErrorHandler = FutureOr<void> Function(
   BuildContext context,
-  AuthError error,
+  ClerkError error,
 );
 
 /// Widget to display error messages as errors are received
@@ -38,7 +38,7 @@ class ClerkErrorListener extends StatefulWidget {
 class _ClerkErrorListenerState extends State<ClerkErrorListener> {
   StreamSubscription<void>? _errorSub;
 
-  Future<void> _errorHandler(AuthError error) async {
+  Future<void> _errorHandler(ClerkError error) async {
     if (widget.handler case ClerkErrorHandler handler) {
       return handler(context, error);
     }

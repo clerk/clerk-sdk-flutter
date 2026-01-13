@@ -4,11 +4,24 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/material.dart';
 
+/// should we invert the logo for dark mode?
+extension on clerk.SocialConnection {
+  // TODO(shinyford): update to use keyed-id
+  bool get invertLogoForDarkMode => const [
+        'Apple',
+        'GitHub',
+        'X / Twitter',
+        'TikTok',
+        'Notion',
+        'Vercel',
+        'Okta Workforce'
+      ].contains(name);
+}
+
 /// The [SocialConnectionButton] is to be used with the authentication flow when working with
 /// a an oAuth provider. When there is sufficient space, an [Icon] and [Text] description of
 /// the provider. Else, just the [Icon].
 ///
-
 @immutable
 class SocialConnectionButton extends StatelessWidget {
   /// Constructs a new [SocialConnectionButton].
@@ -27,48 +40,33 @@ class SocialConnectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeExtension = ClerkAuth.themeExtensionOf(context);
-    return MaterialButton(
-      onPressed: onPressed,
-      elevation: 2.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: borderRadius4,
-        side: BorderSide(color: themeExtension.colors.borderSide),
-      ),
-      padding: allPadding12,
-      textColor: themeExtension.colors.lightweightText,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          final logo = SizedBox.square(
-            dimension: 12,
-            child: Center(
-              child: connection.logoUrl.isNotEmpty
-                  ? ClerkCachedImage(connection.logoUrl)
-                  : Text(
-                      connection.name.initials,
-                      textAlign: TextAlign.center,
-                      style: themeExtension.styles.heading.copyWith(
-                        height: .1,
-                        fontSize: 16,
-                      ),
-                    ),
-            ),
-          );
-          if (constraints.maxWidth < 100.0) {
-            return logo;
-          }
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              logo,
-              horizontalMargin8,
-              Text(
-                connection.name,
-                maxLines: 1,
-                style: themeExtension.styles.text,
+    return SizedBox(
+      width: 45,
+      height: 30,
+      child: MaterialButton(
+        onPressed: onPressed,
+        elevation: 2.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: borderRadius4,
+          side: BorderSide(color: themeExtension.colors.borderSide),
+        ),
+        textColor: themeExtension.colors.lightweightText,
+        child: connection.logoUrl.isNotEmpty
+            ? ClerkCachedImage(
+                connection.logoUrl,
+                invertColors: connection.invertLogoForDarkMode &&
+                    themeExtension.brightness == Brightness.dark,
+                width: 14,
+              )
+            : Text(
+                connection.name.initials,
+                textAlign: TextAlign.center,
+                style: themeExtension.styles.heading.copyWith(
+                  height: .1,
+                  fontSize: 16,
+                ),
+                textScaler: TextScaler.noScaling,
               ),
-            ],
-          );
-        },
       ),
     );
   }

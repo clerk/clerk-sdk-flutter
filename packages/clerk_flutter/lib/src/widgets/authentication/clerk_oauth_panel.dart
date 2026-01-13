@@ -41,19 +41,17 @@ class _ClerkOAuthPanelState extends State<ClerkOAuthPanel>
           return emptyWidget;
         }
 
-        return Row(
+        return Wrap(
+          spacing: 8,
+          runSpacing: 12,
+          alignment: WrapAlignment.center,
           children: [
-            for (final (index, connection) in socialConnections.indexed) ...[
-              if (index > 0) //
-                horizontalMargin8,
-              Expanded(
-                child: SocialConnectionButton(
-                  key: ValueKey<clerk.SocialConnection>(connection),
-                  connection: connection,
-                  onPressed: () => widget.onStrategyChosen(connection.strategy),
-                ),
+            for (final (connection) in socialConnections) //
+              SocialConnectionButton(
+                key: ValueKey<clerk.SocialConnection>(connection),
+                connection: connection,
+                onPressed: () => widget.onStrategyChosen(connection.strategy),
               ),
-            ]
           ],
         );
       },

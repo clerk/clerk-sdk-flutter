@@ -330,7 +330,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     }
 
     if (password?.orNullIfEmpty != confirmation?.orNullIfEmpty) {
-      return l10ns.passwordAndPasswordConfirmationMustMatch;
+      return l10ns.passwordMatchError;
     }
 
     if (password case String password when password.isNotEmpty) {
@@ -415,7 +415,7 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
           onPageFinished: (_) => _updateTitle(),
           onWebResourceError: (e) => widget.onError(
             clerk.ClerkError(
-              code: clerk.ClerkErrorCode.webviewErrorResponse,
+              code: clerk.ClerkErrorCode.authenticationServiceError,
               message: e.description,
             ),
           ),

@@ -41,6 +41,7 @@
   "anUppercaseLetter": "an UPPERCASE letter",
   "and": "and",
   "areYouSure": "Are you sure?",
+  "authenticationServiceError": "There was an error in authentication service",
   "authenticatorApp": "authenticator app",
   "automaticInvitation": "Automatic invitation",
   "automaticSuggestion": "Automatic suggestion",
@@ -194,8 +195,8 @@
   "organizations": "Organizations",
   "passkey": "passkey",
   "password": "Password",
-  "passwordAndPasswordConfirmationMustMatch": "Password and password confirmation must match",
   "passwordConfirmation": "confirm password",
+  "passwordInvalid": "Invalid password",
   "passwordMatchError": "Password and password confirmation must match",
   "passwordMustBeSupplied": "A password must be supplied",
   "passwordRequires": "Password requires:",
@@ -213,11 +214,20 @@
   "profileDetails": "Profile details",
   "recommendSize": "Recommend size 1:1, up to 5MB.",
   "requiredField": "(required)",
+  "requiredFieldsAreMissing": "Required fields are missing",
   "resend": "Resend",
   "resetFailed": "That password reset attempt failed. A new code has been sent.",
   "resetPassword": "Reset password and sign in",
   "selectAccount": "Select the account with which you wish to continue",
   "sendMeTheCode": "Send me the reset code",
+  "serverErrorResponse": "There was an error on the Frontend API server: {arg}",
+  "@serverErrorResponse": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
   "setUpYourOrganization": "Set up your organization",
   "signIn": "Sign in",
   "signInByCodeSentToYourEmail": "Send code to your email",
@@ -296,6 +306,14 @@
   "@typeTypeInvalid": {
     "placeholders": {
       "type": {
+        "type": "String"
+      }
+    }
+  },
+  "unknownError": "An unknown error has occurred: {arg}",
+  "@unknownError": {
+    "placeholders": {
+      "arg": {
         "type": "String"
       }
     }

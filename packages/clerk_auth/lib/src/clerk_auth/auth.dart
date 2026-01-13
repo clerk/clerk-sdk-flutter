@@ -4,8 +4,7 @@ import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/clerk_api/api.dart';
-import 'package:clerk_auth/src/models/api/api_error.dart';
-import 'package:clerk_auth/src/models/api/api_response.dart';
+import 'package:clerk_auth/src/models/api/external_error.dart';
 import 'package:meta/meta.dart';
 
 /// [Auth] provides more abstracted access to the Clerk API.
@@ -57,17 +56,17 @@ class Auth {
   /// Adds [error] to [errorStream]
   void addError(ClerkError error) => _errors.add(error);
 
-  Future<void> _catchApiErrors(Future<void> Function() fn) async {
+  Future<void> _catchExternalErrors(Future<void> Function() fn) async {
     try {
       await fn();
-    } on ApiError catch (error) {
-      if (error.errors case ApiErrorCollection errors) {
-        addError(AuthError.from(errors));
+    } on ExternalError catch (error) {
+      if (error.errors case ExternalErrorCollection errors) {
+        addError(ClerkError.from(errors));
       } else {
         addError(
-          AuthError(
+          ClerkError(
             message: error.toString(),
-            code: error.authErrorCode ?? AuthErrorCode.serverErrorResponse,
+            code: error.errorCode ?? ClerkErrorCode.serverErrorResponse,
           ),
         );
       }
@@ -219,7 +218,7 @@ class Auth {
     SessionToken? sessionToken;
 
     if (isSignedIn) {
-      await _catchApiErrors(
+      await _catchExternalErrors(
         () async {
           sessionToken = await _api.updateSessionToken();
           if (sessionToken case SessionToken token) {
@@ -339,7 +338,7 @@ class Auth {
       if (org == null && templateName == null) {
         token = await _pollForSessionToken(); // this resets the timer too
       } else {
-        await _catchApiErrors(
+        await _catchExternalErrors(
           () async => token = await _api.updateSessionToken(org, templateName),
         );
       }
@@ -367,7 +366,7 @@ class Auth {
         .createSignIn(strategy: strategy, redirectUrl: redirectUrl)
         .then(_housekeeping);
     if (client.signIn case SignIn signIn when signIn.hasVerification == false) {
-      await _catchApiErrors(
+      await _catchExternalErrors(
         () async {
           await _api
               .prepareSignIn(
@@ -577,7 +576,7 @@ class Auth {
 
       case SignIn signIn
           when strategy == Strategy.emailLink && redirectUrl is String:
-        await _catchApiErrors(
+        await _catchExternalErrors(
           () async {
             await _api
                 .prepareSignIn(

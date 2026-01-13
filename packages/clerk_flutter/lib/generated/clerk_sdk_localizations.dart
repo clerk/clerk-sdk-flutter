@@ -198,6 +198,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Are you sure?'**
   String get areYouSure;
 
+  /// No description provided for @authenticationServiceError.
+  ///
+  /// In en, this message translates to:
+  /// **'There was an error in authentication service'**
+  String get authenticationServiceError;
+
   /// No description provided for @authenticatorApp.
   ///
   /// In en, this message translates to:
@@ -612,17 +618,17 @@ abstract class ClerkSdkLocalizations {
   /// **'Password'**
   String get password;
 
-  /// No description provided for @passwordAndPasswordConfirmationMustMatch.
-  ///
-  /// In en, this message translates to:
-  /// **'Password and password confirmation must match'**
-  String get passwordAndPasswordConfirmationMustMatch;
-
   /// No description provided for @passwordConfirmation.
   ///
   /// In en, this message translates to:
   /// **'confirm password'**
   String get passwordConfirmation;
+
+  /// No description provided for @passwordInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid password'**
+  String get passwordInvalid;
 
   /// No description provided for @passwordMatchError.
   ///
@@ -726,6 +732,12 @@ abstract class ClerkSdkLocalizations {
   /// **'(required)'**
   String get requiredField;
 
+  /// No description provided for @requiredFieldsAreMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Required fields are missing'**
+  String get requiredFieldsAreMissing;
+
   /// No description provided for @resend.
   ///
   /// In en, this message translates to:
@@ -755,6 +767,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Send me the reset code'**
   String get sendMeTheCode;
+
+  /// No description provided for @serverErrorResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'There was an error on the Frontend API server: {arg}'**
+  String serverErrorResponse(String arg);
 
   /// No description provided for @setUpYourOrganization.
   ///
@@ -911,6 +929,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Type \'{type}\' is invalid'**
   String typeTypeInvalid(String type);
+
+  /// No description provided for @unknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unknown error has occurred: {arg}'**
+  String unknownError(String arg);
 
   /// No description provided for @unsupportedPasswordResetStrategy.
   ///

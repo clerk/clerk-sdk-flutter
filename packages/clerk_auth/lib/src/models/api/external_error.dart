@@ -1,3 +1,4 @@
+import 'package:clerk_auth/src/clerk_auth/clerk_error.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -18,6 +19,8 @@ class ExternalError with InformativeToStringMixin {
     this.code,
     this.meta,
     this.longMessage,
+    this.errors,
+    this.errorCode,
   });
 
   /// message
@@ -32,8 +35,21 @@ class ExternalError with InformativeToStringMixin {
   /// long message
   final String? longMessage;
 
+  /// Unknown error
+  static const unknown = ExternalError(
+    message: 'Unknown error',
+    errorCode: ClerkErrorCode.unknownError,
+  );
+
   /// The longer of the two messages
   String get fullMessage => longMessage ?? message;
+
+  /// Optional list of errors if multiple
+  final ExternalErrorCollection? errors;
+
+  /// An optional [ClerkErrorCode], indicating this
+  /// error is internally generated
+  final ClerkErrorCode? errorCode;
 
   /// fromJson
   static ExternalError fromJson(dynamic json) {
@@ -61,7 +77,14 @@ class ExternalErrorCollection {
 
   /// formatted error message
   String get errorMessage =>
-      errors?.map((e) => e.fullMessage).join('; ') ?? 'Unknown error';
+      errors?.map((e) => e.fullMessage).join('; ') ??
+      ExternalError.unknown.message;
+
+  /// Does this collection contain only a single error?
+  bool get hasSingleError => errors?.length == 1;
+
+  /// The first error or a representation of this
+  ExternalError get error => errors?.first ?? ExternalError.unknown;
 
   /// fromJson
   static ExternalErrorCollection fromJson(dynamic json) {

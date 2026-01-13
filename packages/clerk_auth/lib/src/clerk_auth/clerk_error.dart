@@ -52,8 +52,8 @@ enum ClerkErrorCode {
   /// Server error response
   serverErrorResponse,
 
-  /// Webview error response
-  webviewErrorResponse,
+  /// Authentication service error
+  authenticationServiceError,
 
   /// Invalid Password
   invalidPassword,
@@ -69,9 +69,6 @@ enum ClerkErrorCode {
 
   /// No strategy associated with type,
   noAssociatedStrategy,
-
-  /// No code retrieval method associated with the strategy,
-  noAssociatedCodeRetrievalMethod,
 
   /// Password and password confirmation must match
   passwordMatchError,
@@ -105,4 +102,7 @@ enum ClerkErrorCode {
 
   /// Required fields are missing
   requiredFieldsAreMissing,
+
+  /// Unknown error
+  unknownError,
 }

@@ -13,27 +13,37 @@ extension ClerkAuthErrorExtension on clerk.ClerkError {
       clerk.ClerkErrorCode.actionNotTimely => l10ns.actionNotTimely,
       clerk.ClerkErrorCode.cannotDeleteSelf => l10ns.cannotDeleteSelf,
       clerk.ClerkErrorCode.jwtPoorlyFormatted =>
-        l10ns.jwtPoorlyFormatted(argument.toString()),
+        l10ns.jwtPoorlyFormatted(argument ?? message),
       clerk.ClerkErrorCode.noAssociatedStrategy =>
-        l10ns.noAssociatedStrategy(argument.toString()),
+        l10ns.noAssociatedStrategy(argument ?? message),
       clerk.ClerkErrorCode.noSessionFoundForUser =>
-        l10ns.noSessionFoundForUser(argument.toString()),
+        l10ns.noSessionFoundForUser(argument ?? message),
       clerk.ClerkErrorCode.noSessionTokenRetrieved =>
         l10ns.noSessionTokenRetrieved,
       clerk.ClerkErrorCode.noStageForStatus =>
-        l10ns.noStageForStatus(argument.toString()),
+        l10ns.noStageForStatus(argument ?? message),
       clerk.ClerkErrorCode.noSuchFirstFactorStrategy =>
-        l10ns.noSuchFirstFactorStrategy(argument.toString()),
+        l10ns.noSuchFirstFactorStrategy(argument ?? message),
       clerk.ClerkErrorCode.noSuchSecondFactorStrategy =>
-        l10ns.noSuchSecondFactorStrategy(argument.toString()),
-      clerk.ClerkErrorCode.passwordMatchError =>
-        l10ns.passwordAndPasswordConfirmationMustMatch,
+        l10ns.noSuchSecondFactorStrategy(argument ?? message),
+      clerk.ClerkErrorCode.passwordMatchError => l10ns.passwordMatchError,
       clerk.ClerkErrorCode.passwordResetStrategyError =>
-        l10ns.unsupportedPasswordResetStrategy(argument.toString()),
+        l10ns.unsupportedPasswordResetStrategy(argument ?? message),
       clerk.ClerkErrorCode.problemsConnecting => l10ns.problemsConnecting,
       clerk.ClerkErrorCode.signInError =>
-        l10ns.signInError(argument.toString()),
-      _ => toString(),
+        l10ns.signInError(argument ?? message),
+      clerk.ClerkErrorCode.serverErrorResponse =>
+        l10ns.serverErrorResponse(argument ?? message),
+      clerk.ClerkErrorCode.authenticationServiceError =>
+        l10ns.authenticationServiceError,
+      clerk.ClerkErrorCode.invalidPassword => l10ns.passwordInvalid,
+      clerk.ClerkErrorCode.requiredFieldsAreMissing =>
+        l10ns.requiredFieldsAreMissing,
+      clerk.ClerkErrorCode.unknownError =>
+        l10ns.unknownError(argument ?? message),
+      clerk.ClerkErrorCode.typeInvalid =>
+        l10ns.typeTypeInvalid(argument ?? message),
+      null => toString(),
     };
   }
 }

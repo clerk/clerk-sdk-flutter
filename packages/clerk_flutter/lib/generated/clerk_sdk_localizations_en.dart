@@ -68,6 +68,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get areYouSure => 'Are you sure?';
 
   @override
+  String get authenticationServiceError =>
+      'There was an error in authentication service';
+
+  @override
   String get authenticatorApp => 'authenticator app';
 
   @override
@@ -305,11 +309,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get password => 'Password';
 
   @override
-  String get passwordAndPasswordConfirmationMustMatch =>
-      'Password and password confirmation must match';
+  String get passwordConfirmation => 'confirm password';
 
   @override
-  String get passwordConfirmation => 'confirm password';
+  String get passwordInvalid => 'Invalid password';
 
   @override
   String get passwordMatchError =>
@@ -366,6 +369,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get requiredField => '(required)';
 
   @override
+  String get requiredFieldsAreMissing => 'Required fields are missing';
+
+  @override
   String get resend => 'Resend';
 
   @override
@@ -381,6 +387,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get sendMeTheCode => 'Send me the reset code';
+
+  @override
+  String serverErrorResponse(String arg) {
+    return 'There was an error on the Frontend API server: $arg';
+  }
 
   @override
   String get setUpYourOrganization => 'Set up your organization';
@@ -474,6 +485,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   @override
   String typeTypeInvalid(String type) {
     return 'Type \'$type\' is invalid';
+  }
+
+  @override
+  String unknownError(String arg) {
+    return 'An unknown error has occurred: $arg';
   }
 
   @override

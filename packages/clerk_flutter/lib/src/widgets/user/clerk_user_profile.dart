@@ -111,6 +111,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
         _ => throw clerk.ClerkError(
             code: clerk.ClerkErrorCode.typeInvalid,
             message: localizations.typeTypeInvalid(type.name),
+            argument: type.name,
           ),
       },
     );

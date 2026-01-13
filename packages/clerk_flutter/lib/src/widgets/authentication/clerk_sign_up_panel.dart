@@ -409,7 +409,7 @@ class _LegalAcceptanceConfirmation extends StatelessWidget {
         spans.add(
           TextSpan(
             text: target,
-            style: TextStyle(color: themeExtension.colors.link),
+            style: TextStyle(color: themeExtension.colors.accent),
             recognizer: recognizer,
           ),
         );

@@ -1,4 +1,3 @@
-import 'package:clerk_auth/src/clerk_auth/clerk_error.dart';
 import 'package:clerk_auth/src/models/client/auth_object.dart';
 import 'package:clerk_auth/src/models/client/factor.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
@@ -80,24 +79,35 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   );
 
   /// The currently most important verification
-  Verification? get verification =>
-      firstFactorVerification ?? secondFactorVerification;
+  Verification? get verification {
+    return switch (status) {
+      Status.needsFirstFactor => firstFactorVerification,
+      Status.needsSecondFactor => secondFactorVerification,
+      _ => null,
+    };
+  }
+
+  /// Does this [SignIn] require preparation for the given [Strategy]?
+  bool requiresPreparationFor(Strategy strategy) =>
+      strategy.requiresPreparation && verification is! Verification;
 
   /// Do we have a verification in operation>?
   bool get hasVerification => verification is Verification;
 
+  /// Do we need a first factor?
+  bool get needsFirstFactor => status == Status.needsFirstFactor;
+
+  /// Do we need a second factor?
+  bool get needsSecondFactor => status == Status.needsSecondFactor;
+
+  /// Do we need a factor?
+  bool get needsFactor => needsFirstFactor || needsSecondFactor;
+
   /// Is this [SignIn] transferable to a [SignUp]?
   bool get isTransferable => verification?.status.isTransferable == true;
 
-  /// fromJson
-  static SignIn fromJson(Map<String, dynamic> json) => _$SignInFromJson(json);
-
-  /// toJson
-  @override
-  Map<String, dynamic> toJson() => _$SignInToJson(this);
-
   /// Find a [Verification] if one exists for this [SignIn]
-  /// at the giver [Stage]
+  /// at the given [Stage]
   ///
   Verification? verificationFor(Stage stage) {
     return switch (stage) {
@@ -106,8 +116,8 @@ class SignIn extends AuthObject with InformativeToStringMixin {
     };
   }
 
-  /// Find the [Factor]s for this [SignIn] that match
-  /// the [stage]
+  /// Find a list of [Factor]s for this [SignIn]
+  /// at the given [Stage]
   ///
   List<Factor> factorsFor(Stage stage) {
     return switch (stage) {
@@ -116,38 +126,50 @@ class SignIn extends AuthObject with InformativeToStringMixin {
     };
   }
 
-  /// The factors for the current stage
-  List<Factor> get factors => switch (status) {
-        Status.needsFirstFactor => supportedFirstFactors,
-        Status.needsSecondFactor => supportedSecondFactors,
-        _ => const [],
-      };
+  /// Do we need factors for the given [Stage]?
+  ///
+  bool needsFactorsFor(Stage stage) {
+    return switch (stage) {
+      Stage.first => needsFirstFactor,
+      Stage.second => needsSecondFactor,
+    };
+  }
+
+  /// The factors for the current status
+  List<Factor> get factors {
+    return switch (status) {
+      Status.needsFirstFactor => supportedFirstFactors,
+      Status.needsSecondFactor => supportedSecondFactors,
+      _ => const [],
+    };
+  }
 
   /// can we handle the password strategy?
   bool get canUsePassword => factors.any((f) => f.strategy.isPassword);
 
   /// Find the [Factor] for this [SignIn] that matches
-  /// the [strategy] and [stage]
+  /// the [strategy] and optional [stage], or null
   ///
-  /// Throw an error on failure
-  ///
-  Factor factorFor(Strategy strategy, Stage stage) {
-    for (final factor in factorsFor(stage)) {
+  Factor? factorFor(
+    Strategy strategy, {
+    Stage? stage,
+  }) {
+    final factors = switch (stage) {
+      Stage.first => supportedFirstFactors,
+      Stage.second => supportedSecondFactors,
+      null => this.factors,
+    };
+    for (final factor in factors) {
       if (factor.strategy == strategy) return factor;
     }
-    switch (stage) {
-      case Stage.first:
-        throw ClerkError(
-          message: 'Strategy {arg} unsupported for first factor',
-          argument: strategy.toString(),
-          code: ClerkErrorCode.noSuchFirstFactorStrategy,
-        );
-      case Stage.second:
-        throw ClerkError(
-          message: 'Strategy {arg} unsupported for second factor',
-          argument: strategy.toString(),
-          code: ClerkErrorCode.noSuchSecondFactorStrategy,
-        );
-    }
+
+    return null;
   }
+
+  /// fromJson
+  static SignIn fromJson(Map<String, dynamic> json) => _$SignInFromJson(json);
+
+  /// toJson
+  @override
+  Map<String, dynamic> toJson() => _$SignInToJson(this);
 }

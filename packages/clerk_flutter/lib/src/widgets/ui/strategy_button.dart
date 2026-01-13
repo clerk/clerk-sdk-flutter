@@ -12,6 +12,7 @@ class StrategyButton extends StatelessWidget {
     super.key,
     required this.strategy,
     required this.onClick,
+    this.safeIdentifier,
   });
 
   /// The oAuth provider this button represents.
@@ -20,11 +21,16 @@ class StrategyButton extends StatelessWidget {
   /// The function called when a button is tapped
   final VoidCallback onClick;
 
+  /// The safe identifier for the strategy
+  final String? safeIdentifier;
+
   /// details for strategies we support
   static const _icons = {
-    clerk.Strategy.emailLink: Icons.email_outlined,
-    clerk.Strategy.emailCode: Icons.email_outlined,
-    clerk.Strategy.phoneCode: Icons.phone_android_outlined,
+    clerk.Strategy.totp: Icons.lock_clock,
+    clerk.Strategy.backupCode: Icons.reorder_sharp,
+    clerk.Strategy.emailLink: Icons.link_sharp,
+    clerk.Strategy.emailCode: Icons.email,
+    clerk.Strategy.phoneCode: Icons.textsms,
   };
 
   static bool _supports(clerk.Strategy strategy) =>
@@ -34,24 +40,35 @@ class StrategyButton extends StatelessWidget {
   /// by this widget
   static bool supports(clerk.Factor factor) => _supports(factor.strategy);
 
-  String _label(ClerkSdkLocalizations localizations) {
+  String _label(ClerkSdkLocalizations l10ns) {
     switch (strategy) {
+      case clerk.Strategy.totp:
+        return l10ns.signInUsingYourAuthenticatorApp;
+      case clerk.Strategy.backupCode:
+        return l10ns.signInWithOneOfYourBackupCodes;
       case clerk.Strategy.emailLink:
-        return localizations.signInByClickingALinkSentToYouByEmail;
+        if (safeIdentifier case String safeIdentifier) {
+          return l10ns.signInByEmailLink(safeIdentifier);
+        }
+        return l10ns.signInByLinkSentToYourEmail;
       case clerk.Strategy.emailCode:
-        return localizations.signInByEnteringACodeSentToYouByEmail;
+        if (safeIdentifier case String safeIdentifier) {
+          return l10ns.signInByEmailCode(safeIdentifier);
+        }
+        return l10ns.signInByCodeSentToYourEmail;
       case clerk.Strategy.phoneCode:
-        return localizations.signInByEnteringACodeSentToYouByTextMessage;
-      case clerk.Strategy.enterpriseSSO:
-        return localizations.signInUsingEnterpriseSSO;
-      default:
-        throw clerk.ClerkError(
-          code: clerk.ClerkErrorCode.noAssociatedStrategy,
-          message: localizations.noAssociatedCodeRetrievalMethod(
-            strategy.toString(),
-          ),
-        );
+        if (safeIdentifier case String safeIdentifier) {
+          return l10ns.signInBySMSCode(safeIdentifier);
+        }
+        return l10ns.signInBySMSCodeToYourPhone;
     }
+
+    throw clerk.ClerkError(
+      code: clerk.ClerkErrorCode.noAssociatedStrategy,
+      message: l10ns.noAssociatedCodeRetrievalMethod(
+        strategy.toString(),
+      ),
+    );
   }
 
   @override
@@ -65,15 +82,15 @@ class StrategyButton extends StatelessWidget {
     return MaterialButton(
       onPressed: onClick,
       elevation: 2.0,
-      padding: allPadding8,
+      padding: horizontalPadding16 + verticalPadding8,
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius4,
         side: BorderSide(color: themeExtension.colors.borderSide),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(_icons[strategy], color: themeExtension.colors.lightweightText),
+          Icon(_icons[strategy], color: themeExtension.colors.icon),
           horizontalMargin8,
           Flexible(
             child: Text(

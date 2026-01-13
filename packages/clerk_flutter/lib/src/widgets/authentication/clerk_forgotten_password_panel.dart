@@ -135,8 +135,10 @@ class _ClerkForgottenPasswordPanelState
         .where((f) => f.isPasswordResetter)
         .toList(growable: false);
 
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return AlertDialog(
       scrollable: true,
+      backgroundColor: themeExtension.colors.background,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -251,13 +253,12 @@ class _ActionButton extends StatelessWidget {
       return defaultLoadingWidget;
     }
 
-    final themeExtension = ClerkAuth.themeExtensionOf(context);
     return ClerkMaterialButton(
-      style: ClerkMaterialButtonStyle.light,
+      style: ClerkMaterialButtonStyle.dark,
       onPressed: onPressed,
       label: Padding(
         padding: horizontalPadding8,
-        child: Text(label, style: themeExtension.styles.subtext),
+        child: Text(label),
       ),
     );
   }

@@ -362,18 +362,30 @@ class Api with Logging {
       '`redirectUrl` required for strategy $strategy',
     );
 
-    final factor = signIn.factorFor(strategy, stage);
-    return await _fetchApiResponse(
-      '/client/sign_ins/${signIn.id}/prepare_${stage}_factor',
-      params: {
-        'strategy': strategy,
-        'email_address_id': factor.emailAddressId,
-        'phone_number_id': factor.phoneNumberId,
-        'web3_wallet_id': factor.web3WalletId,
-        'passkey_id': factor.passkeyId,
-        'redirect_url': redirectUrl,
-      },
-    );
+    if (signIn.factorFor(strategy, stage: stage) case Factor factor) {
+      return await _fetchApiResponse(
+        '/client/sign_ins/${signIn.id}/prepare_${stage}_factor',
+        params: {
+          'strategy': strategy,
+          'email_address_id': factor.emailAddressId,
+          'phone_number_id': factor.phoneNumberId,
+          'web3_wallet_id': factor.web3WalletId,
+          'passkey_id': factor.passkeyId,
+          'redirect_url': redirectUrl,
+        },
+      );
+    } else {
+      switch (stage) {
+        case Stage.first:
+          throw const ExternalError(
+            message: 'Strategy unsupported for first factor',
+          );
+        case Stage.second:
+          throw const ExternalError(
+            message: 'Strategy unsupported for second factor',
+          );
+      }
+    }
   }
 
   /// Attempt a [SignIn] according to the [strategy].

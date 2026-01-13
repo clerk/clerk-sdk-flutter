@@ -50,7 +50,7 @@ class ClerkMaterialButton extends StatelessWidget {
     final dark = style == ClerkMaterialButtonStyle.dark;
     final themeExtension = ClerkAuth.themeExtensionOf(context);
     final color =
-        dark ? themeExtension.colors.text : themeExtension.colors.background;
+        dark ? themeExtension.colors.accent : themeExtension.colors.background;
     final textColor =
         dark ? themeExtension.colors.background : themeExtension.colors.text;
     final child = DefaultTextStyle(

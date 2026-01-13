@@ -21,6 +21,12 @@ class Strategy {
   /// provider
   final String? provider;
 
+  /// The length of a numerical code
+  static const numericalCodeLength = 6;
+
+  /// The length of a backup code
+  static const textualCodeLength = 8;
+
   static const _oauthTokenGoogleName = 'google_one_tap';
   static const _oauthToken = 'oauth_token';
   static const _oauthCustom = 'oauth_custom';
@@ -143,10 +149,23 @@ class Strategy {
     username.name: username,
   };
 
+  /// totp strategy
+  static const totp = Strategy(name: 'totp');
+
+  /// backup code strategy
+  static const backupCode = Strategy(name: 'backup_code');
+
+  /// the collected secondary authentication strategies
+  static final secondaryAuthenticationStrategies = {
+    backupCode.name: backupCode,
+    totp.name: totp,
+  };
+
   static final _strategies = {
     ...oauthStrategies,
     ...verificationStrategies,
     ...identificationStrategies,
+    ...secondaryAuthenticationStrategies,
   };
 
   /// is unknown?
@@ -157,6 +176,9 @@ class Strategy {
 
   /// is password?
   bool get isPassword => this == password;
+
+  /// is email link?
+  bool get isEmailLink => this == emailLink;
 
   /// is some variety of oauth?
   bool get isOauth => name == _oauth || isOauthCustom || isOauthToken;
@@ -186,12 +208,32 @@ class Strategy {
         resetPasswordPhoneCode
       ].contains(this);
 
-  /// requires code?
-  bool get requiresCode => const [
+  /// requires six digit code?
+  bool get requiresNumericalCode => const [
         emailCode,
         phoneCode,
         resetPasswordEmailCode,
-        resetPasswordPhoneCode
+        resetPasswordPhoneCode,
+        totp
+      ].contains(this);
+
+  /// requires textual code?
+  bool get requiresTextualCode => const [
+        backupCode,
+      ].contains(this);
+
+  /// requires code?
+  bool get requiresCode => requiresNumericalCode || requiresTextualCode;
+
+  /// requires user to take some action outside of the app?
+  bool get requiresExternalAction => requiresCode || isEmailLink;
+
+  /// requires preparation?
+  bool get requiresPreparation => const [
+        emailCode,
+        phoneCode,
+        resetPasswordEmailCode,
+        resetPasswordPhoneCode,
       ].contains(this);
 
   /// requires signature?
@@ -213,6 +255,25 @@ class Strategy {
   /// requires redirect?
   bool get requiresRedirect =>
       name == _oauth || const [emailLink, enterpriseSSO].contains(this);
+
+  /// numerical code regex - [numericalCodeLength] digits
+  static final _numericalCodeRE = RegExp('^\\d{$numericalCodeLength}\$');
+
+  /// textual code regex - [textualCodeLength] lowercase characters or digits
+  /// the format used for Clerk backup codes
+  static final _textualCodeRE = RegExp('^[a-z\\d]{$textualCodeLength}\$');
+
+  /// Is this code acceptable for validation against the Frontend API?
+  bool mightAccept(String? code) {
+    if (requiresNumericalCode) {
+      return code is String && _numericalCodeRE.hasMatch(code);
+    }
+    if (requiresTextualCode) {
+      return code is String && _textualCodeRE.hasMatch(code);
+    }
+
+    return false;
+  }
 
   /// For a given [name] return the [Strategy] it identifies.
   /// Create one if necessary and possible

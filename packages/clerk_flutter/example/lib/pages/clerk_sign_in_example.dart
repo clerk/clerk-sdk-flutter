@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,8 @@ class ClerkSignInExample extends StatefulWidget {
 }
 
 class _ClerkSignInExampleState extends State<ClerkSignInExample> {
+  final resetCompleter = Completer<void>();
+
   bool isLight = true;
 
   /// Light and dark themes. [ClerkThemeExtension]s should be overridden as
@@ -25,6 +29,22 @@ class _ClerkSignInExampleState extends State<ClerkSignInExample> {
   static final darkTheme = ThemeData.dark().copyWith(
     extensions: [ClerkThemeExtension.dark],
   );
+
+  @override
+  void initState() {
+    isLight = WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+        Brightness.light;
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        final authState = ClerkAuth.of(context, listen: false);
+        if (authState.isSigningIn) {
+          await authState.resetClient();
+        }
+        resetCompleter.complete();
+      },
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +67,26 @@ class _ClerkSignInExampleState extends State<ClerkSignInExample> {
           child: ClerkErrorListener(
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: ClerkAuthBuilder(
-                signedInBuilder: (context, authState) {
-                  if (authState.env.organization.isEnabled == false ||
-                      authState.user!.hasOrganizations == false) {
-                    return const ClerkUserButton();
-                  }
-                  return const _UserAndOrgTabs();
-                },
-                signedOutBuilder: (context, authState) {
-                  return const ClerkAuthentication();
-                },
-              ),
+              child: FutureBuilder(
+                  future: resetCompleter.future,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    return ClerkAuthBuilder(
+                      signedInBuilder: (context, authState) {
+                        if (authState.env.organization.isEnabled == false ||
+                            authState.user!.hasOrganizations == false) {
+                          return const ClerkUserButton();
+                        }
+                        return const _UserAndOrgTabs();
+                      },
+                      signedOutBuilder: (context, authState) {
+                        return const ClerkAuthentication();
+                      },
+                    );
+                  }),
             ),
           ),
         ),

@@ -37,10 +37,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
       'I agree to the Terms of Service and Privacy Policy';
 
   @override
-  String get actionNotTimely =>
-      'Awaited user action not completed in required timeframe';
-
-  @override
   String get active => 'active';
 
   @override
@@ -68,8 +64,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get areYouSure => 'Are you sure?';
 
   @override
-  String get authenticationServiceError =>
-      'There was an error in authentication service';
+  String authenticationServiceError(String arg) {
+    return 'There was an error in the authentication service: $arg';
+  }
 
   @override
   String get authenticatorApp => 'authenticator app';
@@ -256,7 +253,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String noAssociatedCodeRetrievalMethod(String arg) {
-    return 'No code retrieval method associated with $arg';
+    return 'Could not find a code retrieval method associated with $arg';
   }
 
   @override
@@ -312,9 +309,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get passwordConfirmation => 'confirm password';
 
   @override
-  String get passwordInvalid => 'Invalid password';
-
-  @override
   String get passwordMatchError =>
       'Password and password confirmation must match';
 
@@ -352,9 +346,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get privacyPolicy => 'Privacy Policy';
-
-  @override
-  String get problemsConnecting => 'We are having problems connecting';
 
   @override
   String get profile => 'Profile';
@@ -425,11 +416,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get signInBySMSCodeToYourPhone => 'Send code to your phone';
-
-  @override
-  String signInError(String arg) {
-    return 'Unsupported sign in attempt: $arg';
-  }
 
   @override
   String signInTo(String name) {

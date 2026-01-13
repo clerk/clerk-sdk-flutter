@@ -10,40 +10,35 @@ extension ClerkAuthErrorExtension on clerk.ClerkError {
   /// Allow localization of an [clerk.ClerkError]
   String localizedMessage(ClerkSdkLocalizations l10ns) {
     return switch (code) {
-      clerk.ClerkErrorCode.actionNotTimely => l10ns.actionNotTimely,
+      // codes requiring localisation
       clerk.ClerkErrorCode.cannotDeleteSelf => l10ns.cannotDeleteSelf,
       clerk.ClerkErrorCode.jwtPoorlyFormatted =>
-        l10ns.jwtPoorlyFormatted(argument ?? message),
+        l10ns.jwtPoorlyFormatted(argument.toString()),
       clerk.ClerkErrorCode.noAssociatedStrategy =>
-        l10ns.noAssociatedStrategy(argument ?? message),
+        l10ns.noAssociatedStrategy(argument.toString()),
+      clerk.ClerkErrorCode.noAssociatedCodeRetrievalMethod =>
+        l10ns.noAssociatedCodeRetrievalMethod(argument.toString()),
       clerk.ClerkErrorCode.noSessionFoundForUser =>
-        l10ns.noSessionFoundForUser(argument ?? message),
+        l10ns.noSessionFoundForUser(argument.toString()),
       clerk.ClerkErrorCode.noSessionTokenRetrieved =>
         l10ns.noSessionTokenRetrieved,
       clerk.ClerkErrorCode.noStageForStatus =>
-        l10ns.noStageForStatus(argument ?? message),
+        l10ns.noStageForStatus(argument.toString()),
       clerk.ClerkErrorCode.noSuchFirstFactorStrategy =>
-        l10ns.noSuchFirstFactorStrategy(argument ?? message),
+        l10ns.noSuchFirstFactorStrategy(argument.toString()),
       clerk.ClerkErrorCode.noSuchSecondFactorStrategy =>
-        l10ns.noSuchSecondFactorStrategy(argument ?? message),
+        l10ns.noSuchSecondFactorStrategy(argument.toString()),
       clerk.ClerkErrorCode.passwordMatchError => l10ns.passwordMatchError,
       clerk.ClerkErrorCode.passwordResetStrategyError =>
-        l10ns.unsupportedPasswordResetStrategy(argument ?? message),
-      clerk.ClerkErrorCode.problemsConnecting => l10ns.problemsConnecting,
-      clerk.ClerkErrorCode.signInError =>
-        l10ns.signInError(argument ?? message),
+        l10ns.unsupportedPasswordResetStrategy(argument.toString()),
       clerk.ClerkErrorCode.serverErrorResponse =>
-        l10ns.serverErrorResponse(argument ?? message),
-      clerk.ClerkErrorCode.authenticationServiceError =>
-        l10ns.authenticationServiceError,
-      clerk.ClerkErrorCode.invalidPassword => l10ns.passwordInvalid,
-      clerk.ClerkErrorCode.requiredFieldsAreMissing =>
-        l10ns.requiredFieldsAreMissing,
+        l10ns.serverErrorResponse(argument.toString()),
       clerk.ClerkErrorCode.unknownError =>
-        l10ns.unknownError(argument ?? message),
-      clerk.ClerkErrorCode.typeInvalid =>
-        l10ns.typeTypeInvalid(argument ?? message),
-      null => toString(),
+        l10ns.unknownError(argument.toString()),
+
+      // Fallback for errors generated within clerk_flutter. We can assume
+      // the message will already be localised.
+      clerk.ClerkErrorCode.clientAppError => toString(),
     };
   }
 }

@@ -101,10 +101,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
         password?.isNotEmpty != true) {
       final l10ns = ClerkAuth.localizationsOf(context);
       authState.addError(
-        clerk.ClerkError(
-          code: clerk.ClerkErrorCode.invalidPassword,
-          message: l10ns.passwordMustBeSupplied,
-        ),
+        clerk.ClerkError.clientAppError(message: l10ns.passwordMustBeSupplied),
       );
       return;
     }
@@ -114,10 +111,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     if (authState.checkPassword(password, passwordConfirmation, context)
         case String error) {
       authState.addError(
-        clerk.ClerkError(
-          code: clerk.ClerkErrorCode.invalidPassword,
-          message: error,
-        ),
+        clerk.ClerkError.clientAppError(message: error),
       );
       return;
     }
@@ -125,10 +119,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     if (attributes.any((a) => a.isRequired && _valueOrNull(a.attr) == null)) {
       final l10ns = ClerkAuth.localizationsOf(context);
       authState.addError(
-        clerk.ClerkError(
-          code: clerk.ClerkErrorCode.requiredFieldsAreMissing,
-          message: l10ns.pleaseAddRequiredInformation,
-        ),
+        clerk.ClerkError.clientAppError(
+            message: l10ns.pleaseAddRequiredInformation),
       );
       setState(() => _highlightMissing = true);
       return;

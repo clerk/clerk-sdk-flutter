@@ -413,12 +413,14 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (_) => _updateTitle(),
-          onWebResourceError: (e) => widget.onError(
-            clerk.ClerkError(
-              code: clerk.ClerkErrorCode.authenticationServiceError,
-              message: e.description,
-            ),
-          ),
+          onWebResourceError: (e) {
+            final l10ns = ClerkAuth.localizationsOf(context);
+            widget.onError(
+              clerk.ClerkError.clientAppError(
+                message: l10ns.authenticationServiceError(e.description),
+              ),
+            );
+          },
           onNavigationRequest: (NavigationRequest request) async {
             try {
               if (request.url.startsWith(clerk.ClerkConstants.oauthRedirect)) {

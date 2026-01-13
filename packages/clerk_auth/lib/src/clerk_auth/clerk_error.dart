@@ -26,8 +26,14 @@ class ClerkError implements Exception {
         errors: errors,
       );
 
+  /// Construct a client app error
+  factory ClerkError.clientAppError({required String message}) => ClerkError(
+        code: ClerkErrorCode.clientAppError,
+        message: message,
+      );
+
   /// Error code
-  final ClerkErrorCode? code;
+  final ClerkErrorCode code;
 
   /// The associated [message]
   final String message;
@@ -52,15 +58,6 @@ enum ClerkErrorCode {
   /// Server error response
   serverErrorResponse,
 
-  /// Authentication service error
-  authenticationServiceError,
-
-  /// Invalid Password
-  invalidPassword,
-
-  /// Type Invalid
-  typeInvalid,
-
   /// No stage for status
   noStageForStatus,
 
@@ -70,14 +67,14 @@ enum ClerkErrorCode {
   /// No strategy associated with type,
   noAssociatedStrategy,
 
+  /// No code retrieval method associated with type
+  noAssociatedCodeRetrievalMethod,
+
   /// Password and password confirmation must match
   passwordMatchError,
 
   /// JWT poorly formatted
   jwtPoorlyFormatted,
-
-  /// Awaited user action not completed in required timeframe
-  actionNotTimely,
 
   /// No session found for user
   noSessionFoundForUser,
@@ -88,21 +85,15 @@ enum ClerkErrorCode {
   /// Unsupported strategy for second factor
   noSuchSecondFactorStrategy,
 
-  /// Unsupported Sign-in attempt
-  signInError,
-
   /// Password reset error
   passwordResetStrategyError,
 
   /// You are not authorized to delete your user
   cannotDeleteSelf,
 
-  /// We are having problems connecting
-  problemsConnecting,
-
-  /// Required fields are missing
-  requiredFieldsAreMissing,
-
   /// Unknown error
   unknownError,
+
+  /// Client app error
+  clientAppError,
 }

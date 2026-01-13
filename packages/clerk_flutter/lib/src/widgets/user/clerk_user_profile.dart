@@ -43,8 +43,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
           return PhoneNumber.parse(identifier).isValid();
         default:
           final localizations = ClerkAuth.localizationsOf(context);
-          throw clerk.ClerkError(
-            code: clerk.ClerkErrorCode.typeInvalid,
+          throw clerk.ClerkError.clientAppError(
             message: localizations.typeTypeInvalid(type.name),
           );
       }
@@ -108,10 +107,8 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
             onChanged: (ident) => identifier = ident.identifier,
             onSubmit: (_) => Navigator.of(context).pop(true),
           ),
-        _ => throw clerk.ClerkError(
-            code: clerk.ClerkErrorCode.typeInvalid,
+        _ => throw clerk.ClerkError.clientAppError(
             message: localizations.typeTypeInvalid(type.name),
-            argument: type.name,
           ),
       },
     );
@@ -124,8 +121,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
           await _verifyIdentifyingData(context, authState, identifier);
         }
       } else {
-        throw clerk.ClerkError(
-          code: clerk.ClerkErrorCode.typeInvalid,
+        throw clerk.ClerkError.clientAppError(
           message: type == clerk.IdentifierType.phoneNumber
               ? localizations.invalidPhoneNumber(identifier)
               : localizations.invalidEmailAddress(identifier),
@@ -267,10 +263,10 @@ class _ExternalAccountList extends StatelessWidget {
           if (auth.user?.externalAccounts case final accounts?) {
             for (final account in accounts) {
               if (account.verification.errorMessage case String errorMessage) {
+                final l10ns = ClerkAuth.localizationsOf(context);
                 auth.addError(
-                  clerk.ClerkError(
-                    message: errorMessage,
-                    code: clerk.ClerkErrorCode.serverErrorResponse,
+                  clerk.ClerkError.clientAppError(
+                    message: l10ns.serverErrorResponse(errorMessage),
                   ),
                 );
                 await auth.deleteExternalAccount(account: account);

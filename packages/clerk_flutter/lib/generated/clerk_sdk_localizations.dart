@@ -138,12 +138,6 @@ abstract class ClerkSdkLocalizations {
   /// **'I agree to the Terms of Service and Privacy Policy'**
   String get acceptTerms;
 
-  /// No description provided for @actionNotTimely.
-  ///
-  /// In en, this message translates to:
-  /// **'Awaited user action not completed in required timeframe'**
-  String get actionNotTimely;
-
   /// No description provided for @active.
   ///
   /// In en, this message translates to:
@@ -201,8 +195,8 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @authenticationServiceError.
   ///
   /// In en, this message translates to:
-  /// **'There was an error in authentication service'**
-  String get authenticationServiceError;
+  /// **'There was an error in the authentication service: {arg}'**
+  String authenticationServiceError(String arg);
 
   /// No description provided for @authenticatorApp.
   ///
@@ -537,7 +531,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @noAssociatedCodeRetrievalMethod.
   ///
   /// In en, this message translates to:
-  /// **'No code retrieval method associated with {arg}'**
+  /// **'Could not find a code retrieval method associated with {arg}'**
   String noAssociatedCodeRetrievalMethod(String arg);
 
   /// No description provided for @noAssociatedStrategy.
@@ -624,12 +618,6 @@ abstract class ClerkSdkLocalizations {
   /// **'confirm password'**
   String get passwordConfirmation;
 
-  /// No description provided for @passwordInvalid.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid password'**
-  String get passwordInvalid;
-
   /// No description provided for @passwordMatchError.
   ///
   /// In en, this message translates to:
@@ -701,12 +689,6 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Privacy Policy'**
   String get privacyPolicy;
-
-  /// No description provided for @problemsConnecting.
-  ///
-  /// In en, this message translates to:
-  /// **'We are having problems connecting'**
-  String get problemsConnecting;
 
   /// No description provided for @profile.
   ///
@@ -827,12 +809,6 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Send code to your phone'**
   String get signInBySMSCodeToYourPhone;
-
-  /// No description provided for @signInError.
-  ///
-  /// In en, this message translates to:
-  /// **'Unsupported sign in attempt: {arg}'**
-  String signInError(String arg);
 
   /// No description provided for @signInTo.
   ///

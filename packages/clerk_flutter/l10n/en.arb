@@ -56,6 +56,7 @@
       }
     }
   },
+  "clickOnTheLinkThatsBeenSentToYou": "Click on the link that‘s been sent to you and then check back here",
   "complete": "complete",
   "connectAccount": "Connect account",
   "connectedAccounts": "Connected accounts",

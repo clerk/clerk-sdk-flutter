@@ -89,10 +89,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           if (authState.client.signIn case clerk.SignIn signIn when mounted) {
             final factors = signIn.factors;
             if (factors.any((f) => f.strategy.isEnterpriseSSO)) {
-              await authState.ssoSignIn(
-                context,
-                clerk.Strategy.enterpriseSSO,
-              );
+              await authState.ssoSignIn(context, clerk.Strategy.enterpriseSSO);
             } else if (signIn.needsFactor && factors.length == 1) {
               await authState.attemptSignIn(strategy: factors.first.strategy);
             }
@@ -152,7 +149,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final themeExtension = ClerkAuth.themeExtensionOf(context);
 
     final signIn = authState.signIn ?? clerk.SignIn.empty;
-    final safeIdentifier = signIn.factorFor(_strategy)?.safeIdentifier;
+    final safeIdentifier = signIn.factorFor(_strategy)?.safeIdentifier ??
+        _identifier.prettyIdentifier.orNullIfEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +173,9 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           key: const Key('heading'),
           open: signIn.status.needsFactor,
           child: Text(
-            signIn.needsSecondFactor ? l10ns.twoStepVerification : _identifier,
+            signIn.needsSecondFactor
+                ? l10ns.twoStepVerification
+                : _identifier.identifier,
             style: themeExtension.styles.heading,
           ),
         ),
@@ -186,13 +186,14 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         _EmailLinkMessage(
           key: const Key('emailLinkMessage'),
           open: signIn.needsFirstFactor && _strategy.isEmailLink,
-          identifier: safeIdentifier ?? _identifier,
+          identifier: safeIdentifier,
         ),
 
         // Code input
         _CodeInput(
           key: const Key('codeInput'),
           strategy: _strategy,
+          identifier: safeIdentifier,
           onChanged: _updateCode,
           onSubmit: (code) => _submitCode(code, authState),
         ),
@@ -232,7 +233,7 @@ class _EmailLinkMessage extends StatelessWidget {
   });
 
   final bool open;
-  final String identifier;
+  final String? identifier;
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +244,9 @@ class _EmailLinkMessage extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            l10ns.clickOnTheLinkThatsBeenSentTo(identifier),
+            identifier is String
+                ? l10ns.clickOnTheLinkThatsBeenSentTo(identifier!)
+                : l10ns.clickOnTheLinkThatsBeenSentToYou,
             textAlign: TextAlign.center,
             maxLines: 3,
             style: themeExtension.styles.subheading,
@@ -261,11 +264,14 @@ class _CodeInput extends StatelessWidget {
   const _CodeInput({
     super.key,
     required this.strategy,
+    required this.identifier,
     required this.onChanged,
     required this.onSubmit,
   });
 
   final clerk.Strategy strategy;
+
+  final String? identifier;
 
   final ValueChanged<String> onChanged;
 
@@ -282,10 +288,14 @@ class _CodeInput extends StatelessWidget {
           title: switch (strategy) {
             clerk.Strategy.emailCode ||
             clerk.Strategy.resetPasswordEmailCode =>
-              l10ns.enterTheCodeSentToYouByEmail,
+              identifier is String
+                  ? l10ns.enterTheCodeSentTo(identifier!)
+                  : l10ns.enterTheCodeSentToYouByEmail,
             clerk.Strategy.phoneCode ||
             clerk.Strategy.resetPasswordPhoneCode =>
-              l10ns.enterTheCodeSentToYouByTextMessage,
+              identifier is String
+                  ? l10ns.enterTheCodeSentTo(identifier!)
+                  : l10ns.enterTheCodeSentToYouByTextMessage,
             clerk.Strategy.backupCode => l10ns.enterOneOfYourBackupCodes,
             clerk.Strategy.totp => l10ns.enterTheCodeFromYourAuthenticatorApp,
             _ => null,

@@ -97,9 +97,14 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
             number.intlFormattedNsn,
           );
         }
-      } on Exception {
-        // Should be [PhoneNumberException] but it's annoyingly not exported
-        // ignore
+      } catch (e) {
+        // We want to ignore [PhoneNumberException]s but rethrow other
+        // exceptions. Annoyingly, [PhoneNumberException] neither inherits from
+        // something available, nor is exported from the phone_input package,so
+        // we have to do this instead. Boo.
+        if (e.toString().startsWith('PhoneNumberException') == false) {
+          rethrow;
+        }
       }
     }
     return null;

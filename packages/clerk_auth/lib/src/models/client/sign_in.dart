@@ -1,4 +1,3 @@
-import 'package:clerk_auth/src/clerk_auth/clerk_error.dart';
 import 'package:clerk_auth/src/models/client/auth_object.dart';
 import 'package:clerk_auth/src/models/client/factor.dart';
 import 'package:clerk_auth/src/models/client/strategy.dart';
@@ -137,11 +136,13 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   }
 
   /// The factors for the current status
-  List<Factor> get factors => switch (status) {
-        Status.needsFirstFactor => supportedFirstFactors,
-        Status.needsSecondFactor => supportedSecondFactors,
-        _ => const [],
-      };
+  List<Factor> get factors {
+    return switch (status) {
+      Status.needsFirstFactor => supportedFirstFactors,
+      Status.needsSecondFactor => supportedSecondFactors,
+      _ => const [],
+    };
+  }
 
   /// can we handle the password strategy?
   bool get canUsePassword => factors.any((f) => f.strategy.isPassword);

@@ -557,14 +557,13 @@ class Auth {
             )
             .then(_housekeeping);
 
-      case SignIn signIn
-          when strategy == Strategy.emailLink && redirectUrl is String:
+      case SignIn signIn when strategy.isEmailLink:
         await _api
             .prepareSignIn(
               signIn,
               stage: Stage.first,
               strategy: Strategy.emailLink,
-              redirectUrl: redirectUrl,
+              redirectUrl: redirectUrl ?? ClerkConstants.oauthRedirect,
             )
             .then(_housekeeping);
         unawaited(_pollForEmailLinkCompletion());
@@ -582,8 +581,7 @@ class Auth {
             )
             .then(_housekeeping);
 
-      case SignIn signIn
-          when signIn.status.needsFactor && strategy.mightAccept(code):
+      case SignIn signIn when signIn.status.needsFactor:
         final stage = Stage.forStatus(signIn.status);
         if (signIn.requiresPreparationFor(strategy)) {
           await _api
@@ -591,7 +589,8 @@ class Auth {
               .then(_housekeeping);
         }
         if (client.signIn case SignIn signIn
-            when signIn.requiresPreparationFor(strategy) == false) {
+            when signIn.requiresPreparationFor(strategy) == false &&
+                strategy.mightAccept(code)) {
           await _api
               .attemptSignIn(
                 signIn,

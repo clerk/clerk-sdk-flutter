@@ -94,6 +94,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
+  String get clickOnTheLinkThatsBeenSentToYou =>
+      'Click on the link that‘s been sent to you and then check back here';
+
+  @override
   String get complete => 'complete';
 
   @override

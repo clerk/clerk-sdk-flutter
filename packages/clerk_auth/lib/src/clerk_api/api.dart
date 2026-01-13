@@ -377,14 +377,12 @@ class Api with Logging {
     } else {
       switch (stage) {
         case Stage.first:
-          throw const ApiError(
+          throw const ExternalError(
             message: 'Strategy unsupported for first factor',
-            authErrorCode: AuthErrorCode.noSuchFirstFactorStrategy,
           );
         case Stage.second:
-          throw const ApiError(
+          throw const ExternalError(
             message: 'Strategy unsupported for second factor',
-            authErrorCode: AuthErrorCode.noSuchSecondFactorStrategy,
           );
       }
     }

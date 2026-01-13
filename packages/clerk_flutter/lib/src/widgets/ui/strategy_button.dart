@@ -63,8 +63,8 @@ class StrategyButton extends StatelessWidget {
         return l10ns.signInBySMSCodeToYourPhone;
     }
 
-    throw clerk.AuthError(
-      code: clerk.AuthErrorCode.noAssociatedStrategy,
+    throw clerk.ClerkError(
+      code: clerk.ClerkErrorCode.noAssociatedStrategy,
       message: l10ns.noAssociatedCodeRetrievalMethod(
         strategy.toString(),
       ),

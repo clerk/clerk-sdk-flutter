@@ -246,6 +246,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Click on the link that‘s been sent to {identifier} and then check back here'**
   String clickOnTheLinkThatsBeenSentTo(String identifier);
 
+  /// No description provided for @clickOnTheLinkThatsBeenSentToYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Click on the link that‘s been sent to you and then check back here'**
+  String get clickOnTheLinkThatsBeenSentToYou;
+
   /// No description provided for @complete.
   ///
   /// In en, this message translates to:

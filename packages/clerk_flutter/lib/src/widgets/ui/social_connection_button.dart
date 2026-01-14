@@ -6,16 +6,14 @@ import 'package:flutter/material.dart';
 
 /// should we invert the logo for dark mode?
 extension on clerk.SocialConnection {
-  // TODO(shinyford): update to use keyed-id
   bool get invertLogoForDarkMode => const [
-        'Apple',
-        'GitHub',
-        'X / Twitter',
-        'TikTok',
-        'Notion',
-        'Vercel',
-        'Okta Workforce'
-      ].contains(name);
+        clerk.Strategy.oauthApple,
+        clerk.Strategy.oauthGithub,
+        clerk.Strategy.oauthX,
+        clerk.Strategy.oauthTiktok,
+        clerk.Strategy.oauthNotion,
+        clerk.Strategy.oauthVercel,
+      ].contains(strategy);
 }
 
 /// The [SocialConnectionButton] is to be used with the authentication flow when working with

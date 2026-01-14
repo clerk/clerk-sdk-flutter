@@ -49,6 +49,18 @@ class Strategy {
   /// oauth facebook strategy
   static const oauthFacebook = Strategy(name: _oauth, provider: 'facebook');
 
+  /// oauth twitter strategy
+  static const oauthX = Strategy(name: _oauth, provider: 'x');
+
+  /// oauth tiktok strategy
+  static const oauthTiktok = Strategy(name: _oauth, provider: 'tiktok');
+
+  /// oauth notion strategy
+  static const oauthNotion = Strategy(name: _oauth, provider: 'notion');
+
+  /// oauth vercel strategy
+  static const oauthVercel = Strategy(name: _oauth, provider: 'vercel');
+
   /// oauth token apple strategy
   static const oauthTokenApple = Strategy(name: _oauthToken, provider: 'apple');
 
@@ -57,9 +69,13 @@ class Strategy {
 
   /// the collected oauth strategies
   static final oauthStrategies = {
+    oauthX.toString(): oauthX,
     oauthApple.toString(): oauthApple,
     oauthGithub.toString(): oauthGithub,
     oauthGoogle.toString(): oauthGoogle,
+    oauthTiktok.toString(): oauthTiktok,
+    oauthNotion.toString(): oauthNotion,
+    oauthVercel.toString(): oauthVercel,
     oauthFacebook.toString(): oauthFacebook,
     oauthTokenApple.toString(): oauthTokenApple,
     oauthTokenGoogle.toString(): oauthTokenGoogle,

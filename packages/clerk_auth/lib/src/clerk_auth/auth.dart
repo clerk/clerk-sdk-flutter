@@ -56,9 +56,9 @@ class Auth {
   /// Adds [error] to [errorStream]
   void addError(ClerkError error) => _errors.add(error);
 
-  Future<void> _catchExternalErrors(Future<void> Function() fn) async {
+  Future<T?> _catchExternalErrors<T>(FutureOr<T?> Function() fn) async {
     try {
-      await fn();
+      return await fn();
     } on ExternalError catch (error) {
       if (error.errors case ExternalErrorCollection errors) {
         addError(ClerkError.from(errors));
@@ -71,6 +71,7 @@ class Auth {
         );
       }
     }
+    return null;
   }
 
   /// Are we not yet initialised?
@@ -218,19 +219,15 @@ class Auth {
     SessionToken? sessionToken;
 
     if (isSignedIn) {
-      await _catchExternalErrors(
-        () async {
-          sessionToken = await _api.updateSessionToken();
-          if (sessionToken case SessionToken token) {
-            _sessionTokens.add(token);
-            if (token.expiry.difference(DateTime.timestamp())
-                case Duration tokenBasedDelay
-                when tokenBasedDelay > Duration.zero) {
-              delay = tokenBasedDelay;
-            }
-          }
-        },
-      );
+      sessionToken = await _catchExternalErrors(_api.updateSessionToken);
+      if (sessionToken case SessionToken token) {
+        _sessionTokens.add(token);
+        if (token.expiry.difference(DateTime.timestamp())
+            case Duration tokenBasedDelay
+            when tokenBasedDelay > Duration.zero) {
+          delay = tokenBasedDelay;
+        }
+      }
     }
 
     _pollTimer = Timer(delay, _pollForSessionToken);
@@ -334,16 +331,16 @@ class Auth {
   }) async {
     final org = env.organization.isEnabled ? organization : null;
     SessionToken? token = _api.sessionToken(org, templateName);
-    if (token is! SessionToken) {
+    if (token == null) {
       if (org == null && templateName == null) {
         token = await _pollForSessionToken(); // this resets the timer too
       } else {
-        await _catchExternalErrors(
-          () async => token = await _api.updateSessionToken(org, templateName),
+        token = await _catchExternalErrors(
+          () => _api.updateSessionToken(org, templateName),
         );
       }
-      if (token is SessionToken) {
-        _sessionTokens.add(token!);
+      if (token != null) {
+        _sessionTokens.add(token);
       } else {
         throw const ClerkError(
           message: 'No session token retrieved',
@@ -352,7 +349,7 @@ class Auth {
       }
     }
 
-    return token!;
+    return token;
   }
 
   /// Prepare for sign in via an oAuth provider
@@ -367,16 +364,14 @@ class Auth {
         .then(_housekeeping);
     if (client.signIn case SignIn signIn when signIn.hasVerification == false) {
       await _catchExternalErrors(
-        () async {
-          await _api
-              .prepareSignIn(
-                signIn,
-                stage: Stage.first,
-                strategy: strategy,
-                redirectUrl: redirectUrl,
-              )
-              .then(_housekeeping);
-        },
+        () => _api
+            .prepareSignIn(
+              signIn,
+              stage: Stage.first,
+              strategy: strategy,
+              redirectUrl: redirectUrl,
+            )
+            .then(_housekeeping),
       );
     }
     update();
@@ -576,19 +571,19 @@ class Auth {
 
       case SignIn signIn
           when strategy == Strategy.emailLink && redirectUrl is String:
-        await _catchExternalErrors(
-          () async {
-            await _api
-                .prepareSignIn(
-                  signIn,
-                  stage: Stage.first,
-                  strategy: Strategy.emailLink,
-                  redirectUrl: redirectUrl,
-                )
-                .then(_housekeeping);
-            unawaited(_pollForEmailLinkCompletion());
-          },
+        final response = await _catchExternalErrors(
+          () => _api
+              .prepareSignIn(
+                signIn,
+                stage: Stage.first,
+                strategy: Strategy.emailLink,
+                redirectUrl: redirectUrl,
+              )
+              .then(_housekeeping),
         );
+        if (response?.isOkay == true) {
+          unawaited(_pollForEmailLinkCompletion());
+        }
 
       case SignIn signIn
           when signIn.status.needsFactor &&

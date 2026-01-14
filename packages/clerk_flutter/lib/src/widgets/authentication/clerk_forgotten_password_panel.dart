@@ -91,7 +91,7 @@ class _ClerkForgottenPasswordPanelState
   Future<void> _submit(ClerkAuthState authState, BuildContext context) async {
     if (authState.checkPassword(_password, _confirmation, context)
         case String errorMessage) {
-      authState.addError(
+      authState.handleError(
         clerk.ClerkError.clientAppError(message: errorMessage),
       );
     } else {
@@ -108,7 +108,7 @@ class _ClerkForgottenPasswordPanelState
           Navigator.of(context).pop(true);
         } else {
           final l10ns = ClerkAuth.localizationsOf(context);
-          authState.addError(
+          authState.handleError(
             clerk.ClerkError.clientAppError(message: l10ns.resetFailed),
           );
           await _initiatePasswordReset(authState);

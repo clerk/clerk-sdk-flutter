@@ -39,6 +39,25 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
 
+  Sink<clerk.ClerkError>? _errors;
+
+  @override
+  void handleError(clerk.ClerkError error) {
+    if (_errors case final errors?) {
+      errors.add(error);
+    } else {
+      super.handleError(error);
+    }
+  }
+
+  /// Set the error stream to capture [ClerkError]s as they occur
+  /// rather than allow them to be thrown. Null will revert to
+  /// throwing.
+  ///
+  void setErrorSink(Sink<clerk.ClerkError>? errors) {
+    _errors = errors;
+  }
+
   @override
   Future<void> initialize() async {
     await super.initialize();
@@ -309,8 +328,8 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   }
 
   void _onError(clerk.ClerkError error, ClerkErrorCallback? onError) {
-    addError(error);
     onError?.call(error);
+    handleError(error); // last, because may throw
   }
 
   /// Returns a boolean regarding whether or not a password has been supplied,

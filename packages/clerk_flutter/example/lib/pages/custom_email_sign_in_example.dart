@@ -38,6 +38,7 @@ class _CustomEmailSignInExampleState extends State<CustomEmailSignInExample> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  final _errorStream = StreamController<clerk.ClerkError>.broadcast();
   late final StreamSubscription<clerk.ClerkError> _errorSubscription;
   late final ClerkAuthState _authState;
 
@@ -48,7 +49,8 @@ class _CustomEmailSignInExampleState extends State<CustomEmailSignInExample> {
       _authState = ClerkAuth.of(context);
       _user.value = _authState.user;
       _authState.addListener(_clerkAuthListener);
-      _errorSubscription = _authState.errorStream.listen(_onError);
+      _errorSubscription = _errorStream.stream.listen(_onError);
+      _authState.setErrorSink(_errorStream);
       _initalized.value = true;
     });
   }
@@ -87,6 +89,7 @@ class _CustomEmailSignInExampleState extends State<CustomEmailSignInExample> {
     _passwordController.dispose();
     _authState.removeListener(_clerkAuthListener);
     _errorSubscription.cancel();
+    _errorStream.close();
   }
 
   @override

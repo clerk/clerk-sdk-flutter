@@ -94,10 +94,6 @@ class ClerkAuth extends StatefulWidget {
   static clerk.DisplayConfig displayConfigOf(BuildContext context) =>
       of(context, listen: false).env.display;
 
-  /// get the stream of [clerk.ClerkError]
-  static Stream<clerk.ClerkError> errorStreamOf(BuildContext context) =>
-      of(context, listen: false).errorStream;
-
   /// get the [ClerkFileCache] of the [ClerkAuthConfig]
   static ClerkFileCache fileCacheOf(BuildContext context) =>
       of(context, listen: false).config.fileCache;

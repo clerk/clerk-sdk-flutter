@@ -264,7 +264,7 @@ class _ExternalAccountList extends StatelessWidget {
             for (final account in accounts) {
               if (account.verification.errorMessage case String errorMessage) {
                 final l10ns = ClerkAuth.localizationsOf(context);
-                auth.addError(
+                auth.handleError(
                   clerk.ClerkError.clientAppError(
                     message: l10ns.serverErrorResponse(errorMessage),
                   ),

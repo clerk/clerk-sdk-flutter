@@ -100,7 +100,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     if (authState.signUp?.requires(clerk.Field.password) == true &&
         password?.isNotEmpty != true) {
       final l10ns = ClerkAuth.localizationsOf(context);
-      authState.addError(
+      authState.handleError(
         clerk.ClerkError.clientAppError(message: l10ns.passwordMustBeSupplied),
       );
       return;
@@ -110,7 +110,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
         _valueOrNull(clerk.UserAttribute.passwordConfirmation);
     if (authState.checkPassword(password, passwordConfirmation, context)
         case String error) {
-      authState.addError(
+      authState.handleError(
         clerk.ClerkError.clientAppError(message: error),
       );
       return;
@@ -118,7 +118,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
     if (attributes.any((a) => a.isRequired && _valueOrNull(a.attr) == null)) {
       final l10ns = ClerkAuth.localizationsOf(context);
-      authState.addError(
+      authState.handleError(
         clerk.ClerkError.clientAppError(
             message: l10ns.pleaseAddRequiredInformation),
       );

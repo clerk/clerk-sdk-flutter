@@ -37,10 +37,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
       'I agree to the Terms of Service and Privacy Policy';
 
   @override
-  String get actionNotTimely =>
-      'Awaited user action not completed in required timeframe';
-
-  @override
   String get active => 'active';
 
   @override
@@ -66,6 +62,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get areYouSure => 'Are you sure?';
+
+  @override
+  String authenticationServiceError(String arg) {
+    return 'There was an error in the authentication service: $arg';
+  }
 
   @override
   String get authenticatorApp => 'authenticator app';
@@ -252,7 +253,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String noAssociatedCodeRetrievalMethod(String arg) {
-    return 'No code retrieval method associated with $arg';
+    return 'Could not find a code retrieval method associated with $arg';
   }
 
   @override
@@ -305,10 +306,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get password => 'Password';
 
   @override
-  String get passwordAndPasswordConfirmationMustMatch =>
-      'Password and password confirmation must match';
-
-  @override
   String get passwordConfirmation => 'confirm password';
 
   @override
@@ -351,9 +348,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get privacyPolicy => 'Privacy Policy';
 
   @override
-  String get problemsConnecting => 'We are having problems connecting';
-
-  @override
   String get profile => 'Profile';
 
   @override
@@ -364,6 +358,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get requiredField => '(required)';
+
+  @override
+  String get requiredFieldsAreMissing => 'Required fields are missing';
 
   @override
   String get resend => 'Resend';
@@ -381,6 +378,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get sendMeTheCode => 'Send me the reset code';
+
+  @override
+  String serverErrorResponse(String arg) {
+    return 'There was an error on the Frontend API server: $arg';
+  }
 
   @override
   String get setUpYourOrganization => 'Set up your organization';
@@ -414,11 +416,6 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get signInBySMSCodeToYourPhone => 'Send code to your phone';
-
-  @override
-  String signInError(String arg) {
-    return 'Unsupported sign in attempt: $arg';
-  }
 
   @override
   String signInTo(String name) {
@@ -474,6 +471,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   @override
   String typeTypeInvalid(String type) {
     return 'Type \'$type\' is invalid';
+  }
+
+  @override
+  String unknownError(String arg) {
+    return 'An unknown error has occurred: $arg';
   }
 
   @override

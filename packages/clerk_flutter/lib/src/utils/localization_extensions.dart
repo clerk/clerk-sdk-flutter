@@ -10,12 +10,14 @@ extension ClerkAuthErrorExtension on clerk.ClerkError {
   /// Allow localization of an [clerk.ClerkError]
   String localizedMessage(ClerkSdkLocalizations l10ns) {
     return switch (code) {
-      clerk.ClerkErrorCode.actionNotTimely => l10ns.actionNotTimely,
+      // codes requiring localisation
       clerk.ClerkErrorCode.cannotDeleteSelf => l10ns.cannotDeleteSelf,
       clerk.ClerkErrorCode.jwtPoorlyFormatted =>
         l10ns.jwtPoorlyFormatted(argument.toString()),
       clerk.ClerkErrorCode.noAssociatedStrategy =>
         l10ns.noAssociatedStrategy(argument.toString()),
+      clerk.ClerkErrorCode.noAssociatedCodeRetrievalMethod =>
+        l10ns.noAssociatedCodeRetrievalMethod(argument.toString()),
       clerk.ClerkErrorCode.noSessionFoundForUser =>
         l10ns.noSessionFoundForUser(argument.toString()),
       clerk.ClerkErrorCode.noSessionTokenRetrieved =>
@@ -26,14 +28,17 @@ extension ClerkAuthErrorExtension on clerk.ClerkError {
         l10ns.noSuchFirstFactorStrategy(argument.toString()),
       clerk.ClerkErrorCode.noSuchSecondFactorStrategy =>
         l10ns.noSuchSecondFactorStrategy(argument.toString()),
-      clerk.ClerkErrorCode.passwordMatchError =>
-        l10ns.passwordAndPasswordConfirmationMustMatch,
+      clerk.ClerkErrorCode.passwordMatchError => l10ns.passwordMatchError,
       clerk.ClerkErrorCode.passwordResetStrategyError =>
         l10ns.unsupportedPasswordResetStrategy(argument.toString()),
-      clerk.ClerkErrorCode.problemsConnecting => l10ns.problemsConnecting,
-      clerk.ClerkErrorCode.signInError =>
-        l10ns.signInError(argument.toString()),
-      _ => toString(),
+      clerk.ClerkErrorCode.serverErrorResponse =>
+        l10ns.serverErrorResponse(argument.toString()),
+      clerk.ClerkErrorCode.unknownError =>
+        l10ns.unknownError(argument.toString()),
+
+      // Fallback for errors generated within clerk_flutter. We can assume
+      // the message will already be localised.
+      clerk.ClerkErrorCode.clientAppError => toString(),
     };
   }
 }

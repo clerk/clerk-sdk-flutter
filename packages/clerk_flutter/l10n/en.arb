@@ -31,7 +31,6 @@
   },
   "abandoned": "abandoned",
   "acceptTerms": "I agree to the Terms of Service and Privacy Policy",
-  "actionNotTimely": "Awaited user action not completed in required timeframe",
   "active": "active",
   "addAccount": "Add account",
   "addDomain": "Add domain",
@@ -41,6 +40,14 @@
   "anUppercaseLetter": "an UPPERCASE letter",
   "and": "and",
   "areYouSure": "Are you sure?",
+  "authenticationServiceError": "There was an error in the authentication service: {arg}",
+  "@authenticationServiceError": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
   "authenticatorApp": "authenticator app",
   "automaticInvitation": "Automatic invitation",
   "automaticSuggestion": "Automatic suggestion",
@@ -138,7 +145,7 @@
   "needsSecondFactor": "needs second factor",
   "newPassword": "New password",
   "newPasswordConfirmation": "Confirm new password",
-  "noAssociatedCodeRetrievalMethod": "No code retrieval method associated with {arg}",
+  "noAssociatedCodeRetrievalMethod": "Could not find a code retrieval method associated with {arg}",
   "@noAssociatedCodeRetrievalMethod": {
     "placeholders": {
       "arg": {
@@ -194,7 +201,6 @@
   "organizations": "Organizations",
   "passkey": "passkey",
   "password": "Password",
-  "passwordAndPasswordConfirmationMustMatch": "Password and password confirmation must match",
   "passwordConfirmation": "confirm password",
   "passwordMatchError": "Password and password confirmation must match",
   "passwordMustBeSupplied": "A password must be supplied",
@@ -208,16 +214,24 @@
   "pleaseEnterYourIdentifier": "Please enter your identifier",
   "primary": "PRIMARY",
   "privacyPolicy": "Privacy Policy",
-  "problemsConnecting": "We are having problems connecting",
   "profile": "Profile",
   "profileDetails": "Profile details",
   "recommendSize": "Recommend size 1:1, up to 5MB.",
   "requiredField": "(required)",
+  "requiredFieldsAreMissing": "Required fields are missing",
   "resend": "Resend",
   "resetFailed": "That password reset attempt failed. A new code has been sent.",
   "resetPassword": "Reset password and sign in",
   "selectAccount": "Select the account with which you wish to continue",
   "sendMeTheCode": "Send me the reset code",
+  "serverErrorResponse": "There was an error on the Frontend API server: {arg}",
+  "@serverErrorResponse": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
   "setUpYourOrganization": "Set up your organization",
   "signIn": "Sign in",
   "signInByCodeSentToYourEmail": "Send code to your email",
@@ -248,14 +262,6 @@
     }
   },
   "signInBySMSCodeToYourPhone": "Send code to your phone",
-  "signInError": "Unsupported sign in attempt: {arg}",
-  "@signInError": {
-    "placeholders": {
-      "arg": {
-        "type": "String"
-      }
-    }
-  },
   "signInTo": "Sign in to {name}",
   "@signInTo": {
     "placeholders": {
@@ -296,6 +302,14 @@
   "@typeTypeInvalid": {
     "placeholders": {
       "type": {
+        "type": "String"
+      }
+    }
+  },
+  "unknownError": "An unknown error has occurred: {arg}",
+  "@unknownError": {
+    "placeholders": {
+      "arg": {
         "type": "String"
       }
     }

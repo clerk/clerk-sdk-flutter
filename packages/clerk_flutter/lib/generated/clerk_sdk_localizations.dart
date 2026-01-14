@@ -138,12 +138,6 @@ abstract class ClerkSdkLocalizations {
   /// **'I agree to the Terms of Service and Privacy Policy'**
   String get acceptTerms;
 
-  /// No description provided for @actionNotTimely.
-  ///
-  /// In en, this message translates to:
-  /// **'Awaited user action not completed in required timeframe'**
-  String get actionNotTimely;
-
   /// No description provided for @active.
   ///
   /// In en, this message translates to:
@@ -197,6 +191,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure?'**
   String get areYouSure;
+
+  /// No description provided for @authenticationServiceError.
+  ///
+  /// In en, this message translates to:
+  /// **'There was an error in the authentication service: {arg}'**
+  String authenticationServiceError(String arg);
 
   /// No description provided for @authenticatorApp.
   ///
@@ -531,7 +531,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @noAssociatedCodeRetrievalMethod.
   ///
   /// In en, this message translates to:
-  /// **'No code retrieval method associated with {arg}'**
+  /// **'Could not find a code retrieval method associated with {arg}'**
   String noAssociatedCodeRetrievalMethod(String arg);
 
   /// No description provided for @noAssociatedStrategy.
@@ -612,12 +612,6 @@ abstract class ClerkSdkLocalizations {
   /// **'Password'**
   String get password;
 
-  /// No description provided for @passwordAndPasswordConfirmationMustMatch.
-  ///
-  /// In en, this message translates to:
-  /// **'Password and password confirmation must match'**
-  String get passwordAndPasswordConfirmationMustMatch;
-
   /// No description provided for @passwordConfirmation.
   ///
   /// In en, this message translates to:
@@ -696,12 +690,6 @@ abstract class ClerkSdkLocalizations {
   /// **'Privacy Policy'**
   String get privacyPolicy;
 
-  /// No description provided for @problemsConnecting.
-  ///
-  /// In en, this message translates to:
-  /// **'We are having problems connecting'**
-  String get problemsConnecting;
-
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
@@ -725,6 +713,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'(required)'**
   String get requiredField;
+
+  /// No description provided for @requiredFieldsAreMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Required fields are missing'**
+  String get requiredFieldsAreMissing;
 
   /// No description provided for @resend.
   ///
@@ -755,6 +749,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Send me the reset code'**
   String get sendMeTheCode;
+
+  /// No description provided for @serverErrorResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'There was an error on the Frontend API server: {arg}'**
+  String serverErrorResponse(String arg);
 
   /// No description provided for @setUpYourOrganization.
   ///
@@ -809,12 +809,6 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Send code to your phone'**
   String get signInBySMSCodeToYourPhone;
-
-  /// No description provided for @signInError.
-  ///
-  /// In en, this message translates to:
-  /// **'Unsupported sign in attempt: {arg}'**
-  String signInError(String arg);
 
   /// No description provided for @signInTo.
   ///
@@ -911,6 +905,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Type \'{type}\' is invalid'**
   String typeTypeInvalid(String type);
+
+  /// No description provided for @unknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unknown error has occurred: {arg}'**
+  String unknownError(String arg);
 
   /// No description provided for @unsupportedPasswordResetStrategy.
   ///

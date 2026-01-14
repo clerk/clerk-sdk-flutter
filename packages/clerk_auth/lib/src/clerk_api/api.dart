@@ -379,10 +379,12 @@ class Api with Logging {
         case Stage.first:
           throw const ExternalError(
             message: 'Strategy unsupported for first factor',
+            errorCode: ClerkErrorCode.noSuchFirstFactorStrategy,
           );
         case Stage.second:
           throw const ExternalError(
             message: 'Strategy unsupported for second factor',
+            errorCode: ClerkErrorCode.noSuchSecondFactorStrategy,
           );
       }
     }
@@ -854,11 +856,15 @@ class Api with Logging {
         return _tokenCache.makeAndCacheSessionToken(token, templateName);
       } else if (_extractErrorCollection(body)
           case ExternalErrorCollection errors) {
-        throw ClerkError.from(errors);
+        if (errors.hasSingleError) {
+          throw errors.error;
+        } else {
+          throw ExternalError(message: 'Multiple errors', errors: errors);
+        }
       } else {
-        throw const ClerkError(
+        throw const ExternalError(
           message: 'No session token retrieved',
-          code: ClerkErrorCode.noSessionTokenRetrieved,
+          errorCode: ClerkErrorCode.noSessionTokenRetrieved,
         );
       }
     }

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/clerk_api/api.dart';
+import 'package:clerk_auth/src/models/api/external_error.dart';
 import 'package:meta/meta.dart';
 
 /// [Auth] provides more abstracted access to the Clerk API.
@@ -54,6 +55,24 @@ class Auth {
 
   /// Adds [error] to [errorStream]
   void addError(ClerkError error) => _errors.add(error);
+
+  Future<T?> _catchExternalErrors<T>(FutureOr<T?> Function() fn) async {
+    try {
+      return await fn();
+    } on ExternalError catch (error) {
+      if (error.errors case ExternalErrorCollection errors) {
+        addError(ClerkError.from(errors));
+      } else {
+        addError(
+          ClerkError(
+            message: error.toString(),
+            code: error.errorCode ?? ClerkErrorCode.serverErrorResponse,
+          ),
+        );
+      }
+    }
+    return null;
+  }
 
   /// Are we not yet initialised?
   bool get isNotAvailable => env.isEmpty;
@@ -199,30 +218,19 @@ class Auth {
     Duration delay = _defaultPollDelay;
     SessionToken? sessionToken;
 
-    try {
-      if (isSignedIn) {
-        sessionToken = await _api.updateSessionToken();
-        if (sessionToken case SessionToken token) {
-          _sessionTokens.add(token);
-          if (token.expiry.difference(DateTime.timestamp())
-              case Duration tokenBasedDelay
-              when tokenBasedDelay > Duration.zero) {
-            delay = tokenBasedDelay;
-          }
+    if (isSignedIn) {
+      sessionToken = await _catchExternalErrors(_api.updateSessionToken);
+      if (sessionToken case SessionToken token) {
+        _sessionTokens.add(token);
+        if (token.expiry.difference(DateTime.timestamp())
+            case Duration tokenBasedDelay
+            when tokenBasedDelay > Duration.zero) {
+          delay = tokenBasedDelay;
         }
       }
-    } on ClerkError catch (error) {
-      addError(error);
-    } catch (error) {
-      addError(
-        ClerkError(
-          code: ClerkErrorCode.noSessionTokenRetrieved,
-          message: error.toString(),
-        ),
-      );
-    } finally {
-      _pollTimer = Timer(delay, _pollForSessionToken);
     }
+
+    _pollTimer = Timer(delay, _pollForSessionToken);
 
     return sessionToken;
   }
@@ -323,13 +331,15 @@ class Auth {
   }) async {
     final org = env.organization.isEnabled ? organization : null;
     SessionToken? token = _api.sessionToken(org, templateName);
-    if (token is! SessionToken) {
+    if (token == null) {
       if (org == null && templateName == null) {
         token = await _pollForSessionToken(); // this resets the timer too
       } else {
-        token = await _api.updateSessionToken(org, templateName);
+        token = await _catchExternalErrors(
+          () => _api.updateSessionToken(org, templateName),
+        );
       }
-      if (token is SessionToken) {
+      if (token != null) {
         _sessionTokens.add(token);
       } else {
         throw const ClerkError(
@@ -353,14 +363,16 @@ class Auth {
         .createSignIn(strategy: strategy, redirectUrl: redirectUrl)
         .then(_housekeeping);
     if (client.signIn case SignIn signIn when signIn.hasVerification == false) {
-      await _api
-          .prepareSignIn(
-            signIn,
-            stage: Stage.first,
-            strategy: strategy,
-            redirectUrl: redirectUrl,
-          )
-          .then(_housekeeping);
+      await _catchExternalErrors(
+        () => _api
+            .prepareSignIn(
+              signIn,
+              stage: Stage.first,
+              strategy: strategy,
+              redirectUrl: redirectUrl,
+            )
+            .then(_housekeeping),
+      );
     }
     update();
   }
@@ -557,16 +569,21 @@ class Auth {
             )
             .then(_housekeeping);
 
-      case SignIn signIn when strategy.isEmailLink:
-        await _api
-            .prepareSignIn(
-              signIn,
-              stage: Stage.first,
-              strategy: Strategy.emailLink,
-              redirectUrl: redirectUrl ?? ClerkConstants.oauthRedirect,
-            )
-            .then(_housekeeping);
-        unawaited(_pollForEmailLinkCompletion());
+      case SignIn signIn
+          when strategy == Strategy.emailLink && redirectUrl is String:
+        final response = await _catchExternalErrors(
+          () => _api
+              .prepareSignIn(
+                signIn,
+                stage: Stage.first,
+                strategy: Strategy.emailLink,
+                redirectUrl: redirectUrl,
+              )
+              .then(_housekeeping),
+        );
+        if (response?.isOkay == true) {
+          unawaited(_pollForEmailLinkCompletion());
+        }
 
       case SignIn signIn
           when signIn.status.needsFactor &&

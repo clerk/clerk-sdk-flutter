@@ -92,10 +92,7 @@ class _ClerkForgottenPasswordPanelState
     if (authState.checkPassword(_password, _confirmation, context)
         case String errorMessage) {
       authState.addError(
-        clerk.ClerkError(
-          code: clerk.ClerkErrorCode.invalidPassword,
-          message: errorMessage,
-        ),
+        clerk.ClerkError.clientAppError(message: errorMessage),
       );
     } else {
       final code = _code;
@@ -112,10 +109,7 @@ class _ClerkForgottenPasswordPanelState
         } else {
           final l10ns = ClerkAuth.localizationsOf(context);
           authState.addError(
-            clerk.ClerkError(
-              message: l10ns.resetFailed,
-              code: null,
-            ),
+            clerk.ClerkError.clientAppError(message: l10ns.resetFailed),
           );
           await _initiatePasswordReset(authState);
         }

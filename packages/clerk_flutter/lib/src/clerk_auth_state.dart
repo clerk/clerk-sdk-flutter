@@ -39,23 +39,18 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
 
-  Sink<clerk.ClerkError>? _errors;
+  final _errors = StreamController<clerk.ClerkError>.broadcast();
 
+  /// Stream of [clerk.ClerkError]s
+  Stream<clerk.ClerkError> get errorStream => _errors.stream;
+	
   @override
   void handleError(clerk.ClerkError error) {
-    if (_errors case final errors?) {
-      errors.add(error);
+    if (_errors.hasListener) {
+      _errors.add(error);
     } else {
       super.handleError(error);
     }
-  }
-
-  /// Set the error stream to capture [ClerkError]s as they occur
-  /// rather than allow them to be thrown. Null will revert to
-  /// throwing.
-  ///
-  void setErrorSink(Sink<clerk.ClerkError>? errors) {
-    _errors = errors;
   }
 
   @override
@@ -70,6 +65,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     _deepLinkSub = null;
     dispose();
     super.terminate();
+    _errors.close();
   }
 
   void _processDeepLink(ClerkDeepLink? link) {

@@ -49,6 +49,10 @@ class Auth {
   Stream<SessionToken> get sessionTokenStream => _sessionTokens.stream;
   final _sessionTokens = StreamController<SessionToken>.broadcast();
 
+  /// Adds [error] to [errorStream]
+  @Deprecated('Please use handleError instead.')
+  void addError(ClerkError error) => handleError(error);
+
   /// Handles [ClerkError]s when they occur
   void handleError(ClerkError error) => throw error;
 

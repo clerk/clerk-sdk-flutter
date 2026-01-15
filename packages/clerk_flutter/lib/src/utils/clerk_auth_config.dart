@@ -8,6 +8,7 @@ import 'package:clerk_flutter/src/widgets/ui/common.dart'
     show defaultLoadingWidget;
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// A map of [Locale] strings to [ClerkSdkLocalizations] instances
 ///
@@ -41,6 +42,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     this.loading = defaultLoadingWidget,
     this.redirectionGenerator,
     this.deepLinkStream,
+    this.defaultLaunchMode = LaunchMode.externalApplication,
     ClerkFileCache? fileCache,
     ClerkSdkLocalizationsCollection? localizations,
     ClerkSdkLocalizations? fallbackLocalization,
@@ -89,6 +91,9 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   /// A stream of deep links that the host app thinks the Clerk
   /// SDK might be interested in
   final Stream<ClerkDeepLink?>? deepLinkStream;
+
+  /// The default [LaunchMode] to use when launching a URL for SSO
+  final LaunchMode defaultLaunchMode;
 
   /// The [Widget] to display while loading data, override with null
   /// to disable the loading overlay or use your own widget.

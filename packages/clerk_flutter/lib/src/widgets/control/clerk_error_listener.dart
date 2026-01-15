@@ -22,17 +22,11 @@ class ClerkErrorListener extends StatefulWidget {
   const ClerkErrorListener({
     super.key,
     this.handler,
-    this.errorStream,
     required this.child,
   });
 
   /// Implement this function to handle errors
   final ClerkErrorHandler? handler;
-
-  /// Optionals stream to listen for errors on, so that consuming app
-  /// can interrogate errors as they occur as well as the standard
-  /// Clerk UI applying
-  final StreamController<clerk.ClerkError>? errorStream;
 
   /// Child to wrap
   final Widget child;
@@ -42,31 +36,7 @@ class ClerkErrorListener extends StatefulWidget {
 }
 
 class _ClerkErrorListenerState extends State<ClerkErrorListener> {
-  late final StreamController<clerk.ClerkError> _errorStream =
-      widget.errorStream ?? StreamController<clerk.ClerkError>.broadcast();
-  late final StreamSubscription<void> _errorSub;
-
-  @override
-  void initState() {
-    super.initState();
-    _errorSub = _errorStream.stream.asyncMap(_errorHandler).listen(null);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    ClerkAuth.of(context, listen: false).setErrorSink(_errorStream);
-  }
-
-  @override
-  void dispose() {
-    _errorSub.cancel();
-    if (widget.errorStream == null) {
-      // we created this error stream, so we should close it
-      _errorStream.close();
-    }
-    super.dispose();
-  }
+  late StreamSubscription<void>? _errorSub;
 
   Future<void> _errorHandler(clerk.ClerkError error) async {
     if (widget.handler case ClerkErrorHandler handler) {
@@ -103,6 +73,21 @@ class _ClerkErrorListenerState extends State<ClerkErrorListener> {
       );
       rethrow;
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _errorSub?.cancel();
+    _errorSub = ClerkAuth.errorStreamOf(context) //
+        .asyncMap(_errorHandler)
+        .listen(null);
+  }
+
+  @override
+  void dispose() {
+    _errorSub?.cancel();
+    super.dispose();
   }
 
   @override

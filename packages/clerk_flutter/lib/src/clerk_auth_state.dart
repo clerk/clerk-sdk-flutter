@@ -89,6 +89,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     BuildContext context,
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
+    LaunchMode? launchMode,
   }) async {
     final redirect = config.redirectionGenerator?.call(context, strategy);
     await safelyCall(
@@ -133,7 +134,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       } else {
         // a bespoke redirect: we handle externally, and assume a deep link
         // will complete sign-in
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        await launchUrl(uri, mode: launchMode ?? config.defaultLaunchMode);
       }
     }
   }
@@ -143,6 +144,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     BuildContext context,
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
+    LaunchMode? launchMode,
   }) async {
     final redirect = config.redirectionGenerator?.call(context, strategy);
     await safelyCall(
@@ -183,7 +185,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       } else {
         // a bespoke redirect: we handle externally, and assume a deep link
         // will complete sign-in
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        await launchUrl(uri, mode: launchMode ?? config.defaultLaunchMode);
       }
     }
   }
@@ -193,6 +195,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     BuildContext context,
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
+    LaunchMode? launchMode,
   }) async {
     final redirect = config.redirectionGenerator?.call(context, strategy) ??
         Uri.parse(clerk.ClerkConstants.oauthRedirect);
@@ -243,7 +246,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       } else {
         // a bespoke redirect: we handle externally, and assume a deep link
         // will complete sign-in
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        await launchUrl(uri, mode: launchMode ?? config.defaultLaunchMode);
       }
     }
   }

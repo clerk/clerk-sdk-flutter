@@ -37,7 +37,6 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
   final _user = ValueNotifier<clerk.User?>(null);
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final _errorStream = StreamController<clerk.ClerkError>.broadcast();
   late final StreamSubscription<clerk.ClerkError> _errorSubscription;
   late final ClerkAuthState _authState;
 
@@ -48,8 +47,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
       _authState = ClerkAuth.of(context);
       _user.value = _authState.user;
       _authState.addListener(_clerkAuthListener);
-      _errorSubscription = _errorStream.stream.listen(_onError);
-      _authState.setErrorSink(_errorStream);
+      _errorSubscription = _authState.errorStream.listen(_onError);
       _initialized.value = true;
     });
   }
@@ -60,7 +58,6 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     super.dispose();
     _authState.removeListener(_clerkAuthListener);
     _errorSubscription.cancel();
-    _errorStream.close();
   }
 
   void _clerkAuthListener() {

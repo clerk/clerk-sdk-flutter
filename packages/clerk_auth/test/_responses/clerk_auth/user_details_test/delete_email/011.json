@@ -1,8 +1,8 @@
 {
-  "key": "DELETE /v1/me/email_addresses/idn_36vl5VnVgDbcmSAAFrplsa4eFxw?_clerk_session_id=SESSION_ID",
+  "key": "DELETE /v1/me/email_addresses/idn_38LTaupeu8QjLyPZkiN2eitJaem?_clerk_session_id=SESSION_ID",
   "body": {
     "response": {
-      "id": "idn_36vl5VnVgDbcmSAAFrplsa4eFxw",
+      "id": "idn_38LTaupeu8QjLyPZkiN2eitJaem",
       "object": "email_address",
       "deleted": true
     },
@@ -28,8 +28,8 @@
             "locale": null,
             "image_url": "URL",
             "has_image": false,
-            "primary_email_address_id": "idn_36vl5Gb96CC7eAoCwFR8tV6n5N1",
-            "primary_phone_number_id": "idn_36vl5JavQPTrEmXzSQnrpaKYMEq",
+            "primary_email_address_id": "idn_38LTaaZwedItZHhDarYPZTF47gl",
+            "primary_phone_number_id": "idn_38LTaeqDsLKLRIU5rtrMnISZJk4",
             "primary_web3_wallet_id": null,
             "password_enabled": true,
             "two_factor_enabled": false,
@@ -37,7 +37,7 @@
             "backup_code_enabled": false,
             "email_addresses": [
               {
-                "id": "idn_36vl5Gb96CC7eAoCwFR8tV6n5N1",
+                "id": "idn_38LTaaZwedItZHhDarYPZTF47gl",
                 "object": "email_address",
                 "email_address": "user-zgvszxrlx2vtywls+clerk_test@somedomain.com",
                 "reserved": false,
@@ -56,7 +56,7 @@
             ],
             "phone_numbers": [
               {
-                "id": "idn_36vl5JavQPTrEmXzSQnrpaKYMEq",
+                "id": "idn_38LTaeqDsLKLRIU5rtrMnISZJk4",
                 "object": "phone_number",
                 "phone_number": "+15555550161",
                 "reserved_for_second_factor": false,

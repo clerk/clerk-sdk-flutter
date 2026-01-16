@@ -41,10 +41,12 @@ void main() {
       password: env.password,
       passwordConfirmation: env.password,
     );
+    await auth.attemptSignUp(strategy: Strategy.emailCode);
     await auth.attemptSignUp(
       strategy: Strategy.emailCode,
       code: env.code,
     );
+    await auth.attemptSignUp(strategy: Strategy.phoneCode);
     await auth.attemptSignUp(
       strategy: Strategy.phoneCode,
       code: env.code,

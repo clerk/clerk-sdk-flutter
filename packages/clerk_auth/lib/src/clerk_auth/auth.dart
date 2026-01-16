@@ -706,20 +706,24 @@ class Auth {
         case SignUp signUp
             when signUp.status == Status.missingRequirements &&
                 signUp.missingFields.isEmpty &&
-                signUp.verifications.isEmpty &&
+                signUp.isVerifying(strategy) == false &&
                 signUp.unverifiedFields.isNotEmpty:
-          if (env.supportsPhoneCode && signUp.unverified(Field.phoneNumber)) {
+          if (strategy == Strategy.phoneCode &&
+              env.supportsPhoneCode &&
+              signUp.unverified(Field.phoneNumber)) {
             await _api
                 .prepareSignUp(signUp, strategy: Strategy.phoneCode)
                 .then(_housekeeping);
           }
 
           if (signUp.unverified(Field.emailAddress)) {
-            if (env.supportsEmailCode) {
+            if (strategy == Strategy.emailCode && env.supportsEmailCode) {
               await _api
                   .prepareSignUp(signUp, strategy: Strategy.emailCode)
                   .then(_housekeeping);
-            } else if (env.supportsEmailLink && redirectUrl is String) {
+            } else if (strategy == Strategy.emailLink &&
+                env.supportsEmailLink &&
+                redirectUrl is String) {
               await _api
                   .prepareSignUp(
                     signUp,

@@ -32,7 +32,7 @@ class CustomOAuthSignInExample extends StatefulWidget {
 }
 
 class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
-  final _initalized = ValueNotifier<bool>(false);
+  final _initialized = ValueNotifier<bool>(false);
   final _loading = ValueNotifier<bool>(false);
   final _user = ValueNotifier<clerk.User?>(null);
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -48,8 +48,16 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
       _user.value = _authState.user;
       _authState.addListener(_clerkAuthListener);
       _errorSubscription = _authState.errorStream.listen(_onError);
-      _initalized.value = true;
+      _initialized.value = true;
     });
+  }
+
+  // Always dispose of the subscriptions and remove listeners.
+  @override
+  void dispose() {
+    super.dispose();
+    _authState.removeListener(_clerkAuthListener);
+    _errorSubscription.cancel();
   }
 
   void _clerkAuthListener() {
@@ -91,14 +99,6 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     _loading.value = false;
   }
 
-  // Always dispose of the subscriptions and remove listeners.
-  @override
-  void dispose() {
-    super.dispose();
-    _authState.removeListener(_clerkAuthListener);
-    _errorSubscription.cancel();
-  }
-
   @override
   Widget build(BuildContext context) {
     const spacer = SizedBox(height: 16);
@@ -108,9 +108,9 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
         title: const Text('Custom Sign In'),
       ),
       body: ListenableBuilder(
-        listenable: _initalized,
+        listenable: _initialized,
         builder: (context, _) {
-          if (!_initalized.value) {
+          if (!_initialized.value) {
             return const Center(child: CircularProgressIndicator());
           }
           return ValueListenableBuilder<bool>(

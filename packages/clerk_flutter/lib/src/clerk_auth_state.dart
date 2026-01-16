@@ -173,7 +173,9 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           final uri = Uri.parse(redirectUrl);
           await safelyCall(
             context,
-            () => parseDeepLink(ClerkDeepLink(strategy: strategy, uri: uri)),
+            () {
+              return parseDeepLink(ClerkDeepLink(strategy: strategy, uri: uri));
+            },
             onError: onError,
           );
           if (context.mounted) {
@@ -190,7 +192,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     }
   }
 
-  /// Performs SSO sign in according to the [strategy]
+  /// Performs SSO sign up according to the [strategy]
   Future<void> ssoSignUp(
     BuildContext context,
     clerk.Strategy strategy, {

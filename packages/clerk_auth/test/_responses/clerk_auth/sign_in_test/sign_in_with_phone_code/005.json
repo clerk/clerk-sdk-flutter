@@ -117,6 +117,7 @@
             "delete_self_enabled": true,
             "bypass_client_trust": false,
             "create_organization_enabled": true,
+            "create_organizations_limit": 0,
             "last_active_at": "%%DATETIME -3%%",
             "mfa_enabled_at": null,
             "mfa_disabled_at": null,

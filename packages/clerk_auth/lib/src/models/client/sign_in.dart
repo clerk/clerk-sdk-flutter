@@ -83,7 +83,7 @@ class SignIn extends AuthObject with InformativeToStringMixin {
     return switch (status) {
       Status.needsFirstFactor => firstFactorVerification,
       Status.needsSecondFactor => secondFactorVerification,
-      _ => null,
+      _ => firstFactorVerification ?? secondFactorVerification,
     };
   }
 

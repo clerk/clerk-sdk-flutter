@@ -14,11 +14,16 @@
         [
           "email_address",
           "oauth_apple",
+          "oauth_box",
           "oauth_facebook",
           "oauth_github",
           "oauth_google",
           "oauth_linkedin_oidc",
+          "oauth_notion",
+          "oauth_tiktok",
           "oauth_token_apple",
+          "oauth_vercel",
+          "oauth_x",
           "phone_number"
         ],
         [
@@ -28,10 +33,15 @@
       "identification_strategies": [
         "email_address",
         "oauth_apple",
+        "oauth_box",
         "oauth_facebook",
         "oauth_github",
         "oauth_google",
         "oauth_linkedin_oidc",
+        "oauth_notion",
+        "oauth_tiktok",
+        "oauth_vercel",
+        "oauth_x",
         "passkey",
         "password",
         "phone_number",
@@ -43,11 +53,16 @@
         "enterprise_sso",
         "google_one_tap",
         "oauth_apple",
+        "oauth_box",
         "oauth_facebook",
         "oauth_github",
         "oauth_google",
         "oauth_linkedin_oidc",
+        "oauth_notion",
+        "oauth_tiktok",
         "oauth_token_apple",
+        "oauth_vercel",
+        "oauth_x",
         "passkey",
         "password",
         "phone_code",
@@ -57,6 +72,7 @@
         "ticket"
       ],
       "second_factors": [
+        "backup_code",
         "phone_code",
         "totp"
       ],
@@ -248,12 +264,14 @@
           "verify_at_sign_up": false
         },
         "backup_code": {
-          "enabled": false,
+          "enabled": true,
           "required": false,
           "used_for_first_factor": false,
           "first_factors": [],
-          "used_for_second_factor": false,
-          "second_factors": [],
+          "used_for_second_factor": true,
+          "second_factors": [
+            "backup_code"
+          ],
           "verifications": [],
           "verify_at_sign_up": false
         },
@@ -344,6 +362,17 @@
           "name": "Apple",
           "logo_url": "URL"
         },
+        "oauth_box": {
+          "enabled": true,
+          "required": false,
+          "authenticatable": true,
+          "block_email_subaddresses": false,
+          "strategy": "oauth_box",
+          "not_selectable": false,
+          "deprecated": false,
+          "name": "Box",
+          "logo_url": "URL"
+        },
         "oauth_custom_spung": {
           "enabled": false,
           "required": false,
@@ -396,6 +425,61 @@
           "not_selectable": false,
           "deprecated": false,
           "name": "LinkedIn",
+          "logo_url": "URL"
+        },
+        "oauth_notion": {
+          "enabled": true,
+          "required": false,
+          "authenticatable": true,
+          "block_email_subaddresses": false,
+          "strategy": "oauth_notion",
+          "not_selectable": false,
+          "deprecated": false,
+          "name": "Notion",
+          "logo_url": "URL"
+        },
+        "oauth_tiktok": {
+          "enabled": true,
+          "required": false,
+          "authenticatable": true,
+          "block_email_subaddresses": false,
+          "strategy": "oauth_tiktok",
+          "not_selectable": false,
+          "deprecated": false,
+          "name": "TikTok",
+          "logo_url": "URL"
+        },
+        "oauth_twitter": {
+          "enabled": false,
+          "required": false,
+          "authenticatable": false,
+          "block_email_subaddresses": false,
+          "strategy": "",
+          "not_selectable": true,
+          "deprecated": false,
+          "name": "Twitter",
+          "logo_url": "URL"
+        },
+        "oauth_vercel": {
+          "enabled": true,
+          "required": false,
+          "authenticatable": true,
+          "block_email_subaddresses": false,
+          "strategy": "oauth_vercel",
+          "not_selectable": false,
+          "deprecated": false,
+          "name": "Vercel",
+          "logo_url": "URL"
+        },
+        "oauth_x": {
+          "enabled": true,
+          "required": false,
+          "authenticatable": true,
+          "block_email_subaddresses": false,
+          "strategy": "oauth_x",
+          "not_selectable": false,
+          "deprecated": false,
+          "name": "X / Twitter",
           "logo_url": "URL"
         }
       },

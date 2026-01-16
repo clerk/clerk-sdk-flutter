@@ -58,6 +58,10 @@ void main() {
           expect(client.signUp?.status, Status.missingRequirements);
           expect(client.signUp?.unverifiedFields.contains(Field.phoneNumber));
 
+          /// Prepare...
+          client = await auth.attemptSignUp(strategy: Strategy.phoneCode);
+
+          /// ...and attempt
           client = await auth.attemptSignUp(
             strategy: Strategy.phoneCode,
             code: env.code,
@@ -107,6 +111,7 @@ void main() {
         expect(client.signUp?.status, Status.missingRequirements);
         expect(client.signUp?.unverifiedFields.contains(Field.phoneNumber));
 
+        await auth.attemptSignUp(strategy: Strategy.phoneCode);
         client = await auth.attemptSignUp(
           strategy: Strategy.phoneCode,
           code: env.code,

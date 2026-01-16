@@ -15,10 +15,15 @@
       ],
       "optional_fields": [
         "oauth_apple",
+        "oauth_box",
         "oauth_facebook",
         "oauth_github",
         "oauth_google",
         "oauth_linkedin_oidc",
+        "oauth_notion",
+        "oauth_tiktok",
+        "oauth_vercel",
+        "oauth_x",
         "username"
       ],
       "missing_fields": [],
@@ -78,10 +83,15 @@
         ],
         "optional_fields": [
           "oauth_apple",
+          "oauth_box",
           "oauth_facebook",
           "oauth_github",
           "oauth_google",
           "oauth_linkedin_oidc",
+          "oauth_notion",
+          "oauth_tiktok",
+          "oauth_vercel",
+          "oauth_x",
           "username"
         ],
         "missing_fields": [],

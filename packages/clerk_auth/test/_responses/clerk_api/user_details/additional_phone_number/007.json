@@ -2,7 +2,7 @@
   "key": "POST /v1/me/phone_numbers?_clerk_session_id=SESSION_ID phone_number",
   "body": {
     "response": {
-      "id": "idn_36vl5LQPBVE4adHuYIb2cpLZ3Go",
+      "id": "idn_38LTbAAzba4EljEDb1HO1O6fW7x",
       "object": "phone_number",
       "phone_number": "+15555550168",
       "reserved_for_second_factor": false,
@@ -36,8 +36,8 @@
             "locale": null,
             "image_url": "URL",
             "has_image": false,
-            "primary_email_address_id": "idn_36vl5A12QYYx8ZrDimeMdNllkmO",
-            "primary_phone_number_id": "idn_36vl59EZ64fFh3vMdvJoRNjnD1t",
+            "primary_email_address_id": "idn_38LTaqCjZojvjo8NOkZ7OM3BQEs",
+            "primary_phone_number_id": "idn_38LTast26F4tOwzQuNXuyumlDuF",
             "primary_web3_wallet_id": null,
             "password_enabled": true,
             "two_factor_enabled": false,
@@ -45,7 +45,7 @@
             "backup_code_enabled": false,
             "email_addresses": [
               {
-                "id": "idn_36vl5A12QYYx8ZrDimeMdNllkmO",
+                "id": "idn_38LTaqCjZojvjo8NOkZ7OM3BQEs",
                 "object": "email_address",
                 "email_address": "user-ywrkaxrpb25hbf9wag9uzv9udw1izxi+clerk_test@somedomain.com",
                 "reserved": false,
@@ -64,7 +64,7 @@
             ],
             "phone_numbers": [
               {
-                "id": "idn_36vl5LQPBVE4adHuYIb2cpLZ3Go",
+                "id": "idn_38LTbAAzba4EljEDb1HO1O6fW7x",
                 "object": "phone_number",
                 "phone_number": "+15555550168",
                 "reserved_for_second_factor": false,
@@ -77,7 +77,7 @@
                 "updated_at": "%%DATETIME -2%%"
               },
               {
-                "id": "idn_36vl59EZ64fFh3vMdvJoRNjnD1t",
+                "id": "idn_38LTast26F4tOwzQuNXuyumlDuF",
                 "object": "phone_number",
                 "phone_number": "+15555550124",
                 "reserved_for_second_factor": false,

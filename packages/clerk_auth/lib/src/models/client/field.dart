@@ -21,11 +21,20 @@ class Field {
   /// email address
   static const emailAddress = Field._('email_address');
 
+  /// first name
+  static const firstName = Field._('first_name');
+
+  /// last name
+  static const lastName = Field._('lastName');
+
   /// username
   static const username = Field._('username');
 
   /// password
   static const password = Field._('password');
+
+  /// Ts&Cs and Privacy have been accepted?
+  static const legalAccepted = Field._('legal_accepted');
 
   /// saml
   static const saml = Field._('saml');
@@ -41,6 +50,7 @@ class Field {
     emailAddress.name: emailAddress,
     username.name: username,
     password.name: password,
+    legalAccepted.name: legalAccepted,
     saml.name: saml,
     enterpriseSSO.name: enterpriseSSO,
     externalAccount.name: externalAccount,
@@ -70,6 +80,10 @@ class Field {
     return switch (attribute) {
       UserAttribute.phoneNumber => phoneNumber,
       UserAttribute.emailAddress => emailAddress,
+      UserAttribute.password => password,
+      UserAttribute.firstName => firstName,
+      UserAttribute.lastName => lastName,
+      UserAttribute.username => username,
       _ => null,
     };
   }

@@ -1,5 +1,5 @@
 {
-  "key": "PATCH /v1/me?_clerk_session_id=SESSION_ID primary_email_address_id=idn_36vl5mRqcG3hDDPLHlGXES47V61",
+  "key": "PATCH /v1/me?_clerk_session_id=SESSION_ID primary_email_address_id=idn_38LTbTWLbU0SPef0qxGuSGtdMXs",
   "body": {
     "response": {
       "id": "USER_ID",
@@ -10,8 +10,8 @@
       "locale": null,
       "image_url": "URL",
       "has_image": false,
-      "primary_email_address_id": "idn_36vl5mRqcG3hDDPLHlGXES47V61",
-      "primary_phone_number_id": "idn_36vl5YMN22twpsfYY44d4Uw8Fmt",
+      "primary_email_address_id": "idn_38LTbTWLbU0SPef0qxGuSGtdMXs",
+      "primary_phone_number_id": "idn_38LTbBjdrMGxo2j7lrk6hri5ofI",
       "primary_web3_wallet_id": null,
       "password_enabled": true,
       "two_factor_enabled": false,
@@ -19,7 +19,7 @@
       "backup_code_enabled": false,
       "email_addresses": [
         {
-          "id": "idn_36vl5mRqcG3hDDPLHlGXES47V61",
+          "id": "idn_38LTbTWLbU0SPef0qxGuSGtdMXs",
           "object": "email_address",
           "email_address": "secondary+clerk_test@somedomain.com",
           "reserved": false,
@@ -36,7 +36,7 @@
           "updated_at": "%%DATETIME -2%%"
         },
         {
-          "id": "idn_36vl5Sh7XGr24m4RLd5Es0rqonQ",
+          "id": "idn_38LTbHahqSULoU8LBu4G0EZV7IG",
           "object": "email_address",
           "email_address": "user-c2v0x3byaw1hcnlfzw1haww+clerk_test@somedomain.com",
           "reserved": false,
@@ -55,7 +55,7 @@
       ],
       "phone_numbers": [
         {
-          "id": "idn_36vl5YMN22twpsfYY44d4Uw8Fmt",
+          "id": "idn_38LTbBjdrMGxo2j7lrk6hri5ofI",
           "object": "phone_number",
           "phone_number": "+15555550121",
           "reserved_for_second_factor": false,
@@ -122,8 +122,8 @@
             "locale": null,
             "image_url": "URL",
             "has_image": false,
-            "primary_email_address_id": "idn_36vl5mRqcG3hDDPLHlGXES47V61",
-            "primary_phone_number_id": "idn_36vl5YMN22twpsfYY44d4Uw8Fmt",
+            "primary_email_address_id": "idn_38LTbTWLbU0SPef0qxGuSGtdMXs",
+            "primary_phone_number_id": "idn_38LTbBjdrMGxo2j7lrk6hri5ofI",
             "primary_web3_wallet_id": null,
             "password_enabled": true,
             "two_factor_enabled": false,
@@ -131,7 +131,7 @@
             "backup_code_enabled": false,
             "email_addresses": [
               {
-                "id": "idn_36vl5mRqcG3hDDPLHlGXES47V61",
+                "id": "idn_38LTbTWLbU0SPef0qxGuSGtdMXs",
                 "object": "email_address",
                 "email_address": "secondary+clerk_test@somedomain.com",
                 "reserved": false,
@@ -148,7 +148,7 @@
                 "updated_at": "%%DATETIME -2%%"
               },
               {
-                "id": "idn_36vl5Sh7XGr24m4RLd5Es0rqonQ",
+                "id": "idn_38LTbHahqSULoU8LBu4G0EZV7IG",
                 "object": "email_address",
                 "email_address": "user-c2v0x3byaw1hcnlfzw1haww+clerk_test@somedomain.com",
                 "reserved": false,
@@ -167,7 +167,7 @@
             ],
             "phone_numbers": [
               {
-                "id": "idn_36vl5YMN22twpsfYY44d4Uw8Fmt",
+                "id": "idn_38LTbBjdrMGxo2j7lrk6hri5ofI",
                 "object": "phone_number",
                 "phone_number": "+15555550121",
                 "reserved_for_second_factor": false,

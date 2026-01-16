@@ -1,6 +1,4 @@
-import 'package:clerk_auth/src/models/client/auth_object.dart';
-import 'package:clerk_auth/src/models/client/field.dart';
-import 'package:clerk_auth/src/models/client/verification.dart';
+import 'package:clerk_auth/src/models/client.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
@@ -126,6 +124,10 @@ class SignUp extends AuthObject with InformativeToStringMixin {
 
   /// is [field] unverified?
   bool unverified(Field? field) => unverifiedFields.contains(field);
+
+  /// Do we have a [verification] for strategy happening?
+  bool isVerifying(Strategy strategy) => verifications.values
+      .any((v) => v.strategy == strategy && v.status.isVerified == false);
 
   /// Is this [SignUp] transferable to a [SignIn]?
   bool get isTransferable => verifications.values

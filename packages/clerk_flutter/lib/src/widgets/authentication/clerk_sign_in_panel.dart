@@ -6,8 +6,8 @@ import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/identifier.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_forgotten_password_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_control_buttons.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_identifier_input.dart';
-import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
@@ -214,7 +214,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         verticalMargin8,
 
         // Buttons
-        _ControlButtons(
+        ClerkControlButtons(
           onContinue: _needsCont(signIn) ? () => _continue(authState) : null,
           onBack: _needsBack(signIn) ? () => _reset(authState) : null,
         ),
@@ -305,63 +305,6 @@ class _CodeInput extends StatelessWidget {
           onSubmit: onSubmit,
         ),
       ),
-    );
-  }
-}
-
-class _ControlButtons extends StatelessWidget {
-  const _ControlButtons({
-    required this.onContinue,
-    required this.onBack,
-  });
-
-  final VoidCallback? onContinue;
-
-  final VoidCallback? onBack;
-
-  bool get requiresContinue => onContinue is VoidCallback;
-
-  bool get requiresBack => onBack is VoidCallback;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10ns = ClerkAuth.localizationsOf(context);
-    return Row(
-      children: [
-        if (requiresBack) //
-          Expanded(
-            child: ClerkMaterialButton(
-              onPressed: onBack,
-              label: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Icon(Icons.arrow_left_sharp),
-                  horizontalMargin4,
-                  Center(child: Text(l10ns.back)),
-                ],
-              ),
-            ),
-          ),
-        if (requiresContinue) ...[
-          if (requiresBack) //
-            horizontalMargin8,
-          Expanded(
-            child: ClerkMaterialButton(
-              onPressed: onContinue,
-              label: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Center(child: Text(l10ns.cont)),
-                  horizontalMargin4,
-                  const Icon(Icons.arrow_right_sharp),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ],
     );
   }
 }

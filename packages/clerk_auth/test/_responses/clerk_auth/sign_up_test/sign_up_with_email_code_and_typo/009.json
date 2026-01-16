@@ -15,10 +15,15 @@
       ],
       "optional_fields": [
         "oauth_apple",
+        "oauth_box",
         "oauth_facebook",
         "oauth_github",
         "oauth_google",
         "oauth_linkedin_oidc",
+        "oauth_notion",
+        "oauth_tiktok",
+        "oauth_vercel",
+        "oauth_x",
         "username"
       ],
       "missing_fields": [],
@@ -51,7 +56,7 @@
         "external_account": null
       },
       "username": null,
-      "email_address": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8-typo+clerk_test@somedomain.com",
+      "email_address": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8+clerk_test@somedomain.com",
       "phone_number": "+15555550133",
       "web3_wallet": null,
       "password_enabled": true,
@@ -89,8 +94,8 @@
             "locale": null,
             "image_url": "URL",
             "has_image": false,
-            "primary_email_address_id": "idn_36vl4nncSiSgCV6kw3KpURH3rie",
-            "primary_phone_number_id": "idn_36vl4ndumFZOBVdpMH7X3w7Vc4n",
+            "primary_email_address_id": "idn_38LTa3d67KB2G867jGrLBphv1pV",
+            "primary_phone_number_id": "idn_38LTa2ljhnGMAsbO0bYDTJnAq3K",
             "primary_web3_wallet_id": null,
             "password_enabled": true,
             "two_factor_enabled": false,
@@ -98,9 +103,9 @@
             "backup_code_enabled": false,
             "email_addresses": [
               {
-                "id": "idn_36vl4nncSiSgCV6kw3KpURH3rie",
+                "id": "idn_38LTa3d67KB2G867jGrLBphv1pV",
                 "object": "email_address",
-                "email_address": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8-typo+clerk_test@somedomain.com",
+                "email_address": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8+clerk_test@somedomain.com",
                 "reserved": false,
                 "verification": {
                   "object": "verification_otp",
@@ -117,7 +122,7 @@
             ],
             "phone_numbers": [
               {
-                "id": "idn_36vl4ndumFZOBVdpMH7X3w7Vc4n",
+                "id": "idn_38LTa2ljhnGMAsbO0bYDTJnAq3K",
                 "object": "phone_number",
                 "phone_number": "+15555550133",
                 "reserved_for_second_factor": false,
@@ -168,7 +173,7 @@
             "last_name": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8",
             "image_url": "URL",
             "has_image": false,
-            "identifier": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8-typo+clerk_test@somedomain.com",
+            "identifier": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8+clerk_test@somedomain.com",
             "username": null,
             "profile_image_url": "URL"
           },

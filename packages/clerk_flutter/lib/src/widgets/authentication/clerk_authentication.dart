@@ -42,7 +42,12 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
     with ClerkTelemetryStateMixin {
   _AuthState _state = _AuthState.signingIn;
 
-  void _toggle() => setState(() => _state = _state.nextState);
+  Future<void> _toggle(ClerkAuthState authState) async {
+    if (authState.isSigningIn || authState.isSigningUp) {
+      await authState.resetClient();
+    }
+    setState(() => _state = _state.nextState);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +61,13 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
     final display = ClerkAuth.displayConfigOf(context);
     final localizations = ClerkAuth.localizationsOf(context);
 
+    // Coerce [_state] if we're in a specific one
+    if (authState.isSigningIn) {
+      _state = _AuthState.signingIn;
+    } else if (authState.isSigningUp) {
+      _state = _AuthState.signingUp;
+    }
+
     return ClerkVerticalCard(
       topPortion: Column(
         mainAxisSize: MainAxisSize.min,
@@ -68,44 +80,39 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
                 ? localizations.welcomeBackPleaseSignInToContinue
                 : localizations.welcomePleaseFillInTheDetailsToGetStarted,
           ),
-          ClerkAuthBuilder(
-            builder: (context, authState) {
-              return Padding(
-                padding: horizontalPadding32,
-                child: Column(
-                  children: [
-                    if (authState.env.hasOauthStrategies) //
-                      Closeable(
-                        closed: authState.isSigningIn || authState.isSigningUp,
-                        child: Column(
-                          children: [
-                            ClerkOAuthPanel(
-                              onStrategyChosen: (strategy) async {
-                                await authState.ssoSignIn(context, strategy);
-                              },
-                            ),
-                            const OrDivider(),
-                          ],
-                        ),
-                      ),
-                    Openable(
-                      open: _state.isSigningIn,
-                      child: const ClerkSignInPanel(),
-                    ),
-                    Openable(
-                      open: _state.isSigningUp,
-                      child: const ClerkSignUpPanel(),
-                    ),
-                  ],
+          Padding(
+            padding: horizontalPadding32,
+            child: Column(
+              children: [
+                if (authState.env.hasOauthStrategies) ...[
+                  Closeable(
+                    closed: authState.isSigningUp ||
+                        (authState.isSigningIn &&
+                            authState.signIn!.verification?.strategy.isOauth !=
+                                true),
+                    child: const ClerkOAuthPanel(),
+                  ),
+                  Closeable(
+                    closed: authState.isSigningUp || authState.isSigningIn,
+                    child: const OrDivider(),
+                  ),
+                ],
+                Openable(
+                  open: _state.isSigningIn,
+                  child: const ClerkSignInPanel(),
                 ),
-              );
-            },
+                Openable(
+                  open: _state.isSigningUp,
+                  child: const ClerkSignUpPanel(),
+                ),
+              ],
+            ),
           ),
         ],
       ),
       bottomPortion: _BottomPortion(
         state: _state,
-        onChange: _toggle,
+        onChange: () => _toggle(authState),
       ),
     );
   }

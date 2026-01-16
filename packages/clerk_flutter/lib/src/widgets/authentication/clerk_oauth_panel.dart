@@ -17,10 +17,10 @@ import 'package:flutter/material.dart';
 ///
 class ClerkOAuthPanel extends StatefulWidget {
   /// Construct a new [ClerkOAuthPanel]
-  const ClerkOAuthPanel({super.key, required this.onStrategyChosen});
+  const ClerkOAuthPanel({super.key, this.onStrategyChosen});
 
   /// Function to call when a strategy is chosen
-  final ValueChanged<clerk.Strategy> onStrategyChosen;
+  final ValueChanged<clerk.Strategy>? onStrategyChosen;
 
   @override
   State<ClerkOAuthPanel> createState() => _ClerkOAuthPanelState();
@@ -28,6 +28,21 @@ class ClerkOAuthPanel extends StatefulWidget {
 
 class _ClerkOAuthPanelState extends State<ClerkOAuthPanel>
     with ClerkTelemetryStateMixin {
+  clerk.SocialConnection? _connection;
+
+  Future<void> _onStrategyChosen(
+    ClerkAuthState authState,
+    clerk.SocialConnection connection,
+  ) async {
+    setState(() => _connection = connection);
+    if (widget.onStrategyChosen case final onStrategyChosen?) {
+      onStrategyChosen(connection.strategy);
+    } else {
+      await authState.ssoSignIn(context, connection.strategy);
+    }
+    setState(() => _connection = null);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClerkAuthBuilder(
@@ -50,7 +65,9 @@ class _ClerkOAuthPanelState extends State<ClerkOAuthPanel>
               SocialConnectionButton(
                 key: ValueKey<clerk.SocialConnection>(connection),
                 connection: connection,
-                onPressed: () => widget.onStrategyChosen(connection.strategy),
+                onPressed: _connection == null || _connection == connection
+                    ? () => _onStrategyChosen(authState, connection)
+                    : null,
               ),
           ],
         );

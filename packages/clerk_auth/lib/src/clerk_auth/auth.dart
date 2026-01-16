@@ -643,7 +643,6 @@ class Auth {
     bool? legalAccepted,
   }) async {
     final hasVerificationCredential = code is String || signature is String;
-    final hasInitialSignUp = client.signUp is SignUp;
 
     if (password != passwordConfirmation) {
       throw const ClerkError(
@@ -652,7 +651,30 @@ class Auth {
       );
     }
 
-    if (hasInitialSignUp == false) {
+    if (client.signUp case SignUp signUp) {
+      final needsUpdate = (password?.isNotEmpty == true) ||
+          (firstName is String && firstName != signUp.firstName) ||
+          (lastName is String && lastName != signUp.lastName) ||
+          (username is String && username != signUp.username) ||
+          (emailAddress is String && emailAddress != signUp.emailAddress) ||
+          (phoneNumber is String && phoneNumber != signUp.phoneNumber) ||
+          (legalAccepted is bool);
+      if (needsUpdate) {
+        await _api
+            .updateSignUp(
+              signUp,
+              strategy: strategy,
+              password: password,
+              firstName: firstName,
+              lastName: lastName,
+              username: username,
+              emailAddress: emailAddress,
+              phoneNumber: phoneNumber,
+              legalAccepted: legalAccepted,
+            )
+            .then(_housekeeping);
+      }
+    } else {
       await _api
           .createSignUp(
             strategy: strategy,
@@ -684,6 +706,7 @@ class Auth {
         case SignUp signUp
             when signUp.status == Status.missingRequirements &&
                 signUp.missingFields.isEmpty &&
+                signUp.verifications.isEmpty &&
                 signUp.unverifiedFields.isNotEmpty:
           if (env.supportsPhoneCode && signUp.unverified(Field.phoneNumber)) {
             await _api
@@ -696,8 +719,7 @@ class Auth {
               await _api
                   .prepareSignUp(signUp, strategy: Strategy.emailCode)
                   .then(_housekeeping);
-            }
-            if (env.supportsEmailLink && redirectUrl is String) {
+            } else if (env.supportsEmailLink && redirectUrl is String) {
               await _api
                   .prepareSignUp(
                     signUp,
@@ -732,34 +754,6 @@ class Auth {
                   strategy: strategy,
                   code: code,
                   signature: signature,
-                )
-                .then(_housekeeping);
-          }
-
-        case SignUp signUp when hasInitialSignUp:
-          // if we didn't create a SignUp object earlier,  now is the time to
-          // update the preexisting SignUp object, in case of changes
-          final needsUpdate = (password?.isNotEmpty == true) ||
-              (firstName is String && firstName != signUp.firstName) ||
-              (lastName is String && lastName != signUp.lastName) ||
-              (username is String && username != signUp.username) ||
-              (emailAddress is String && emailAddress != signUp.emailAddress) ||
-              (phoneNumber is String && phoneNumber != signUp.phoneNumber) ||
-              // We don't have current state for legalAccepted in SignUp;
-              // if provided, assume it's a change worth sending
-              (legalAccepted is bool);
-          if (needsUpdate) {
-            await _api
-                .updateSignUp(
-                  signUp,
-                  strategy: strategy,
-                  password: password,
-                  firstName: firstName,
-                  lastName: lastName,
-                  username: username,
-                  emailAddress: emailAddress,
-                  phoneNumber: phoneNumber,
-                  legalAccepted: legalAccepted,
                 )
                 .then(_housekeeping);
           }

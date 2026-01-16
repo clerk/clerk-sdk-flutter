@@ -43,7 +43,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   /// Stream of [clerk.ClerkError]s
   Stream<clerk.ClerkError> get errorStream => _errors.stream;
-	
+
   @override
   void handleError(clerk.ClerkError error) {
     if (_errors.hasListener) {

@@ -295,7 +295,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             ),
           ),
         Openable(
-          open: _needsLegalAcceptance && _hasLegalAcceptance,
+          open: _needsLegalAcceptance == false || _hasLegalAcceptance,
           child: Padding(
             padding: verticalPadding16,
             child: ClerkControlButtons(

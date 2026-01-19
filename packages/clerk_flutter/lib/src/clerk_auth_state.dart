@@ -173,9 +173,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           final uri = Uri.parse(redirectUrl);
           await safelyCall(
             context,
-            () {
-              return parseDeepLink(ClerkDeepLink(strategy: strategy, uri: uri));
-            },
+            () => parseDeepLink(ClerkDeepLink(strategy: strategy, uri: uri)),
             onError: onError,
           );
           if (context.mounted) {

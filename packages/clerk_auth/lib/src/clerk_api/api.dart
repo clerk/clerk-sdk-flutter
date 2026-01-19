@@ -290,14 +290,13 @@ class Api with Logging {
       '`code` required for strategy $strategy',
     );
 
-    final xxx = await _fetchApiResponse(
+    return await _fetchApiResponse(
       '/client/sign_ups/${signUp.id}/attempt_verification',
       params: {
         'strategy': strategy,
         'code': code,
       },
     );
-    return xxx;
   }
 
   // Sign In API

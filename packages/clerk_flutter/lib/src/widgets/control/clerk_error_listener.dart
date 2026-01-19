@@ -36,7 +36,7 @@ class ClerkErrorListener extends StatefulWidget {
 }
 
 class _ClerkErrorListenerState extends State<ClerkErrorListener> {
-  late StreamSubscription<void>? _errorSub;
+  StreamSubscription<void>? _errorSub;
 
   Future<void> _errorHandler(clerk.ClerkError error) async {
     if (widget.handler case ClerkErrorHandler handler) {

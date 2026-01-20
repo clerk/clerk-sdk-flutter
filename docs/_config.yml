@@ -1,0 +1,78 @@
+# Clerk Dart & Flutter SDK Documentation
+title: Clerk Dart & Flutter SDK
+description: Official documentation for Clerk's Dart and Flutter SDKs
+baseurl: "/clerk-sdk-flutter"
+url: "https://clerk.github.io"
+
+# Theme
+theme: just-the-docs
+
+# Logo and branding
+logo: "/assets/images/clerk-logo.svg"
+# Custom Clerk color scheme
+color_scheme: clerk
+
+# Navigation
+nav_enabled: true
+nav_sort: case_insensitive
+
+# Search
+search_enabled: true
+search:
+  heading_level: 2
+  previews: 3
+  preview_words_before: 5
+  preview_words_after: 10
+  tokenizer_separator: /[\s/]+/
+  rel_url: true
+  button: true
+
+# Enable relative URLs for all links
+aux_links_new_tab: false
+
+# Footer
+footer_content: "Copyright &copy; 2026 Clerk, Inc. Licensed under the MIT License."
+
+# Aux links
+aux_links:
+  "Clerk Dart & Flutter SDK on GitHub":
+    - "https://github.com/clerk/clerk-sdk-flutter"
+  "Clerk Documentation":
+    - "https://clerk.com/docs"
+  "Clerk Dashboard":
+    - "https://dashboard.clerk.com"
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-github-metadata
+  - jekyll-include-cache
+  - jekyll-relative-links
+
+# Relative links configuration
+relative_links:
+  enabled: true
+  collections: true
+
+# Syntax highlighting
+kramdown:
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    default_lang: dart
+
+# Exclude from processing
+exclude:
+  - node_modules/
+  - vendor/
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+

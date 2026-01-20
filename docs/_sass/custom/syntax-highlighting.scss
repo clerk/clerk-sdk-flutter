@@ -1,0 +1,159 @@
+// Dark theme syntax highlighting for code blocks
+// Based on GitHub Dark theme
+
+.highlight {
+  background-color: #1A1A1A;
+  color: #E5E5E5;
+  
+  // Comments
+  .c, .cm, .c1, .cs {
+    color: #8B949E;
+    font-style: italic;
+  }
+  
+  // Keywords
+  .k, .kc, .kd, .kn, .kp, .kr, .kt {
+    color: #FF7B72;
+  }
+  
+  // Operators
+  .o, .ow {
+    color: #FF7B72;
+  }
+  
+  // Strings
+  .s, .s1, .s2, .sb, .sc, .sd, .se, .sh, .si, .sx {
+    color: #A5D6FF;
+  }
+  
+  // Numbers
+  .m, .mf, .mh, .mi, .mo, .il {
+    color: #79C0FF;
+  }
+  
+  // Names
+  .n, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nx, .py {
+    color: #D2A8FF;
+  }
+  
+  // Variables
+  .nv, .vc, .vg, .vi {
+    color: #FFA657;
+  }
+  
+  // Built-ins
+  .nb {
+    color: #79C0FF;
+  }
+  
+  // Functions
+  .nf {
+    color: #D2A8FF;
+  }
+  
+  // Classes
+  .nc {
+    color: #FFA657;
+  }
+  
+  // Booleans
+  .bp {
+    color: #79C0FF;
+  }
+  
+  // Punctuation
+  .p {
+    color: #E5E5E5;
+  }
+  
+  // Generic
+  .gd {
+    color: #FF7B72;
+    background-color: #3F1F1F;
+  }
+  
+  .gi {
+    color: #7EE787;
+    background-color: #1F3F1F;
+  }
+  
+  .ge {
+    font-style: italic;
+  }
+  
+  .gs {
+    font-weight: bold;
+  }
+  
+  // Line numbers
+  .lineno {
+    color: #6B6B6B;
+    user-select: none;
+    padding-right: 1em;
+    border-right: 1px solid #2A2A2A;
+    margin-right: 1em;
+  }
+  
+  // Dart-specific
+  .kd {
+    color: #FF7B72; // class, void, var, final, const
+  }
+  
+  .kt {
+    color: #79C0FF; // int, String, bool, etc.
+  }
+  
+  // YAML-specific
+  .l-Scalar-Plain {
+    color: #A5D6FF;
+  }
+  
+  .na {
+    color: #79C0FF; // YAML keys
+  }
+  
+  // JSON-specific
+  .s2 {
+    color: #A5D6FF; // JSON strings
+  }
+  
+  // Bash/Shell
+  .nv {
+    color: #79C0FF; // environment variables
+  }
+  
+  .nb {
+    color: #D2A8FF; // built-in commands
+  }
+}
+
+// Inline code
+code {
+  background-color: #1A1A1A;
+  color: #E5E5E5;
+  border: 1px solid #2A2A2A;
+}
+
+// Code blocks
+pre {
+  background-color: #1A1A1A;
+  border: 1px solid #2A2A2A;
+  
+  code {
+    background-color: transparent;
+    border: none;
+    color: #E5E5E5;
+  }
+}
+
+// Highlighted lines in code blocks
+.highlight .hll {
+  background-color: #2A2A2A;
+}
+
+// Error highlighting
+.highlight .err {
+  color: #FF7B72;
+  background-color: transparent;
+}
+

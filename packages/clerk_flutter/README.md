@@ -16,6 +16,20 @@
 **Clerk helps developers build user management. We provide streamlined user experiences
 for your users to sign up, sign in, and manage their profile from your Flutter code.**
 
+---
+
+## 📚 Documentation
+
+**[View Full Documentation →](https://clerk.github.io/clerk-sdk-flutter/packages/clerk-flutter)**
+
+- 🚀 [Flutter Quickstart](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-flutter)
+- 📖 [Widget Reference](https://clerk.github.io/clerk-sdk-flutter/api/widgets)
+- 🎨 [Customization Guide](https://clerk.github.io/clerk-sdk-flutter/guides/customization)
+- 🎯 [Authentication Flows](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
+- 👤 [User Management](https://clerk.github.io/clerk-sdk-flutter/guides/user-management)
+
+---
+
 ## Requirements
 
 * Flutter >= 3.27.4
@@ -77,6 +91,19 @@ Add the following line to your `android/app/src/main/AndroidManifest.xml` file:
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 ```
+
+---
+
+## 📖 Learn More
+
+- [Full Documentation](https://clerk.github.io/clerk-sdk-flutter/)
+- [Flutter Quickstart](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-flutter)
+- [Widget Reference](https://clerk.github.io/clerk-sdk-flutter/api/widgets)
+- [Customization Guide](https://clerk.github.io/clerk-sdk-flutter/guides/customization)
+- [Authentication Flows](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
+- [Example App](https://github.com/clerk/clerk-sdk-flutter/tree/main/packages/clerk_flutter/example)
+
+---
 
 ## License
 

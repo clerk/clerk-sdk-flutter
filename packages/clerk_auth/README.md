@@ -10,11 +10,24 @@
 [![documentation](https://img.shields.io/badge/documentation-clerk-green.svg)](https://clerk.com/docs)
 [![twitter](https://img.shields.io/twitter/follow/ClerkDev?style=social)](https://twitter.com/intent/follow?screen_name=ClerkDev)
 
-> ### ⚠️ The Clerk Flutter SDK is in Beta ⚠️
+> ### ⚠️ The Clerk Dart SDK is in Beta ⚠️
 > ❗️ Breaking changes should be expected until the first stable release (1.0.0) ❗️
 
 **Clerk helps developers build user management. We provide streamlined user experiences
 for your users to sign up, sign in, and manage their profile from your Dart code.**
+
+---
+
+## 📚 Documentation
+
+**[View Full Documentation →](https://clerk.github.io/clerk-sdk-flutter/packages/clerk-auth)**
+
+- 🚀 [Dart Quickstart](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-dart)
+- 📖 [API Reference](https://pub.dev/documentation/clerk_auth/latest/)
+- 🎯 [Authentication Guide](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
+- 👤 [User Management](https://clerk.github.io/clerk-sdk-flutter/guides/user-management)
+
+---
 
 ## Requirements
 
@@ -68,7 +81,9 @@ Future<void> main() async {
 }
 ```
 
-For more details see [Clerk Auth object](https://pub.dev/documentation/clerk_auth/latest/clerk_auth/Auth-class.html)
+For more details see:
+- [Clerk Auth Documentation](https://clerk.github.io/clerk-sdk-flutter/packages/clerk-auth)
+- [API Reference](https://pub.dev/documentation/clerk_auth/latest/clerk_auth/Auth-class.html)
 
 ## Session Token Polling
 
@@ -96,6 +111,18 @@ Note that the behaviour described above has been introduced in v0.0.13-beta. Pri
 polling off, enabling it via a `SessionTokenPollMode` object in the config. This object has been deprecated in 
 v0.0.13-beta: it is no longer used, and will be deleted in a future version. If you are using it, or relying on
 the system defaulting to no polling, please review your code.
+
+---
+
+## 📖 Learn More
+
+- [Full Documentation](https://clerk.github.io/clerk-sdk-flutter/)
+- [Dart Quickstart](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-dart)
+- [Authentication Guide](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
+- [User Management](https://clerk.github.io/clerk-sdk-flutter/guides/user-management)
+- [Session Tokens](https://clerk.github.io/clerk-sdk-flutter/guides/session-tokens)
+
+---
 
 ## License
 

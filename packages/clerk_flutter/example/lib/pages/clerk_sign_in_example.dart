@@ -37,7 +37,7 @@ class _ClerkSignInExampleState extends State<ClerkSignInExample> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
         final authState = ClerkAuth.of(context, listen: false);
-        if (authState.isSigningIn) {
+        if (authState.isSigningIn || authState.isSigningUp) {
           await authState.resetClient();
         }
         resetCompleter.complete();

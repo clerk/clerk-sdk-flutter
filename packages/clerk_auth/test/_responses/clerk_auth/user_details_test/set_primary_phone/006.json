@@ -1,5 +1,5 @@
 {
-  "key": "POST /v1/client/sign_ups/SIGN_UP_ID/attempt_verification code=424242&strategy=email_code",
+  "key": "POST /v1/client/sign_ups/SIGN_UP_ID/prepare_verification strategy=phone_code",
   "body": {
     "response": {
       "object": "sign_up_attempt",
@@ -15,10 +15,15 @@
       ],
       "optional_fields": [
         "oauth_apple",
+        "oauth_box",
         "oauth_facebook",
         "oauth_github",
         "oauth_google",
         "oauth_linkedin_oidc",
+        "oauth_notion",
+        "oauth_tiktok",
+        "oauth_vercel",
+        "oauth_x",
         "username"
       ],
       "missing_fields": [],
@@ -88,10 +93,15 @@
         ],
         "optional_fields": [
           "oauth_apple",
+          "oauth_box",
           "oauth_facebook",
           "oauth_github",
           "oauth_google",
           "oauth_linkedin_oidc",
+          "oauth_notion",
+          "oauth_tiktok",
+          "oauth_vercel",
+          "oauth_x",
           "username"
         ],
         "missing_fields": [],

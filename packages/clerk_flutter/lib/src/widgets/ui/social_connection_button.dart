@@ -30,7 +30,7 @@ class SocialConnectionButton extends StatelessWidget {
   });
 
   /// Function to call when a strategy chosen
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   /// The oAuth provider this button represents.
   final clerk.SocialConnection connection;
@@ -41,30 +41,34 @@ class SocialConnectionButton extends StatelessWidget {
     return SizedBox(
       width: 45,
       height: 30,
-      child: MaterialButton(
-        onPressed: onPressed,
-        elevation: 2.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: borderRadius4,
-          side: BorderSide(color: themeExtension.colors.borderSide),
-        ),
-        textColor: themeExtension.colors.lightweightText,
-        child: connection.logoUrl.isNotEmpty
-            ? ClerkCachedImage(
-                connection.logoUrl,
-                invertColors: connection.invertLogoForDarkMode &&
-                    themeExtension.brightness == Brightness.dark,
-                width: 14,
-              )
-            : Text(
-                connection.name.initials,
-                textAlign: TextAlign.center,
-                style: themeExtension.styles.heading.copyWith(
-                  height: .1,
-                  fontSize: 16,
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 200),
+        opacity: onPressed == null ? 0.5 : 1.0,
+        child: MaterialButton(
+          onPressed: onPressed,
+          elevation: 2.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: borderRadius4,
+            side: BorderSide(color: themeExtension.colors.borderSide),
+          ),
+          textColor: themeExtension.colors.lightweightText,
+          child: connection.logoUrl.isNotEmpty
+              ? ClerkCachedImage(
+                  connection.logoUrl,
+                  invertColors: connection.invertLogoForDarkMode &&
+                      themeExtension.brightness == Brightness.dark,
+                  width: 14,
+                )
+              : Text(
+                  connection.name.initials,
+                  textAlign: TextAlign.center,
+                  style: themeExtension.styles.heading.copyWith(
+                    height: .1,
+                    fontSize: 16,
+                  ),
+                  textScaler: TextScaler.noScaling,
                 ),
-                textScaler: TextScaler.noScaling,
-              ),
+        ),
       ),
     );
   }

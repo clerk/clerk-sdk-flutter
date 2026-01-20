@@ -190,7 +190,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     }
   }
 
-  /// Performs SSO sign in according to the [strategy]
+  /// Performs SSO sign up according to the [strategy]
   Future<void> ssoSignUp(
     BuildContext context,
     clerk.Strategy strategy, {

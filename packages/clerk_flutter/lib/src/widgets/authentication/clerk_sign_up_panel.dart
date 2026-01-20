@@ -6,7 +6,7 @@ import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
-import 'package:clerk_flutter/src/widgets/ui/clerk_continue_button.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_control_buttons.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
@@ -93,12 +93,15 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     });
   }
 
-  Future<void> _continue(List<_Attribute> attributes) async {
-    final authState = ClerkAuth.of(context, listen: false);
+  Future<void> _continue(
+    ClerkAuthState authState,
+    List<_Attribute> attributes,
+  ) async {
+    final l10ns = authState.localizationsOf(context);
 
     final password = _valueOrNull(clerk.UserAttribute.password);
-    if (authState.signUp?.requires(clerk.Field.password) == true &&
-        password?.isNotEmpty != true) {
+    if (authState.signUp?.missing(clerk.Field.password) == true &&
+        password == null) {
       final l10ns = ClerkAuth.localizationsOf(context);
       authState.addError(
         clerk.ClerkError.clientAppError(message: l10ns.passwordMustBeSupplied),
@@ -113,16 +116,6 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       authState.addError(
         clerk.ClerkError.clientAppError(message: error),
       );
-      return;
-    }
-
-    if (attributes.any((a) => a.isRequired && _valueOrNull(a.attr) == null)) {
-      final l10ns = ClerkAuth.localizationsOf(context);
-      authState.addError(
-        clerk.ClerkError.clientAppError(
-            message: l10ns.pleaseAddRequiredInformation),
-      );
-      setState(() => _highlightMissing = true);
       return;
     }
 
@@ -154,8 +147,17 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       await authState.ssoSignUp(context, clerk.Strategy.enterpriseSSO);
     }
 
+    final hasMissingFields = authState.signUp?.missingFields.isNotEmpty == true;
+    if (hasMissingFields) {
+      authState.addError(
+        clerk.ClerkError.clientAppError(
+          message: l10ns.pleaseAddRequiredInformation,
+        ),
+      );
+    }
+
     setState(() {
-      _state = authState.isSigningUp
+      _state = authState.isSigningUp && hasMissingFields == false
           ? _SignUpPanelState.waiting
           : _SignUpPanelState.input;
       _highlightMissing = true;
@@ -165,8 +167,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   void _acceptTerms() =>
       setState(() => _hasLegalAcceptance = !_hasLegalAcceptance);
 
-  Future<void> _reset() async {
-    final authState = ClerkAuth.of(context, listen: false);
+  Future<void> _reset(ClerkAuthState authState) async {
     await authState.resetClient();
     _state = _SignUpPanelState.input;
   }
@@ -188,6 +189,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             when data.isEnabled) //
           _Attribute(attr, data),
     ];
+    final hasMissingFields = signUp?.missingFields.isNotEmpty == true;
     final isAwaitingCode = (env.supportsEmailCode &&
             signUp?.unverified(clerk.Field.emailAddress) == true) ||
         (env.supportsPhoneCode &&
@@ -218,6 +220,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             value: _values[attr] ?? '',
             localizations: l10ns,
             closed: _state.isInput ||
+                hasMissingFields ||
                 signUp?.unverified(clerk.Field.forUserAttribute(attr)) != true,
             onSubmit: (code) async {
               await _sendCode(
@@ -226,9 +229,10 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
               );
               return false;
             },
-            onResend: _reset,
+            onResend: () => _continue(authState, attributes),
           ),
         if (env.supportsEmailLink &&
+            hasMissingFields == false &&
             signUp?.unverified(clerk.Field.emailAddress) == true) //
           Closeable(
             closed: _state.isInput || isAwaitingCode,
@@ -253,20 +257,19 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             mainAxisSize: MainAxisSize.min,
             children: [
               for (final attribute in attributes) //
-                _FormField(
-                  attribute: attribute,
-                  authState: authState,
-                  localizations: l10ns,
-                  values: _values,
-                  highlight: _highlightMissing,
-                ),
+                if (hasMissingFields == false ||
+                    signUp?.missing(
+                            clerk.Field.forUserAttribute(attribute.attr)) ==
+                        true)
+                  _FormField(
+                    attribute: attribute,
+                    authState: authState,
+                    localizations: l10ns,
+                    values: _values,
+                    highlight: _highlightMissing,
+                  ),
             ],
           ),
-        ),
-        Closeable(
-          closed: (_state.isWaiting && isAwaitingCode == false) ||
-              (_needsLegalAcceptance && _hasLegalAcceptance == false),
-          child: ClerkContinueButton(onPressed: () => _continue(attributes)),
         ),
         if (_needsLegalAcceptance) //
           Closeable(
@@ -291,6 +294,18 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
               ],
             ),
           ),
+        Openable(
+          open: _needsLegalAcceptance == false || _hasLegalAcceptance,
+          child: Padding(
+            padding: verticalPadding16,
+            child: ClerkControlButtons(
+              onContinue: () => _continue(authState, attributes),
+              onBack: _state.isWaiting || hasMissingFields
+                  ? () => _reset(authState)
+                  : null,
+            ),
+          ),
+        ),
         verticalMargin32,
       ],
     );

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:clerk_auth/clerk_auth.dart';
+import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 /// Clerk Error Handler
 typedef ClerkErrorHandler = FutureOr<void> Function(
   BuildContext context,
-  ClerkError error,
+  clerk.ClerkError error,
 );
 
 /// Widget to display error messages as errors are received
@@ -38,7 +38,7 @@ class ClerkErrorListener extends StatefulWidget {
 class _ClerkErrorListenerState extends State<ClerkErrorListener> {
   StreamSubscription<void>? _errorSub;
 
-  Future<void> _errorHandler(ClerkError error) async {
+  Future<void> _errorHandler(clerk.ClerkError error) async {
     if (widget.handler case ClerkErrorHandler handler) {
       return handler(context, error);
     }

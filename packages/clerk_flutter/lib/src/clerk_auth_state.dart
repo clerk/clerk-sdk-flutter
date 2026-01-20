@@ -39,6 +39,20 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
 
+  final _errors = StreamController<clerk.ClerkError>.broadcast();
+
+  /// Stream of [clerk.ClerkError]s
+  Stream<clerk.ClerkError> get errorStream => _errors.stream;
+
+  @override
+  void handleError(clerk.ClerkError error) {
+    if (_errors.hasListener) {
+      _errors.add(error);
+    } else {
+      super.handleError(error);
+    }
+  }
+
   @override
   Future<void> initialize() async {
     await super.initialize();
@@ -51,6 +65,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     _deepLinkSub = null;
     dispose();
     super.terminate();
+    _errors.close();
   }
 
   void _processDeepLink(ClerkDeepLink? link) {
@@ -309,8 +324,8 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   }
 
   void _onError(clerk.ClerkError error, ClerkErrorCallback? onError) {
-    addError(error);
     onError?.call(error);
+    handleError(error); // last, because may throw
   }
 
   /// Returns a boolean regarding whether or not a password has been supplied,

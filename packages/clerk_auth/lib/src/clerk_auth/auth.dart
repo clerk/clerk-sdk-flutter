@@ -45,25 +45,25 @@ class Auth {
   Timer? _pollTimer;
   Map<String, dynamic> _persistableData = {};
 
-  /// Stream of errors reported by the SDK of type [ClerkError]
-  Stream<ClerkError> get errorStream => _errors.stream;
-  final _errors = StreamController<ClerkError>.broadcast();
-
   /// Stream of [SessionToken]s as they renew
   Stream<SessionToken> get sessionTokenStream => _sessionTokens.stream;
   final _sessionTokens = StreamController<SessionToken>.broadcast();
 
   /// Adds [error] to [errorStream]
-  void addError(ClerkError error) => _errors.add(error);
+  @Deprecated('Please use handleError instead.')
+  void addError(ClerkError error) => handleError(error);
+
+  /// Handles [ClerkError]s when they occur
+  void handleError(ClerkError error) => throw error;
 
   Future<T?> _catchExternalErrors<T>(FutureOr<T?> Function() fn) async {
     try {
       return await fn();
     } on ExternalError catch (error) {
       if (error.errors case ExternalErrorCollection errors) {
-        addError(ClerkError.from(errors));
+        handleError(ClerkError.from(errors));
       } else {
-        addError(
+        handleError(
           ClerkError(
             message: error.toString(),
             code: error.errorCode ?? ClerkErrorCode.serverErrorResponse,
@@ -72,6 +72,15 @@ class Auth {
       }
     }
     return null;
+  }
+
+  ApiResponse _housekeeping(ApiResponse resp) {
+    if (resp.isError) {
+      handleError(ClerkError.from(resp.errorCollection));
+    } else if (resp.client case Client client) {
+      this.client = client;
+    }
+    return resp;
   }
 
   /// Are we not yet initialised?
@@ -206,7 +215,6 @@ class Auth {
     _persistenceTimer?.cancel();
     _refetchTimer?.cancel();
     _api.terminate();
-    _errors.close();
     _sessionTokens.close();
     telemetry.terminate();
     config.terminate();
@@ -256,15 +264,6 @@ class Auth {
       // timestamped versions anyway)
       return (Client.empty, Environment.empty);
     }
-  }
-
-  ApiResponse _housekeeping(ApiResponse resp) {
-    if (resp.isError) {
-      addError(ClerkError.from(resp.errorCollection));
-    } else if (resp.client case Client client) {
-      this.client = client;
-    }
-    return resp;
   }
 
   Future<void> _persistData() async {
@@ -501,7 +500,7 @@ class Auth {
           .createSignIn(identifier: identifier, strategy: strategy)
           .then(_housekeeping);
     } else {
-      addError(
+      handleError(
         ClerkError(
           code: ClerkErrorCode.passwordResetStrategyError,
           message: 'Unsupported password reset strategy: {arg}',
@@ -1000,7 +999,7 @@ class Auth {
       client = await _api.currentClient();
       update();
     } else {
-      addError(
+      handleError(
         const ClerkError(
           code: ClerkErrorCode.cannotDeleteSelf,
           message: 'You are not authorized to delete your user',

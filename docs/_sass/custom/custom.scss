@@ -1,0 +1,167 @@
+// Import syntax highlighting
+@import "./syntax-highlighting";
+
+
+// Custom styles to match Clerk documentation
+
+// Smooth scrolling
+html {
+  scroll-behavior: smooth;
+}
+
+// Logo styling
+.site-logo {
+  max-height: 32px;
+}
+
+// Navigation improvements
+.site-nav {
+  padding-top: 1.5rem;
+}
+
+.nav-list .nav-list-item {
+  margin: 0.25rem 0;
+}
+
+.nav-list-link {
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(108, 71, 255, 0.1);
+  }
+
+  &.active {
+    background-color: rgba(108, 71, 255, 0.15);
+    font-weight: 500;
+  }
+}
+
+// Code blocks
+pre.highlight {
+  border-radius: 8px;
+  border: 1px solid #2A2A2A;
+}
+
+code {
+  border-radius: 4px;
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+}
+
+// Tables
+table {
+  border-radius: 8px;
+  overflow: hidden;
+
+  th {
+    background-color: #1A1A1A;
+    font-weight: 600;
+  }
+
+  td, th {
+    border-color: #2A2A2A;
+  }
+}
+
+// Buttons
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid #2A2A2A;
+  background-color: transparent;
+  color: #E5E5E5;
+
+  &:hover {
+    border-color: #6C47FF;
+    background-color: rgba(108, 71, 255, 0.1);
+    color: #FFFFFF;
+  }
+}
+
+.btn-primary {
+  background-color: #6C47FF;
+  border-color: #6C47FF;
+  color: #FFFFFF;
+
+  &:hover {
+    background-color: #5A38E6;
+    border-color: #5A38E6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(108, 71, 255, 0.3);
+  }
+}
+
+// Headings
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+// Links
+a {
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #B5AAEB;
+  }
+}
+
+// Search
+.search-input {
+  border-radius: 8px;
+  background-color: #1A1A1A;
+  border: 1px solid #2A2A2A;
+
+  &:focus {
+    border-color: #6C47FF;
+    box-shadow: 0 0 0 3px rgba(108, 71, 255, 0.1);
+  }
+}
+
+// Callouts
+.label,
+.label-blue,
+.label-green,
+.label-purple,
+.label-red,
+.label-yellow {
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+// Note/Warning boxes
+blockquote {
+  border-left: 4px solid #6C47FF;
+  background-color: rgba(108, 71, 255, 0.05);
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+
+// Sidebar footer
+.site-footer {
+  border-top: 1px solid #2A2A2A;
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #6B6B6B;
+}
+
+// Main content area
+.main-content {
+  max-width: 50rem;
+
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #2A2A2A;
+  }
+}
+

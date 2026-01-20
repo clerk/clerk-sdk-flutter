@@ -22,6 +22,7 @@ class User with InformativeToStringMixin {
   /// Constructor
   const User({
     required this.id,
+    required this.externalId,
     required this.username,
     required this.firstName,
     required this.lastName,
@@ -58,6 +59,9 @@ class User with InformativeToStringMixin {
 
   /// id
   final String id;
+
+  /// external id
+  final String? externalId;
 
   /// username
   final String? username;
@@ -262,6 +266,7 @@ class User with InformativeToStringMixin {
 
   /// copy this user with changed fields
   User copyWith({
+    String? externalId,
     String? username,
     String? firstName,
     String? lastName,
@@ -297,6 +302,7 @@ class User with InformativeToStringMixin {
   }) {
     return User(
       id: id,
+      externalId: externalId ?? this.externalId,
       username: username ?? this.username,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,

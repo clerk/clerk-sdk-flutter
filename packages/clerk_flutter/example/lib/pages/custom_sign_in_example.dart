@@ -52,14 +52,6 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     });
   }
 
-  // Always dispose of the subscriptions and remove listeners.
-  @override
-  void dispose() {
-    super.dispose();
-    _authState.removeListener(_clerkAuthListener);
-    _errorSubscription.cancel();
-  }
-
   void _clerkAuthListener() {
     final user = _authState.user;
     _user.value = user;
@@ -97,6 +89,14 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
       token: account.authentication.idToken,
     );
     _loading.value = false;
+  }
+
+  // Always dispose of the subscriptions and remove listeners.
+  @override
+  void dispose() {
+    super.dispose();
+    _authState.removeListener(_clerkAuthListener);
+    _errorSubscription.cancel();
   }
 
   @override

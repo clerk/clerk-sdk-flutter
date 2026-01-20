@@ -30,7 +30,7 @@ class CustomEmailSignInExample extends StatefulWidget {
 }
 
 class _CustomEmailSignInExampleState extends State<CustomEmailSignInExample> {
-  final _initialized = ValueNotifier<bool>(false);
+  final _initalized = ValueNotifier<bool>(false);
   final _loading = ValueNotifier<bool>(false);
   final _user = ValueNotifier<clerk.User?>(null);
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -49,7 +49,7 @@ class _CustomEmailSignInExampleState extends State<CustomEmailSignInExample> {
       _user.value = _authState.user;
       _authState.addListener(_clerkAuthListener);
       _errorSubscription = _authState.errorStream.listen(_onError);
-      _initialized.value = true;
+      _initalized.value = true;
     });
   }
 
@@ -98,9 +98,9 @@ class _CustomEmailSignInExampleState extends State<CustomEmailSignInExample> {
         title: const Text('Custom Email Sign In'),
       ),
       body: ListenableBuilder(
-        listenable: _initialized,
+        listenable: _initalized,
         builder: (context, _) {
-          if (!_initialized.value) {
+          if (!_initalized.value) {
             return const Center(child: CircularProgressIndicator());
           }
           return ValueListenableBuilder<bool>(

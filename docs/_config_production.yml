@@ -1,0 +1,7 @@
+# Production overrides for GitHub Pages deployment
+# This file is merged with _config.yml during GitHub Pages build
+
+# Use remote_theme for GitHub Pages
+remote_theme: just-the-docs/just-the-docs
+theme: null
+

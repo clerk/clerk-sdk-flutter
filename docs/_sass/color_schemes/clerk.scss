@@ -1,0 +1,56 @@
+// Clerk color scheme - matching https://clerk.com/docs
+// Based on dark theme with Clerk brand colors
+
+// Background colors
+$body-background-color: #0F0F0F;
+$sidebar-color: #0F0F0F;
+$code-background-color: #1A1A1A;
+$table-background-color: #1A1A1A;
+$feedback-color: darken($sidebar-color, 3%);
+
+// Text colors
+$body-text-color: #E5E5E5;
+$body-heading-color: #FFFFFF;
+$nav-child-link-color: #A1A1A1;
+$link-color: #9B8FD9;
+$btn-primary-color: #6C47FF;
+$base-button-color: #6C47FF;
+
+// Border colors
+$border-color: #2A2A2A;
+
+// Code colors
+$code-linenumber-color: #6B6B6B;
+
+// Search
+$search-background-color: #1A1A1A;
+$search-result-preview-color: #A1A1A1;
+
+// Sidebar
+$sidebar-width: 264px;
+$sidebar-width-sm: 200px;
+
+// Navigation
+$nav-list-link-color: #E5E5E5;
+$nav-list-link-color-hover: #FFFFFF;
+$nav-list-link-color-active: #FFFFFF;
+$nav-list-expander-color: #6B6B6B;
+
+// Buttons
+$btn-primary-color: #6C47FF;
+
+// Base button (outline style)
+$base-button-color: transparent;
+
+// Feedback colors
+$label-green: #10B981;
+$label-blue: #3B82F6;
+$label-purple: #6C47FF;
+$label-red: #EF4444;
+$label-yellow: #F59E0B;
+
+// Callouts/Admonitions
+$note-color: #3B82F6;
+$warning-color: #F59E0B;
+$important-color: #EF4444;
+

@@ -159,7 +159,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
     final hasMissingFields = authState.signUp?.missingFields.isNotEmpty == true;
     if (hasMissingFields) {
-      authState.addError(
+      authState.handleError(
         clerk.ClerkError.clientAppError(
           message: l10ns.pleaseAddRequiredInformation,
         ),

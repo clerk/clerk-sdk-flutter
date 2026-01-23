@@ -13,7 +13,6 @@ import 'package:clerk_auth/src/models/models.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:http/http.dart' as http;
-import 'package:retry/retry.dart';
 
 typedef _JsonObject = Map<String, dynamic>;
 

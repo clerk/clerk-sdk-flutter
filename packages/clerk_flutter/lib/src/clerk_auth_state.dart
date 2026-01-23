@@ -37,7 +37,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   ClerkAuthConfig get config => _config;
   final ClerkAuthConfig _config;
 
-  StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
+  StreamSubscription<Uri?>? _deepLinkSub;
 
   final _errors = StreamController<clerk.ClerkError>.broadcast();
 
@@ -68,8 +68,8 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     _errors.close();
   }
 
-  void _processDeepLink(ClerkDeepLink? link) {
-    if (link case ClerkDeepLink link) {
+  void _processDeepLink(Uri? link) {
+    if (link case Uri link) {
       parseDeepLink(link);
     }
   }
@@ -188,7 +188,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           final uri = Uri.parse(redirectUrl);
           await safelyCall(
             context,
-            () => parseDeepLink(ClerkDeepLink(strategy: strategy, uri: uri)),
+            () => parseDeepLink(uri),
             onError: onError,
           );
           if (context.mounted) {
@@ -247,9 +247,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
         if (redirectUrl != null && context.mounted) {
           await safelyCall(
             context,
-            () => parseDeepLink(
-              ClerkDeepLink(strategy: strategy, uri: Uri.parse(redirectUrl)),
-            ),
+            () => parseDeepLink(Uri.parse(redirectUrl)),
             onError: onError,
           );
           if (context.mounted) {
@@ -282,11 +280,11 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   ///
   /// If the link contains no known [clerk.Strategy], it is assumed that the
   /// final element of the [uri.path] will be the name of the strategy to use
-  Future<bool> parseDeepLink(ClerkDeepLink link) async {
+  Future<bool> parseDeepLink(Uri uri) async {
     if (signIn?.verification case clerk.Verification verification
         when verification.status.isVerified == false) {
       if (verification.strategy.isSSO) {
-        if (link.uri.queryParameters[_kRotatingTokenNonce] case String token) {
+        if (uri.queryParameters[_kRotatingTokenNonce] case String token) {
           await completeOAuthSignIn(token: token);
         } else {
           await refreshClient();

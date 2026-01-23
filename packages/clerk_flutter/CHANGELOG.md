@@ -1,3 +1,9 @@
+## 0.0.14-beta
+
+* BREAKING CHANGE: The `ClerkDeepLink` class has been removed, since the information
+  it carried is no longer being used. Deep links are now passed into the Clerk SDK 
+  as `Stream<Uri?> deepLinkStream` in the `ClerkAuthConfig`. 
+
 ## 0.0.13-beta
 
 * feat: make test helpers globally available [#292]

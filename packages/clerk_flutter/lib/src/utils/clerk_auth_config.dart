@@ -91,7 +91,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
 
   /// A stream of deep links that the host app thinks the Clerk
   /// SDK might be interested in
-  final Stream<ClerkDeepLink?>? deepLinkStream;
+  final Stream<Uri?>? deepLinkStream;
 
   /// The default [LaunchMode] to use when launching a URL for SSO
   final LaunchMode defaultLaunchMode;

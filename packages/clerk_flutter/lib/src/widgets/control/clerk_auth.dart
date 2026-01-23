@@ -8,19 +8,6 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/material.dart';
 
-/// A class to transport [Uri]s from deep links into the app into the Clerk
-/// SDK, potentially with a [clerk.Strategy] imposed by the host app
-class ClerkDeepLink {
-  /// construct a [ClerkDeepLink]
-  const ClerkDeepLink({required this.uri, this.strategy});
-
-  /// The [Uri]
-  final Uri uri;
-
-  /// The [clerk.Strategy]
-  final clerk.Strategy? strategy;
-}
-
 /// Control widget initialising Clerk Auth system
 class ClerkAuth extends StatefulWidget {
   /// Construct a [ClerkAuth]
@@ -40,7 +27,7 @@ class ClerkAuth extends StatefulWidget {
   /// Constructor to use when using [MaterialApp] for your project.
   static TransitionBuilder materialAppBuilder({
     required ClerkAuthConfig config,
-    Stream<ClerkDeepLink>? deepLinkStream,
+    Stream<Uri>? deepLinkStream,
   }) {
     return (BuildContext context, Widget? child) {
       return ClerkAuth(

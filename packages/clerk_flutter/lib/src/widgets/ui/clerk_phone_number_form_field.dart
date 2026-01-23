@@ -131,7 +131,7 @@ class _PhoneInputState extends State<_PhoneInput> {
 
   bool _valid(PhoneNumber? phoneNumber) =>
       // For debugging, since [PhoneNumber] won't validate Clerk test numbers:
-      /* phoneNumber?.international == '+XXXXXXXX' || */
+      // phoneNumber?.international == '+XXXXXXXXX' ||
       phoneNumber?.isValid() == true;
 
   @override

@@ -479,14 +479,12 @@ class Api with Logging {
   ///
   Future<ApiResponse> sendOauthToken(
     AuthObject authObject, {
-    required Strategy strategy,
     required String token,
   }) async {
     return await _fetchApiResponse(
       '/client/${authObject.urlType}/${authObject.id}',
       method: HttpMethod.get,
       params: {
-        'strategy': strategy,
         'rotating_token_nonce': token,
       },
     );

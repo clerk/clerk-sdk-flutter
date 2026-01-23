@@ -283,21 +283,18 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   /// If the link contains no known [clerk.Strategy], it is assumed that the
   /// final element of the [uri.path] will be the name of the strategy to use
   Future<bool> parseDeepLink(ClerkDeepLink link) async {
-    final strategy = switch (link.strategy) {
-      clerk.Strategy strategy when strategy.isKnown => strategy,
-      _ => clerk.Strategy.fromJson(link.uri.pathSegments.last),
-    };
-
-    if (strategy.isUnknown) {
-      return false;
-    } else if (strategy == clerk.Strategy.emailLink) {
-      await refreshClient();
-    } else if (link.uri.queryParameters[_kRotatingTokenNonce] case String token
-        when strategy.isSSO) {
-      await completeOAuthSignIn(strategy: strategy, token: token);
-    } else {
-      await refreshClient();
-      await transfer();
+    if (signIn?.verification case clerk.Verification verification
+        when verification.status.isVerified == false) {
+      if (verification.strategy.isSSO) {
+        if (link.uri.queryParameters[_kRotatingTokenNonce] case String token) {
+          await completeOAuthSignIn(token: token);
+        } else {
+          await refreshClient();
+          await transfer();
+        }
+      }
+    } else if (user is clerk.User) {
+      update();
     }
 
     return true;

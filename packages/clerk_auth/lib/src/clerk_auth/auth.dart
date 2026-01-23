@@ -379,13 +379,10 @@ class Auth {
   /// Complete oAuth sign in by presenting the token
   ///
   Future<void> completeOAuthSignIn({
-    required Strategy strategy,
     required String token,
   }) async {
     if (signIn ?? signUp case AuthObject authObject) {
-      await _api
-          .sendOauthToken(authObject, strategy: strategy, token: token)
-          .then(_housekeeping);
+      await _api.sendOauthToken(authObject, token: token).then(_housekeeping);
       update();
     }
   }
@@ -550,9 +547,7 @@ class Auth {
         break;
 
       case SignIn signIn when strategy.isSSO && token is String:
-        await _api
-            .sendOauthToken(signIn, strategy: strategy, token: token)
-            .then(_housekeeping);
+        await _api.sendOauthToken(signIn, token: token).then(_housekeeping);
 
       case SignIn signIn
           when strategy.isPasswordResetter &&

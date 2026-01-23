@@ -39,7 +39,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     super.clientRefreshPeriod,
     super.httpService,
     super.httpConnectionTimeout,
-    super.rateLimitRetryPeriod,
+    super.retryOptions,
     this.loading = defaultLoadingWidget,
     this.redirectionGenerator,
     this.deepLinkStream,

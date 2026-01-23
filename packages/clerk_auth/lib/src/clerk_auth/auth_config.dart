@@ -7,6 +7,9 @@ import 'package:clerk_auth/src/clerk_auth/sdk_flags.dart';
 // ignore: deprecated_member_use_from_same_package
 import 'package:clerk_auth/src/models/enums.dart' show SessionTokenPollMode;
 import 'package:meta/meta.dart';
+import 'package:retry/retry.dart';
+
+export 'package:retry/retry.dart' show RetryOptions;
 
 /// Used by [Api] to locate the current user locale preference.
 typedef LocalesLookup = List<String> Function();
@@ -22,7 +25,7 @@ class AuthConfig {
     required this.persistor,
     this.flags = const SdkFlags(),
     this.sessionTokenPolling = true,
-    this.rateLimitRetryPeriod = Duration.zero,
+    this.retryOptions = const RetryOptions(),
     // ignore: deprecated_member_use_from_same_package
     SessionTokenPollMode? sessionTokenPollMode, // deprecated
     LocalesLookup? localesLookup,
@@ -60,9 +63,8 @@ class AuthConfig {
   /// Do we want to regularly poll for a new session token?
   final bool sessionTokenPolling;
 
-  /// The amount of time to keep retrying a request when rate limited before
-  /// erroring
-  final Duration rateLimitRetryPeriod;
+  /// Options for retrying failed requests
+  final RetryOptions retryOptions;
 
   /// Function to return list of current user's locales for translation
   final LocalesLookup localesLookup;

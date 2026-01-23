@@ -13,6 +13,7 @@ import 'package:clerk_auth/src/models/models.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
 import 'package:http/http.dart' as http;
+import 'package:retry/retry.dart';
 
 typedef _JsonObject = Map<String, dynamic>;
 
@@ -1036,33 +1037,49 @@ class Api with Logging {
     );
     final uri = _uri(path, params: queryParams);
 
-    final tryUntil = DateTime.timestamp().add(config.rateLimitRetryPeriod);
-    while (true) {
-      final resp = await config.httpService.send(
-        method,
-        uri,
-        headers: headers,
-        params: method.isNotGet ? bodyParams : null,
-      );
-
-      if (resp.statusCode != HttpStatus.tooManyRequests) {
-        return resp;
-      }
-
-      // Have we run out of time to retry after a 429?
-      if (DateTime.timestamp().isAfter(tryUntil)) {
-        throw const ExternalError(
-          message: 'You have tried too many times. Please try again later.',
-          code: 'too_many_retries',
-          errorCode: ClerkErrorCode.tooManyRetries,
+    return await config.retryOptions.retry(
+      () async {
+        final response = await config.httpService.send(
+          method,
+          uri,
+          headers: headers,
+          params: method.isNotGet ? bodyParams : null,
         );
-      }
-
-      // If we still have time, delay the requisite amount before retrying
-      final delay = int.tryParse(resp.headers['retry-after'] ?? '') ?? 5;
-      logSevere('HTTP429 received. Delaying ${delay}secs');
-      await Future.delayed(Duration(seconds: delay));
-    }
+        if (response.statusCode == HttpStatus.tooManyRequests) {
+          throw ExternalError(
+            message: 'You have tried too many times. Please try again later.',
+            code: 'too_many_retries',
+            errorCode: ClerkErrorCode.tooManyRetries,
+            meta: response.headers,
+          );
+        }
+        return response;
+      },
+      retryIf: (e) {
+        // Retry on socket exceptions
+        if (e is SocketException || e is TimeoutException) {
+          return true;
+        }
+        // Retry on 429
+        if (e case ExternalError e
+            when e.errorCode == ClerkErrorCode.tooManyRetries) {
+          return true;
+        }
+        return false;
+      },
+      onRetry: (e) async {
+        logNotice('Retrying request due to:', e);
+        if (e case ExternalError e
+            when e.errorCode == ClerkErrorCode.tooManyRetries) {
+          // capture retry-after header and delay if
+          // present, otherwise retry with default backoff
+          final delay = int.tryParse(e.meta?['retry-after'] ?? '');
+          if (delay != null) {
+            await Future.delayed(Duration(seconds: delay));
+          }
+        }
+      },
+    );
   }
 
   _JsonObject _queryParams(

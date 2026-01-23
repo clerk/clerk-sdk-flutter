@@ -570,6 +570,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Strategy {arg} not supported for second factor'**
   String noSuchSecondFactorStrategy(String arg);
 
+  /// No description provided for @noUserAttributeForField.
+  ///
+  /// In en, this message translates to:
+  /// **'No user attribute found for field {arg}'**
+  String noUserAttributeForField(String arg);
+
   /// No description provided for @ok.
   ///
   /// In en, this message translates to:
@@ -753,7 +759,7 @@ abstract class ClerkSdkLocalizations {
   /// No description provided for @serverErrorResponse.
   ///
   /// In en, this message translates to:
-  /// **'There was an error on the Frontend API server: {arg}'**
+  /// **'{arg} (ERROR RECEIVED FROM SERVER)'**
   String serverErrorResponse(String arg);
 
   /// No description provided for @setUpYourOrganization.
@@ -887,6 +893,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Terms of Service'**
   String get termsOfService;
+
+  /// No description provided for @tooManyRetries.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorry, the server is busy. Please try again later.'**
+  String get tooManyRetries;
 
   /// No description provided for @transferable.
   ///

@@ -285,6 +285,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
+  String noUserAttributeForField(String arg) {
+    return 'No user attribute found for field $arg';
+  }
+
+  @override
   String get ok => 'OK';
 
   @override
@@ -381,7 +386,7 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String serverErrorResponse(String arg) {
-    return 'There was an error on the Frontend API server: $arg';
+    return '$arg (ERROR RECEIVED FROM SERVER)';
   }
 
   @override
@@ -461,6 +466,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get termsOfService => 'Terms of Service';
+
+  @override
+  String get tooManyRetries =>
+      'Sorry, the server is busy. Please try again later.';
 
   @override
   String get transferable => 'transferable';

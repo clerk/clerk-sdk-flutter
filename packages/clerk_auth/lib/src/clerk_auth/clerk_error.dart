@@ -22,7 +22,8 @@ class ClerkError implements Exception {
   /// Construct from an [ExternalErrorCollection]
   factory ClerkError.from(ExternalErrorCollection errors) => ClerkError(
         code: ClerkErrorCode.serverErrorResponse,
-        message: errors.errorMessage,
+        message: '{arg} (ERROR RECEIVED FROM SERVER)',
+        argument: errors.errorMessage,
         errors: errors,
       );
 
@@ -79,6 +80,9 @@ enum ClerkErrorCode {
   /// No session found for user
   noSessionFoundForUser,
 
+  /// No user attribute found for field
+  noUserAttributeForField,
+
   /// Unsupported strategy for first factor
   noSuchFirstFactorStrategy,
 
@@ -93,6 +97,9 @@ enum ClerkErrorCode {
 
   /// Unknown error
   unknownError,
+
+  /// too many retries
+  tooManyRetries,
 
   /// Client app error
   clientAppError,

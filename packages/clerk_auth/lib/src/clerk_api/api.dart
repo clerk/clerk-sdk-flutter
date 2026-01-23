@@ -39,20 +39,27 @@ class Api with Logging {
   bool _testMode;
   bool _multiSessionMode = true;
 
-  static const _kClerkAPIVersion = 'clerk-api-version';
-  static const _kClerkClientId = 'x-clerk-client-id';
-  static const _kClerkJsVersion = '_clerk_js_version';
-  static const _kClerkSessionId = '_clerk_session_id';
+  // fields in passed or returned json
+  static const _kActiveOrganizationIdKey = 'active_organization_id';
   static const _kClientKey = 'client';
   static const _kErrorsKey = 'errors';
-  static const _kActiveOrganizationIdKey = 'active_organization_id';
-  static const _kMetaKey = 'meta';
-  static const _kIsNative = '_is_native';
   static const _kJwtKey = 'jwt';
-  static const _kOrganizationId = 'organization_id';
+  static const _kMetaKey = 'meta';
+  static const _kOrgIdKey = 'organization_id';
+
+  // query string parameters
+  static const _kClerkJsVersion = '_clerk_js_version';
+  static const _kClerkSessionId = '_clerk_session_id';
+  static const _kIsNative = '_is_native';
   static const _kResponseKey = 'response';
+
+  // headers
+  static const _kClerkAPIVersion = 'clerk-api-version';
+  static const _kClerkClientId = 'x-clerk-client-id';
   static const _kXFlutterSDKVersion = 'x-flutter-sdk-version';
   static const _kXMobile = 'x-mobile';
+
+  // http scheme
   static const _scheme = 'https';
 
   /// Initialise the API
@@ -479,14 +486,12 @@ class Api with Logging {
   ///
   Future<ApiResponse> sendOauthToken(
     AuthObject authObject, {
-    required Strategy strategy,
     required String token,
   }) async {
     return await _fetchApiResponse(
       '/client/${authObject.urlType}/${authObject.id}',
       method: HttpMethod.get,
       params: {
-        'strategy': strategy,
         'rotating_token_nonce': token,
       },
     );
@@ -847,7 +852,7 @@ class Api with Logging {
         headers: _headers(),
         nullableParams: {
           if (org case Organization org) //
-            _kOrganizationId: org.id,
+            _kOrgIdKey: org.id,
         },
       );
       final body = json.decode(resp.body) as _JsonObject;
@@ -945,6 +950,9 @@ class Api with Logging {
           code: 'socket_exception',
         ),
       );
+    } on ExternalError catch (error, stacktrace) {
+      logSevere('External error', error, stacktrace);
+      return ApiResponse.fatal(error: error);
     } catch (error, stacktrace) {
       logSevere('Error during fetch', error, stacktrace);
       return ApiResponse.fatal(
@@ -1028,27 +1036,28 @@ class Api with Logging {
     );
     final uri = _uri(path, params: queryParams);
 
-    final resp = await config.httpService.send(
-      method,
-      uri,
-      headers: headers,
-      params: method.isNotGet ? bodyParams : null,
-    );
-
-    if (resp.statusCode == HttpStatus.tooManyRequests) {
-      final delay = int.tryParse(resp.headers['retry-after'] ?? '') ?? 5;
-      logSevere('Delaying ${delay}secs');
-      await Future.delayed(Duration(seconds: delay));
-      return await _fetch(
-        path: path,
-        method: method,
+    for (int tryCount = 0; tryCount <= config.rateLimitRetryCount; tryCount++) {
+      final resp = await config.httpService.send(
+        method,
+        uri,
         headers: headers,
-        params: params,
-        withSession: withSession,
+        params: method.isNotGet ? bodyParams : null,
       );
+
+      if (resp.statusCode != HttpStatus.tooManyRequests) {
+        return resp;
+      }
+
+      final delay = int.tryParse(resp.headers['retry-after'] ?? '') ?? 5;
+      logSevere('HTTP429 received. Delaying ${delay}secs');
+      await Future.delayed(Duration(seconds: delay));
     }
 
-    return resp;
+    throw const ExternalError(
+      message: 'You have tried too many times. Please try again later.',
+      code: 'too_many_retries',
+      errorCode: ClerkErrorCode.tooManyRetries,
+    );
   }
 
   _JsonObject _queryParams(

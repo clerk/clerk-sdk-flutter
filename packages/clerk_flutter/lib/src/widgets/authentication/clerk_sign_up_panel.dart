@@ -4,6 +4,7 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/utils/identifier.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_control_buttons.dart';
@@ -12,20 +13,11 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart'
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
+import 'package:clerk_flutter/src/widgets/ui/strategy_button.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:phone_input/phone_input_package.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-enum _SignUpPanelState {
-  input,
-  waiting;
-
-  bool get isInput => this == input;
-
-  bool get isWaiting => this == waiting;
-}
 
 /// The [ClerkSignUpPanel] renders a UI for signing up users.
 ///
@@ -46,11 +38,20 @@ class ClerkSignUpPanel extends StatefulWidget {
 
 class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     with ClerkTelemetryStateMixin {
-  final Map<clerk.UserAttribute, String?> _values = {};
-  _SignUpPanelState _state = _SignUpPanelState.input;
+  static const _uaFieldMap = {
+    clerk.Field.emailAddress: clerk.UserAttribute.emailAddress,
+    clerk.Field.phoneNumber: clerk.UserAttribute.phoneNumber,
+    clerk.Field.firstName: clerk.UserAttribute.firstName,
+    clerk.Field.lastName: clerk.UserAttribute.lastName,
+    clerk.Field.username: clerk.UserAttribute.username,
+    clerk.Field.password: clerk.UserAttribute.password,
+  };
+
+  final Map<clerk.UserAttribute, Identifier?> _values = {};
   bool _needsLegalAcceptance = true;
   bool _hasLegalAcceptance = false;
   bool _highlightMissing = false;
+  clerk.Strategy _strategy = clerk.Strategy.password;
 
   static const _signUpAttributes = [
     clerk.UserAttribute.firstName,
@@ -70,18 +71,21 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     _needsLegalAcceptance = authState.env.user.signUp.legalConsentEnabled;
 
     if (authState.signUp case clerk.SignUp signUp) {
-      _values[clerk.UserAttribute.firstName] ??= signUp.firstName;
-      _values[clerk.UserAttribute.lastName] ??= signUp.lastName;
-      _values[clerk.UserAttribute.username] ??= signUp.username;
-      _values[clerk.UserAttribute.emailAddress] ??= signUp.emailAddress;
-      _values[clerk.UserAttribute.phoneNumber] ??= signUp.phoneNumber is String
-          ? PhoneNumber.parse(signUp.phoneNumber!).intlFormattedNsn
-          : null;
+      _values[clerk.UserAttribute.firstName] ??=
+          Identifier.orNull(signUp.firstName);
+      _values[clerk.UserAttribute.lastName] ??=
+          Identifier.orNull(signUp.lastName);
+      _values[clerk.UserAttribute.username] ??=
+          Identifier.orNull(signUp.username);
+      _values[clerk.UserAttribute.emailAddress] ??=
+          Identifier.orNull(signUp.emailAddress);
+      _values[clerk.UserAttribute.phoneNumber] ??=
+          PhoneNumberIdentifier.orNull(signUp.phoneNumber);
     }
   }
 
-  String? _valueOrNull(clerk.UserAttribute attr) =>
-      _values[attr]?.trim().orNullIfEmpty;
+  String? _valueOrNull(clerk.UserAttribute? attr) =>
+      _values[attr]?.identifier.trim().orNullIfEmpty;
 
   Future<void> _sendCode({
     required String code,
@@ -95,14 +99,16 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
   Future<void> _continue(
     ClerkAuthState authState,
-    List<_Attribute> attributes,
-  ) async {
+    List<_Attribute> attributes, {
+    clerk.Strategy? strategy,
+  }) async {
     final l10ns = authState.localizationsOf(context);
+
+    _strategy = strategy ?? _strategy;
 
     final password = _valueOrNull(clerk.UserAttribute.password);
     if (authState.signUp?.missing(clerk.Field.password) == true &&
         password == null) {
-      final l10ns = ClerkAuth.localizationsOf(context);
       authState.handleError(
         clerk.ClerkError.clientAppError(message: l10ns.passwordMustBeSupplied),
       );
@@ -119,26 +125,32 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       return;
     }
 
-    if (attributes.any((a) => a.isRequired && _valueOrNull(a.attr) == null)) {
-      final l10ns = ClerkAuth.localizationsOf(context);
+    if (_requiresInformation(authState.signUp, attributes)) {
       authState.handleError(
         clerk.ClerkError.clientAppError(
-            message: l10ns.pleaseAddRequiredInformation),
+          message: l10ns.pleaseAddRequiredInformation,
+        ),
       );
       setState(() => _highlightMissing = true);
       return;
     }
 
+    if (_strategy.isPassword &&
+        authState.signUp?.unverified(clerk.Field.phoneNumber) == true) {
+      _strategy = clerk.Strategy.phoneCode;
+    }
+
     final username = _valueOrNull(clerk.UserAttribute.username);
     final emailAddress = _valueOrNull(clerk.UserAttribute.emailAddress);
-    final redirectUri = authState.emailVerificationRedirectUri(context);
     final phoneNumber = _valueOrNull(clerk.UserAttribute.phoneNumber);
+    final redirectUrl =
+        authState.emailVerificationRedirectUri(context)?.toString();
 
     await authState.safelyCall(
       context,
       () async {
         await authState.attemptSignUp(
-          strategy: clerk.Strategy.password,
+          strategy: _strategy,
           firstName: _valueOrNull(clerk.UserAttribute.firstName),
           lastName: _valueOrNull(clerk.UserAttribute.lastName),
           username: username,
@@ -146,40 +158,70 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           phoneNumber: phoneNumber,
           password: password,
           passwordConfirmation: passwordConfirmation,
-          redirectUrl: redirectUri?.toString(),
+          redirectUrl: redirectUrl,
           legalAccepted: _needsLegalAcceptance ? _hasLegalAcceptance : null,
         );
       },
     );
 
-    if (authState.signUp case clerk.SignUp signUp
-        when signUp.requiresEnterpriseSSOSignUp && mounted) {
-      await authState.ssoSignUp(context, clerk.Strategy.enterpriseSSO);
-    }
+    if (authState.signUp case clerk.SignUp signUp when mounted) {
+      if (_requiresInformation(signUp, attributes)) {
+        setState(() => _highlightMissing = true);
+        authState.handleError(
+          clerk.ClerkError.clientAppError(
+            message: l10ns.pleaseAddRequiredInformation,
+          ),
+        );
+      }
 
-    final hasMissingFields = authState.signUp?.missingFields.isNotEmpty == true;
-    if (hasMissingFields) {
-      authState.handleError(
-        clerk.ClerkError.clientAppError(
-          message: l10ns.pleaseAddRequiredInformation,
-        ),
-      );
+      final env = authState.env;
+      if (signUp.requiresEnterpriseSSOSignUp) {
+        await authState.ssoSignUp(context, clerk.Strategy.enterpriseSSO);
+      } else if (env.supportsPhoneCode &&
+          signUp.unverified(clerk.Field.phoneNumber)) {
+        await _prepareVerification(authState, clerk.Strategy.phoneCode);
+      } else if (signUp.unverified(clerk.Field.emailAddress)) {
+        if (env.supportsEmailCode && env.supportsEmailLink == false) {
+          await _prepareVerification(authState, clerk.Strategy.emailCode);
+        } else if (env.supportsEmailLink && env.supportsEmailCode == false) {
+          await _prepareVerification(authState, clerk.Strategy.emailLink);
+        }
+      }
     }
-
-    setState(() {
-      _state = authState.isSigningUp && hasMissingFields == false
-          ? _SignUpPanelState.waiting
-          : _SignUpPanelState.input;
-      _highlightMissing = true;
-    });
   }
 
-  void _acceptTerms() =>
-      setState(() => _hasLegalAcceptance = !_hasLegalAcceptance);
+  bool _requiresInformation(clerk.SignUp? signUp, List<_Attribute> attrs) =>
+      switch (signUp?.missingFields) {
+        List<clerk.Field> missingFields => missingFields.any(
+            (f) => f == clerk.Field.legalAccepted
+                ? _hasLegalAcceptance == false
+                : _valueOrNull(_uaFieldMap[f]) == null,
+          ),
+        _ => attrs.any((a) => a.isRequired && _valueOrNull(a.attr) == null),
+      };
+
+  Future<void> _prepareVerification(
+    ClerkAuthState authState,
+    clerk.Strategy strategy,
+  ) async {
+    _strategy = strategy;
+    await authState.safelyCall(
+      context,
+      () => authState.attemptSignUp(
+        strategy: strategy,
+        redirectUrl: strategy.isEmailLink
+            ? authState.emailVerificationRedirectUri(context)?.toString()
+            : null,
+      ),
+    );
+  }
+
+  void _acceptTerms(bool hasLegalAcceptance) =>
+      setState(() => _hasLegalAcceptance = hasLegalAcceptance);
 
   Future<void> _reset(ClerkAuthState authState) async {
+    _strategy = clerk.Strategy.password;
     await authState.resetClient();
-    _state = _SignUpPanelState.input;
   }
 
   @override
@@ -199,15 +241,29 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             when data.isEnabled) //
           _Attribute(attr, data),
     ];
+
     final hasMissingFields = signUp?.missingFields.isNotEmpty == true;
-    final isAwaitingCode = (env.supportsEmailCode &&
-            signUp?.unverified(clerk.Field.emailAddress) == true) ||
-        (env.supportsPhoneCode &&
-            signUp?.unverified(clerk.Field.phoneNumber) == true);
+    final awaitingPhoneCode = hasMissingFields == false &&
+        signUp?.awaiting(clerk.Field.phoneNumber) == true;
+    final needsEmail = hasMissingFields == false &&
+        (env.supportsEmailCode || env.supportsEmailLink) &&
+        signUp?.unverified(clerk.Field.emailAddress) == true;
+    final awaitingEmailCode = awaitingPhoneCode == false &&
+        _strategy == clerk.Strategy.emailCode &&
+        needsEmail;
+    final awaitingEmailLink = awaitingPhoneCode == false &&
+        awaitingEmailCode == false &&
+        _strategy == clerk.Strategy.emailLink &&
+        needsEmail;
+    final needsEmailStrategy =
+        needsEmail && awaitingEmailCode == false && awaitingEmailLink == false;
 
     // if we have both first and last name, associate them
     attributes.firstWhereOrNull((a) => a.isFirstName)?.associated =
         attributes.removeFirstOrNull((a) => a.isLastName);
+
+    final emailAddress =
+        _values[clerk.UserAttribute.emailAddress]?.prettyIdentifier;
 
     // if we have a password, associate a confirmation
     final password = attributes.firstWhereOrNull((a) => a.isPassword);
@@ -219,39 +275,50 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (final attr in [
-          if (env.supportsPhoneCode) //
-            clerk.UserAttribute.phoneNumber,
-          if (env.supportsEmailCode) //
-            clerk.UserAttribute.emailAddress,
-        ]) //
+        // Phone code input
+        if (env.supportsPhoneCode) //
           _CodeInputBox(
-            attribute: attr,
-            value: _values[attr] ?? '',
+            attribute: clerk.UserAttribute.phoneNumber,
+            value: _values[clerk.UserAttribute.phoneNumber]?.prettyIdentifier,
             localizations: l10ns,
-            closed: _state.isInput ||
-                hasMissingFields ||
-                signUp?.unverified(clerk.Field.forUserAttribute(attr)) != true,
+            open: awaitingPhoneCode,
             onSubmit: (code) async {
               await _sendCode(
-                strategy: clerk.Strategy.forUserAttribute(attr),
+                strategy: clerk.Strategy.phoneCode,
                 code: code,
               );
               return false;
             },
             onResend: () => _continue(authState, attributes),
           ),
-        if (env.supportsEmailLink &&
-            hasMissingFields == false &&
-            signUp?.unverified(clerk.Field.emailAddress) == true) //
-          Closeable(
-            closed: _state.isInput || isAwaitingCode,
+
+        // Email code input
+        if (env.supportsEmailCode) //
+          _CodeInputBox(
+            attribute: clerk.UserAttribute.emailAddress,
+            value: emailAddress,
+            localizations: l10ns,
+            open: awaitingEmailCode,
+            onSubmit: (code) async {
+              await _sendCode(
+                strategy: clerk.Strategy.emailCode,
+                code: code,
+              );
+              return false;
+            },
+            onResend: () => _continue(authState, attributes),
+          ),
+
+        // Email link message
+        if (env.supportsEmailLink) //
+          Openable(
+            open: awaitingEmailLink,
             child: Column(
               children: [
                 Text(
-                  l10ns.clickOnTheLinkThatsBeenSentTo(
-                    _values[clerk.UserAttribute.emailAddress]!,
-                  ),
+                  emailAddress is String
+                      ? l10ns.clickOnTheLinkThatsBeenSentTo(emailAddress)
+                      : l10ns.clickOnTheLinkThatsBeenSentToYou,
                   textAlign: TextAlign.center,
                   maxLines: 3,
                   style: themeExtension.styles.subheading,
@@ -261,8 +328,35 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
               ],
             ),
           ),
-        Closeable(
-          closed: _state.isWaiting,
+
+        // Choose email strategy
+        if (needsEmail) //
+          Openable(
+            open: awaitingPhoneCode == false && needsEmailStrategy,
+            child: Column(
+              children: [
+                for (final strategy in [
+                  if (env.supportsEmailCode) clerk.Strategy.emailCode,
+                  if (env.supportsEmailLink) clerk.Strategy.emailLink,
+                ]) //
+                  Padding(
+                    padding: topPadding4,
+                    child: StrategyButton(
+                      key: ValueKey<clerk.Strategy>(strategy),
+                      strategy: strategy,
+                      safeIdentifier:
+                          _valueOrNull(clerk.UserAttribute.emailAddress),
+                      onClick: () => _prepareVerification(authState, strategy),
+                    ),
+                  ),
+                verticalMargin8,
+              ],
+            ),
+          ),
+
+        // Input fields
+        Openable(
+          open: _strategy.isPassword,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -281,41 +375,17 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             ],
           ),
         ),
-        if (_needsLegalAcceptance) //
-          Closeable(
-            closed: _state.isWaiting,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: _acceptTerms,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
-                    child: Icon(
-                      _hasLegalAcceptance
-                          ? Icons.check_box_outlined
-                          : Icons.check_box_outline_blank,
-                    ),
-                  ),
-                ),
-                const Expanded(child: _LegalAcceptanceConfirmation()),
-              ],
-            ),
-          ),
-        Openable(
-          open: _needsLegalAcceptance == false || _hasLegalAcceptance,
-          child: Padding(
-            padding: verticalPadding16,
-            child: ClerkControlButtons(
-              onContinue: () => _continue(authState, attributes),
-              onBack: _state.isWaiting || hasMissingFields
-                  ? () => _reset(authState)
-                  : null,
-            ),
-          ),
+
+        // Control buttons
+        _ControlButtons(
+          onAcceptTerms: _acceptTerms,
+          onContinue: () => _continue(authState, attributes),
+          onBack:
+              _strategy.isPassword == false ? () => _reset(authState) : null,
+          needsLegalAcceptance: _needsLegalAcceptance,
+          hasLegalAcceptance: _hasLegalAcceptance,
         ),
+
         verticalMargin32,
       ],
     );
@@ -337,7 +407,7 @@ class _FormField extends StatelessWidget {
 
   final ClerkSdkLocalizations localizations;
 
-  final Map<clerk.UserAttribute, String?> values;
+  final Map<clerk.UserAttribute, Identifier?> values;
 
   final bool highlight;
 
@@ -348,7 +418,7 @@ class _FormField extends StatelessWidget {
           true ||
       (highlight &&
           attribute.isRequired &&
-          (values[attribute.attr]?.trim() ?? '').isEmpty);
+          (values[attribute.attr]?.identifier.trim() ?? '').isEmpty);
 
   Widget _formField(_Attribute attribute) {
     if (attribute.needsObscuring) {
@@ -356,22 +426,22 @@ class _FormField extends StatelessWidget {
         valueListenable: _obscure,
         builder: (context, obscure, _) {
           return ClerkTextFormField(
-            initial: values[attribute.attr],
+            initial: values[attribute.attr]?.identifier,
             label: attribute.title(localizations),
             obscureText: obscure,
             onObscure: () => _obscure.value = !obscure,
             isMissing: _isMissing(authState, attribute),
-            onChanged: (value) => values[attribute.attr] = value,
+            onChanged: (value) => values[attribute.attr] = Identifier(value),
           );
         },
       );
     }
 
     return ClerkTextFormField(
-      initial: values[attribute.attr],
+      initial: values[attribute.attr]?.identifier,
       label: attribute.title(localizations),
       isMissing: _isMissing(authState, attribute),
-      onChanged: (value) => values[attribute.attr] = value,
+      onChanged: (value) => values[attribute.attr] = Identifier(value),
     );
   }
 
@@ -382,12 +452,11 @@ class _FormField extends StatelessWidget {
       child: switch (attribute) {
         _Attribute attribute when attribute.isPhoneNumber =>
           ClerkPhoneNumberFormField(
-            initial: values[attribute.attr],
+            initial: values[attribute.attr]?.identifier,
             label: attribute.title(localizations),
             isMissing: _isMissing(authState, attribute),
             isOptional: attribute.isOptional,
-            onChanged: (identifier) =>
-                values[attribute.attr] = identifier.identifier,
+            onChanged: (identifier) => values[attribute.attr] = identifier,
           ),
         _Attribute attribute when attribute.associated is _Attribute => Flex(
             direction: attribute.isFirstName ? Axis.horizontal : Axis.vertical,
@@ -403,6 +472,74 @@ class _FormField extends StatelessWidget {
           ),
         _Attribute attribute => _formField(attribute),
       },
+    );
+  }
+}
+
+class _ControlButtons extends StatefulWidget {
+  const _ControlButtons({
+    required this.onAcceptTerms,
+    required this.onContinue,
+    required this.onBack,
+    required this.needsLegalAcceptance,
+    required this.hasLegalAcceptance,
+  });
+
+  final ValueChanged<bool> onAcceptTerms;
+  final VoidCallback? onContinue;
+  final VoidCallback? onBack;
+  final bool needsLegalAcceptance;
+  final bool hasLegalAcceptance;
+
+  @override
+  State<_ControlButtons> createState() => _ControlButtonsState();
+}
+
+class _ControlButtonsState extends State<_ControlButtons> {
+  late bool hasLegalAcceptance = widget.hasLegalAcceptance;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (widget.needsLegalAcceptance) //
+          Closeable(
+            closed: widget.onBack is VoidCallback,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    final acceptance = hasLegalAcceptance == false;
+                    setState(() => hasLegalAcceptance = acceptance);
+                    widget.onAcceptTerms(acceptance);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+                    child: Icon(
+                      hasLegalAcceptance
+                          ? Icons.check_box_outlined
+                          : Icons.check_box_outline_blank,
+                    ),
+                  ),
+                ),
+                const Expanded(child: _LegalAcceptanceConfirmation()),
+              ],
+            ),
+          ),
+        Openable(
+          open: widget.needsLegalAcceptance == false || hasLegalAcceptance,
+          child: Padding(
+            padding: verticalPadding16,
+            child: ClerkControlButtons(
+              onContinue: widget.onContinue,
+              onBack: widget.onBack,
+            ),
+          ),
+        )
+      ],
     );
   }
 }
@@ -491,7 +628,7 @@ class _CodeInputBox extends StatefulWidget {
     required this.onResend,
     required this.onSubmit,
     required this.localizations,
-    required this.closed,
+    required this.open,
     required this.value,
   });
 
@@ -503,9 +640,9 @@ class _CodeInputBox extends StatefulWidget {
 
   final ClerkSdkLocalizations localizations;
 
-  final bool closed;
+  final bool open;
 
-  final String value;
+  final String? value;
 
   @override
   State<_CodeInputBox> createState() => _CodeInputBoxState();
@@ -522,8 +659,8 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Closeable(
-      closed: widget.closed,
+    return Openable(
+      open: widget.open,
       onEnd: (closed) {
         if (closed == false) {
           _focus.requestFocus();
@@ -544,7 +681,9 @@ class _CodeInputBoxState extends State<_CodeInputBox> {
                   widget.localizations.verifyYourPhoneNumber,
                 _ => widget.attribute.toString(),
               },
-              subtitle: widget.localizations.enterTheCodeSentTo(widget.value),
+              subtitle: widget.value is String
+                  ? widget.localizations.enterTheCodeSentTo(widget.value!)
+                  : widget.localizations.enterTheCodeSentToYou,
               onSubmit: widget.onSubmit,
             ),
             Padding(

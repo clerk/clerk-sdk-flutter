@@ -22,6 +22,7 @@ class AuthConfig {
     required this.persistor,
     this.flags = const SdkFlags(),
     this.sessionTokenPolling = true,
+    this.rateLimitRetryCount = 0,
     // ignore: deprecated_member_use_from_same_package
     SessionTokenPollMode? sessionTokenPollMode, // deprecated
     LocalesLookup? localesLookup,
@@ -58,6 +59,9 @@ class AuthConfig {
 
   /// Do we want to regularly poll for a new session token?
   final bool sessionTokenPolling;
+
+  /// The number of times to retry a request when rate limited before erroring
+  final int rateLimitRetryCount;
 
   /// Function to return list of current user's locales for translation
   final LocalesLookup localesLookup;

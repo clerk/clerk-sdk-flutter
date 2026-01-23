@@ -95,7 +95,7 @@ class _PhoneInputState extends State<_PhoneInput> {
   late PhoneNumber _phoneNumber;
 
   // widget.initial is String ? PhoneNumber.parse(widget.initial!) : null;
-  late bool _isValid = _phoneNumber.isValid() == true;
+  late bool _isValid = _valid(_phoneNumber);
   late IsoCode _isoCode;
 
   late Future<PhoneNumber> _phoneNumberFuture;
@@ -129,6 +129,11 @@ class _PhoneInputState extends State<_PhoneInput> {
     }
   }
 
+  bool _valid(PhoneNumber? phoneNumber) =>
+      // For debugging, since [PhoneNumber] won't validate Clerk test numbers:
+      /* phoneNumber?.international == '+XXXXXXXX' || */
+      phoneNumber?.isValid() == true;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -149,7 +154,7 @@ class _PhoneInputState extends State<_PhoneInput> {
           focusNode: widget.focusNode,
           onChanged: (phoneNumber) {
             if (phoneNumber case PhoneNumber phoneNumber) {
-              final valid = phoneNumber.isValid();
+              final valid = _valid(phoneNumber);
               if (valid != _isValid) setState(() => _isValid = valid);
               if (valid) {
                 widget.onChanged(

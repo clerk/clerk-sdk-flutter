@@ -32,10 +32,7 @@ enum _AuthState {
 @immutable
 class ClerkAuthentication extends StatefulWidget {
   /// Constructs a new [ClerkAuthentication].
-  const ClerkAuthentication({super.key, this.title});
-
-  /// The title to use for the authentication panel
-  final String? title;
+  const ClerkAuthentication({super.key});
 
   @override
   State<ClerkAuthentication> createState() => _ClerkAuthenticationState();
@@ -72,10 +69,9 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
             title: _state.isSigningIn
                 ? localizations.signInTo(display.applicationName)
                 : localizations.signUpTo(display.applicationName),
-            subtitle: widget.title ??
-                (_state.isSigningIn
-                    ? localizations.welcomeBackPleaseSignInToContinue
-                    : localizations.welcomePleaseFillInTheDetailsToGetStarted),
+            subtitle: _state.isSigningIn
+                ? localizations.welcomeBackPleaseSignInToContinue
+                : localizations.welcomePleaseFillInTheDetailsToGetStarted,
           ),
           Padding(
             padding: horizontalPadding32,

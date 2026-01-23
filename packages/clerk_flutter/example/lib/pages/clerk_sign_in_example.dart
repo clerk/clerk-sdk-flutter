@@ -83,11 +83,7 @@ class _ClerkSignInExampleState extends State<ClerkSignInExample> {
                         return const _UserAndOrgTabs();
                       },
                       signedOutBuilder: (context, authState) {
-                        return ClerkAuthentication(
-                            title: authState
-                                    .signIn?.firstFactorVerification?.strategy
-                                    .toString() ??
-                                'Not signed in');
+                        return const ClerkAuthentication();
                       },
                     );
                   }),

@@ -45,7 +45,7 @@ class ExampleApp extends StatelessWidget {
   /// just a container for the [Uri]. The [ClerkDeepLink] can also
   /// contain a [clerk.Strategy], to use in preference to a strategy
   /// inferred from the [Uri]
-  ClerkDeepLink? handleDeepLink(Uri uri) {
+  Future<ClerkDeepLink?> handleDeepLink(Uri uri) async {
     // Check the uri to see if it should be handled by the Clerk SDK...
     if (uri.pathSegments.first == 'auth') {
       // ...and return a [ClerkDeepLink] which tells the SDK to handle it.
@@ -55,15 +55,15 @@ class ExampleApp extends StatelessWidget {
     // If the host app deems the deep link to be not relevant to the Clerk SDK,
     // we can choose here to process it separately. Alternatively, we can just
     // ignore it for now, and let the app handle it in a different manner.
-    handleDeepLinkInAnotherWay(uri);
+    await handleDeepLinkInAnotherWay(uri);
 
-    // We then return [null]  instead of a [ClerkDeepLink] to inhibit further
+    // We then return [null] instead of a [ClerkDeepLink] to inhibit further
     // processing by the SDK.
     return null;
   }
 
   /// This function handles a deep link that is not relevant to the Clerk SDK
-  void handleDeepLinkInAnotherWay(Uri uri) {
+  Future<void> handleDeepLinkInAnotherWay(Uri uri) async {
     // do something with the deep link that is outside the remit
     // of the Clerk SDK
   }
@@ -87,7 +87,7 @@ class ExampleApp extends StatelessWidget {
       config: ClerkAuthConfig(
         publishableKey: publishableKey,
         redirectionGenerator: generateDeepLink,
-        deepLinkStream: AppLinks().allUriLinkStream.map(handleDeepLink),
+        deepLinkStream: AppLinks().allUriLinkStream.asyncMap(handleDeepLink),
       ),
       child: MaterialApp(
         theme: ThemeData.light(),

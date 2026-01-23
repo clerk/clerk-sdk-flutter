@@ -8,8 +8,10 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_overlay_host.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:flutter/material.dart';
 
-/// A class to transport [Uri]s from deep links into the app into the Clerk
-/// SDK, potentially with a [clerk.Strategy] imposed by the host app
+/// A class to transport [Uri]s from deep links opening the app into the Clerk
+/// SDK. At the moment this object is largely superflouous since it carries
+/// only the  [Uri]:  however, it leaves the door open for future expansion of
+/// the object without breaking backward compatibility
 class ClerkDeepLink {
   /// construct a [ClerkDeepLink]
   const ClerkDeepLink({required this.uri, this.strategy});
@@ -18,6 +20,7 @@ class ClerkDeepLink {
   final Uri uri;
 
   /// The [clerk.Strategy]
+  @Deprecated("strategy is no longer used")
   final clerk.Strategy? strategy;
 }
 

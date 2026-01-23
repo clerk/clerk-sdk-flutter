@@ -1036,7 +1036,8 @@ class Api with Logging {
     );
     final uri = _uri(path, params: queryParams);
 
-    for (int tryCount = 0; tryCount <= config.rateLimitRetryCount; tryCount++) {
+    final tryUntil = DateTime.timestamp().add(config.rateLimitRetryPeriod);
+    while (true) {
       final resp = await config.httpService.send(
         method,
         uri,
@@ -1048,16 +1049,20 @@ class Api with Logging {
         return resp;
       }
 
+      // Have we run out of time to retry after a 429?
+      if (DateTime.timestamp().isAfter(tryUntil)) {
+        throw const ExternalError(
+          message: 'You have tried too many times. Please try again later.',
+          code: 'too_many_retries',
+          errorCode: ClerkErrorCode.tooManyRetries,
+        );
+      }
+
+      // If we still have time, delay the requisite amount before retrying
       final delay = int.tryParse(resp.headers['retry-after'] ?? '') ?? 5;
       logSevere('HTTP429 received. Delaying ${delay}secs');
       await Future.delayed(Duration(seconds: delay));
     }
-
-    throw const ExternalError(
-      message: 'You have tried too many times. Please try again later.',
-      code: 'too_many_retries',
-      errorCode: ClerkErrorCode.tooManyRetries,
-    );
   }
 
   _JsonObject _queryParams(

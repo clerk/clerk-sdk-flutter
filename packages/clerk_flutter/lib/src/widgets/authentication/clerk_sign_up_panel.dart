@@ -161,33 +161,34 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           redirectUrl: redirectUrl,
           legalAccepted: _needsLegalAcceptance ? _hasLegalAcceptance : null,
         );
+
+        if (authState.signUp case clerk.SignUp signUp when mounted) {
+          if (_requiresInformation(signUp, attributes)) {
+            setState(() => _highlightMissing = true);
+            authState.handleError(
+              clerk.ClerkError.clientAppError(
+                message: l10ns.pleaseAddRequiredInformation,
+              ),
+            );
+          }
+
+          final env = authState.env;
+          if (signUp.requiresEnterpriseSSOSignUp) {
+            await authState.ssoSignUp(context, clerk.Strategy.enterpriseSSO);
+          } else if (env.supportsPhoneCode &&
+              signUp.unverified(clerk.Field.phoneNumber)) {
+            await _prepareVerification(authState, clerk.Strategy.phoneCode);
+          } else if (signUp.unverified(clerk.Field.emailAddress)) {
+            if (env.supportsEmailCode && env.supportsEmailLink == false) {
+              await _prepareVerification(authState, clerk.Strategy.emailCode);
+            } else if (env.supportsEmailLink &&
+                env.supportsEmailCode == false) {
+              await _prepareVerification(authState, clerk.Strategy.emailLink);
+            }
+          }
+        }
       },
     );
-
-    if (authState.signUp case clerk.SignUp signUp when mounted) {
-      if (_requiresInformation(signUp, attributes)) {
-        setState(() => _highlightMissing = true);
-        authState.handleError(
-          clerk.ClerkError.clientAppError(
-            message: l10ns.pleaseAddRequiredInformation,
-          ),
-        );
-      }
-
-      final env = authState.env;
-      if (signUp.requiresEnterpriseSSOSignUp) {
-        await authState.ssoSignUp(context, clerk.Strategy.enterpriseSSO);
-      } else if (env.supportsPhoneCode &&
-          signUp.unverified(clerk.Field.phoneNumber)) {
-        await _prepareVerification(authState, clerk.Strategy.phoneCode);
-      } else if (signUp.unverified(clerk.Field.emailAddress)) {
-        if (env.supportsEmailCode && env.supportsEmailLink == false) {
-          await _prepareVerification(authState, clerk.Strategy.emailCode);
-        } else if (env.supportsEmailLink && env.supportsEmailCode == false) {
-          await _prepareVerification(authState, clerk.Strategy.emailLink);
-        }
-      }
-    }
   }
 
   bool _requiresInformation(clerk.SignUp? signUp, List<_Attribute> attrs) =>
@@ -205,14 +206,11 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
     clerk.Strategy strategy,
   ) async {
     _strategy = strategy;
-    await authState.safelyCall(
-      context,
-      () => authState.attemptSignUp(
-        strategy: strategy,
-        redirectUrl: strategy.isEmailLink
-            ? authState.emailVerificationRedirectUri(context)?.toString()
-            : null,
-      ),
+    await authState.attemptSignUp(
+      strategy: strategy,
+      redirectUrl: strategy.isEmailLink
+          ? authState.emailVerificationRedirectUri(context)?.toString()
+          : null,
     );
   }
 
@@ -346,7 +344,12 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                       strategy: strategy,
                       safeIdentifier:
                           _valueOrNull(clerk.UserAttribute.emailAddress),
-                      onClick: () => _prepareVerification(authState, strategy),
+                      onClick: () async {
+                        await authState.safelyCall(
+                          context,
+                          () => _prepareVerification(authState, strategy),
+                        );
+                      },
                     ),
                   ),
                 verticalMargin8,
@@ -379,7 +382,9 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
         // Control buttons
         _ControlButtons(
           onAcceptTerms: _acceptTerms,
-          onContinue: () => _continue(authState, attributes),
+          onContinue: awaitingEmailLink == false
+              ? () => _continue(authState, attributes)
+              : null,
           onBack:
               _strategy.isPassword == false ? () => _reset(authState) : null,
           needsLegalAcceptance: _needsLegalAcceptance,

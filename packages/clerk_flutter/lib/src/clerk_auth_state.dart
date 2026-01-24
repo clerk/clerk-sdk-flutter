@@ -44,6 +44,9 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   /// Stream of [clerk.ClerkError]s
   Stream<clerk.ClerkError> get errorStream => _errors.stream;
 
+  /// Lock to prevent multiple updates at once
+  final _updateLock = _UpdateLock();
+
   @override
   void handleError(clerk.ClerkError error) {
     if (_errors.hasListener) {
@@ -87,8 +90,10 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   @override
   void update() {
-    super.update();
-    notifyListeners();
+    if (_updateLock.isUnlocked) {
+      super.update();
+      notifyListeners();
+    }
   }
 
   @override
@@ -306,14 +311,21 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     ClerkErrorCallback? onError,
   }) async {
     T? result;
+
+    _updateLock.lock();
+
     final overlay = ClerkOverlay.of(context);
     _loadingOverlay.insertInto(overlay);
+
     try {
       result = await fn();
     } on clerk.ClerkError catch (error) {
       _onError(error, onError);
     } finally {
       _loadingOverlay.removeFrom(overlay);
+      if (_updateLock.release()) {
+        update();
+      }
     }
     return result;
   }
@@ -501,4 +513,16 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
       body: WebViewWidget(controller: controller),
     );
   }
+}
+
+class _UpdateLock {
+  int _lockCount = 0;
+
+  void lock() => ++_lockCount;
+
+  bool release() => _lockCount > 0 && --_lockCount == 0;
+
+  bool get isUnlocked => _lockCount == 0;
+
+  bool get isLocked => _lockCount > 0;
 }

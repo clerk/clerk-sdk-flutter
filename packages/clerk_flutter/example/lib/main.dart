@@ -41,14 +41,14 @@ class ExampleApp extends StatelessWidget {
   /// Publishable Key
   final String publishableKey;
 
-  /// This function maps a [Uri] into a [ClerkDeepLink], which is essentially
-  /// just a container for the [Uri]. The [ClerkDeepLink] can also
-  /// contain a [clerk.Strategy], to use in preference to a strategy
-  /// inferred from the [Uri]
+  /// This function checks a [Uri] to see if it's a deep link that the
+  /// Clerk SDK should handle. If so, the [Uri] is returned to be consumed
+  /// by the SDK's `deepLinkStream`. If not, the [Uri] is handled another
+  /// way, and null returned to tell the Clerk SDK to ignore it.
   Future<Uri?> handleDeepLink(Uri uri) async {
     // Check the uri to see if it should be handled by the Clerk SDK...
     if (uri.pathSegments.first == 'auth') {
-      // ...and return a [ClerkDeepLink] which tells the SDK to handle it.
+      // ...and return the [Uri] which tells the SDK to handle it.
       return uri;
     }
 
@@ -57,8 +57,7 @@ class ExampleApp extends StatelessWidget {
     // ignore it for now, and let the app handle it in a different manner.
     await handleDeepLinkInAnotherWay(uri);
 
-    // We then return [null] instead of a [ClerkDeepLink] to inhibit further
-    // processing by the SDK.
+    // We then return [null] to inhibit further processing by the SDK.
     return null;
   }
 

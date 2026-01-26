@@ -170,20 +170,20 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                 message: l10ns.pleaseAddRequiredInformation,
               ),
             );
-          }
-
-          final env = authState.env;
-          if (signUp.requiresEnterpriseSSOSignUp) {
-            await authState.ssoSignUp(context, clerk.Strategy.enterpriseSSO);
-          } else if (env.supportsPhoneCode &&
-              signUp.unverified(clerk.Field.phoneNumber)) {
-            await _prepareVerification(authState, clerk.Strategy.phoneCode);
-          } else if (signUp.unverified(clerk.Field.emailAddress)) {
-            if (env.supportsEmailCode && env.supportsEmailLink == false) {
-              await _prepareVerification(authState, clerk.Strategy.emailCode);
-            } else if (env.supportsEmailLink &&
-                env.supportsEmailCode == false) {
-              await _prepareVerification(authState, clerk.Strategy.emailLink);
+          } else {
+            final env = authState.env;
+            if (signUp.requiresEnterpriseSSOSignUp) {
+              await authState.ssoSignUp(context, clerk.Strategy.enterpriseSSO);
+            } else if (env.supportsPhoneCode &&
+                signUp.unverified(clerk.Field.phoneNumber)) {
+              await _prepareVerification(authState, clerk.Strategy.phoneCode);
+            } else if (signUp.unverified(clerk.Field.emailAddress)) {
+              if (env.supportsEmailCode && env.supportsEmailLink == false) {
+                await _prepareVerification(authState, clerk.Strategy.emailCode);
+              } else if (env.supportsEmailLink &&
+                  env.supportsEmailCode == false) {
+                await _prepareVerification(authState, clerk.Strategy.emailLink);
+              }
             }
           }
         }

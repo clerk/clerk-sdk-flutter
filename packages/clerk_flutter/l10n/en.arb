@@ -194,6 +194,14 @@
       }
     }
   },
+  "noUserAttributeForField": "No user attribute found for field {arg}",
+  "@noUserAttributeForField": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
   "ok": "OK",
   "optional": "(optional)",
   "or": "or",
@@ -224,7 +232,7 @@
   "resetPassword": "Reset password and sign in",
   "selectAccount": "Select the account with which you wish to continue",
   "sendMeTheCode": "Send me the reset code",
-  "serverErrorResponse": "There was an error on the Frontend API server: {arg}",
+  "serverErrorResponse": "{arg} (ERROR RECEIVED FROM SERVER)",
   "@serverErrorResponse": {
     "placeholders": {
       "arg": {
@@ -296,6 +304,7 @@
   "slugUrl": "Slug URL",
   "switchTo": "Switch to",
   "termsOfService": "Terms of Service",
+  "tooManyRetries": "Sorry, the server is busy. Please try again later.",
   "transferable": "transferable",
   "twoStepVerification": "Two-step verification",
   "typeTypeInvalid": "Type '{type}' is invalid",

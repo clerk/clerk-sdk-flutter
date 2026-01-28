@@ -35,12 +35,6 @@ class ExternalError with InformativeToStringMixin {
   /// long message
   final String? longMessage;
 
-  /// Unknown error
-  static const unknown = ExternalError(
-    message: 'Unknown error',
-    errorCode: ClerkErrorCode.unknownError,
-  );
-
   /// The longer of the two messages
   String get fullMessage => longMessage ?? message;
 
@@ -59,6 +53,12 @@ class ExternalError with InformativeToStringMixin {
   /// toJson
   @override
   Map<String, dynamic> toJson() => _$ExternalErrorToJson(this);
+
+  /// Unknown error
+  static const unknown = ExternalError(
+    message: 'Unknown error',
+    errorCode: ClerkErrorCode.unknownError,
+  );
 }
 
 /// Error class renamed this is for backwards compatibility

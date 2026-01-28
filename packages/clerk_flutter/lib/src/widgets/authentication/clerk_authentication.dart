@@ -42,13 +42,6 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
     with ClerkTelemetryStateMixin {
   _AuthState _state = _AuthState.signingIn;
 
-  Future<void> _toggle(ClerkAuthState authState) async {
-    if (authState.isSigningIn || authState.isSigningUp) {
-      await authState.resetClient();
-    }
-    setState(() => _state = _state.nextState);
-  }
-
   @override
   Widget build(BuildContext context) {
     final authState = ClerkAuth.of(context);
@@ -61,8 +54,8 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
     final display = ClerkAuth.displayConfigOf(context);
     final localizations = ClerkAuth.localizationsOf(context);
 
-    // Coerce [_state] if we're in a specific one
-    if (authState.isSigningIn) {
+    // Coerce [_state] if we're in one specific one
+    if (authState.isSigningIn && authState.isSigningUp == false) {
       _state = _AuthState.signingIn;
     } else if (authState.isSigningUp) {
       _state = _AuthState.signingUp;
@@ -99,10 +92,12 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
                 ],
                 Openable(
                   open: _state.isSigningIn,
+                  keepAlive: true,
                   child: const ClerkSignInPanel(),
                 ),
                 Openable(
                   open: _state.isSigningUp,
+                  keepAlive: true,
                   child: const ClerkSignUpPanel(),
                 ),
               ],
@@ -112,7 +107,7 @@ class _ClerkAuthenticationState extends State<ClerkAuthentication>
       ),
       bottomPortion: _BottomPortion(
         state: _state,
-        onChange: () => _toggle(authState),
+        onChange: () => setState(() => _state = _state.nextState),
       ),
     );
   }

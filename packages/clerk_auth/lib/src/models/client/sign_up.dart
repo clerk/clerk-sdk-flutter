@@ -125,6 +125,10 @@ class SignUp extends AuthObject with InformativeToStringMixin {
   /// is [field] unverified?
   bool unverified(Field? field) => unverifiedFields.contains(field);
 
+  /// is [field] awaiting verification?
+  bool awaiting(Field? field) =>
+      verifications[field]?.status.isVerified == false;
+
   /// Do we have a [verification] for strategy happening?
   bool isVerifying(Strategy strategy) => verifications.values
       .any((v) => v.strategy == strategy && v.status.isVerified == false);

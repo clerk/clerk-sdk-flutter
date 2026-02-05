@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -16,6 +16,7 @@ class UpdateUserRequest {
     this.externalId,
     this.firstName,
     this.lastName,
+    this.locale,
     this.primaryEmailAddressId,
     this.notifyPrimaryEmailAddressChanged = false,
     this.primaryPhoneNumberId,
@@ -38,6 +39,7 @@ class UpdateUserRequest {
     this.skipLegalChecks,
     this.createOrganizationsLimit,
     this.createdAt,
+    this.bypassClientTrust,
   });
 
   /// The ID of the user as used in your external systems or your previous authentication solution. Must be unique across your instance.
@@ -48,6 +50,9 @@ class UpdateUserRequest {
 
   /// The last name to assign to the user
   String? lastName;
+
+  /// The locale to assign to the user (e.g., \"en-US\", \"fr-FR\")
+  String? locale;
 
   /// The ID of the email address to set as primary. It must be verified, and present on the current user.
   String? primaryEmailAddressId;
@@ -67,7 +72,7 @@ class UpdateUserRequest {
   /// The ID of the image to set as the user's profile image
   String? profileImageId;
 
-  /// The plaintext password to give the user. Must be at least 8 characters long, and can not be in any list of hacked passwords.
+  /// The plaintext password to give the user. Must be at least 8 characters long, and cannot be in any list of hacked passwords.
   String? password;
 
   /// In case you already have the password digests and not the passwords, you can use them for the newly created user via this property. The digests should be generated with one of the supported algorithms. The hashing algorithm can be specified using the `password_hasher` property.
@@ -79,7 +84,7 @@ class UpdateUserRequest {
   ///
   String? passwordDigest;
 
-  /// The hashing algorithm that was used to generate the password digest.  The algorithms we support at the moment are [`bcrypt`](https://en.wikipedia.org/wiki/Bcrypt), [`bcrypt_sha256_django`](https://docs.djangoproject.com/en/4.0/topics/auth/passwords/), [`md5`](https://en.wikipedia.org/wiki/MD5), `pbkdf2_sha1`, `pbkdf2_sha256`, [`pbkdf2_sha256_django`](https://docs.djangoproject.com/en/4.0/topics/auth/passwords/), [`phpass`](https://www.openwall.com/phpass/), [`scrypt_firebase`](https://firebaseopensource.com/projects/firebase/scrypt/), [`scrypt_werkzeug`](https://werkzeug.palletsprojects.com/en/3.0.x/utils/#werkzeug.security.generate_password_hash), [`sha256`](https://en.wikipedia.org/wiki/SHA-2), and the [`argon2`](https://argon2.online/) variants: `argon2i` and `argon2id`.  Each of the supported hashers expects the incoming digest to be in a particular format. See the [Clerk docs](https://clerk.com/docs/references/backend/user/create-user) for more information.
+  /// The hashing algorithm that was used to generate the password digest.  The algorithms we support at the moment are [`bcrypt`](https://en.wikipedia.org/wiki/Bcrypt), [`bcrypt_sha256_django`](https://docs.djangoproject.com/en/4.0/topics/auth/passwords/), [`md5`](https://en.wikipedia.org/wiki/MD5), `pbkdf2_sha1`, `pbkdf2_sha256`, [`pbkdf2_sha256_django`](https://docs.djangoproject.com/en/4.0/topics/auth/passwords/), [`phpass`](https://www.openwall.com/phpass/), `md5_phpass`, [`scrypt_firebase`](https://firebaseopensource.com/projects/firebase/scrypt/), [`scrypt_werkzeug`](https://werkzeug.palletsprojects.com/en/3.0.x/utils/#werkzeug.security.generate_password_hash), [`sha256`](https://en.wikipedia.org/wiki/SHA-2), [`ldap_ssha`](https://www.openldap.org/faq/data/cache/347.html), the [`argon2`](https://argon2.online/) variants: `argon2i` and `argon2id`, and `sha512_symfony`, the SHA-512 variant of the [Symfony](https://symfony.com/doc/current/security/passwords.html) legacy hasher.  Each of the supported hashers expects the incoming digest to be in a particular format. See the [Clerk docs](https://clerk.com/docs/references/backend/user/create-user) for more information.
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -115,7 +120,7 @@ class UpdateUserRequest {
   /// If true, the user can create organizations with the Frontend API.
   bool? createOrganizationEnabled;
 
-  /// A custom timestamps denoting _when_ the user accepted legal requirements, specified in RFC3339 format (e.g. `2012-10-20T07:15:20.902Z`).
+  /// A custom timestamp denoting _when_ the user accepted legal requirements, specified in RFC3339 format (e.g. `2012-10-20T07:15:20.902Z`).
   String? legalAcceptedAt;
 
   /// When set to `true` all legal checks are skipped. It is not recommended to skip legal checks unless you are migrating a user to Clerk.
@@ -127,6 +132,9 @@ class UpdateUserRequest {
   /// A custom date/time denoting _when_ the user signed up to the application, specified in RFC3339 format (e.g. `2012-10-20T07:15:20.902Z`).
   String? createdAt;
 
+  /// When set to `true`, the user will bypass client trust checks during sign-in.
+  bool? bypassClientTrust;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -134,6 +142,7 @@ class UpdateUserRequest {
           other.externalId == externalId &&
           other.firstName == firstName &&
           other.lastName == lastName &&
+          other.locale == locale &&
           other.primaryEmailAddressId == primaryEmailAddressId &&
           other.notifyPrimaryEmailAddressChanged ==
               notifyPrimaryEmailAddressChanged &&
@@ -156,7 +165,8 @@ class UpdateUserRequest {
           other.legalAcceptedAt == legalAcceptedAt &&
           other.skipLegalChecks == skipLegalChecks &&
           other.createOrganizationsLimit == createOrganizationsLimit &&
-          other.createdAt == createdAt;
+          other.createdAt == createdAt &&
+          other.bypassClientTrust == bypassClientTrust;
 
   @override
   int get hashCode =>
@@ -164,6 +174,7 @@ class UpdateUserRequest {
       (externalId == null ? 0 : externalId!.hashCode) +
       (firstName == null ? 0 : firstName!.hashCode) +
       (lastName == null ? 0 : lastName!.hashCode) +
+      (locale == null ? 0 : locale!.hashCode) +
       (primaryEmailAddressId == null ? 0 : primaryEmailAddressId!.hashCode) +
       (notifyPrimaryEmailAddressChanged == null
           ? 0
@@ -191,11 +202,12 @@ class UpdateUserRequest {
       (createOrganizationsLimit == null
           ? 0
           : createOrganizationsLimit!.hashCode) +
-      (createdAt == null ? 0 : createdAt!.hashCode);
+      (createdAt == null ? 0 : createdAt!.hashCode) +
+      (bypassClientTrust == null ? 0 : bypassClientTrust!.hashCode);
 
   @override
   String toString() =>
-      'UpdateUserRequest[externalId=$externalId, firstName=$firstName, lastName=$lastName, primaryEmailAddressId=$primaryEmailAddressId, notifyPrimaryEmailAddressChanged=$notifyPrimaryEmailAddressChanged, primaryPhoneNumberId=$primaryPhoneNumberId, primaryWeb3WalletId=$primaryWeb3WalletId, username=$username, profileImageId=$profileImageId, password=$password, passwordDigest=$passwordDigest, passwordHasher=$passwordHasher, skipPasswordChecks=$skipPasswordChecks, signOutOfOtherSessions=$signOutOfOtherSessions, totpSecret=$totpSecret, backupCodes=$backupCodes, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, unsafeMetadata=$unsafeMetadata, deleteSelfEnabled=$deleteSelfEnabled, createOrganizationEnabled=$createOrganizationEnabled, legalAcceptedAt=$legalAcceptedAt, skipLegalChecks=$skipLegalChecks, createOrganizationsLimit=$createOrganizationsLimit, createdAt=$createdAt]';
+      'UpdateUserRequest[externalId=$externalId, firstName=$firstName, lastName=$lastName, locale=$locale, primaryEmailAddressId=$primaryEmailAddressId, notifyPrimaryEmailAddressChanged=$notifyPrimaryEmailAddressChanged, primaryPhoneNumberId=$primaryPhoneNumberId, primaryWeb3WalletId=$primaryWeb3WalletId, username=$username, profileImageId=$profileImageId, password=$password, passwordDigest=$passwordDigest, passwordHasher=$passwordHasher, skipPasswordChecks=$skipPasswordChecks, signOutOfOtherSessions=$signOutOfOtherSessions, totpSecret=$totpSecret, backupCodes=$backupCodes, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, unsafeMetadata=$unsafeMetadata, deleteSelfEnabled=$deleteSelfEnabled, createOrganizationEnabled=$createOrganizationEnabled, legalAcceptedAt=$legalAcceptedAt, skipLegalChecks=$skipLegalChecks, createOrganizationsLimit=$createOrganizationsLimit, createdAt=$createdAt, bypassClientTrust=$bypassClientTrust]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -213,6 +225,11 @@ class UpdateUserRequest {
       json[r'last_name'] = this.lastName;
     } else {
       json[r'last_name'] = null;
+    }
+    if (this.locale != null) {
+      json[r'locale'] = this.locale;
+    } else {
+      json[r'locale'] = null;
     }
     if (this.primaryEmailAddressId != null) {
       json[r'primary_email_address_id'] = this.primaryEmailAddressId;
@@ -321,6 +338,11 @@ class UpdateUserRequest {
     } else {
       json[r'created_at'] = null;
     }
+    if (this.bypassClientTrust != null) {
+      json[r'bypass_client_trust'] = this.bypassClientTrust;
+    } else {
+      json[r'bypass_client_trust'] = null;
+    }
     return json;
   }
 
@@ -348,6 +370,7 @@ class UpdateUserRequest {
         externalId: mapValueOfType<String>(json, r'external_id'),
         firstName: mapValueOfType<String>(json, r'first_name'),
         lastName: mapValueOfType<String>(json, r'last_name'),
+        locale: mapValueOfType<String>(json, r'locale'),
         primaryEmailAddressId:
             mapValueOfType<String>(json, r'primary_email_address_id'),
         notifyPrimaryEmailAddressChanged: mapValueOfType<bool>(
@@ -386,6 +409,7 @@ class UpdateUserRequest {
         createOrganizationsLimit:
             mapValueOfType<int>(json, r'create_organizations_limit'),
         createdAt: mapValueOfType<String>(json, r'created_at'),
+        bypassClientTrust: mapValueOfType<bool>(json, r'bypass_client_trust'),
       );
     }
     return null;

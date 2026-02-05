@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -13,6 +13,7 @@ part of openapi.api;
 class Web3WalletVerification {
   /// Returns a new [Web3WalletVerification] instance.
   Web3WalletVerification({
+    this.object,
     required this.status,
     required this.strategy,
     this.nonce,
@@ -21,6 +22,8 @@ class Web3WalletVerification {
     required this.expireAt,
     this.verifiedAtClient,
   });
+
+  Web3WalletVerificationObjectEnum? object;
 
   Web3WalletVerificationStatusEnum status;
 
@@ -40,6 +43,7 @@ class Web3WalletVerification {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is Web3WalletVerification &&
+          other.object == object &&
           other.status == status &&
           other.strategy == strategy &&
           other.nonce == nonce &&
@@ -51,6 +55,7 @@ class Web3WalletVerification {
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
+      (object == null ? 0 : object!.hashCode) +
       (status.hashCode) +
       (strategy.hashCode) +
       (nonce == null ? 0 : nonce!.hashCode) +
@@ -61,10 +66,15 @@ class Web3WalletVerification {
 
   @override
   String toString() =>
-      'Web3WalletVerification[status=$status, strategy=$strategy, nonce=$nonce, message=$message, attempts=$attempts, expireAt=$expireAt, verifiedAtClient=$verifiedAtClient]';
+      'Web3WalletVerification[object=$object, status=$status, strategy=$strategy, nonce=$nonce, message=$message, attempts=$attempts, expireAt=$expireAt, verifiedAtClient=$verifiedAtClient]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    if (this.object != null) {
+      json[r'object'] = this.object;
+    } else {
+      json[r'object'] = null;
+    }
     json[r'status'] = this.status;
     json[r'strategy'] = this.strategy;
     if (this.nonce != null) {
@@ -116,6 +126,7 @@ class Web3WalletVerification {
       }());
 
       return Web3WalletVerification(
+        object: Web3WalletVerificationObjectEnum.fromJson(json[r'object']),
         status: Web3WalletVerificationStatusEnum.fromJson(json[r'status'])!,
         strategy:
             Web3WalletVerificationStrategyEnum.fromJson(json[r'strategy'])!,
@@ -185,6 +196,83 @@ class Web3WalletVerification {
     'attempts',
     'expire_at',
   };
+}
+
+class Web3WalletVerificationObjectEnum {
+  /// Instantiate a new enum with the provided [value].
+  const Web3WalletVerificationObjectEnum._(this.value);
+
+  /// The underlying value of this enum member.
+  final String value;
+
+  @override
+  String toString() => value;
+
+  String toJson() => value;
+
+  static const verificationAdmin =
+      Web3WalletVerificationObjectEnum._(r'verification_admin');
+
+  /// List of all possible values in this [enum][Web3WalletVerificationObjectEnum].
+  static const values = <Web3WalletVerificationObjectEnum>[
+    verificationAdmin,
+  ];
+
+  static Web3WalletVerificationObjectEnum? fromJson(dynamic value) =>
+      Web3WalletVerificationObjectEnumTypeTransformer().decode(value);
+
+  static List<Web3WalletVerificationObjectEnum> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
+    final result = <Web3WalletVerificationObjectEnum>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = Web3WalletVerificationObjectEnum.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+}
+
+/// Transformation class that can [encode] an instance of [Web3WalletVerificationObjectEnum] to String,
+/// and [decode] dynamic data back to [Web3WalletVerificationObjectEnum].
+class Web3WalletVerificationObjectEnumTypeTransformer {
+  factory Web3WalletVerificationObjectEnumTypeTransformer() =>
+      _instance ??= const Web3WalletVerificationObjectEnumTypeTransformer._();
+
+  const Web3WalletVerificationObjectEnumTypeTransformer._();
+
+  String encode(Web3WalletVerificationObjectEnum data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a Web3WalletVerificationObjectEnum.
+  ///
+  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
+  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
+  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
+  ///
+  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
+  /// and users are still using an old app with the old code.
+  Web3WalletVerificationObjectEnum? decode(dynamic data,
+      {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        case r'verification_admin':
+          return Web3WalletVerificationObjectEnum.verificationAdmin;
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [Web3WalletVerificationObjectEnumTypeTransformer] instance.
+  static Web3WalletVerificationObjectEnumTypeTransformer? _instance;
 }
 
 class Web3WalletVerificationStatusEnum {

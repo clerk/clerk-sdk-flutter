@@ -1,8 +1,8 @@
-# clerk_backend_api.api.OrganizationMembershipsApi
+# openapi.api.OrganizationMembershipsApi
 
 ## Load the API package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.clerk.com/v1*
@@ -26,7 +26,7 @@ Adds a user as a member to the given organization. Only users in the same instan
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -77,7 +77,7 @@ Removes the given membership from the organization
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -86,8 +86,8 @@ import 'package:clerk_backend_api/api.dart';
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = OrganizationMembershipsApi();
-final organizationId = organizationId_example; // String | The ID of the organization the membership belongs to
-final userId = userId_example; // String | The ID of the user that this membership belongs to
+final organizationId = organizationId_example; // String | The ID of the organization to which this membership belongs
+final userId = userId_example; // String | The ID of the user to which this membership belongs
 
 try {
     final result = api_instance.deleteOrganizationMembership(organizationId, userId);
@@ -101,8 +101,8 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **organizationId** | **String**| The ID of the organization the membership belongs to | 
- **userId** | **String**| The ID of the user that this membership belongs to | 
+ **organizationId** | **String**| The ID of the organization to which this membership belongs | 
+ **userId** | **String**| The ID of the user to which this membership belongs | 
 
 ### Return type
 
@@ -128,7 +128,7 @@ Retrieves all organization user memberships for the given instance.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -181,7 +181,7 @@ Retrieves all user memberships for the given organization
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -192,13 +192,13 @@ import 'package:clerk_backend_api/api.dart';
 final api_instance = OrganizationMembershipsApi();
 final organizationId = organizationId_example; // String | The organization ID.
 final orderBy = orderBy_example; // String | Sorts organizations memberships by phone_number, email_address, created_at, first_name, last_name or username. By prepending one of those values with + or -, we can choose to sort in ascending (ASC) or descending (DESC) order.\"
-final userId = []; // List<String> | Returns users with the user ids specified. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective user id should be included or excluded from the result set. Accepts up to 100 user ids. Any user ids not found are ignored.
+final userId = []; // List<String> | Returns users with the user IDs specified. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective user ID should be included or excluded from the result set. Accepts up to 100 user IDs. Any user IDs not found are ignored.
 final emailAddress = []; // List<String> | Returns users with the specified email addresses. Accepts up to 100 email addresses. Any email addresses not found are ignored.
 final phoneNumber = []; // List<String> | Returns users with the specified phone numbers. Accepts up to 100 phone numbers. Any phone numbers not found are ignored.
 final username = []; // List<String> | Returns users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored.
-final web3Wallet = []; // List<String> | Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored.
+final web3Wallet = []; // List<String> | Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored.
 final role = []; // List<String> | Returns users with the specified roles. Accepts up to 100 roles. Any roles not found are ignored.
-final query = query_example; // String | Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
+final query = query_example; // String | Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
 final emailAddressQuery = emailAddressQuery_example; // String | Returns users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`.
 final phoneNumberQuery = phoneNumberQuery_example; // String | Returns users with phone numbers that match the given query, via case-insensitive partial match. For example, `phone_number_query=555` will match a user with the phone number `+1555xxxxxxx`.
 final usernameQuery = usernameQuery_example; // String | Returns users with usernames that match the given query, via case-insensitive partial match. For example, `username_query=CoolUser` will match a user with the username `SomeCoolUser`.
@@ -224,13 +224,13 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **organizationId** | **String**| The organization ID. | 
  **orderBy** | **String**| Sorts organizations memberships by phone_number, email_address, created_at, first_name, last_name or username. By prepending one of those values with + or -, we can choose to sort in ascending (ASC) or descending (DESC) order.\" | [optional] 
- **userId** | [**List<String>**](String.md)| Returns users with the user ids specified. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective user id should be included or excluded from the result set. Accepts up to 100 user ids. Any user ids not found are ignored. | [optional] [default to const []]
+ **userId** | [**List<String>**](String.md)| Returns users with the user IDs specified. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective user ID should be included or excluded from the result set. Accepts up to 100 user IDs. Any user IDs not found are ignored. | [optional] [default to const []]
  **emailAddress** | [**List<String>**](String.md)| Returns users with the specified email addresses. Accepts up to 100 email addresses. Any email addresses not found are ignored. | [optional] [default to const []]
  **phoneNumber** | [**List<String>**](String.md)| Returns users with the specified phone numbers. Accepts up to 100 phone numbers. Any phone numbers not found are ignored. | [optional] [default to const []]
  **username** | [**List<String>**](String.md)| Returns users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored. | [optional] [default to const []]
- **web3Wallet** | [**List<String>**](String.md)| Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored. | [optional] [default to const []]
+ **web3Wallet** | [**List<String>**](String.md)| Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored. | [optional] [default to const []]
  **role** | [**List<String>**](String.md)| Returns users with the specified roles. Accepts up to 100 roles. Any roles not found are ignored. | [optional] [default to const []]
- **query** | **String**| Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well. | [optional] 
+ **query** | **String**| Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well. | [optional] 
  **emailAddressQuery** | **String**| Returns users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`. | [optional] 
  **phoneNumberQuery** | **String**| Returns users with phone numbers that match the given query, via case-insensitive partial match. For example, `phone_number_query=555` will match a user with the phone number `+1555xxxxxxx`. | [optional] 
  **usernameQuery** | **String**| Returns users with usernames that match the given query, via case-insensitive partial match. For example, `username_query=CoolUser` will match a user with the username `SomeCoolUser`. | [optional] 
@@ -266,7 +266,7 @@ Updates the properties of an existing organization membership
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -275,8 +275,8 @@ import 'package:clerk_backend_api/api.dart';
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = OrganizationMembershipsApi();
-final organizationId = organizationId_example; // String | The ID of the organization the membership belongs to
-final userId = userId_example; // String | The ID of the user that this membership belongs to
+final organizationId = organizationId_example; // String | The ID of the organization to which this membership belongs
+final userId = userId_example; // String | The ID of the user to which this membership belongs
 final updateOrganizationMembershipRequest = UpdateOrganizationMembershipRequest(); // UpdateOrganizationMembershipRequest | 
 
 try {
@@ -291,8 +291,8 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **organizationId** | **String**| The ID of the organization the membership belongs to | 
- **userId** | **String**| The ID of the user that this membership belongs to | 
+ **organizationId** | **String**| The ID of the organization to which this membership belongs | 
+ **userId** | **String**| The ID of the user to which this membership belongs | 
  **updateOrganizationMembershipRequest** | [**UpdateOrganizationMembershipRequest**](UpdateOrganizationMembershipRequest.md)|  | 
 
 ### Return type
@@ -319,7 +319,7 @@ Update an organization membership's metadata attributes by merging existing valu
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -328,8 +328,8 @@ import 'package:clerk_backend_api/api.dart';
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = OrganizationMembershipsApi();
-final organizationId = organizationId_example; // String | The ID of the organization the membership belongs to
-final userId = userId_example; // String | The ID of the user that this membership belongs to
+final organizationId = organizationId_example; // String | The ID of the organization to which this membership belongs
+final userId = userId_example; // String | The ID of the user to which this membership belongs
 final updateOrganizationMembershipMetadataRequest = UpdateOrganizationMembershipMetadataRequest(); // UpdateOrganizationMembershipMetadataRequest | 
 
 try {
@@ -344,8 +344,8 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **organizationId** | **String**| The ID of the organization the membership belongs to | 
- **userId** | **String**| The ID of the user that this membership belongs to | 
+ **organizationId** | **String**| The ID of the organization to which this membership belongs | 
+ **userId** | **String**| The ID of the user to which this membership belongs | 
  **updateOrganizationMembershipMetadataRequest** | [**UpdateOrganizationMembershipMetadataRequest**](UpdateOrganizationMembershipMetadataRequest.md)|  | [optional] 
 
 ### Return type

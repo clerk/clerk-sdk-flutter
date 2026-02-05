@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -28,17 +28,17 @@ class CreateJWTTemplateRequest {
   /// JWT template claims in JSON format
   Object claims;
 
-  /// JWT token lifetime
+  /// JWT lifetime
   ///
   /// Minimum value: 30
   /// Maximum value: 315360000
-  num? lifetime;
+  int? lifetime;
 
-  /// JWT token allowed clock skew
+  /// JWT allowed clock skew
   ///
   /// Minimum value: 0
   /// Maximum value: 300
-  num? allowedClockSkew;
+  int? allowedClockSkew;
 
   /// Whether a custom signing key/algorithm is also provided for this template
   ///
@@ -137,12 +137,8 @@ class CreateJWTTemplateRequest {
       return CreateJWTTemplateRequest(
         name: mapValueOfType<String>(json, r'name')!,
         claims: mapValueOfType<Object>(json, r'claims')!,
-        lifetime: json[r'lifetime'] == null
-            ? null
-            : num.parse('${json[r'lifetime']}'),
-        allowedClockSkew: json[r'allowed_clock_skew'] == null
-            ? null
-            : num.parse('${json[r'allowed_clock_skew']}'),
+        lifetime: mapValueOfType<int>(json, r'lifetime'),
+        allowedClockSkew: mapValueOfType<int>(json, r'allowed_clock_skew'),
         customSigningKey: mapValueOfType<bool>(json, r'custom_signing_key'),
         signingAlgorithm: mapValueOfType<String>(json, r'signing_algorithm'),
         signingKey: mapValueOfType<String>(json, r'signing_key'),

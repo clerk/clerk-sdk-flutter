@@ -1,8 +1,8 @@
-# clerk_backend_api.api.OAuthApplicationsApi
+# openapi.api.OAuthApplicationsApi
 
 ## Load the API package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.clerk.com/v1*
@@ -22,11 +22,11 @@ Method | HTTP request | Description
 
 Create an OAuth application
 
-Creates a new OAuth application with the given name and callback URL for an instance. The callback URL must be a valid url. All URL schemes are allowed such as `http://`, `https://`, `myapp://`, etc...
+Creates a new OAuth application with the given name and callback URL for an instance. The callback URL must be a valid URL. All URL schemes are allowed such as `http://`, `https://`, `myapp://`, etc...
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -75,7 +75,7 @@ Deletes the given OAuth application. This is not reversible.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -124,7 +124,7 @@ Fetches the OAuth application whose ID matches the provided `id` in the path.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -165,7 +165,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **listOAuthApplications**
-> OAuthApplications listOAuthApplications(limit, offset)
+> OAuthApplications listOAuthApplications(limit, offset, orderBy, nameQuery)
 
 Get a list of OAuth applications for an instance
 
@@ -173,7 +173,7 @@ This request returns the list of OAuth applications for an instance. Results can
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -184,9 +184,11 @@ import 'package:clerk_backend_api/api.dart';
 final api_instance = OAuthApplicationsApi();
 final limit = 56; // int | Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`.
 final offset = 56; // int | Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`.
+final orderBy = orderBy_example; // String | Allows to return OAuth applications in a particular order. At the moment, you can order the returned OAuth applications by their `created_at` and `name`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want OAuth applications to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. We only support one `order_by` parameter, and if multiple `order_by` parameters are provided, we will only keep the first one. For example, if you pass `order_by=name&order_by=created_at`, we will consider only the first `order_by` parameter, which is `name`. The `created_at` parameter will be ignored in this case.
+final nameQuery = nameQuery_example; // String | Returns OAuth applications with names that match the given query, via case-insensitive partial match.
 
 try {
-    final result = api_instance.listOAuthApplications(limit, offset);
+    final result = api_instance.listOAuthApplications(limit, offset, orderBy, nameQuery);
     print(result);
 } catch (e) {
     print('Exception when calling OAuthApplicationsApi->listOAuthApplications: $e\n');
@@ -199,6 +201,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **limit** | **int**| Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`. | [optional] [default to 10]
  **offset** | **int**| Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`. | [optional] [default to 0]
+ **orderBy** | **String**| Allows to return OAuth applications in a particular order. At the moment, you can order the returned OAuth applications by their `created_at` and `name`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want OAuth applications to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. We only support one `order_by` parameter, and if multiple `order_by` parameters are provided, we will only keep the first one. For example, if you pass `order_by=name&order_by=created_at`, we will consider only the first `order_by` parameter, which is `name`. The `created_at` parameter will be ignored in this case. | [optional] [default to '+created_at']
+ **nameQuery** | **String**| Returns OAuth applications with names that match the given query, via case-insensitive partial match. | [optional] 
 
 ### Return type
 
@@ -224,7 +228,7 @@ Rotates the OAuth application's client secret. When the client secret is rotated
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -273,7 +277,7 @@ Updates an existing OAuth application
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');

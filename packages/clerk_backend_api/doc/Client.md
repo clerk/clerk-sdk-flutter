@@ -1,8 +1,8 @@
-# clerk_backend_api.model.Client
+# openapi.model.Client
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **signInId** | **String** |  | 
 **signUpId** | **String** |  | 
 **lastActiveSessionId** | **String** | Last active session_id.  | 
+**lastAuthenticationStrategy** | **String** | The authentication strategy that was last used to authenticate the user on this client.  | 
 **updatedAt** | **int** | Unix timestamp of last update.  | 
 **createdAt** | **int** | Unix timestamp of creation.  | 
 

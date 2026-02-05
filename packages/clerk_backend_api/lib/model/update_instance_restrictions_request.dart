@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -15,20 +15,20 @@ class UpdateInstanceRestrictionsRequest {
   UpdateInstanceRestrictionsRequest({
     this.allowlist,
     this.blocklist,
+    this.allowlistBlocklistDisabledOnSignIn,
     this.blockEmailSubaddresses,
     this.blockDisposableEmailDomains,
-    this.ignoreDotsForGmailAddresses,
   });
 
   bool? allowlist;
 
   bool? blocklist;
 
+  bool? allowlistBlocklistDisabledOnSignIn;
+
   bool? blockEmailSubaddresses;
 
   bool? blockDisposableEmailDomains;
-
-  bool? ignoreDotsForGmailAddresses;
 
   @override
   bool operator ==(Object other) =>
@@ -36,26 +36,27 @@ class UpdateInstanceRestrictionsRequest {
       other is UpdateInstanceRestrictionsRequest &&
           other.allowlist == allowlist &&
           other.blocklist == blocklist &&
+          other.allowlistBlocklistDisabledOnSignIn ==
+              allowlistBlocklistDisabledOnSignIn &&
           other.blockEmailSubaddresses == blockEmailSubaddresses &&
-          other.blockDisposableEmailDomains == blockDisposableEmailDomains &&
-          other.ignoreDotsForGmailAddresses == ignoreDotsForGmailAddresses;
+          other.blockDisposableEmailDomains == blockDisposableEmailDomains;
 
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
       (allowlist == null ? 0 : allowlist!.hashCode) +
       (blocklist == null ? 0 : blocklist!.hashCode) +
+      (allowlistBlocklistDisabledOnSignIn == null
+          ? 0
+          : allowlistBlocklistDisabledOnSignIn!.hashCode) +
       (blockEmailSubaddresses == null ? 0 : blockEmailSubaddresses!.hashCode) +
       (blockDisposableEmailDomains == null
           ? 0
-          : blockDisposableEmailDomains!.hashCode) +
-      (ignoreDotsForGmailAddresses == null
-          ? 0
-          : ignoreDotsForGmailAddresses!.hashCode);
+          : blockDisposableEmailDomains!.hashCode);
 
   @override
   String toString() =>
-      'UpdateInstanceRestrictionsRequest[allowlist=$allowlist, blocklist=$blocklist, blockEmailSubaddresses=$blockEmailSubaddresses, blockDisposableEmailDomains=$blockDisposableEmailDomains, ignoreDotsForGmailAddresses=$ignoreDotsForGmailAddresses]';
+      'UpdateInstanceRestrictionsRequest[allowlist=$allowlist, blocklist=$blocklist, allowlistBlocklistDisabledOnSignIn=$allowlistBlocklistDisabledOnSignIn, blockEmailSubaddresses=$blockEmailSubaddresses, blockDisposableEmailDomains=$blockDisposableEmailDomains]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -69,6 +70,12 @@ class UpdateInstanceRestrictionsRequest {
     } else {
       json[r'blocklist'] = null;
     }
+    if (this.allowlistBlocklistDisabledOnSignIn != null) {
+      json[r'allowlist_blocklist_disabled_on_sign_in'] =
+          this.allowlistBlocklistDisabledOnSignIn;
+    } else {
+      json[r'allowlist_blocklist_disabled_on_sign_in'] = null;
+    }
     if (this.blockEmailSubaddresses != null) {
       json[r'block_email_subaddresses'] = this.blockEmailSubaddresses;
     } else {
@@ -79,12 +86,6 @@ class UpdateInstanceRestrictionsRequest {
           this.blockDisposableEmailDomains;
     } else {
       json[r'block_disposable_email_domains'] = null;
-    }
-    if (this.ignoreDotsForGmailAddresses != null) {
-      json[r'ignore_dots_for_gmail_addresses'] =
-          this.ignoreDotsForGmailAddresses;
-    } else {
-      json[r'ignore_dots_for_gmail_addresses'] = null;
     }
     return json;
   }
@@ -112,12 +113,12 @@ class UpdateInstanceRestrictionsRequest {
       return UpdateInstanceRestrictionsRequest(
         allowlist: mapValueOfType<bool>(json, r'allowlist'),
         blocklist: mapValueOfType<bool>(json, r'blocklist'),
+        allowlistBlocklistDisabledOnSignIn: mapValueOfType<bool>(
+            json, r'allowlist_blocklist_disabled_on_sign_in'),
         blockEmailSubaddresses:
             mapValueOfType<bool>(json, r'block_email_subaddresses'),
         blockDisposableEmailDomains:
             mapValueOfType<bool>(json, r'block_disposable_email_domains'),
-        ignoreDotsForGmailAddresses:
-            mapValueOfType<bool>(json, r'ignore_dots_for_gmail_addresses'),
       );
     }
     return null;

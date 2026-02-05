@@ -1,8 +1,8 @@
-# clerk_backend_api.api.ClientsApi
+# openapi.api.ClientsApi
 
 ## Load the API package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.clerk.com/v1*
@@ -23,7 +23,7 @@ Returns the details of a client.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -72,7 +72,7 @@ Returns a list of all clients. The clients are returned sorted by creation date,
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -125,7 +125,7 @@ Verifies the client in the provided token
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');

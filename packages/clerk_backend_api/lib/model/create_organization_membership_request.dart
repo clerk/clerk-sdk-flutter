@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -15,6 +15,8 @@ class CreateOrganizationMembershipRequest {
   CreateOrganizationMembershipRequest({
     required this.userId,
     required this.role,
+    this.publicMetadata = const {},
+    this.privateMetadata = const {},
   });
 
   /// The ID of the user that will be added as a member in the organization. The user needs to exist in the same instance as the organization and must not be a member of the given organization already.
@@ -23,26 +25,47 @@ class CreateOrganizationMembershipRequest {
   /// The role that the new member will have in the organization.
   String role;
 
+  /// Metadata saved on the organization membership, that is visible to both your frontend and backend.
+  Map<String, Object>? publicMetadata;
+
+  /// Metadata saved on the organization membership that is only visible to your backend.
+  Map<String, Object>? privateMetadata;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is CreateOrganizationMembershipRequest &&
           other.userId == userId &&
-          other.role == role;
+          other.role == role &&
+          _deepEquality.equals(other.publicMetadata, publicMetadata) &&
+          _deepEquality.equals(other.privateMetadata, privateMetadata);
 
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
-      (userId.hashCode) + (role.hashCode);
+      (userId.hashCode) +
+      (role.hashCode) +
+      (publicMetadata == null ? 0 : publicMetadata!.hashCode) +
+      (privateMetadata == null ? 0 : privateMetadata!.hashCode);
 
   @override
   String toString() =>
-      'CreateOrganizationMembershipRequest[userId=$userId, role=$role]';
+      'CreateOrganizationMembershipRequest[userId=$userId, role=$role, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     json[r'user_id'] = this.userId;
     json[r'role'] = this.role;
+    if (this.publicMetadata != null) {
+      json[r'public_metadata'] = this.publicMetadata;
+    } else {
+      json[r'public_metadata'] = null;
+    }
+    if (this.privateMetadata != null) {
+      json[r'private_metadata'] = this.privateMetadata;
+    } else {
+      json[r'private_metadata'] = null;
+    }
     return json;
   }
 
@@ -69,6 +92,11 @@ class CreateOrganizationMembershipRequest {
       return CreateOrganizationMembershipRequest(
         userId: mapValueOfType<String>(json, r'user_id')!,
         role: mapValueOfType<String>(json, r'role')!,
+        publicMetadata:
+            mapCastOfType<String, Object>(json, r'public_metadata') ?? const {},
+        privateMetadata:
+            mapCastOfType<String, Object>(json, r'private_metadata') ??
+                const {},
       );
     }
     return null;

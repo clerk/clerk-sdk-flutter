@@ -1,8 +1,8 @@
-# clerk_backend_api.model.Template
+# openapi.model.Template
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
 **object** | **String** | String representing the object's type. Objects of the same type share the same value.  | [optional] 
-**instanceId** | **String** | the id of the instance the template belongs to | [optional] 
+**instanceId** | **String** | The ID of the instance to which the template belongs | [optional] 
 **resourceType** | **String** | whether this is a system (default) or user overridden) template | [optional] 
 **templateType** | **String** | whether this is an email or SMS template | [optional] 
 **name** | **String** | user-friendly name of the template | [optional] 
@@ -18,6 +18,7 @@ Name | Type | Description | Notes
 **position** | **int** | position with the listing of templates | [optional] 
 **canRevert** | **bool** | whether this template can be reverted to the corresponding system default | [optional] 
 **canDelete** | **bool** | whether this template can be deleted | [optional] 
+**canEditBody** | **bool** | whether the body of this template can be edited | [optional] 
 **canToggle** | **bool** | whether this template can be enabled or disabled, true only for notification SMS templates | [optional] 
 **subject** | **String** | email subject | [optional] 
 **markup** | **String** | the editor markup used to generate the body of the template | [optional] 
@@ -28,6 +29,7 @@ Name | Type | Description | Notes
 **replyToEmailName** | **String** |  | [optional] 
 **deliveredByClerk** | **bool** |  | [optional] 
 **enabled** | **bool** |  | [optional] 
+**flaggedAsSuspicious** | **bool** |  | [optional] 
 **updatedAt** | **int** | Unix timestamp of last update.  | [optional] 
 **createdAt** | **int** | Unix timestamp of creation.  | [optional] 
 

@@ -1,8 +1,8 @@
-# clerk_backend_api.api.OrganizationDomainsApi
+# openapi.api.OrganizationDomainsApi
 
 ## Load the API package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.clerk.com/v1*
@@ -11,6 +11,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**createOrganizationDomain**](OrganizationDomainsApi.md#createorganizationdomain) | **POST** /organizations/{organization_id}/domains | Create a new organization domain.
 [**deleteOrganizationDomain**](OrganizationDomainsApi.md#deleteorganizationdomain) | **DELETE** /organizations/{organization_id}/domains/{domain_id} | Remove a domain from an organization.
+[**listAllOrganizationDomains**](OrganizationDomainsApi.md#listallorganizationdomains) | **GET** /organization_domains | List all organization domains
 [**listOrganizationDomains**](OrganizationDomainsApi.md#listorganizationdomains) | **GET** /organizations/{organization_id}/domains | Get a list of all domains of an organization.
 [**updateOrganizationDomain**](OrganizationDomainsApi.md#updateorganizationdomain) | **PATCH** /organizations/{organization_id}/domains/{domain_id} | Update an organization domain.
 
@@ -24,7 +25,7 @@ Creates a new organization domain. By default the domain is verified, but can be
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -75,7 +76,7 @@ Removes the given domain from the organization.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -84,7 +85,7 @@ import 'package:clerk_backend_api/api.dart';
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = OrganizationDomainsApi();
-final organizationId = organizationId_example; // String | The ID of the organization the domain belongs to
+final organizationId = organizationId_example; // String | The ID of the organization to which the domain belongs
 final domainId = domainId_example; // String | The ID of the domain
 
 try {
@@ -99,12 +100,73 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **organizationId** | **String**| The ID of the organization the domain belongs to | 
+ **organizationId** | **String**| The ID of the organization to which the domain belongs | 
  **domainId** | **String**| The ID of the domain | 
 
 ### Return type
 
 [**DeletedObject**](DeletedObject.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **listAllOrganizationDomains**
+> OrganizationDomains listAllOrganizationDomains(organizationId, verified, enrollmentMode, query, orderBy, offset, limit)
+
+List all organization domains
+
+Retrieves a list of all organization domains within the current instance. This endpoint can be used to list all domains across all organizations or filter domains by organization, verification status, enrollment mode, or search query.  The response includes pagination information and details about each domain including its verification status, enrollment mode, and associated counts. 
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: bearerAuth
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = OrganizationDomainsApi();
+final organizationId = organizationId_example; // String | The ID of the organization to filter domains by
+final verified = verified_example; // String | Filter by verification status
+final enrollmentMode = []; // List<String> | Filter by enrollment mode
+final query = query_example; // String | Search domains by name or organization ID. If the query starts with \"org_\", it will search by exact organization ID match. Otherwise, it performs a case-insensitive partial match on the domain name.  Note: An empty string or whitespace-only value is not allowed and will result in a validation error. 
+final orderBy = orderBy_example; // String | Allows to return organization domains in a particular order. At the moment, you can order the returned domains by their `name` or `created_at`. In order to specify the direction, you can use the `+/-` symbols prepended to the property to order by. For example, if you want domains to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. Defaults to `-created_at`. 
+final offset = 56; // int | Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`.
+final limit = 56; // int | Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`.
+
+try {
+    final result = api_instance.listAllOrganizationDomains(organizationId, verified, enrollmentMode, query, orderBy, offset, limit);
+    print(result);
+} catch (e) {
+    print('Exception when calling OrganizationDomainsApi->listAllOrganizationDomains: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **organizationId** | **String**| The ID of the organization to filter domains by | [optional] 
+ **verified** | **String**| Filter by verification status | [optional] 
+ **enrollmentMode** | [**List<String>**](String.md)| Filter by enrollment mode | [optional] [default to const []]
+ **query** | **String**| Search domains by name or organization ID. If the query starts with \"org_\", it will search by exact organization ID match. Otherwise, it performs a case-insensitive partial match on the domain name.  Note: An empty string or whitespace-only value is not allowed and will result in a validation error.  | [optional] 
+ **orderBy** | **String**| Allows to return organization domains in a particular order. At the moment, you can order the returned domains by their `name` or `created_at`. In order to specify the direction, you can use the `+/-` symbols prepended to the property to order by. For example, if you want domains to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. Defaults to `-created_at`.  | [optional] [default to '-created_at']
+ **offset** | **int**| Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`. | [optional] [default to 0]
+ **limit** | **int**| Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`. | [optional] [default to 10]
+
+### Return type
+
+[**OrganizationDomains**](OrganizationDomains.md)
 
 ### Authorization
 
@@ -126,7 +188,7 @@ Get a list of all domains of an organization.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -183,7 +245,7 @@ Updates the properties of an existing organization domain.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -192,7 +254,7 @@ import 'package:clerk_backend_api/api.dart';
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = OrganizationDomainsApi();
-final organizationId = organizationId_example; // String | The ID of the organization the domain belongs to
+final organizationId = organizationId_example; // String | The ID of the organization to which the domain belongs
 final domainId = domainId_example; // String | The ID of the domain
 final updateOrganizationDomainRequest = UpdateOrganizationDomainRequest(); // UpdateOrganizationDomainRequest | 
 
@@ -208,7 +270,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **organizationId** | **String**| The ID of the organization the domain belongs to | 
+ **organizationId** | **String**| The ID of the organization to which the domain belongs | 
  **domainId** | **String**| The ID of the domain | 
  **updateOrganizationDomainRequest** | [**UpdateOrganizationDomainRequest**](UpdateOrganizationDomainRequest.md)|  | 
 

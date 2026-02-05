@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -34,7 +34,7 @@ class CreateOrganizationRequest {
   /// Metadata saved on the organization, read-only from the Frontend API and fully accessible (read/write) from the Backend API
   Map<String, Object>? publicMetadata;
 
-  /// A slug for the new organization. Can contain only lowercase alphanumeric characters and the dash \"-\". Must be unique for the instance.
+  /// A slug for the new organization. Can contain only lowercase alphanumeric characters and the dash \"-\". Must be unique for the instance. This field should only be included when slugs are enabled in the organization settings, refer to our [documentation](https://clerk.com/docs/guides/organizations/overview#organization-slugs).
   String? slug;
 
   /// The maximum number of memberships allowed for this organization

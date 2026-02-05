@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -17,6 +17,8 @@ class Organization {
     required this.id,
     required this.name,
     required this.slug,
+    this.imageUrl,
+    required this.hasImage,
     this.membersCount,
     this.missingMemberWithElevatedPermissions,
     this.pendingInvitationsCount,
@@ -27,6 +29,7 @@ class Organization {
     this.createdBy,
     required this.createdAt,
     required this.updatedAt,
+    this.lastActiveAt,
   });
 
   OrganizationObjectEnum object;
@@ -36,6 +39,16 @@ class Organization {
   String name;
 
   String slug;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? imageUrl;
+
+  bool hasImage;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -83,6 +96,15 @@ class Organization {
   /// Unix timestamp of last update.
   int updatedAt;
 
+  /// Unix timestamp of last activity.
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? lastActiveAt;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -91,6 +113,8 @@ class Organization {
           other.id == id &&
           other.name == name &&
           other.slug == slug &&
+          other.imageUrl == imageUrl &&
+          other.hasImage == hasImage &&
           other.membersCount == membersCount &&
           other.missingMemberWithElevatedPermissions ==
               missingMemberWithElevatedPermissions &&
@@ -101,7 +125,8 @@ class Organization {
           _deepEquality.equals(other.privateMetadata, privateMetadata) &&
           other.createdBy == createdBy &&
           other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+          other.updatedAt == updatedAt &&
+          other.lastActiveAt == lastActiveAt;
 
   @override
   int get hashCode =>
@@ -110,6 +135,8 @@ class Organization {
       (id.hashCode) +
       (name.hashCode) +
       (slug.hashCode) +
+      (imageUrl == null ? 0 : imageUrl!.hashCode) +
+      (hasImage.hashCode) +
       (membersCount == null ? 0 : membersCount!.hashCode) +
       (missingMemberWithElevatedPermissions == null
           ? 0
@@ -123,11 +150,12 @@ class Organization {
       (privateMetadata.hashCode) +
       (createdBy == null ? 0 : createdBy!.hashCode) +
       (createdAt.hashCode) +
-      (updatedAt.hashCode);
+      (updatedAt.hashCode) +
+      (lastActiveAt == null ? 0 : lastActiveAt!.hashCode);
 
   @override
   String toString() =>
-      'Organization[object=$object, id=$id, name=$name, slug=$slug, membersCount=$membersCount, missingMemberWithElevatedPermissions=$missingMemberWithElevatedPermissions, pendingInvitationsCount=$pendingInvitationsCount, maxAllowedMemberships=$maxAllowedMemberships, adminDeleteEnabled=$adminDeleteEnabled, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, createdBy=$createdBy, createdAt=$createdAt, updatedAt=$updatedAt]';
+      'Organization[object=$object, id=$id, name=$name, slug=$slug, imageUrl=$imageUrl, hasImage=$hasImage, membersCount=$membersCount, missingMemberWithElevatedPermissions=$missingMemberWithElevatedPermissions, pendingInvitationsCount=$pendingInvitationsCount, maxAllowedMemberships=$maxAllowedMemberships, adminDeleteEnabled=$adminDeleteEnabled, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, createdBy=$createdBy, createdAt=$createdAt, updatedAt=$updatedAt, lastActiveAt=$lastActiveAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -135,6 +163,12 @@ class Organization {
     json[r'id'] = this.id;
     json[r'name'] = this.name;
     json[r'slug'] = this.slug;
+    if (this.imageUrl != null) {
+      json[r'image_url'] = this.imageUrl;
+    } else {
+      json[r'image_url'] = null;
+    }
+    json[r'has_image'] = this.hasImage;
     if (this.membersCount != null) {
       json[r'members_count'] = this.membersCount;
     } else {
@@ -162,6 +196,11 @@ class Organization {
     }
     json[r'created_at'] = this.createdAt;
     json[r'updated_at'] = this.updatedAt;
+    if (this.lastActiveAt != null) {
+      json[r'last_active_at'] = this.lastActiveAt;
+    } else {
+      json[r'last_active_at'] = null;
+    }
     return json;
   }
 
@@ -190,6 +229,8 @@ class Organization {
         id: mapValueOfType<String>(json, r'id')!,
         name: mapValueOfType<String>(json, r'name')!,
         slug: mapValueOfType<String>(json, r'slug')!,
+        imageUrl: mapValueOfType<String>(json, r'image_url'),
+        hasImage: mapValueOfType<bool>(json, r'has_image')!,
         membersCount: mapValueOfType<int>(json, r'members_count'),
         missingMemberWithElevatedPermissions: mapValueOfType<bool>(
             json, r'missing_member_with_elevated_permissions'),
@@ -202,10 +243,12 @@ class Organization {
         publicMetadata:
             mapCastOfType<String, Object>(json, r'public_metadata')!,
         privateMetadata:
-            mapCastOfType<String, Object>(json, r'private_metadata')!,
+            mapCastOfType<String, Object>(json, r'private_metadata') ??
+                const {},
         createdBy: mapValueOfType<String>(json, r'created_by'),
         createdAt: mapValueOfType<int>(json, r'created_at')!,
         updatedAt: mapValueOfType<int>(json, r'updated_at')!,
+        lastActiveAt: mapValueOfType<int>(json, r'last_active_at'),
       );
     }
     return null;
@@ -266,10 +309,10 @@ class Organization {
     'id',
     'name',
     'slug',
+    'has_image',
     'max_allowed_memberships',
     'admin_delete_enabled',
     'public_metadata',
-    'private_metadata',
     'created_at',
     'updated_at',
   };

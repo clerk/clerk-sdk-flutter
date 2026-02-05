@@ -1,8 +1,8 @@
-# clerk_backend_api.api.ActorTokensApi
+# openapi.api.ActorTokensApi
 
 ## Load the API package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.clerk.com/v1*
@@ -22,7 +22,7 @@ Create an actor token that can be used to impersonate the given user. The `actor
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -71,7 +71,7 @@ Revokes a pending actor token.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');

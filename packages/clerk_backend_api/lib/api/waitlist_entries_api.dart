@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -15,6 +15,76 @@ class WaitlistEntriesApi {
       : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
+
+  /// Create multiple waitlist entries
+  ///
+  /// Creates multiple waitlist entries for the provided email addresses. You can choose whether to send confirmation emails by setting the `notify` parameter to `true` or `false` for each entry. If the `notify` parameter is omitted, it defaults to `true`.  If an email address is already on the waitlist, no new entry will be created and the existing waitlist entry will be returned. Duplicate email addresses within the same request are not allowed.  This endpoint is limited to a maximum of 50 entries per API call. If you need to add more entries, please make multiple requests.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [List<CreateBulkWaitlistEntriesRequestInner>] createBulkWaitlistEntriesRequestInner:
+  ///   Required parameters
+  Future<http.Response> createBulkWaitlistEntriesWithHttpInfo({
+    List<CreateBulkWaitlistEntriesRequestInner>?
+        createBulkWaitlistEntriesRequestInner,
+  }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/waitlist_entries/bulk';
+
+    // ignore: prefer_final_locals
+    Object? postBody = createBulkWaitlistEntriesRequestInner;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Create multiple waitlist entries
+  ///
+  /// Creates multiple waitlist entries for the provided email addresses. You can choose whether to send confirmation emails by setting the `notify` parameter to `true` or `false` for each entry. If the `notify` parameter is omitted, it defaults to `true`.  If an email address is already on the waitlist, no new entry will be created and the existing waitlist entry will be returned. Duplicate email addresses within the same request are not allowed.  This endpoint is limited to a maximum of 50 entries per API call. If you need to add more entries, please make multiple requests.
+  ///
+  /// Parameters:
+  ///
+  /// * [List<CreateBulkWaitlistEntriesRequestInner>] createBulkWaitlistEntriesRequestInner:
+  ///   Required parameters
+  Future<List<WaitlistEntry>?> createBulkWaitlistEntries({
+    List<CreateBulkWaitlistEntriesRequestInner>?
+        createBulkWaitlistEntriesRequestInner,
+  }) async {
+    final response = await createBulkWaitlistEntriesWithHttpInfo(
+      createBulkWaitlistEntriesRequestInner:
+          createBulkWaitlistEntriesRequestInner,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      final responseBody = await _decodeBodyBytes(response);
+      return (await apiClient.deserializeAsync(
+              responseBody, 'List<WaitlistEntry>') as List)
+          .cast<WaitlistEntry>()
+          .toList(growable: false);
+    }
+    return null;
+  }
 
   /// Create a waitlist entry
   ///
@@ -63,6 +133,147 @@ class WaitlistEntriesApi {
   }) async {
     final response = await createWaitlistEntryWithHttpInfo(
       createWaitlistEntryRequest: createWaitlistEntryRequest,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'WaitlistEntry',
+      ) as WaitlistEntry;
+    }
+    return null;
+  }
+
+  /// Delete a pending waitlist entry
+  ///
+  /// Delete a pending waitlist entry.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] waitlistEntryId (required):
+  ///   The ID of the waitlist entry to delete
+  Future<http.Response> deleteWaitlistEntryWithHttpInfo(
+    String waitlistEntryId,
+  ) async {
+    // ignore: prefer_const_declarations
+    final path = r'/waitlist_entries/{waitlist_entry_id}'
+        .replaceAll('{waitlist_entry_id}', waitlistEntryId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+    return apiClient.invokeAPI(
+      path,
+      'DELETE',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Delete a pending waitlist entry
+  ///
+  /// Delete a pending waitlist entry.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] waitlistEntryId (required):
+  ///   The ID of the waitlist entry to delete
+  Future<DeletedObject?> deleteWaitlistEntry(
+    String waitlistEntryId,
+  ) async {
+    final response = await deleteWaitlistEntryWithHttpInfo(
+      waitlistEntryId,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'DeletedObject',
+      ) as DeletedObject;
+    }
+    return null;
+  }
+
+  /// Invite a waitlist entry
+  ///
+  /// Send an invite to the email address in a waitlist entry.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] waitlistEntryId (required):
+  ///   The ID of the waitlist entry to invite
+  ///
+  /// * [InviteWaitlistEntryRequest] inviteWaitlistEntryRequest:
+  Future<http.Response> inviteWaitlistEntryWithHttpInfo(
+    String waitlistEntryId, {
+    InviteWaitlistEntryRequest? inviteWaitlistEntryRequest,
+  }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/waitlist_entries/{waitlist_entry_id}/invite'
+        .replaceAll('{waitlist_entry_id}', waitlistEntryId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = inviteWaitlistEntryRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Invite a waitlist entry
+  ///
+  /// Send an invite to the email address in a waitlist entry.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] waitlistEntryId (required):
+  ///   The ID of the waitlist entry to invite
+  ///
+  /// * [InviteWaitlistEntryRequest] inviteWaitlistEntryRequest:
+  Future<WaitlistEntry?> inviteWaitlistEntry(
+    String waitlistEntryId, {
+    InviteWaitlistEntryRequest? inviteWaitlistEntryRequest,
+  }) async {
+    final response = await inviteWaitlistEntryWithHttpInfo(
+      waitlistEntryId,
+      inviteWaitlistEntryRequest: inviteWaitlistEntryRequest,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -194,6 +405,73 @@ class WaitlistEntriesApi {
         await _decodeBodyBytes(response),
         'ListWaitlistEntries200Response',
       ) as ListWaitlistEntries200Response;
+    }
+    return null;
+  }
+
+  /// Reject a waitlist entry
+  ///
+  /// Reject a waitlist entry.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] waitlistEntryId (required):
+  ///   The ID of the waitlist entry to reject
+  Future<http.Response> rejectWaitlistEntryWithHttpInfo(
+    String waitlistEntryId,
+  ) async {
+    // ignore: prefer_const_declarations
+    final path = r'/waitlist_entries/{waitlist_entry_id}/reject'
+        .replaceAll('{waitlist_entry_id}', waitlistEntryId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Reject a waitlist entry
+  ///
+  /// Reject a waitlist entry.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] waitlistEntryId (required):
+  ///   The ID of the waitlist entry to reject
+  Future<WaitlistEntry?> rejectWaitlistEntry(
+    String waitlistEntryId,
+  ) async {
+    final response = await rejectWaitlistEntryWithHttpInfo(
+      waitlistEntryId,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'WaitlistEntry',
+      ) as WaitlistEntry;
     }
     return null;
   }

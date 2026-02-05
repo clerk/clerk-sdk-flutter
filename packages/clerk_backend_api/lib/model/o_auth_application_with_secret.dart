@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -18,6 +18,11 @@ class OAuthApplicationWithSecret {
     required this.instanceId,
     required this.name,
     required this.clientId,
+    required this.clientUri,
+    required this.clientImageUrl,
+    required this.dynamicallyRegistered,
+    required this.consentScreenEnabled,
+    required this.pkceRequired,
     required this.public,
     required this.scopes,
     this.redirectUris = const [],
@@ -41,6 +46,16 @@ class OAuthApplicationWithSecret {
   String name;
 
   String clientId;
+
+  String? clientUri;
+
+  String? clientImageUrl;
+
+  bool dynamicallyRegistered;
+
+  bool consentScreenEnabled;
+
+  bool pkceRequired;
 
   bool public;
 
@@ -85,6 +100,11 @@ class OAuthApplicationWithSecret {
           other.instanceId == instanceId &&
           other.name == name &&
           other.clientId == clientId &&
+          other.clientUri == clientUri &&
+          other.clientImageUrl == clientImageUrl &&
+          other.dynamicallyRegistered == dynamicallyRegistered &&
+          other.consentScreenEnabled == consentScreenEnabled &&
+          other.pkceRequired == pkceRequired &&
           other.public == public &&
           other.scopes == scopes &&
           _deepEquality.equals(other.redirectUris, redirectUris) &&
@@ -106,6 +126,11 @@ class OAuthApplicationWithSecret {
       (instanceId.hashCode) +
       (name.hashCode) +
       (clientId.hashCode) +
+      (clientUri == null ? 0 : clientUri!.hashCode) +
+      (clientImageUrl == null ? 0 : clientImageUrl!.hashCode) +
+      (dynamicallyRegistered.hashCode) +
+      (consentScreenEnabled.hashCode) +
+      (pkceRequired.hashCode) +
       (public.hashCode) +
       (scopes.hashCode) +
       (redirectUris.hashCode) +
@@ -121,7 +146,7 @@ class OAuthApplicationWithSecret {
 
   @override
   String toString() =>
-      'OAuthApplicationWithSecret[object=$object, id=$id, instanceId=$instanceId, name=$name, clientId=$clientId, public=$public, scopes=$scopes, redirectUris=$redirectUris, callbackUrl=$callbackUrl, authorizeUrl=$authorizeUrl, tokenFetchUrl=$tokenFetchUrl, userInfoUrl=$userInfoUrl, discoveryUrl=$discoveryUrl, tokenIntrospectionUrl=$tokenIntrospectionUrl, createdAt=$createdAt, updatedAt=$updatedAt, clientSecret=$clientSecret]';
+      'OAuthApplicationWithSecret[object=$object, id=$id, instanceId=$instanceId, name=$name, clientId=$clientId, clientUri=$clientUri, clientImageUrl=$clientImageUrl, dynamicallyRegistered=$dynamicallyRegistered, consentScreenEnabled=$consentScreenEnabled, pkceRequired=$pkceRequired, public=$public, scopes=$scopes, redirectUris=$redirectUris, callbackUrl=$callbackUrl, authorizeUrl=$authorizeUrl, tokenFetchUrl=$tokenFetchUrl, userInfoUrl=$userInfoUrl, discoveryUrl=$discoveryUrl, tokenIntrospectionUrl=$tokenIntrospectionUrl, createdAt=$createdAt, updatedAt=$updatedAt, clientSecret=$clientSecret]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -130,6 +155,19 @@ class OAuthApplicationWithSecret {
     json[r'instance_id'] = this.instanceId;
     json[r'name'] = this.name;
     json[r'client_id'] = this.clientId;
+    if (this.clientUri != null) {
+      json[r'client_uri'] = this.clientUri;
+    } else {
+      json[r'client_uri'] = null;
+    }
+    if (this.clientImageUrl != null) {
+      json[r'client_image_url'] = this.clientImageUrl;
+    } else {
+      json[r'client_image_url'] = null;
+    }
+    json[r'dynamically_registered'] = this.dynamicallyRegistered;
+    json[r'consent_screen_enabled'] = this.consentScreenEnabled;
+    json[r'pkce_required'] = this.pkceRequired;
     json[r'public'] = this.public;
     json[r'scopes'] = this.scopes;
     json[r'redirect_uris'] = this.redirectUris;
@@ -175,6 +213,13 @@ class OAuthApplicationWithSecret {
         instanceId: mapValueOfType<String>(json, r'instance_id')!,
         name: mapValueOfType<String>(json, r'name')!,
         clientId: mapValueOfType<String>(json, r'client_id')!,
+        clientUri: mapValueOfType<String>(json, r'client_uri'),
+        clientImageUrl: mapValueOfType<String>(json, r'client_image_url'),
+        dynamicallyRegistered:
+            mapValueOfType<bool>(json, r'dynamically_registered')!,
+        consentScreenEnabled:
+            mapValueOfType<bool>(json, r'consent_screen_enabled')!,
+        pkceRequired: mapValueOfType<bool>(json, r'pkce_required')!,
         public: mapValueOfType<bool>(json, r'public')!,
         scopes: mapValueOfType<String>(json, r'scopes')!,
         redirectUris: json[r'redirect_uris'] is Iterable
@@ -253,6 +298,11 @@ class OAuthApplicationWithSecret {
     'instance_id',
     'name',
     'client_id',
+    'client_uri',
+    'client_image_url',
+    'dynamically_registered',
+    'consent_screen_enabled',
+    'pkce_required',
     'public',
     'scopes',
     'redirect_uris',

@@ -1,13 +1,14 @@
-# clerk_backend_api.model.PhoneNumberVerification
+# openapi.model.PhoneNumberVerification
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**object** | **String** |  | [optional] 
 **status** | **String** |  | 
 **strategy** | **String** |  | 
 **attempts** | **int** |  | 

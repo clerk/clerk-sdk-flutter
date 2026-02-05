@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -15,7 +15,6 @@ class UpdateInstanceRequest {
   UpdateInstanceRequest({
     this.testMode,
     this.hibp,
-    this.enhancedEmailDeliverability,
     this.supportEmail,
     this.clerkJsVersion,
     this.developmentOrigin,
@@ -30,16 +29,13 @@ class UpdateInstanceRequest {
   /// Whether the instance should be using the HIBP service to check passwords for breaches
   bool? hibp;
 
-  /// The \"enhanced_email_deliverability\" feature will send emails from \"verifications@clerk.dev\" instead of your domain. This can be helpful if you do not have a high domain reputation.
-  bool? enhancedEmailDeliverability;
-
   String? supportEmail;
 
   String? clerkJsVersion;
 
   String? developmentOrigin;
 
-  /// For browser-like stacks such as browser extensions, Electron, or Capacitor.js the instance allowed origins need to be updated with the request origin value. For Chrome extensions popup, background, or service worker pages the origin is chrome-extension://extension_uiid. For Electron apps the default origin is http://localhost:3000. For Capacitor, the origin is capacitor://localhost.
+  /// For browser-like stacks such as browser extensions, Electron (not officially supported), or Capacitor.js (not officially supported), the instance allowed origins need to be updated with the request origin value. For Chrome extensions popup, background, or service worker pages, the origin is chrome-extension://extension_uuid. For Electron apps the default origin is http://localhost:3000. For Capacitor, the origin is capacitor://localhost.
   List<String> allowedOrigins;
 
   /// Whether the instance should operate in cookieless development mode (i.e. without third-party cookies). Deprecated: Please use `url_based_session_syncing` instead.
@@ -54,7 +50,6 @@ class UpdateInstanceRequest {
       other is UpdateInstanceRequest &&
           other.testMode == testMode &&
           other.hibp == hibp &&
-          other.enhancedEmailDeliverability == enhancedEmailDeliverability &&
           other.supportEmail == supportEmail &&
           other.clerkJsVersion == clerkJsVersion &&
           other.developmentOrigin == developmentOrigin &&
@@ -67,9 +62,6 @@ class UpdateInstanceRequest {
       // ignore: unnecessary_parenthesis
       (testMode == null ? 0 : testMode!.hashCode) +
       (hibp == null ? 0 : hibp!.hashCode) +
-      (enhancedEmailDeliverability == null
-          ? 0
-          : enhancedEmailDeliverability!.hashCode) +
       (supportEmail == null ? 0 : supportEmail!.hashCode) +
       (clerkJsVersion == null ? 0 : clerkJsVersion!.hashCode) +
       (developmentOrigin == null ? 0 : developmentOrigin!.hashCode) +
@@ -79,7 +71,7 @@ class UpdateInstanceRequest {
 
   @override
   String toString() =>
-      'UpdateInstanceRequest[testMode=$testMode, hibp=$hibp, enhancedEmailDeliverability=$enhancedEmailDeliverability, supportEmail=$supportEmail, clerkJsVersion=$clerkJsVersion, developmentOrigin=$developmentOrigin, allowedOrigins=$allowedOrigins, cookielessDev=$cookielessDev, urlBasedSessionSyncing=$urlBasedSessionSyncing]';
+      'UpdateInstanceRequest[testMode=$testMode, hibp=$hibp, supportEmail=$supportEmail, clerkJsVersion=$clerkJsVersion, developmentOrigin=$developmentOrigin, allowedOrigins=$allowedOrigins, cookielessDev=$cookielessDev, urlBasedSessionSyncing=$urlBasedSessionSyncing]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -92,11 +84,6 @@ class UpdateInstanceRequest {
       json[r'hibp'] = this.hibp;
     } else {
       json[r'hibp'] = null;
-    }
-    if (this.enhancedEmailDeliverability != null) {
-      json[r'enhanced_email_deliverability'] = this.enhancedEmailDeliverability;
-    } else {
-      json[r'enhanced_email_deliverability'] = null;
     }
     if (this.supportEmail != null) {
       json[r'support_email'] = this.supportEmail;
@@ -150,8 +137,6 @@ class UpdateInstanceRequest {
       return UpdateInstanceRequest(
         testMode: mapValueOfType<bool>(json, r'test_mode'),
         hibp: mapValueOfType<bool>(json, r'hibp'),
-        enhancedEmailDeliverability:
-            mapValueOfType<bool>(json, r'enhanced_email_deliverability'),
         supportEmail: mapValueOfType<String>(json, r'support_email'),
         clerkJsVersion: mapValueOfType<String>(json, r'clerk_js_version'),
         developmentOrigin: mapValueOfType<String>(json, r'development_origin'),

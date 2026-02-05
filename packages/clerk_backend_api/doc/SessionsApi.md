@@ -1,8 +1,8 @@
-# clerk_backend_api.api.SessionsApi
+# openapi.api.SessionsApi
 
 ## Load the API package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.clerk.com/v1*
@@ -11,11 +11,11 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**createSession**](SessionsApi.md#createsession) | **POST** /sessions | Create a new active session
 [**createSessionToken**](SessionsApi.md#createsessiontoken) | **POST** /sessions/{session_id}/tokens | Create a session token
-[**createSessionTokenFromTemplate**](SessionsApi.md#createsessiontokenfromtemplate) | **POST** /sessions/{session_id}/tokens/{template_name} | Create a session token from a jwt template
+[**createSessionTokenFromTemplate**](SessionsApi.md#createsessiontokenfromtemplate) | **POST** /sessions/{session_id}/tokens/{template_name} | Create a session token from a JWT template
 [**getSession**](SessionsApi.md#getsession) | **GET** /sessions/{session_id} | Retrieve a session
 [**getSessionList**](SessionsApi.md#getsessionlist) | **GET** /sessions | List all sessions
+[**refreshSession**](SessionsApi.md#refreshsession) | **POST** /sessions/{session_id}/refresh | Refresh a session
 [**revokeSession**](SessionsApi.md#revokesession) | **POST** /sessions/{session_id}/revoke | Revoke a session
-[**verifySession**](SessionsApi.md#verifysession) | **POST** /sessions/{session_id}/verify | Verify a session
 
 
 # **createSession**
@@ -27,7 +27,7 @@ Create a new active session for the provided user ID.  **This operation is inten
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -76,7 +76,7 @@ Creates a session JSON Web Token (JWT) based on a session.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -121,13 +121,13 @@ Name | Type | Description  | Notes
 # **createSessionTokenFromTemplate**
 > CreateSessionToken200Response createSessionTokenFromTemplate(sessionId, templateName, createSessionTokenFromTemplateRequest)
 
-Create a session token from a jwt template
+Create a session token from a JWT template
 
-Creates a JSON Web Token(JWT) based on a session and a JWT Template name defined for your instance
+Creates a JSON Web Token (JWT) based on a session and a JWT Template name defined for your instance
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -137,7 +137,7 @@ import 'package:clerk_backend_api/api.dart';
 
 final api_instance = SessionsApi();
 final sessionId = sessionId_example; // String | The ID of the session
-final templateName = templateName_example; // String | The name of the JWT Template defined in your instance (e.g. `custom_hasura`).
+final templateName = templateName_example; // String | The name of the JWT template defined in your instance (e.g. `custom_hasura`).
 final createSessionTokenFromTemplateRequest = CreateSessionTokenFromTemplateRequest(); // CreateSessionTokenFromTemplateRequest | 
 
 try {
@@ -153,7 +153,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **sessionId** | **String**| The ID of the session | 
- **templateName** | **String**| The name of the JWT Template defined in your instance (e.g. `custom_hasura`). | 
+ **templateName** | **String**| The name of the JWT template defined in your instance (e.g. `custom_hasura`). | 
  **createSessionTokenFromTemplateRequest** | [**CreateSessionTokenFromTemplateRequest**](CreateSessionTokenFromTemplateRequest.md)|  | [optional] 
 
 ### Return type
@@ -180,7 +180,7 @@ Retrieve the details of a session
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -229,7 +229,7 @@ Returns a list of all sessions. The sessions are returned sorted by creation dat
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -279,6 +279,57 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **refreshSession**
+> SessionRefresh refreshSession(sessionId, refreshSessionRequest)
+
+Refresh a session
+
+Refreshes a session by creating a new session token. A 401 is returned when there are validation errors, which signals the SDKs to fall back to the handshake flow.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: bearerAuth
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = SessionsApi();
+final sessionId = sessionId_example; // String | The ID of the session
+final refreshSessionRequest = RefreshSessionRequest(); // RefreshSessionRequest | Refresh session parameters
+
+try {
+    final result = api_instance.refreshSession(sessionId, refreshSessionRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling SessionsApi->refreshSession: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **sessionId** | **String**| The ID of the session | 
+ **refreshSessionRequest** | [**RefreshSessionRequest**](RefreshSessionRequest.md)| Refresh session parameters | [optional] 
+
+### Return type
+
+[**SessionRefresh**](SessionRefresh.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **revokeSession**
 > Session revokeSession(sessionId)
 
@@ -288,7 +339,7 @@ Sets the status of a session as \"revoked\", which is an unauthenticated state. 
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -324,57 +375,6 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **verifySession**
-> Session verifySession(sessionId, verifySessionRequest)
-
-Verify a session
-
-Returns the session if it is authenticated, otherwise returns an error. WARNING: This endpoint is deprecated and will be removed in future versions. We strongly recommend switching to networkless verification using short-lived session tokens,          which is implemented transparently in all recent SDK versions (e.g. [NodeJS SDK](https://clerk.com/docs/backend-requests/handling/nodejs#clerk-express-require-auth)).          For more details on how networkless verification works, refer to our [Session Tokens documentation](https://clerk.com/docs/backend-requests/resources/session-tokens).
-
-### Example
-```dart
-import 'package:clerk_backend_api/api.dart';
-// TODO Configure HTTP Bearer authorization: bearerAuth
-// Case 1. Use String Token
-//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
-// Case 2. Use Function which generate token.
-// String yourTokenGeneratorFunction() { ... }
-//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
-
-final api_instance = SessionsApi();
-final sessionId = sessionId_example; // String | The ID of the session
-final verifySessionRequest = VerifySessionRequest(); // VerifySessionRequest | Parameters.
-
-try {
-    final result = api_instance.verifySession(sessionId, verifySessionRequest);
-    print(result);
-} catch (e) {
-    print('Exception when calling SessionsApi->verifySession: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **sessionId** | **String**| The ID of the session | 
- **verifySessionRequest** | [**VerifySessionRequest**](VerifySessionRequest.md)| Parameters. | [optional] 
-
-### Return type
-
-[**Session**](Session.md)
-
-### Authorization
-
-[bearerAuth](../README.md#bearerAuth)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

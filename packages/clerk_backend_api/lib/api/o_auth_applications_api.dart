@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -18,7 +18,7 @@ class OAuthApplicationsApi {
 
   /// Create an OAuth application
   ///
-  /// Creates a new OAuth application with the given name and callback URL for an instance. The callback URL must be a valid url. All URL schemes are allowed such as `http://`, `https://`, `myapp://`, etc...
+  /// Creates a new OAuth application with the given name and callback URL for an instance. The callback URL must be a valid URL. All URL schemes are allowed such as `http://`, `https://`, `myapp://`, etc...
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -53,7 +53,7 @@ class OAuthApplicationsApi {
 
   /// Create an OAuth application
   ///
-  /// Creates a new OAuth application with the given name and callback URL for an instance. The callback URL must be a valid url. All URL schemes are allowed such as `http://`, `https://`, `myapp://`, etc...
+  /// Creates a new OAuth application with the given name and callback URL for an instance. The callback URL must be a valid URL. All URL schemes are allowed such as `http://`, `https://`, `myapp://`, etc...
   ///
   /// Parameters:
   ///
@@ -227,9 +227,17 @@ class OAuthApplicationsApi {
   ///
   /// * [int] offset:
   ///   Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`.
+  ///
+  /// * [String] orderBy:
+  ///   Allows to return OAuth applications in a particular order. At the moment, you can order the returned OAuth applications by their `created_at` and `name`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want OAuth applications to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. We only support one `order_by` parameter, and if multiple `order_by` parameters are provided, we will only keep the first one. For example, if you pass `order_by=name&order_by=created_at`, we will consider only the first `order_by` parameter, which is `name`. The `created_at` parameter will be ignored in this case.
+  ///
+  /// * [String] nameQuery:
+  ///   Returns OAuth applications with names that match the given query, via case-insensitive partial match.
   Future<http.Response> listOAuthApplicationsWithHttpInfo({
     int? limit,
     int? offset,
+    String? orderBy,
+    String? nameQuery,
   }) async {
     // ignore: prefer_const_declarations
     final path = r'/oauth_applications';
@@ -246,6 +254,12 @@ class OAuthApplicationsApi {
     }
     if (offset != null) {
       queryParams.addAll(_queryParams('', 'offset', offset));
+    }
+    if (orderBy != null) {
+      queryParams.addAll(_queryParams('', 'order_by', orderBy));
+    }
+    if (nameQuery != null) {
+      queryParams.addAll(_queryParams('', 'name_query', nameQuery));
     }
 
     const contentTypes = <String>[];
@@ -272,13 +286,23 @@ class OAuthApplicationsApi {
   ///
   /// * [int] offset:
   ///   Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`.
+  ///
+  /// * [String] orderBy:
+  ///   Allows to return OAuth applications in a particular order. At the moment, you can order the returned OAuth applications by their `created_at` and `name`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want OAuth applications to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. We only support one `order_by` parameter, and if multiple `order_by` parameters are provided, we will only keep the first one. For example, if you pass `order_by=name&order_by=created_at`, we will consider only the first `order_by` parameter, which is `name`. The `created_at` parameter will be ignored in this case.
+  ///
+  /// * [String] nameQuery:
+  ///   Returns OAuth applications with names that match the given query, via case-insensitive partial match.
   Future<OAuthApplications?> listOAuthApplications({
     int? limit,
     int? offset,
+    String? orderBy,
+    String? nameQuery,
   }) async {
     final response = await listOAuthApplicationsWithHttpInfo(
       limit: limit,
       offset: offset,
+      orderBy: orderBy,
+      nameQuery: nameQuery,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));

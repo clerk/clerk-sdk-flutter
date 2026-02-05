@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -13,14 +13,17 @@ part of openapi.api;
 class SAMLAccountVerification {
   /// Returns a new [SAMLAccountVerification] instance.
   SAMLAccountVerification({
+    this.object,
     required this.status,
     required this.strategy,
-    required this.externalVerificationRedirectUrl,
+    this.externalVerificationRedirectUrl,
     this.error,
     required this.expireAt,
     required this.attempts,
     this.verifiedAtClient,
   });
+
+  SAMLAccountVerificationObjectEnum? object;
 
   SAMLAccountVerificationStatusEnum status;
 
@@ -28,7 +31,7 @@ class SAMLAccountVerification {
 
   String? externalVerificationRedirectUrl;
 
-  FromOAuthError? error;
+  VerificationFromOauthError? error;
 
   int? expireAt;
 
@@ -40,6 +43,7 @@ class SAMLAccountVerification {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is SAMLAccountVerification &&
+          other.object == object &&
           other.status == status &&
           other.strategy == strategy &&
           other.externalVerificationRedirectUrl ==
@@ -52,6 +56,7 @@ class SAMLAccountVerification {
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
+      (object == null ? 0 : object!.hashCode) +
       (status.hashCode) +
       (strategy.hashCode) +
       (externalVerificationRedirectUrl == null
@@ -64,10 +69,15 @@ class SAMLAccountVerification {
 
   @override
   String toString() =>
-      'SAMLAccountVerification[status=$status, strategy=$strategy, externalVerificationRedirectUrl=$externalVerificationRedirectUrl, error=$error, expireAt=$expireAt, attempts=$attempts, verifiedAtClient=$verifiedAtClient]';
+      'SAMLAccountVerification[object=$object, status=$status, strategy=$strategy, externalVerificationRedirectUrl=$externalVerificationRedirectUrl, error=$error, expireAt=$expireAt, attempts=$attempts, verifiedAtClient=$verifiedAtClient]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    if (this.object != null) {
+      json[r'object'] = this.object;
+    } else {
+      json[r'object'] = null;
+    }
     json[r'status'] = this.status;
     json[r'strategy'] = this.strategy;
     if (this.externalVerificationRedirectUrl != null) {
@@ -120,12 +130,13 @@ class SAMLAccountVerification {
       }());
 
       return SAMLAccountVerification(
+        object: SAMLAccountVerificationObjectEnum.fromJson(json[r'object']),
         status: SAMLAccountVerificationStatusEnum.fromJson(json[r'status'])!,
         strategy:
             SAMLAccountVerificationStrategyEnum.fromJson(json[r'strategy'])!,
         externalVerificationRedirectUrl:
             mapValueOfType<String>(json, r'external_verification_redirect_url'),
-        error: FromOAuthError.fromJson(json[r'error']),
+        error: VerificationFromOauthError.fromJson(json[r'error']),
         expireAt: mapValueOfType<int>(json, r'expire_at'),
         attempts: mapValueOfType<int>(json, r'attempts'),
         verifiedAtClient: mapValueOfType<String>(json, r'verified_at_client'),
@@ -187,10 +198,86 @@ class SAMLAccountVerification {
   static const requiredKeys = <String>{
     'status',
     'strategy',
-    'external_verification_redirect_url',
     'expire_at',
     'attempts',
   };
+}
+
+class SAMLAccountVerificationObjectEnum {
+  /// Instantiate a new enum with the provided [value].
+  const SAMLAccountVerificationObjectEnum._(this.value);
+
+  /// The underlying value of this enum member.
+  final String value;
+
+  @override
+  String toString() => value;
+
+  String toJson() => value;
+
+  static const verificationTicket =
+      SAMLAccountVerificationObjectEnum._(r'verification_ticket');
+
+  /// List of all possible values in this [enum][SAMLAccountVerificationObjectEnum].
+  static const values = <SAMLAccountVerificationObjectEnum>[
+    verificationTicket,
+  ];
+
+  static SAMLAccountVerificationObjectEnum? fromJson(dynamic value) =>
+      SAMLAccountVerificationObjectEnumTypeTransformer().decode(value);
+
+  static List<SAMLAccountVerificationObjectEnum> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
+    final result = <SAMLAccountVerificationObjectEnum>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = SAMLAccountVerificationObjectEnum.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+}
+
+/// Transformation class that can [encode] an instance of [SAMLAccountVerificationObjectEnum] to String,
+/// and [decode] dynamic data back to [SAMLAccountVerificationObjectEnum].
+class SAMLAccountVerificationObjectEnumTypeTransformer {
+  factory SAMLAccountVerificationObjectEnumTypeTransformer() =>
+      _instance ??= const SAMLAccountVerificationObjectEnumTypeTransformer._();
+
+  const SAMLAccountVerificationObjectEnumTypeTransformer._();
+
+  String encode(SAMLAccountVerificationObjectEnum data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a SAMLAccountVerificationObjectEnum.
+  ///
+  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
+  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
+  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
+  ///
+  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
+  /// and users are still using an old app with the old code.
+  SAMLAccountVerificationObjectEnum? decode(dynamic data,
+      {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        case r'verification_ticket':
+          return SAMLAccountVerificationObjectEnum.verificationTicket;
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [SAMLAccountVerificationObjectEnumTypeTransformer] instance.
+  static SAMLAccountVerificationObjectEnumTypeTransformer? _instance;
 }
 
 class SAMLAccountVerificationStatusEnum {

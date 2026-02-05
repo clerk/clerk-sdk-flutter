@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -18,7 +18,7 @@ class OrganizationsApi {
 
   /// Create an organization
   ///
-  /// Creates a new organization with the given name for an instance. You can specify an optional slug for the new organization. If provided, the organization slug can contain only lowercase alphanumeric characters (letters and digits) and the dash \"-\". Organization slugs must be unique for the instance. You can provide additional metadata for the organization and set any custom attribute you want. Organizations support private and public metadata. Private metadata can only be accessed from the Backend API. Public metadata can be accessed from the Backend API, and are read-only from the Frontend API. The `created_by` user will see this as their [active organization] (https://clerk.com/docs/organizations/overview#active-organization) the next time they create a session, presuming they don't explicitly set a different organization as active before then.
+  /// Creates a new organization with the given name for an instance. You can specify an optional slug for the new organization. If provided, the organization slug can contain only lowercase alphanumeric characters (letters and digits) and the dash \"-\". Organization slugs must be unique for the instance. You can provide additional metadata for the organization and set any custom attribute you want. Organizations support private and public metadata. Private metadata can only be accessed from the Backend API. Public metadata can be accessed from the Backend API, and are read-only from the Frontend API. The `created_by` user will see this as their [active organization](https://clerk.com/docs/organizations/overview#active-organization) the next time they create a session, presuming they don't explicitly set a different organization as active before then.
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -53,7 +53,7 @@ class OrganizationsApi {
 
   /// Create an organization
   ///
-  /// Creates a new organization with the given name for an instance. You can specify an optional slug for the new organization. If provided, the organization slug can contain only lowercase alphanumeric characters (letters and digits) and the dash \"-\". Organization slugs must be unique for the instance. You can provide additional metadata for the organization and set any custom attribute you want. Organizations support private and public metadata. Private metadata can only be accessed from the Backend API. Public metadata can be accessed from the Backend API, and are read-only from the Frontend API. The `created_by` user will see this as their [active organization] (https://clerk.com/docs/organizations/overview#active-organization) the next time they create a session, presuming they don't explicitly set a different organization as active before then.
+  /// Creates a new organization with the given name for an instance. You can specify an optional slug for the new organization. If provided, the organization slug can contain only lowercase alphanumeric characters (letters and digits) and the dash \"-\". Organization slugs must be unique for the instance. You can provide additional metadata for the organization and set any custom attribute you want. Organizations support private and public metadata. Private metadata can only be accessed from the Backend API. Public metadata can be accessed from the Backend API, and are read-only from the Frontend API. The `created_by` user will see this as their [active organization](https://clerk.com/docs/organizations/overview#active-organization) the next time they create a session, presuming they don't explicitly set a different organization as active before then.
   ///
   /// Parameters:
   ///
@@ -82,7 +82,7 @@ class OrganizationsApi {
 
   /// Delete an organization
   ///
-  /// Deletes the given organization. Please note that deleting an organization will also delete all memberships and invitations. This is not reversible.
+  /// Deletes the given organization. Please note that deleting an organization will also delete all memberships and invitations. This is not reversible.  After the organization is deleted, any user's active sessions that contain the deleted organization will be cleared.
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -119,7 +119,7 @@ class OrganizationsApi {
 
   /// Delete an organization
   ///
-  /// Deletes the given organization. Please note that deleting an organization will also delete all memberships and invitations. This is not reversible.
+  /// Deletes the given organization. Please note that deleting an organization will also delete all memberships and invitations. This is not reversible.  After the organization is deleted, any user's active sessions that contain the deleted organization will be cleared.
   ///
   /// Parameters:
   ///
@@ -311,6 +311,73 @@ class OrganizationsApi {
     return null;
   }
 
+  /// Retrieve an organization's billing subscription
+  ///
+  /// Retrieves the billing subscription for the specified organization. This includes subscription details, active plans, billing information, and payment status. The subscription contains subscription items which represent the individual plans the organization is subscribed to.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] organizationId (required):
+  ///   The ID of the organization whose subscription to retrieve
+  Future<http.Response> getOrganizationBillingSubscriptionWithHttpInfo(
+    String organizationId,
+  ) async {
+    // ignore: prefer_const_declarations
+    final path = r'/organizations/{organization_id}/billing/subscription'
+        .replaceAll('{organization_id}', organizationId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Retrieve an organization's billing subscription
+  ///
+  /// Retrieves the billing subscription for the specified organization. This includes subscription details, active plans, billing information, and payment status. The subscription contains subscription items which represent the individual plans the organization is subscribed to.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] organizationId (required):
+  ///   The ID of the organization whose subscription to retrieve
+  Future<CommerceSubscription?> getOrganizationBillingSubscription(
+    String organizationId,
+  ) async {
+    final response = await getOrganizationBillingSubscriptionWithHttpInfo(
+      organizationId,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'CommerceSubscription',
+      ) as CommerceSubscription;
+    }
+    return null;
+  }
+
   /// Get a list of organizations for an instance
   ///
   /// This request returns the list of organizations for an instance. Results can be paginated using the optional `limit` and `offset` query parameters. The organizations are ordered by descending creation date. Most recent organizations will be returned first.
@@ -329,10 +396,10 @@ class OrganizationsApi {
   ///   Returns organizations with ID, name, or slug that match the given query. Uses exact match for organization ID and partial match for name and slug.
   ///
   /// * [List<String>] userId:
-  ///   Returns organizations with the user ids specified. Any user ids not found are ignored. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set.
+  ///   Returns organizations that include any of the specified user IDs as members. Any user IDs not found are ignored. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set.
   ///
   /// * [List<String>] organizationId:
-  ///   Returns organizations with the organization ids specified. Any organization ids not found are ignored. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids. Example: ?organization_id=+org_1&organization_id=-org_2
+  ///   Returns organizations with the organization IDs specified. Any organization IDs not found are ignored. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs. Example: ?organization_id=+org_1&organization_id=-org_2
   ///
   /// * [String] orderBy:
   ///   Allows to return organizations in a particular order. At the moment, you can order the returned organizations either by their `name`, `created_at` or `members_count`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want organizations to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. Defaults to `-created_at`.
@@ -421,10 +488,10 @@ class OrganizationsApi {
   ///   Returns organizations with ID, name, or slug that match the given query. Uses exact match for organization ID and partial match for name and slug.
   ///
   /// * [List<String>] userId:
-  ///   Returns organizations with the user ids specified. Any user ids not found are ignored. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set.
+  ///   Returns organizations that include any of the specified user IDs as members. Any user IDs not found are ignored. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set.
   ///
   /// * [List<String>] organizationId:
-  ///   Returns organizations with the organization ids specified. Any organization ids not found are ignored. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids. Example: ?organization_id=+org_1&organization_id=-org_2
+  ///   Returns organizations with the organization IDs specified. Any organization IDs not found are ignored. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs. Example: ?organization_id=+org_1&organization_id=-org_2
   ///
   /// * [String] orderBy:
   ///   Allows to return organizations in a particular order. At the moment, you can order the returned organizations either by their `name`, `created_at` or `members_count`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want organizations to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. Defaults to `-created_at`.
@@ -621,7 +688,7 @@ class OrganizationsApi {
 
   /// Upload a logo for the organization
   ///
-  /// Set or replace an organization's logo, by uploading an image file. This endpoint uses the `multipart/form-data` request content type and accepts a file of image type. The file size cannot exceed 10MB. Only the following file content types are supported: `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/x-icon`, `image/vnd.microsoft.icon`.
+  /// Set or replace an organization's logo, by uploading an image file. This endpoint uses the `multipart/form-data` request content type and accepts a file of image type. The file size cannot exceed 10MB. Only the following file content types are supported: `image/jpeg`, `image/png`, `image/gif`, `image/webp`.
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -673,7 +740,7 @@ class OrganizationsApi {
 
   /// Upload a logo for the organization
   ///
-  /// Set or replace an organization's logo, by uploading an image file. This endpoint uses the `multipart/form-data` request content type and accepts a file of image type. The file size cannot exceed 10MB. Only the following file content types are supported: `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/x-icon`, `image/vnd.microsoft.icon`.
+  /// Set or replace an organization's logo, by uploading an image file. This endpoint uses the `multipart/form-data` request content type and accepts a file of image type. The file size cannot exceed 10MB. Only the following file content types are supported: `image/jpeg`, `image/png`, `image/gif`, `image/webp`.
   ///
   /// Parameters:
   ///

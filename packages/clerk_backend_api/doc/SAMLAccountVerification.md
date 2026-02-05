@@ -1,17 +1,18 @@
-# clerk_backend_api.model.SAMLAccountVerification
+# openapi.model.SAMLAccountVerification
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**object** | **String** |  | [optional] 
 **status** | **String** |  | 
 **strategy** | **String** |  | 
-**externalVerificationRedirectUrl** | **String** |  | 
-**error** | [**FromOAuthError**](FromOAuthError.md) |  | [optional] 
+**externalVerificationRedirectUrl** | **String** |  | [optional] 
+**error** | [**VerificationFromOauthError**](VerificationFromOauthError.md) |  | [optional] 
 **expireAt** | **int** |  | 
 **attempts** | **int** |  | 
 **verifiedAtClient** | **String** |  | [optional] 

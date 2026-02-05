@@ -1,8 +1,8 @@
-# clerk_backend_api.api.UsersApi
+# openapi.api.UsersApi
 
 ## Load the API package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.clerk.com/v1*
@@ -19,18 +19,23 @@ Method | HTTP request | Description
 [**disableMFA**](UsersApi.md#disablemfa) | **DELETE** /users/{user_id}/mfa | Disable a user's MFA methods
 [**getOAuthAccessToken**](UsersApi.md#getoauthaccesstoken) | **GET** /users/{user_id}/oauth_access_tokens/{provider} | Retrieve the OAuth access token of a user
 [**getUser**](UsersApi.md#getuser) | **GET** /users/{user_id} | Retrieve a user
+[**getUserBillingSubscription**](UsersApi.md#getuserbillingsubscription) | **GET** /users/{user_id}/billing/subscription | Retrieve a user's billing subscription
 [**getUserList**](UsersApi.md#getuserlist) | **GET** /users | List all users
 [**getUsersCount**](UsersApi.md#getuserscount) | **GET** /users/count | Count users
 [**lockUser**](UsersApi.md#lockuser) | **POST** /users/{user_id}/lock | Lock a user
+[**setUserPasswordCompromised**](UsersApi.md#setuserpasswordcompromised) | **POST** /users/{user_id}/password/set_compromised | Set a user's password as compromised
 [**setUserProfileImage**](UsersApi.md#setuserprofileimage) | **POST** /users/{user_id}/profile_image | Set user profile image
 [**unbanUser**](UsersApi.md#unbanuser) | **POST** /users/{user_id}/unban | Unban a user
 [**unlockUser**](UsersApi.md#unlockuser) | **POST** /users/{user_id}/unlock | Unlock a user
+[**unsetUserPasswordCompromised**](UsersApi.md#unsetuserpasswordcompromised) | **POST** /users/{user_id}/password/unset_compromised | Unset a user's password as compromised
 [**updateUser**](UsersApi.md#updateuser) | **PATCH** /users/{user_id} | Update a user
 [**updateUserMetadata**](UsersApi.md#updateusermetadata) | **PATCH** /users/{user_id}/metadata | Merge and update a user's metadata
 [**userPasskeyDelete**](UsersApi.md#userpasskeydelete) | **DELETE** /users/{user_id}/passkeys/{passkey_identification_id} | Delete a user passkey
 [**userWeb3WalletDelete**](UsersApi.md#userweb3walletdelete) | **DELETE** /users/{user_id}/web3_wallets/{web3_wallet_identification_id} | Delete a user web3 wallet
+[**usersBan**](UsersApi.md#usersban) | **POST** /users/ban | Ban multiple users
 [**usersGetOrganizationInvitations**](UsersApi.md#usersgetorganizationinvitations) | **GET** /users/{user_id}/organization_invitations | Retrieve all invitations for a user
 [**usersGetOrganizationMemberships**](UsersApi.md#usersgetorganizationmemberships) | **GET** /users/{user_id}/organization_memberships | Retrieve all memberships for a user
+[**usersUnban**](UsersApi.md#usersunban) | **POST** /users/unban | Unban multiple users
 [**verifyPassword**](UsersApi.md#verifypassword) | **POST** /users/{user_id}/verify_password | Verify the password of a user
 [**verifyTOTP**](UsersApi.md#verifytotp) | **POST** /users/{user_id}/verify_totp | Verify a TOTP or backup code for a user
 
@@ -44,7 +49,7 @@ Marks the given user as banned, which means that all their sessions are revoked 
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -89,11 +94,11 @@ Name | Type | Description  | Notes
 
 Create a new user
 
-Creates a new user. Your user management settings determine how you should setup your user model.  Any email address and phone number created using this method will be marked as verified.  Note: If you are performing a migration, check out our guide on [zero downtime migrations](https://clerk.com/docs/deployments/migrate-overview).  A rate limit rule of 20 requests per 10 seconds is applied to this endpoint.
+Creates a new user. Your user management settings determine how you should setup your user model.  Any email address and phone number created using this method will be marked as verified.  Note: If you are performing a migration, check out our guide on [zero downtime migrations](https://clerk.com/docs/deployments/migrate-overview).  The following rate limit rules apply to this endpoint: 1000 requests per 10 seconds for production instances and 100 requests per 10 seconds for development instances
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -142,7 +147,7 @@ Disable all of a user's backup codes.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -191,7 +196,7 @@ Delete an external account by ID.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -242,7 +247,7 @@ Deletes all of the user's TOTPs.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -291,7 +296,7 @@ Delete the specified user
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -340,7 +345,7 @@ Delete a user's profile image
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -389,7 +394,7 @@ Disable all of a user's MFA methods (e.g. OTP sent via SMS, TOTP on their authen
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -430,7 +435,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getOAuthAccessToken**
-> List<GetOAuthAccessToken200ResponseInner> getOAuthAccessToken(userId, provider, paginated, limit, offset)
+> List<OAuthAccessTokenInner> getOAuthAccessToken(userId, provider, paginated, limit, offset)
 
 Retrieve the OAuth access token of a user
 
@@ -438,7 +443,7 @@ Fetch the corresponding OAuth access token for a user that has previously authen
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -473,7 +478,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**List<GetOAuthAccessToken200ResponseInner>**](GetOAuthAccessToken200ResponseInner.md)
+[**List<OAuthAccessTokenInner>**](OAuthAccessTokenInner.md)
 
 ### Authorization
 
@@ -495,7 +500,7 @@ Retrieve the details of a user
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -535,8 +540,57 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **getUserBillingSubscription**
+> CommerceSubscription getUserBillingSubscription(userId)
+
+Retrieve a user's billing subscription
+
+Retrieves the billing subscription for the specified user. This includes subscription details, active plans, billing information, and payment status. The subscription contains subscription items which represent the individual plans the user is subscribed to.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: bearerAuth
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = UsersApi();
+final userId = userId_example; // String | The ID of the user whose subscription to retrieve
+
+try {
+    final result = api_instance.getUserBillingSubscription(userId);
+    print(result);
+} catch (e) {
+    print('Exception when calling UsersApi->getUserBillingSubscription: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **userId** | **String**| The ID of the user whose subscription to retrieve | 
+
+### Return type
+
+[**CommerceSubscription**](CommerceSubscription.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getUserList**
-> List<User> getUserList(emailAddress, phoneNumber, externalId, username, web3Wallet, userId, organizationId, query, emailAddressQuery, phoneNumberQuery, usernameQuery, nameQuery, banned, lastActiveAtBefore, lastActiveAtAfter, lastActiveAtSince, createdAtBefore, createdAtAfter, limit, offset, orderBy)
+> List<User> getUserList(emailAddress, phoneNumber, externalId, username, web3Wallet, userId, organizationId, query, emailAddressQuery, phoneNumberQuery, usernameQuery, nameQuery, banned, lastActiveAtBefore, lastActiveAtAfter, lastActiveAtSince, createdAtBefore, createdAtAfter, lastSignInAtBefore, lastSignInAtAfter, provider, providerUserId, limit, offset, orderBy)
 
 List all users
 
@@ -544,7 +598,7 @@ Returns a list of all users. The users are returned sorted by creation date, wit
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -555,12 +609,12 @@ import 'package:clerk_backend_api/api.dart';
 final api_instance = UsersApi();
 final emailAddress = []; // List<String> | Returns users with the specified email addresses. Accepts up to 100 email addresses. Any email addresses not found are ignored.
 final phoneNumber = []; // List<String> | Returns users with the specified phone numbers. Accepts up to 100 phone numbers. Any phone numbers not found are ignored.
-final externalId = []; // List<String> | Returns users with the specified external ids. For each external id, the `+` and `-` can be prepended to the id, which denote whether the respective external id should be included or excluded from the result set. Accepts up to 100 external ids. Any external ids not found are ignored.
+final externalId = []; // List<String> | Returns users with the specified external IDs. For each external ID, the `+` and `-` can be prepended to the ID, which denote whether the respective external ID should be included or excluded from the result set. Accepts up to 100 external IDs. Any external IDs not found are ignored.
 final username = []; // List<String> | Returns users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored.
-final web3Wallet = []; // List<String> | Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored.
-final userId = []; // List<String> | Returns users with the user ids specified. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective user id should be included or excluded from the result set. Accepts up to 100 user ids. Any user ids not found are ignored.
-final organizationId = []; // List<String> | Returns users that have memberships to the given organizations. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids.
-final query = query_example; // String | Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
+final web3Wallet = []; // List<String> | Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored.
+final userId = []; // List<String> | Returns users with the user IDs specified. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective user ID should be included or excluded from the result set. Accepts up to 100 user IDs. Any user IDs not found are ignored.
+final organizationId = []; // List<String> | Returns users that have memberships to the given organizations. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs.
+final query = query_example; // String | Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
 final emailAddressQuery = emailAddressQuery_example; // String | Returns users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`.
 final phoneNumberQuery = phoneNumberQuery_example; // String | Returns users with phone numbers that match the given query, via case-insensitive partial match. For example, `phone_number_query=555` will match a user with the phone number `+1555xxxxxxx`.
 final usernameQuery = usernameQuery_example; // String | Returns users with usernames that match the given query, via case-insensitive partial match. For example, `username_query=CoolUser` will match a user with the username `SomeCoolUser`.
@@ -571,12 +625,16 @@ final lastActiveAtAfter = 1700690400000; // int | Returns users whose last sessi
 final lastActiveAtSince = 1700690400000; // int | Returns users that had session activity since the given date. Example: use 1700690400000 to retrieve users that had session activity from 2023-11-23 until the current day. Deprecated in favor of `last_active_at_after`.
 final createdAtBefore = 1730160000000; // int | Returns users who have been created before the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created before 2024-10-29.
 final createdAtAfter = 1730160000000; // int | Returns users who have been created after the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created after 2024-10-29.
+final lastSignInAtBefore = 1700690400000; // int | Returns users whose last sign-in was before the given date (with millisecond precision). Example: use 1700690400000 to retrieve users whose last sign-in was before 2023-11-23.
+final lastSignInAtAfter = 1700690400000; // int | Returns users whose last sign-in was after the given date (with millisecond precision). Example: use 1700690400000 to retrieve users whose last sign-in was after 2023-11-23.
+final provider = provider_example; // String | Returns users with external accounts for the specified OAuth provider. Must be used in combination with the `provider_user_id` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to retrieve a user with Google provider user ID 12345.
+final providerUserId = []; // List<String> | Returns users with the specified provider user IDs for a specific provider. Must be used in combination with the `provider` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to retrieve a user with Google provider user ID 12345. Accepts up to 100 provider user IDs. Any provider user IDs not found are ignored.
 final limit = 56; // int | Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`.
 final offset = 56; // int | Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`.
 final orderBy = orderBy_example; // String | Allows to return users in a particular order. At the moment, you can order the returned users by their `created_at`,`updated_at`,`email_address`,`web3wallet`,`first_name`,`last_name`,`phone_number`,`username`,`last_active_at`,`last_sign_in_at`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want users to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. We only support one `order_by` parameter, and if multiple `order_by` parameters are provided, we will only keep the first one. For example, if you pass `order_by=username&order_by=created_at`, we will consider only the first `order_by` parameter, which is `username`. The `created_at` parameter will be ignored in this case.
 
 try {
-    final result = api_instance.getUserList(emailAddress, phoneNumber, externalId, username, web3Wallet, userId, organizationId, query, emailAddressQuery, phoneNumberQuery, usernameQuery, nameQuery, banned, lastActiveAtBefore, lastActiveAtAfter, lastActiveAtSince, createdAtBefore, createdAtAfter, limit, offset, orderBy);
+    final result = api_instance.getUserList(emailAddress, phoneNumber, externalId, username, web3Wallet, userId, organizationId, query, emailAddressQuery, phoneNumberQuery, usernameQuery, nameQuery, banned, lastActiveAtBefore, lastActiveAtAfter, lastActiveAtSince, createdAtBefore, createdAtAfter, lastSignInAtBefore, lastSignInAtAfter, provider, providerUserId, limit, offset, orderBy);
     print(result);
 } catch (e) {
     print('Exception when calling UsersApi->getUserList: $e\n');
@@ -589,12 +647,12 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **emailAddress** | [**List<String>**](String.md)| Returns users with the specified email addresses. Accepts up to 100 email addresses. Any email addresses not found are ignored. | [optional] [default to const []]
  **phoneNumber** | [**List<String>**](String.md)| Returns users with the specified phone numbers. Accepts up to 100 phone numbers. Any phone numbers not found are ignored. | [optional] [default to const []]
- **externalId** | [**List<String>**](String.md)| Returns users with the specified external ids. For each external id, the `+` and `-` can be prepended to the id, which denote whether the respective external id should be included or excluded from the result set. Accepts up to 100 external ids. Any external ids not found are ignored. | [optional] [default to const []]
+ **externalId** | [**List<String>**](String.md)| Returns users with the specified external IDs. For each external ID, the `+` and `-` can be prepended to the ID, which denote whether the respective external ID should be included or excluded from the result set. Accepts up to 100 external IDs. Any external IDs not found are ignored. | [optional] [default to const []]
  **username** | [**List<String>**](String.md)| Returns users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored. | [optional] [default to const []]
- **web3Wallet** | [**List<String>**](String.md)| Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored. | [optional] [default to const []]
- **userId** | [**List<String>**](String.md)| Returns users with the user ids specified. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective user id should be included or excluded from the result set. Accepts up to 100 user ids. Any user ids not found are ignored. | [optional] [default to const []]
- **organizationId** | [**List<String>**](String.md)| Returns users that have memberships to the given organizations. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids. | [optional] [default to const []]
- **query** | **String**| Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well. | [optional] 
+ **web3Wallet** | [**List<String>**](String.md)| Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored. | [optional] [default to const []]
+ **userId** | [**List<String>**](String.md)| Returns users with the user IDs specified. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective user ID should be included or excluded from the result set. Accepts up to 100 user IDs. Any user IDs not found are ignored. | [optional] [default to const []]
+ **organizationId** | [**List<String>**](String.md)| Returns users that have memberships to the given organizations. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs. | [optional] [default to const []]
+ **query** | **String**| Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well. | [optional] 
  **emailAddressQuery** | **String**| Returns users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`. | [optional] 
  **phoneNumberQuery** | **String**| Returns users with phone numbers that match the given query, via case-insensitive partial match. For example, `phone_number_query=555` will match a user with the phone number `+1555xxxxxxx`. | [optional] 
  **usernameQuery** | **String**| Returns users with usernames that match the given query, via case-insensitive partial match. For example, `username_query=CoolUser` will match a user with the username `SomeCoolUser`. | [optional] 
@@ -605,6 +663,10 @@ Name | Type | Description  | Notes
  **lastActiveAtSince** | **int**| Returns users that had session activity since the given date. Example: use 1700690400000 to retrieve users that had session activity from 2023-11-23 until the current day. Deprecated in favor of `last_active_at_after`. | [optional] 
  **createdAtBefore** | **int**| Returns users who have been created before the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created before 2024-10-29. | [optional] 
  **createdAtAfter** | **int**| Returns users who have been created after the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created after 2024-10-29. | [optional] 
+ **lastSignInAtBefore** | **int**| Returns users whose last sign-in was before the given date (with millisecond precision). Example: use 1700690400000 to retrieve users whose last sign-in was before 2023-11-23. | [optional] 
+ **lastSignInAtAfter** | **int**| Returns users whose last sign-in was after the given date (with millisecond precision). Example: use 1700690400000 to retrieve users whose last sign-in was after 2023-11-23. | [optional] 
+ **provider** | **String**| Returns users with external accounts for the specified OAuth provider. Must be used in combination with the `provider_user_id` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to retrieve a user with Google provider user ID 12345. | [optional] 
+ **providerUserId** | [**List<String>**](String.md)| Returns users with the specified provider user IDs for a specific provider. Must be used in combination with the `provider` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to retrieve a user with Google provider user ID 12345. Accepts up to 100 provider user IDs. Any provider user IDs not found are ignored. | [optional] [default to const []]
  **limit** | **int**| Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`. | [optional] [default to 10]
  **offset** | **int**| Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`. | [optional] [default to 0]
  **orderBy** | **String**| Allows to return users in a particular order. At the moment, you can order the returned users by their `created_at`,`updated_at`,`email_address`,`web3wallet`,`first_name`,`last_name`,`phone_number`,`username`,`last_active_at`,`last_sign_in_at`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want users to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. We only support one `order_by` parameter, and if multiple `order_by` parameters are provided, we will only keep the first one. For example, if you pass `order_by=username&order_by=created_at`, we will consider only the first `order_by` parameter, which is `username`. The `created_at` parameter will be ignored in this case. | [optional] [default to '-created_at']
@@ -625,7 +687,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getUsersCount**
-> TotalCount getUsersCount(emailAddress, phoneNumber, externalId, username, web3Wallet, userId, organizationId, query, emailAddressQuery, phoneNumberQuery, usernameQuery, nameQuery, banned, lastActiveAtBefore, lastActiveAtAfter, lastActiveAtSince, createdAtBefore, createdAtAfter)
+> TotalCount getUsersCount(emailAddress, phoneNumber, externalId, username, web3Wallet, userId, organizationId, query, emailAddressQuery, phoneNumberQuery, usernameQuery, nameQuery, banned, lastActiveAtBefore, lastActiveAtAfter, lastActiveAtSince, createdAtBefore, createdAtAfter, lastSignInAtBefore, lastSignInAtAfter, provider, providerUserId)
 
 Count users
 
@@ -633,7 +695,7 @@ Returns a total count of all users that match the given filtering criteria.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -644,12 +706,12 @@ import 'package:clerk_backend_api/api.dart';
 final api_instance = UsersApi();
 final emailAddress = []; // List<String> | Counts users with the specified email addresses. Accepts up to 100 email addresses. Any email addresses not found are ignored.
 final phoneNumber = []; // List<String> | Counts users with the specified phone numbers. Accepts up to 100 phone numbers. Any phone numbers not found are ignored.
-final externalId = []; // List<String> | Counts users with the specified external ids. Accepts up to 100 external ids. Any external ids not found are ignored.
+final externalId = []; // List<String> | Counts users with the specified external IDs. Accepts up to 100 external IDs. Any external IDs not found are ignored.
 final username = []; // List<String> | Counts users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored.
-final web3Wallet = []; // List<String> | Counts users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored.
-final userId = []; // List<String> | Counts users with the user ids specified. Accepts up to 100 user ids. Any user ids not found are ignored.
-final organizationId = []; // List<String> | Returns users that have memberships to the given organizations. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids.
-final query = query_example; // String | Counts users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
+final web3Wallet = []; // List<String> | Counts users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored.
+final userId = []; // List<String> | Counts users with the user IDs specified. Accepts up to 100 user IDs. Any user IDs not found are ignored.
+final organizationId = []; // List<String> | Returns users that have memberships to the given organizations. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs.
+final query = query_example; // String | Counts users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
 final emailAddressQuery = emailAddressQuery_example; // String | Counts users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`, and will be included in the resulting count.
 final phoneNumberQuery = phoneNumberQuery_example; // String | Counts users with phone numbers that match the given query, via case-insensitive partial match. For example, `phone_number_query=555` will match a user with the phone number `+1555xxxxxxx`, and will be included in the resulting count.
 final usernameQuery = usernameQuery_example; // String | Counts users with usernames that match the given query, via case-insensitive partial match. For example, `username_query=CoolUser` will match a user with the username `SomeCoolUser`, and will be included in the resulting count.
@@ -660,9 +722,13 @@ final lastActiveAtAfter = 1700690400000; // int | Returns users whose last sessi
 final lastActiveAtSince = 1700690400000; // int | Returns users that had session activity since the given date. Example: use 1700690400000 to retrieve users that had session activity from 2023-11-23 until the current day. Deprecated in favor of `last_active_at_after`.
 final createdAtBefore = 1730160000000; // int | Returns users who have been created before the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created before 2024-10-29.
 final createdAtAfter = 1730160000000; // int | Returns users who have been created after the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created after 2024-10-29.
+final lastSignInAtBefore = 1700690400000; // int | Counts users whose last sign-in was before the given date (with millisecond precision). Example: use 1700690400000 to count users whose last sign-in was before 2023-11-23.
+final lastSignInAtAfter = 1700690400000; // int | Counts users whose last sign-in was after the given date (with millisecond precision). Example: use 1700690400000 to count users whose last sign-in was after 2023-11-23.
+final provider = provider_example; // String | Counts users with external accounts for the specified OAuth provider. Must be used in combination with the `provider_user_id` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to count users with Google provider user ID 12345. Accepts up to 100 providers.
+final providerUserId = []; // List<String> | Counts users with the specified provider user IDs for a specific provider. Must be used in combination with the `provider` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to count users with Google provider user ID 12345. Accepts up to 100 provider user IDs. Any provider user IDs not found are ignored.
 
 try {
-    final result = api_instance.getUsersCount(emailAddress, phoneNumber, externalId, username, web3Wallet, userId, organizationId, query, emailAddressQuery, phoneNumberQuery, usernameQuery, nameQuery, banned, lastActiveAtBefore, lastActiveAtAfter, lastActiveAtSince, createdAtBefore, createdAtAfter);
+    final result = api_instance.getUsersCount(emailAddress, phoneNumber, externalId, username, web3Wallet, userId, organizationId, query, emailAddressQuery, phoneNumberQuery, usernameQuery, nameQuery, banned, lastActiveAtBefore, lastActiveAtAfter, lastActiveAtSince, createdAtBefore, createdAtAfter, lastSignInAtBefore, lastSignInAtAfter, provider, providerUserId);
     print(result);
 } catch (e) {
     print('Exception when calling UsersApi->getUsersCount: $e\n');
@@ -675,12 +741,12 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **emailAddress** | [**List<String>**](String.md)| Counts users with the specified email addresses. Accepts up to 100 email addresses. Any email addresses not found are ignored. | [optional] [default to const []]
  **phoneNumber** | [**List<String>**](String.md)| Counts users with the specified phone numbers. Accepts up to 100 phone numbers. Any phone numbers not found are ignored. | [optional] [default to const []]
- **externalId** | [**List<String>**](String.md)| Counts users with the specified external ids. Accepts up to 100 external ids. Any external ids not found are ignored. | [optional] [default to const []]
+ **externalId** | [**List<String>**](String.md)| Counts users with the specified external IDs. Accepts up to 100 external IDs. Any external IDs not found are ignored. | [optional] [default to const []]
  **username** | [**List<String>**](String.md)| Counts users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored. | [optional] [default to const []]
- **web3Wallet** | [**List<String>**](String.md)| Counts users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored. | [optional] [default to const []]
- **userId** | [**List<String>**](String.md)| Counts users with the user ids specified. Accepts up to 100 user ids. Any user ids not found are ignored. | [optional] [default to const []]
- **organizationId** | [**List<String>**](String.md)| Returns users that have memberships to the given organizations. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids. | [optional] [default to const []]
- **query** | **String**| Counts users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well. | [optional] 
+ **web3Wallet** | [**List<String>**](String.md)| Counts users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored. | [optional] [default to const []]
+ **userId** | [**List<String>**](String.md)| Counts users with the user IDs specified. Accepts up to 100 user IDs. Any user IDs not found are ignored. | [optional] [default to const []]
+ **organizationId** | [**List<String>**](String.md)| Returns users that have memberships to the given organizations. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs. | [optional] [default to const []]
+ **query** | **String**| Counts users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well. | [optional] 
  **emailAddressQuery** | **String**| Counts users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`, and will be included in the resulting count. | [optional] 
  **phoneNumberQuery** | **String**| Counts users with phone numbers that match the given query, via case-insensitive partial match. For example, `phone_number_query=555` will match a user with the phone number `+1555xxxxxxx`, and will be included in the resulting count. | [optional] 
  **usernameQuery** | **String**| Counts users with usernames that match the given query, via case-insensitive partial match. For example, `username_query=CoolUser` will match a user with the username `SomeCoolUser`, and will be included in the resulting count. | [optional] 
@@ -691,6 +757,10 @@ Name | Type | Description  | Notes
  **lastActiveAtSince** | **int**| Returns users that had session activity since the given date. Example: use 1700690400000 to retrieve users that had session activity from 2023-11-23 until the current day. Deprecated in favor of `last_active_at_after`. | [optional] 
  **createdAtBefore** | **int**| Returns users who have been created before the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created before 2024-10-29. | [optional] 
  **createdAtAfter** | **int**| Returns users who have been created after the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created after 2024-10-29. | [optional] 
+ **lastSignInAtBefore** | **int**| Counts users whose last sign-in was before the given date (with millisecond precision). Example: use 1700690400000 to count users whose last sign-in was before 2023-11-23. | [optional] 
+ **lastSignInAtAfter** | **int**| Counts users whose last sign-in was after the given date (with millisecond precision). Example: use 1700690400000 to count users whose last sign-in was after 2023-11-23. | [optional] 
+ **provider** | **String**| Counts users with external accounts for the specified OAuth provider. Must be used in combination with the `provider_user_id` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to count users with Google provider user ID 12345. Accepts up to 100 providers. | [optional] 
+ **providerUserId** | [**List<String>**](String.md)| Counts users with the specified provider user IDs for a specific provider. Must be used in combination with the `provider` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to count users with Google provider user ID 12345. Accepts up to 100 provider user IDs. Any provider user IDs not found are ignored. | [optional] [default to const []]
 
 ### Return type
 
@@ -716,7 +786,7 @@ Marks the given user as locked, which means they are not allowed to sign in agai
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -756,6 +826,57 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **setUserPasswordCompromised**
+> User setUserPasswordCompromised(userId, setUserPasswordCompromisedRequest)
+
+Set a user's password as compromised
+
+Sets the given user's password as compromised. The user will be prompted to reset their password on their next sign-in.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: bearerAuth
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = UsersApi();
+final userId = userId_example; // String | The ID of the user to set the password as compromised
+final setUserPasswordCompromisedRequest = SetUserPasswordCompromisedRequest(); // SetUserPasswordCompromisedRequest | 
+
+try {
+    final result = api_instance.setUserPasswordCompromised(userId, setUserPasswordCompromisedRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling UsersApi->setUserPasswordCompromised: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **userId** | **String**| The ID of the user to set the password as compromised | 
+ **setUserPasswordCompromisedRequest** | [**SetUserPasswordCompromisedRequest**](SetUserPasswordCompromisedRequest.md)|  | [optional] 
+
+### Return type
+
+[**User**](User.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **setUserProfileImage**
 > User setUserProfileImage(userId, file)
 
@@ -765,7 +886,7 @@ Update a user's profile image
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -816,7 +937,7 @@ Removes the ban mark from the given user.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -865,7 +986,7 @@ Removes the lock from the given user.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -905,6 +1026,55 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **unsetUserPasswordCompromised**
+> User unsetUserPasswordCompromised(userId)
+
+Unset a user's password as compromised
+
+Sets the given user's password as no longer compromised. The user will no longer be prompted to reset their password on their next sign-in.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: bearerAuth
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = UsersApi();
+final userId = userId_example; // String | The ID of the user to unset the compromised status for
+
+try {
+    final result = api_instance.unsetUserPasswordCompromised(userId);
+    print(result);
+} catch (e) {
+    print('Exception when calling UsersApi->unsetUserPasswordCompromised: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **userId** | **String**| The ID of the user to unset the compromised status for | 
+
+### Return type
+
+[**User**](User.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **updateUser**
 > User updateUser(userId, updateUserRequest)
 
@@ -914,7 +1084,7 @@ Update a user's attributes.  You can set the user's primary contact identifiers 
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -965,7 +1135,7 @@ Update a user's metadata attributes by merging existing values with the provided
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -1016,7 +1186,7 @@ Delete the passkey identification for a given user and notify them through email
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -1067,7 +1237,7 @@ Delete the web3 wallet identification for a given user.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -1109,6 +1279,55 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **usersBan**
+> List<User> usersBan(usersBanRequest)
+
+Ban multiple users
+
+Marks multiple users as banned, which means that all their sessions are revoked and they are not allowed to sign in again.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: bearerAuth
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = UsersApi();
+final usersBanRequest = UsersBanRequest(); // UsersBanRequest | 
+
+try {
+    final result = api_instance.usersBan(usersBanRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling UsersApi->usersBan: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **usersBanRequest** | [**UsersBanRequest**](UsersBanRequest.md)|  | 
+
+### Return type
+
+[**List<User>**](User.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **usersGetOrganizationInvitations**
 > OrganizationInvitationsWithPublicOrganizationData usersGetOrganizationInvitations(userId, limit, offset, status)
 
@@ -1118,7 +1337,7 @@ Retrieve a paginated list of the user's organization invitations
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -1173,7 +1392,7 @@ Retrieve a paginated list of the user's organization memberships
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -1217,6 +1436,55 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **usersUnban**
+> List<User> usersUnban(usersUnbanRequest)
+
+Unban multiple users
+
+Removes the ban mark from multiple users.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: bearerAuth
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = UsersApi();
+final usersUnbanRequest = UsersUnbanRequest(); // UsersUnbanRequest | 
+
+try {
+    final result = api_instance.usersUnban(usersUnbanRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling UsersApi->usersUnban: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **usersUnbanRequest** | [**UsersUnbanRequest**](UsersUnbanRequest.md)|  | 
+
+### Return type
+
+[**List<User>**](User.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **verifyPassword**
 > VerifyPassword200Response verifyPassword(userId, verifyPasswordRequest)
 
@@ -1226,7 +1494,7 @@ Check that the user's password matches the supplied input. Useful for custom aut
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -1277,7 +1545,7 @@ Verify that the provided TOTP or backup code is valid for the user. Verifying a 
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');

@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -17,6 +17,7 @@ class DeletedObject {
     this.id,
     this.slug,
     required this.deleted,
+    this.externalId,
   });
 
   String object;
@@ -39,6 +40,14 @@ class DeletedObject {
 
   bool deleted;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? externalId;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -46,7 +55,8 @@ class DeletedObject {
           other.object == object &&
           other.id == id &&
           other.slug == slug &&
-          other.deleted == deleted;
+          other.deleted == deleted &&
+          other.externalId == externalId;
 
   @override
   int get hashCode =>
@@ -54,11 +64,12 @@ class DeletedObject {
       (object.hashCode) +
       (id == null ? 0 : id!.hashCode) +
       (slug == null ? 0 : slug!.hashCode) +
-      (deleted.hashCode);
+      (deleted.hashCode) +
+      (externalId == null ? 0 : externalId!.hashCode);
 
   @override
   String toString() =>
-      'DeletedObject[object=$object, id=$id, slug=$slug, deleted=$deleted]';
+      'DeletedObject[object=$object, id=$id, slug=$slug, deleted=$deleted, externalId=$externalId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -74,6 +85,11 @@ class DeletedObject {
       json[r'slug'] = null;
     }
     json[r'deleted'] = this.deleted;
+    if (this.externalId != null) {
+      json[r'external_id'] = this.externalId;
+    } else {
+      json[r'external_id'] = null;
+    }
     return json;
   }
 
@@ -102,6 +118,7 @@ class DeletedObject {
         id: mapValueOfType<String>(json, r'id'),
         slug: mapValueOfType<String>(json, r'slug'),
         deleted: mapValueOfType<bool>(json, r'deleted')!,
+        externalId: mapValueOfType<String>(json, r'external_id'),
       );
     }
     return null;

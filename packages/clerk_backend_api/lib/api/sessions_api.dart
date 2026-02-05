@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -154,9 +154,9 @@ class SessionsApi {
     return null;
   }
 
-  /// Create a session token from a jwt template
+  /// Create a session token from a JWT template
   ///
-  /// Creates a JSON Web Token(JWT) based on a session and a JWT Template name defined for your instance
+  /// Creates a JSON Web Token (JWT) based on a session and a JWT Template name defined for your instance
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -166,7 +166,7 @@ class SessionsApi {
   ///   The ID of the session
   ///
   /// * [String] templateName (required):
-  ///   The name of the JWT Template defined in your instance (e.g. `custom_hasura`).
+  ///   The name of the JWT template defined in your instance (e.g. `custom_hasura`).
   ///
   /// * [CreateSessionTokenFromTemplateRequest] createSessionTokenFromTemplateRequest:
   Future<http.Response> createSessionTokenFromTemplateWithHttpInfo(
@@ -200,9 +200,9 @@ class SessionsApi {
     );
   }
 
-  /// Create a session token from a jwt template
+  /// Create a session token from a JWT template
   ///
-  /// Creates a JSON Web Token(JWT) based on a session and a JWT Template name defined for your instance
+  /// Creates a JSON Web Token (JWT) based on a session and a JWT Template name defined for your instance
   ///
   /// Parameters:
   ///
@@ -210,7 +210,7 @@ class SessionsApi {
   ///   The ID of the session
   ///
   /// * [String] templateName (required):
-  ///   The name of the JWT Template defined in your instance (e.g. `custom_hasura`).
+  ///   The name of the JWT template defined in your instance (e.g. `custom_hasura`).
   ///
   /// * [CreateSessionTokenFromTemplateRequest] createSessionTokenFromTemplateRequest:
   Future<CreateSessionToken200Response?> createSessionTokenFromTemplate(
@@ -439,6 +439,82 @@ class SessionsApi {
     return null;
   }
 
+  /// Refresh a session
+  ///
+  /// Refreshes a session by creating a new session token. A 401 is returned when there are validation errors, which signals the SDKs to fall back to the handshake flow.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] sessionId (required):
+  ///   The ID of the session
+  ///
+  /// * [RefreshSessionRequest] refreshSessionRequest:
+  ///   Refresh session parameters
+  Future<http.Response> refreshSessionWithHttpInfo(
+    String sessionId, {
+    RefreshSessionRequest? refreshSessionRequest,
+  }) async {
+    // ignore: prefer_const_declarations
+    final path =
+        r'/sessions/{session_id}/refresh'.replaceAll('{session_id}', sessionId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = refreshSessionRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Refresh a session
+  ///
+  /// Refreshes a session by creating a new session token. A 401 is returned when there are validation errors, which signals the SDKs to fall back to the handshake flow.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] sessionId (required):
+  ///   The ID of the session
+  ///
+  /// * [RefreshSessionRequest] refreshSessionRequest:
+  ///   Refresh session parameters
+  Future<SessionRefresh?> refreshSession(
+    String sessionId, {
+    RefreshSessionRequest? refreshSessionRequest,
+  }) async {
+    final response = await refreshSessionWithHttpInfo(
+      sessionId,
+      refreshSessionRequest: refreshSessionRequest,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'SessionRefresh',
+      ) as SessionRefresh;
+    }
+    return null;
+  }
+
   /// Revoke a session
   ///
   /// Sets the status of a session as \"revoked\", which is an unauthenticated state. In multi-session mode, a revoked session will still be returned along with its client object, however the user will need to sign in again.
@@ -489,82 +565,6 @@ class SessionsApi {
   ) async {
     final response = await revokeSessionWithHttpInfo(
       sessionId,
-    );
-    if (response.statusCode >= HttpStatus.badRequest) {
-      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
-    }
-    // When a remote server returns no body with a status of 204, we shall not decode it.
-    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
-    // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'Session',
-      ) as Session;
-    }
-    return null;
-  }
-
-  /// Verify a session
-  ///
-  /// Returns the session if it is authenticated, otherwise returns an error. WARNING: This endpoint is deprecated and will be removed in future versions. We strongly recommend switching to networkless verification using short-lived session tokens,          which is implemented transparently in all recent SDK versions (e.g. [NodeJS SDK](https://clerk.com/docs/backend-requests/handling/nodejs#clerk-express-require-auth)).          For more details on how networkless verification works, refer to our [Session Tokens documentation](https://clerk.com/docs/backend-requests/resources/session-tokens).
-  ///
-  /// Note: This method returns the HTTP [Response].
-  ///
-  /// Parameters:
-  ///
-  /// * [String] sessionId (required):
-  ///   The ID of the session
-  ///
-  /// * [VerifySessionRequest] verifySessionRequest:
-  ///   Parameters.
-  Future<http.Response> verifySessionWithHttpInfo(
-    String sessionId, {
-    VerifySessionRequest? verifySessionRequest,
-  }) async {
-    // ignore: prefer_const_declarations
-    final path =
-        r'/sessions/{session_id}/verify'.replaceAll('{session_id}', sessionId);
-
-    // ignore: prefer_final_locals
-    Object? postBody = verifySessionRequest;
-
-    final queryParams = <QueryParam>[];
-    final headerParams = <String, String>{};
-    final formParams = <String, String>{};
-
-    const contentTypes = <String>['application/json'];
-
-    return apiClient.invokeAPI(
-      path,
-      'POST',
-      queryParams,
-      postBody,
-      headerParams,
-      formParams,
-      contentTypes.isEmpty ? null : contentTypes.first,
-    );
-  }
-
-  /// Verify a session
-  ///
-  /// Returns the session if it is authenticated, otherwise returns an error. WARNING: This endpoint is deprecated and will be removed in future versions. We strongly recommend switching to networkless verification using short-lived session tokens,          which is implemented transparently in all recent SDK versions (e.g. [NodeJS SDK](https://clerk.com/docs/backend-requests/handling/nodejs#clerk-express-require-auth)).          For more details on how networkless verification works, refer to our [Session Tokens documentation](https://clerk.com/docs/backend-requests/resources/session-tokens).
-  ///
-  /// Parameters:
-  ///
-  /// * [String] sessionId (required):
-  ///   The ID of the session
-  ///
-  /// * [VerifySessionRequest] verifySessionRequest:
-  ///   Parameters.
-  Future<Session?> verifySession(
-    String sessionId, {
-    VerifySessionRequest? verifySessionRequest,
-  }) async {
-    final response = await verifySessionWithHttpInfo(
-      sessionId,
-      verifySessionRequest: verifySessionRequest,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));

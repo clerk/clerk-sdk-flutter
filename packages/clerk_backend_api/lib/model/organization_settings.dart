@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -17,12 +17,15 @@ class OrganizationSettings {
     required this.enabled,
     required this.maxAllowedMemberships,
     required this.maxAllowedRoles,
-    required this.maxAllowedPermissions,
+    this.maxRoleSetsAllowed,
+    this.maxAllowedPermissions,
     required this.creatorRole,
     required this.adminDeleteEnabled,
     required this.domainsEnabled,
+    this.slugDisabled,
     this.domainsEnrollmentModes = const [],
     required this.domainsDefaultRole,
+    this.initialRoleSetKey,
   });
 
   /// String representing the object's type. Objects of the same type share the same value.
@@ -34,7 +37,22 @@ class OrganizationSettings {
 
   int maxAllowedRoles;
 
-  int maxAllowedPermissions;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? maxRoleSetsAllowed;
+
+  /// max_allowed_permissions is now a no-op, as permissions are now unlimited
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? maxAllowedPermissions;
 
   /// The role key that a user will be assigned after creating an organization.
   String creatorRole;
@@ -44,10 +62,21 @@ class OrganizationSettings {
 
   bool domainsEnabled;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? slugDisabled;
+
   List<OrganizationSettingsDomainsEnrollmentModesEnum> domainsEnrollmentModes;
 
   /// The role key that it will be used in order to create an organization invitation or suggestion.
   String domainsDefaultRole;
+
+  /// The role set key that it will be used to create new organizations.
+  String? initialRoleSetKey;
 
   @override
   bool operator ==(Object other) =>
@@ -57,13 +86,16 @@ class OrganizationSettings {
           other.enabled == enabled &&
           other.maxAllowedMemberships == maxAllowedMemberships &&
           other.maxAllowedRoles == maxAllowedRoles &&
+          other.maxRoleSetsAllowed == maxRoleSetsAllowed &&
           other.maxAllowedPermissions == maxAllowedPermissions &&
           other.creatorRole == creatorRole &&
           other.adminDeleteEnabled == adminDeleteEnabled &&
           other.domainsEnabled == domainsEnabled &&
+          other.slugDisabled == slugDisabled &&
           _deepEquality.equals(
               other.domainsEnrollmentModes, domainsEnrollmentModes) &&
-          other.domainsDefaultRole == domainsDefaultRole;
+          other.domainsDefaultRole == domainsDefaultRole &&
+          other.initialRoleSetKey == initialRoleSetKey;
 
   @override
   int get hashCode =>
@@ -72,16 +104,19 @@ class OrganizationSettings {
       (enabled.hashCode) +
       (maxAllowedMemberships.hashCode) +
       (maxAllowedRoles.hashCode) +
-      (maxAllowedPermissions.hashCode) +
+      (maxRoleSetsAllowed == null ? 0 : maxRoleSetsAllowed!.hashCode) +
+      (maxAllowedPermissions == null ? 0 : maxAllowedPermissions!.hashCode) +
       (creatorRole.hashCode) +
       (adminDeleteEnabled.hashCode) +
       (domainsEnabled.hashCode) +
+      (slugDisabled == null ? 0 : slugDisabled!.hashCode) +
       (domainsEnrollmentModes.hashCode) +
-      (domainsDefaultRole.hashCode);
+      (domainsDefaultRole.hashCode) +
+      (initialRoleSetKey == null ? 0 : initialRoleSetKey!.hashCode);
 
   @override
   String toString() =>
-      'OrganizationSettings[object=$object, enabled=$enabled, maxAllowedMemberships=$maxAllowedMemberships, maxAllowedRoles=$maxAllowedRoles, maxAllowedPermissions=$maxAllowedPermissions, creatorRole=$creatorRole, adminDeleteEnabled=$adminDeleteEnabled, domainsEnabled=$domainsEnabled, domainsEnrollmentModes=$domainsEnrollmentModes, domainsDefaultRole=$domainsDefaultRole]';
+      'OrganizationSettings[object=$object, enabled=$enabled, maxAllowedMemberships=$maxAllowedMemberships, maxAllowedRoles=$maxAllowedRoles, maxRoleSetsAllowed=$maxRoleSetsAllowed, maxAllowedPermissions=$maxAllowedPermissions, creatorRole=$creatorRole, adminDeleteEnabled=$adminDeleteEnabled, domainsEnabled=$domainsEnabled, slugDisabled=$slugDisabled, domainsEnrollmentModes=$domainsEnrollmentModes, domainsDefaultRole=$domainsDefaultRole, initialRoleSetKey=$initialRoleSetKey]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -89,12 +124,31 @@ class OrganizationSettings {
     json[r'enabled'] = this.enabled;
     json[r'max_allowed_memberships'] = this.maxAllowedMemberships;
     json[r'max_allowed_roles'] = this.maxAllowedRoles;
-    json[r'max_allowed_permissions'] = this.maxAllowedPermissions;
+    if (this.maxRoleSetsAllowed != null) {
+      json[r'max_role_sets_allowed'] = this.maxRoleSetsAllowed;
+    } else {
+      json[r'max_role_sets_allowed'] = null;
+    }
+    if (this.maxAllowedPermissions != null) {
+      json[r'max_allowed_permissions'] = this.maxAllowedPermissions;
+    } else {
+      json[r'max_allowed_permissions'] = null;
+    }
     json[r'creator_role'] = this.creatorRole;
     json[r'admin_delete_enabled'] = this.adminDeleteEnabled;
     json[r'domains_enabled'] = this.domainsEnabled;
+    if (this.slugDisabled != null) {
+      json[r'slug_disabled'] = this.slugDisabled;
+    } else {
+      json[r'slug_disabled'] = null;
+    }
     json[r'domains_enrollment_modes'] = this.domainsEnrollmentModes;
     json[r'domains_default_role'] = this.domainsDefaultRole;
+    if (this.initialRoleSetKey != null) {
+      json[r'initial_role_set_key'] = this.initialRoleSetKey;
+    } else {
+      json[r'initial_role_set_key'] = null;
+    }
     return json;
   }
 
@@ -124,17 +178,21 @@ class OrganizationSettings {
         maxAllowedMemberships:
             mapValueOfType<int>(json, r'max_allowed_memberships')!,
         maxAllowedRoles: mapValueOfType<int>(json, r'max_allowed_roles')!,
+        maxRoleSetsAllowed: mapValueOfType<int>(json, r'max_role_sets_allowed'),
         maxAllowedPermissions:
-            mapValueOfType<int>(json, r'max_allowed_permissions')!,
+            mapValueOfType<int>(json, r'max_allowed_permissions'),
         creatorRole: mapValueOfType<String>(json, r'creator_role')!,
         adminDeleteEnabled:
             mapValueOfType<bool>(json, r'admin_delete_enabled')!,
         domainsEnabled: mapValueOfType<bool>(json, r'domains_enabled')!,
+        slugDisabled: mapValueOfType<bool>(json, r'slug_disabled'),
         domainsEnrollmentModes:
             OrganizationSettingsDomainsEnrollmentModesEnum.listFromJson(
                 json[r'domains_enrollment_modes']),
         domainsDefaultRole:
             mapValueOfType<String>(json, r'domains_default_role')!,
+        initialRoleSetKey:
+            mapValueOfType<String>(json, r'initial_role_set_key'),
       );
     }
     return null;
@@ -195,7 +253,6 @@ class OrganizationSettings {
     'enabled',
     'max_allowed_memberships',
     'max_allowed_roles',
-    'max_allowed_permissions',
     'creator_role',
     'admin_delete_enabled',
     'domains_enabled',

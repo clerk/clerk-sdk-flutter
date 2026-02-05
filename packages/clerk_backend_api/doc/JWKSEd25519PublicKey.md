@@ -1,8 +1,8 @@
-# clerk_backend_api.model.JWKSEd25519PublicKey
+# openapi.model.JWKSEd25519PublicKey
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties

@@ -1,8 +1,8 @@
-# clerk_backend_api.api.MiscellaneousApi
+# openapi.api.MiscellaneousApi
 
 ## Load the API package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.clerk.com/v1*
@@ -21,7 +21,7 @@ The Clerk interstitial endpoint serves an html page that loads clerk.js in order
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 
 final api_instance = MiscellaneousApi();
 final frontendApi = frontendApi_example; // String | Please use `frontend_api` instead

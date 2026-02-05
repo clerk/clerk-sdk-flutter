@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -20,7 +20,7 @@ class CreateSessionTokenRequest {
   ///
   /// Minimum value: 30
   /// Maximum value: 315360000
-  num? expiresInSeconds;
+  int? expiresInSeconds;
 
   @override
   bool operator ==(Object other) =>
@@ -68,9 +68,7 @@ class CreateSessionTokenRequest {
       }());
 
       return CreateSessionTokenRequest(
-        expiresInSeconds: json[r'expires_in_seconds'] == null
-            ? null
-            : num.parse('${json[r'expires_in_seconds']}'),
+        expiresInSeconds: mapValueOfType<int>(json, r'expires_in_seconds'),
       );
     }
     return null;

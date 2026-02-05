@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -13,84 +13,68 @@ part of openapi.api;
 class Passkey {
   /// Returns a new [Passkey] instance.
   Passkey({
-    required this.status,
-    required this.strategy,
-    this.nonce,
-    this.message,
-    required this.attempts,
-    required this.expireAt,
-    this.verifiedAtClient,
+    this.id,
+    required this.object,
+    required this.name,
+    required this.lastUsedAt,
+    required this.verification,
   });
 
-  PasskeyStatusEnum status;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? id;
 
-  PasskeyStrategyEnum strategy;
+  /// String representing the object's type. Objects of the same type share the same value.
+  PasskeyObjectEnum object;
 
-  PasskeyNonceEnum? nonce;
+  String name;
 
-  String? message;
+  /// Unix timestamp of when the passkey was last used.
+  int lastUsedAt;
 
-  int? attempts;
-
-  int? expireAt;
-
-  String? verifiedAtClient;
+  PasskeyVerification? verification;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is Passkey &&
-          other.status == status &&
-          other.strategy == strategy &&
-          other.nonce == nonce &&
-          other.message == message &&
-          other.attempts == attempts &&
-          other.expireAt == expireAt &&
-          other.verifiedAtClient == verifiedAtClient;
+          other.id == id &&
+          other.object == object &&
+          other.name == name &&
+          other.lastUsedAt == lastUsedAt &&
+          other.verification == verification;
 
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
-      (status.hashCode) +
-      (strategy.hashCode) +
-      (nonce == null ? 0 : nonce!.hashCode) +
-      (message == null ? 0 : message!.hashCode) +
-      (attempts == null ? 0 : attempts!.hashCode) +
-      (expireAt == null ? 0 : expireAt!.hashCode) +
-      (verifiedAtClient == null ? 0 : verifiedAtClient!.hashCode);
+      (id == null ? 0 : id!.hashCode) +
+      (object.hashCode) +
+      (name.hashCode) +
+      (lastUsedAt.hashCode) +
+      (verification == null ? 0 : verification!.hashCode);
 
   @override
   String toString() =>
-      'Passkey[status=$status, strategy=$strategy, nonce=$nonce, message=$message, attempts=$attempts, expireAt=$expireAt, verifiedAtClient=$verifiedAtClient]';
+      'Passkey[id=$id, object=$object, name=$name, lastUsedAt=$lastUsedAt, verification=$verification]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    json[r'status'] = this.status;
-    json[r'strategy'] = this.strategy;
-    if (this.nonce != null) {
-      json[r'nonce'] = this.nonce;
+    if (this.id != null) {
+      json[r'id'] = this.id;
     } else {
-      json[r'nonce'] = null;
+      json[r'id'] = null;
     }
-    if (this.message != null) {
-      json[r'message'] = this.message;
+    json[r'object'] = this.object;
+    json[r'name'] = this.name;
+    json[r'last_used_at'] = this.lastUsedAt;
+    if (this.verification != null) {
+      json[r'verification'] = this.verification;
     } else {
-      json[r'message'] = null;
-    }
-    if (this.attempts != null) {
-      json[r'attempts'] = this.attempts;
-    } else {
-      json[r'attempts'] = null;
-    }
-    if (this.expireAt != null) {
-      json[r'expire_at'] = this.expireAt;
-    } else {
-      json[r'expire_at'] = null;
-    }
-    if (this.verifiedAtClient != null) {
-      json[r'verified_at_client'] = this.verifiedAtClient;
-    } else {
-      json[r'verified_at_client'] = null;
+      json[r'verification'] = null;
     }
     return json;
   }
@@ -116,13 +100,11 @@ class Passkey {
       }());
 
       return Passkey(
-        status: PasskeyStatusEnum.fromJson(json[r'status'])!,
-        strategy: PasskeyStrategyEnum.fromJson(json[r'strategy'])!,
-        nonce: PasskeyNonceEnum.fromJson(json[r'nonce']),
-        message: mapValueOfType<String>(json, r'message'),
-        attempts: mapValueOfType<int>(json, r'attempts'),
-        expireAt: mapValueOfType<int>(json, r'expire_at'),
-        verifiedAtClient: mapValueOfType<String>(json, r'verified_at_client'),
+        id: mapValueOfType<String>(json, r'id'),
+        object: PasskeyObjectEnum.fromJson(json[r'object'])!,
+        name: mapValueOfType<String>(json, r'name')!,
+        lastUsedAt: mapValueOfType<int>(json, r'last_used_at')!,
+        verification: PasskeyVerification.fromJson(json[r'verification']),
       );
     }
     return null;
@@ -179,16 +161,17 @@ class Passkey {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'status',
-    'strategy',
-    'attempts',
-    'expire_at',
+    'object',
+    'name',
+    'last_used_at',
+    'verification',
   };
 }
 
-class PasskeyStatusEnum {
+/// String representing the object's type. Objects of the same type share the same value.
+class PasskeyObjectEnum {
   /// Instantiate a new enum with the provided [value].
-  const PasskeyStatusEnum._(this.value);
+  const PasskeyObjectEnum._(this.value);
 
   /// The underlying value of this enum member.
   final String value;
@@ -198,99 +181,24 @@ class PasskeyStatusEnum {
 
   String toJson() => value;
 
-  static const verified = PasskeyStatusEnum._(r'verified');
+  static const passkey = PasskeyObjectEnum._(r'passkey');
 
-  /// List of all possible values in this [enum][PasskeyStatusEnum].
-  static const values = <PasskeyStatusEnum>[
-    verified,
-  ];
-
-  static PasskeyStatusEnum? fromJson(dynamic value) =>
-      PasskeyStatusEnumTypeTransformer().decode(value);
-
-  static List<PasskeyStatusEnum> listFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
-    final result = <PasskeyStatusEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = PasskeyStatusEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [PasskeyStatusEnum] to String,
-/// and [decode] dynamic data back to [PasskeyStatusEnum].
-class PasskeyStatusEnumTypeTransformer {
-  factory PasskeyStatusEnumTypeTransformer() =>
-      _instance ??= const PasskeyStatusEnumTypeTransformer._();
-
-  const PasskeyStatusEnumTypeTransformer._();
-
-  String encode(PasskeyStatusEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a PasskeyStatusEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  PasskeyStatusEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data) {
-        case r'verified':
-          return PasskeyStatusEnum.verified;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [PasskeyStatusEnumTypeTransformer] instance.
-  static PasskeyStatusEnumTypeTransformer? _instance;
-}
-
-class PasskeyStrategyEnum {
-  /// Instantiate a new enum with the provided [value].
-  const PasskeyStrategyEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const passkey = PasskeyStrategyEnum._(r'passkey');
-
-  /// List of all possible values in this [enum][PasskeyStrategyEnum].
-  static const values = <PasskeyStrategyEnum>[
+  /// List of all possible values in this [enum][PasskeyObjectEnum].
+  static const values = <PasskeyObjectEnum>[
     passkey,
   ];
 
-  static PasskeyStrategyEnum? fromJson(dynamic value) =>
-      PasskeyStrategyEnumTypeTransformer().decode(value);
+  static PasskeyObjectEnum? fromJson(dynamic value) =>
+      PasskeyObjectEnumTypeTransformer().decode(value);
 
-  static List<PasskeyStrategyEnum> listFromJson(
+  static List<PasskeyObjectEnum> listFromJson(
     dynamic json, {
     bool growable = false,
   }) {
-    final result = <PasskeyStrategyEnum>[];
+    final result = <PasskeyObjectEnum>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = PasskeyStrategyEnum.fromJson(row);
+        final value = PasskeyObjectEnum.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -300,17 +208,17 @@ class PasskeyStrategyEnum {
   }
 }
 
-/// Transformation class that can [encode] an instance of [PasskeyStrategyEnum] to String,
-/// and [decode] dynamic data back to [PasskeyStrategyEnum].
-class PasskeyStrategyEnumTypeTransformer {
-  factory PasskeyStrategyEnumTypeTransformer() =>
-      _instance ??= const PasskeyStrategyEnumTypeTransformer._();
+/// Transformation class that can [encode] an instance of [PasskeyObjectEnum] to String,
+/// and [decode] dynamic data back to [PasskeyObjectEnum].
+class PasskeyObjectEnumTypeTransformer {
+  factory PasskeyObjectEnumTypeTransformer() =>
+      _instance ??= const PasskeyObjectEnumTypeTransformer._();
 
-  const PasskeyStrategyEnumTypeTransformer._();
+  const PasskeyObjectEnumTypeTransformer._();
 
-  String encode(PasskeyStrategyEnum data) => data.value;
+  String encode(PasskeyObjectEnum data) => data.value;
 
-  /// Decodes a [dynamic value][data] to a PasskeyStrategyEnum.
+  /// Decodes a [dynamic value][data] to a PasskeyObjectEnum.
   ///
   /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
   /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
@@ -318,11 +226,11 @@ class PasskeyStrategyEnumTypeTransformer {
   ///
   /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
   /// and users are still using an old app with the old code.
-  PasskeyStrategyEnum? decode(dynamic data, {bool allowNull = true}) {
+  PasskeyObjectEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
         case r'passkey':
-          return PasskeyStrategyEnum.passkey;
+          return PasskeyObjectEnum.passkey;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
@@ -332,81 +240,6 @@ class PasskeyStrategyEnumTypeTransformer {
     return null;
   }
 
-  /// Singleton [PasskeyStrategyEnumTypeTransformer] instance.
-  static PasskeyStrategyEnumTypeTransformer? _instance;
-}
-
-class PasskeyNonceEnum {
-  /// Instantiate a new enum with the provided [value].
-  const PasskeyNonceEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const nonce = PasskeyNonceEnum._(r'nonce');
-
-  /// List of all possible values in this [enum][PasskeyNonceEnum].
-  static const values = <PasskeyNonceEnum>[
-    nonce,
-  ];
-
-  static PasskeyNonceEnum? fromJson(dynamic value) =>
-      PasskeyNonceEnumTypeTransformer().decode(value);
-
-  static List<PasskeyNonceEnum> listFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
-    final result = <PasskeyNonceEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = PasskeyNonceEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [PasskeyNonceEnum] to String,
-/// and [decode] dynamic data back to [PasskeyNonceEnum].
-class PasskeyNonceEnumTypeTransformer {
-  factory PasskeyNonceEnumTypeTransformer() =>
-      _instance ??= const PasskeyNonceEnumTypeTransformer._();
-
-  const PasskeyNonceEnumTypeTransformer._();
-
-  String encode(PasskeyNonceEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a PasskeyNonceEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  PasskeyNonceEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data) {
-        case r'nonce':
-          return PasskeyNonceEnum.nonce;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [PasskeyNonceEnumTypeTransformer] instance.
-  static PasskeyNonceEnumTypeTransformer? _instance;
+  /// Singleton [PasskeyObjectEnumTypeTransformer] instance.
+  static PasskeyObjectEnumTypeTransformer? _instance;
 }

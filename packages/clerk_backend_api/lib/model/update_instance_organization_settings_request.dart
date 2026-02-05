@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -17,6 +17,7 @@ class UpdateInstanceOrganizationSettingsRequest {
     this.maxAllowedMemberships,
     this.adminDeleteEnabled,
     this.domainsEnabled,
+    this.slugDisabled,
     this.domainsEnrollmentModes = const [],
     this.creatorRoleId,
     this.domainsDefaultRoleId,
@@ -29,6 +30,8 @@ class UpdateInstanceOrganizationSettingsRequest {
   bool? adminDeleteEnabled;
 
   bool? domainsEnabled;
+
+  bool? slugDisabled;
 
   /// Specify which enrollment modes to enable for your Organization Domains. Supported modes are 'automatic_invitation' & 'automatic_suggestion'.
   List<String> domainsEnrollmentModes;
@@ -47,6 +50,7 @@ class UpdateInstanceOrganizationSettingsRequest {
           other.maxAllowedMemberships == maxAllowedMemberships &&
           other.adminDeleteEnabled == adminDeleteEnabled &&
           other.domainsEnabled == domainsEnabled &&
+          other.slugDisabled == slugDisabled &&
           _deepEquality.equals(
               other.domainsEnrollmentModes, domainsEnrollmentModes) &&
           other.creatorRoleId == creatorRoleId &&
@@ -59,13 +63,14 @@ class UpdateInstanceOrganizationSettingsRequest {
       (maxAllowedMemberships == null ? 0 : maxAllowedMemberships!.hashCode) +
       (adminDeleteEnabled == null ? 0 : adminDeleteEnabled!.hashCode) +
       (domainsEnabled == null ? 0 : domainsEnabled!.hashCode) +
+      (slugDisabled == null ? 0 : slugDisabled!.hashCode) +
       (domainsEnrollmentModes.hashCode) +
       (creatorRoleId == null ? 0 : creatorRoleId!.hashCode) +
       (domainsDefaultRoleId == null ? 0 : domainsDefaultRoleId!.hashCode);
 
   @override
   String toString() =>
-      'UpdateInstanceOrganizationSettingsRequest[enabled=$enabled, maxAllowedMemberships=$maxAllowedMemberships, adminDeleteEnabled=$adminDeleteEnabled, domainsEnabled=$domainsEnabled, domainsEnrollmentModes=$domainsEnrollmentModes, creatorRoleId=$creatorRoleId, domainsDefaultRoleId=$domainsDefaultRoleId]';
+      'UpdateInstanceOrganizationSettingsRequest[enabled=$enabled, maxAllowedMemberships=$maxAllowedMemberships, adminDeleteEnabled=$adminDeleteEnabled, domainsEnabled=$domainsEnabled, slugDisabled=$slugDisabled, domainsEnrollmentModes=$domainsEnrollmentModes, creatorRoleId=$creatorRoleId, domainsDefaultRoleId=$domainsDefaultRoleId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -88,6 +93,11 @@ class UpdateInstanceOrganizationSettingsRequest {
       json[r'domains_enabled'] = this.domainsEnabled;
     } else {
       json[r'domains_enabled'] = null;
+    }
+    if (this.slugDisabled != null) {
+      json[r'slug_disabled'] = this.slugDisabled;
+    } else {
+      json[r'slug_disabled'] = null;
     }
     json[r'domains_enrollment_modes'] = this.domainsEnrollmentModes;
     if (this.creatorRoleId != null) {
@@ -129,6 +139,7 @@ class UpdateInstanceOrganizationSettingsRequest {
             mapValueOfType<int>(json, r'max_allowed_memberships'),
         adminDeleteEnabled: mapValueOfType<bool>(json, r'admin_delete_enabled'),
         domainsEnabled: mapValueOfType<bool>(json, r'domains_enabled'),
+        slugDisabled: mapValueOfType<bool>(json, r'slug_disabled'),
         domainsEnrollmentModes: json[r'domains_enrollment_modes'] is Iterable
             ? (json[r'domains_enrollment_modes'] as Iterable)
                 .cast<String>()

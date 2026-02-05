@@ -1,8 +1,8 @@
-# clerk_backend_api.model.EmailAddress
+# openapi.model.EmailAddress
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties

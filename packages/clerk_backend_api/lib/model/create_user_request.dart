@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -16,6 +16,7 @@ class CreateUserRequest {
     this.externalId,
     this.firstName,
     this.lastName,
+    this.locale,
     this.emailAddress = const [],
     this.phoneNumber = const [],
     this.web3Wallet = const [],
@@ -33,9 +34,11 @@ class CreateUserRequest {
     this.deleteSelfEnabled,
     this.legalAcceptedAt,
     this.skipLegalChecks,
+    this.skipUserRequirement,
     this.createOrganizationEnabled,
     this.createOrganizationsLimit,
     this.createdAt,
+    this.bypassClientTrust,
   });
 
   /// The ID of the user as used in your external systems or your previous authentication solution. Must be unique across your instance.
@@ -46,6 +49,9 @@ class CreateUserRequest {
 
   /// The last name to assign to the user
   String? lastName;
+
+  /// The locale to assign to the user (e.g., \"en-US\", \"fr-FR\")
+  String? locale;
 
   /// Email addresses to add to the user. Must be unique across your instance. The first email address will be set as the user's primary email address.
   List<String> emailAddress;
@@ -59,13 +65,13 @@ class CreateUserRequest {
   /// The username to give to the user. It must be unique across your instance.
   String? username;
 
-  /// The plaintext password to give the user. Must be at least 8 characters long, and can not be in any list of hacked passwords.
+  /// The plaintext password to give the user. Must be at least 8 characters long, and cannot be in any list of hacked passwords.
   String? password;
 
   /// In case you already have the password digests and not the passwords, you can use them for the newly created user via this property. The digests should be generated with one of the supported algorithms. The hashing algorithm can be specified using the `password_hasher` property.
   String? passwordDigest;
 
-  /// The hashing algorithm that was used to generate the password digest.  The algorithms we support at the moment are [`bcrypt`](https://en.wikipedia.org/wiki/Bcrypt), [`bcrypt_sha256_django`](https://docs.djangoproject.com/en/4.0/topics/auth/passwords/), [`md5`](https://en.wikipedia.org/wiki/MD5), `pbkdf2_sha1`, `pbkdf2_sha256`, [`pbkdf2_sha256_django`](https://docs.djangoproject.com/en/4.0/topics/auth/passwords/), [`phpass`](https://www.openwall.com/phpass/), [`scrypt_firebase`](https://firebaseopensource.com/projects/firebase/scrypt/), [`scrypt_werkzeug`](https://werkzeug.palletsprojects.com/en/3.0.x/utils/#werkzeug.security.generate_password_hash), [`sha256`](https://en.wikipedia.org/wiki/SHA-2), and the [`argon2`](https://argon2.online/) variants: `argon2i` and `argon2id`.  Each of the supported hashers expects the incoming digest to be in a particular format. See the [Clerk docs](https://clerk.com/docs/references/backend/user/create-user) for more information.
+  /// The hashing algorithm that was used to generate the password digest.  The algorithms we support at the moment are [`bcrypt`](https://en.wikipedia.org/wiki/Bcrypt), [`bcrypt_sha256_django`](https://docs.djangoproject.com/en/4.0/topics/auth/passwords/), [`md5`](https://en.wikipedia.org/wiki/MD5), `pbkdf2_sha1`, `pbkdf2_sha256`, [`pbkdf2_sha256_django`](https://docs.djangoproject.com/en/4.0/topics/auth/passwords/), [`phpass`](https://www.openwall.com/phpass/), `md5_phpass`, [`scrypt_firebase`](https://firebaseopensource.com/projects/firebase/scrypt/), [`scrypt_werkzeug`](https://werkzeug.palletsprojects.com/en/3.0.x/utils/#werkzeug.security.generate_password_hash), [`sha256`](https://en.wikipedia.org/wiki/SHA-2), [`ldap_ssha`](https://www.openldap.org/faq/data/cache/347.html), the [`argon2`](https://argon2.online/) variants: `argon2i` and `argon2id`, and `sha512_symfony`, the SHA-512 variant of the [Symfony](https://symfony.com/doc/current/security/passwords.html) legacy hasher.  Each of the supported hashers expects the incoming digest to be in a particular format. See the [Clerk docs](https://clerk.com/docs/references/backend/user/create-user) for more information.
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -104,6 +110,9 @@ class CreateUserRequest {
   /// When set to `true` all legal checks are skipped. It is not recommended to skip legal checks unless you are migrating a user to Clerk.
   bool? skipLegalChecks;
 
+  /// When set to `true`, identification types are not enforced. At least one identification type must be enabled and provided on your instance (email, phone, web3 wallet, or username). Users created without required identification types cannot use those authentication strategies It is not recommended to use this flag unless you need to allow Clerk UI components to prompt for required fields while BAPI creates users with minimal data, or for migration a user to Clerk.
+  bool? skipUserRequirement;
+
   /// If enabled, user can create organizations via FAPI.
   bool? createOrganizationEnabled;
 
@@ -113,6 +122,9 @@ class CreateUserRequest {
   /// A custom date/time denoting _when_ the user signed up to the application, specified in RFC3339 format (e.g. `2012-10-20T07:15:20.902Z`).
   String? createdAt;
 
+  /// When set to `true`, the user will bypass client trust checks during sign-in.
+  bool? bypassClientTrust;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -120,6 +132,7 @@ class CreateUserRequest {
           other.externalId == externalId &&
           other.firstName == firstName &&
           other.lastName == lastName &&
+          other.locale == locale &&
           _deepEquality.equals(other.emailAddress, emailAddress) &&
           _deepEquality.equals(other.phoneNumber, phoneNumber) &&
           _deepEquality.equals(other.web3Wallet, web3Wallet) &&
@@ -137,9 +150,11 @@ class CreateUserRequest {
           other.deleteSelfEnabled == deleteSelfEnabled &&
           other.legalAcceptedAt == legalAcceptedAt &&
           other.skipLegalChecks == skipLegalChecks &&
+          other.skipUserRequirement == skipUserRequirement &&
           other.createOrganizationEnabled == createOrganizationEnabled &&
           other.createOrganizationsLimit == createOrganizationsLimit &&
-          other.createdAt == createdAt;
+          other.createdAt == createdAt &&
+          other.bypassClientTrust == bypassClientTrust;
 
   @override
   int get hashCode =>
@@ -147,6 +162,7 @@ class CreateUserRequest {
       (externalId == null ? 0 : externalId!.hashCode) +
       (firstName == null ? 0 : firstName!.hashCode) +
       (lastName == null ? 0 : lastName!.hashCode) +
+      (locale == null ? 0 : locale!.hashCode) +
       (emailAddress.hashCode) +
       (phoneNumber.hashCode) +
       (web3Wallet.hashCode) +
@@ -166,17 +182,19 @@ class CreateUserRequest {
       (deleteSelfEnabled == null ? 0 : deleteSelfEnabled!.hashCode) +
       (legalAcceptedAt == null ? 0 : legalAcceptedAt!.hashCode) +
       (skipLegalChecks == null ? 0 : skipLegalChecks!.hashCode) +
+      (skipUserRequirement == null ? 0 : skipUserRequirement!.hashCode) +
       (createOrganizationEnabled == null
           ? 0
           : createOrganizationEnabled!.hashCode) +
       (createOrganizationsLimit == null
           ? 0
           : createOrganizationsLimit!.hashCode) +
-      (createdAt == null ? 0 : createdAt!.hashCode);
+      (createdAt == null ? 0 : createdAt!.hashCode) +
+      (bypassClientTrust == null ? 0 : bypassClientTrust!.hashCode);
 
   @override
   String toString() =>
-      'CreateUserRequest[externalId=$externalId, firstName=$firstName, lastName=$lastName, emailAddress=$emailAddress, phoneNumber=$phoneNumber, web3Wallet=$web3Wallet, username=$username, password=$password, passwordDigest=$passwordDigest, passwordHasher=$passwordHasher, skipPasswordChecks=$skipPasswordChecks, skipPasswordRequirement=$skipPasswordRequirement, totpSecret=$totpSecret, backupCodes=$backupCodes, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, unsafeMetadata=$unsafeMetadata, deleteSelfEnabled=$deleteSelfEnabled, legalAcceptedAt=$legalAcceptedAt, skipLegalChecks=$skipLegalChecks, createOrganizationEnabled=$createOrganizationEnabled, createOrganizationsLimit=$createOrganizationsLimit, createdAt=$createdAt]';
+      'CreateUserRequest[externalId=$externalId, firstName=$firstName, lastName=$lastName, locale=$locale, emailAddress=$emailAddress, phoneNumber=$phoneNumber, web3Wallet=$web3Wallet, username=$username, password=$password, passwordDigest=$passwordDigest, passwordHasher=$passwordHasher, skipPasswordChecks=$skipPasswordChecks, skipPasswordRequirement=$skipPasswordRequirement, totpSecret=$totpSecret, backupCodes=$backupCodes, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, unsafeMetadata=$unsafeMetadata, deleteSelfEnabled=$deleteSelfEnabled, legalAcceptedAt=$legalAcceptedAt, skipLegalChecks=$skipLegalChecks, skipUserRequirement=$skipUserRequirement, createOrganizationEnabled=$createOrganizationEnabled, createOrganizationsLimit=$createOrganizationsLimit, createdAt=$createdAt, bypassClientTrust=$bypassClientTrust]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -194,6 +212,11 @@ class CreateUserRequest {
       json[r'last_name'] = this.lastName;
     } else {
       json[r'last_name'] = null;
+    }
+    if (this.locale != null) {
+      json[r'locale'] = this.locale;
+    } else {
+      json[r'locale'] = null;
     }
     json[r'email_address'] = this.emailAddress;
     json[r'phone_number'] = this.phoneNumber;
@@ -252,6 +275,11 @@ class CreateUserRequest {
     } else {
       json[r'skip_legal_checks'] = null;
     }
+    if (this.skipUserRequirement != null) {
+      json[r'skip_user_requirement'] = this.skipUserRequirement;
+    } else {
+      json[r'skip_user_requirement'] = null;
+    }
     if (this.createOrganizationEnabled != null) {
       json[r'create_organization_enabled'] = this.createOrganizationEnabled;
     } else {
@@ -266,6 +294,11 @@ class CreateUserRequest {
       json[r'created_at'] = this.createdAt;
     } else {
       json[r'created_at'] = null;
+    }
+    if (this.bypassClientTrust != null) {
+      json[r'bypass_client_trust'] = this.bypassClientTrust;
+    } else {
+      json[r'bypass_client_trust'] = null;
     }
     return json;
   }
@@ -294,6 +327,7 @@ class CreateUserRequest {
         externalId: mapValueOfType<String>(json, r'external_id'),
         firstName: mapValueOfType<String>(json, r'first_name'),
         lastName: mapValueOfType<String>(json, r'last_name'),
+        locale: mapValueOfType<String>(json, r'locale'),
         emailAddress: json[r'email_address'] is Iterable
             ? (json[r'email_address'] as Iterable)
                 .cast<String>()
@@ -332,11 +366,14 @@ class CreateUserRequest {
         deleteSelfEnabled: mapValueOfType<bool>(json, r'delete_self_enabled'),
         legalAcceptedAt: mapValueOfType<String>(json, r'legal_accepted_at'),
         skipLegalChecks: mapValueOfType<bool>(json, r'skip_legal_checks'),
+        skipUserRequirement:
+            mapValueOfType<bool>(json, r'skip_user_requirement'),
         createOrganizationEnabled:
             mapValueOfType<bool>(json, r'create_organization_enabled'),
         createOrganizationsLimit:
             mapValueOfType<int>(json, r'create_organizations_limit'),
         createdAt: mapValueOfType<String>(json, r'created_at'),
+        bypassClientTrust: mapValueOfType<bool>(json, r'bypass_client_trust'),
       );
     }
     return null;

@@ -1,8 +1,8 @@
-# clerk_backend_api.model.SAMLAccount
+# openapi.model.SAMLAccount
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **firstName** | **String** |  | [optional] 
 **lastName** | **String** |  | [optional] 
 **providerUserId** | **String** |  | [optional] 
+**lastAuthenticatedAt** | **int** | Unix timestamp of last authentication.  | [optional] 
 **publicMetadata** | [**Map<String, Object>**](Object.md) |  | [optional] [default to const {}]
 **verification** | [**SAMLAccountVerification**](SAMLAccountVerification.md) |  | 
 **samlConnection** | [**SAMLAccountSamlConnection**](SAMLAccountSamlConnection.md) |  | [optional] 

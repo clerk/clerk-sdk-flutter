@@ -1,8 +1,8 @@
-# clerk_backend_api.model.SAMLConnection
+# openapi.model.SAMLConnection
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -10,7 +10,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
 **name** | **String** |  | 
-**domain** | **String** |  | 
+**domain** | **String** |  | [optional] 
+**domains** | **List<String>** |  | [optional] [default to const []]
 **active** | **bool** |  | 
 **provider** | **String** |  | 
 **syncUserAttributes** | **bool** |  | 

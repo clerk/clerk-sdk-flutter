@@ -1,0 +1,26 @@
+# openapi.model.VerifyOAuthAccessToken200Response
+
+## Load the model package
+```dart
+import 'package:openapi/api.dart';
+```
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**object** | **String** |  | 
+**id** | **String** |  | 
+**clientId** | **String** |  | 
+**subject** | **String** |  | 
+**scopes** | **List<String>** |  | [default to const []]
+**revoked** | **bool** |  | 
+**revocationReason** | **String** |  | 
+**expired** | **bool** |  | 
+**expiration** | **num** |  | 
+**createdAt** | **num** |  | 
+**updatedAt** | **num** |  | 
+**active** | **bool** | Indicates that a JWT access token is not active (expired) | 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

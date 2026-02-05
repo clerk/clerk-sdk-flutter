@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -20,6 +20,7 @@ class CreateOrganizationInvitationRequest {
     this.privateMetadata = const {},
     this.redirectUrl,
     this.expiresInDays,
+    this.notify = true,
   });
 
   /// The email address of the new member that is going to be invited to the organization
@@ -46,6 +47,9 @@ class CreateOrganizationInvitationRequest {
   /// Maximum value: 365
   int? expiresInDays;
 
+  /// Optional flag which denotes whether an email invitation should be sent to the given email address. Defaults to `true`.
+  bool? notify;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -56,7 +60,8 @@ class CreateOrganizationInvitationRequest {
           _deepEquality.equals(other.publicMetadata, publicMetadata) &&
           _deepEquality.equals(other.privateMetadata, privateMetadata) &&
           other.redirectUrl == redirectUrl &&
-          other.expiresInDays == expiresInDays;
+          other.expiresInDays == expiresInDays &&
+          other.notify == notify;
 
   @override
   int get hashCode =>
@@ -67,11 +72,12 @@ class CreateOrganizationInvitationRequest {
       (publicMetadata == null ? 0 : publicMetadata!.hashCode) +
       (privateMetadata == null ? 0 : privateMetadata!.hashCode) +
       (redirectUrl == null ? 0 : redirectUrl!.hashCode) +
-      (expiresInDays == null ? 0 : expiresInDays!.hashCode);
+      (expiresInDays == null ? 0 : expiresInDays!.hashCode) +
+      (notify == null ? 0 : notify!.hashCode);
 
   @override
   String toString() =>
-      'CreateOrganizationInvitationRequest[emailAddress=$emailAddress, inviterUserId=$inviterUserId, role=$role, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, redirectUrl=$redirectUrl, expiresInDays=$expiresInDays]';
+      'CreateOrganizationInvitationRequest[emailAddress=$emailAddress, inviterUserId=$inviterUserId, role=$role, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, redirectUrl=$redirectUrl, expiresInDays=$expiresInDays, notify=$notify]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -101,6 +107,11 @@ class CreateOrganizationInvitationRequest {
       json[r'expires_in_days'] = this.expiresInDays;
     } else {
       json[r'expires_in_days'] = null;
+    }
+    if (this.notify != null) {
+      json[r'notify'] = this.notify;
+    } else {
+      json[r'notify'] = null;
     }
     return json;
   }
@@ -136,6 +147,7 @@ class CreateOrganizationInvitationRequest {
                 const {},
         redirectUrl: mapValueOfType<String>(json, r'redirect_url'),
         expiresInDays: mapValueOfType<int>(json, r'expires_in_days'),
+        notify: mapValueOfType<bool>(json, r'notify') ?? true,
       );
     }
     return null;

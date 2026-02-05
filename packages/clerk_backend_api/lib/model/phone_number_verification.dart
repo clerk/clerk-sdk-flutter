@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -13,12 +13,15 @@ part of openapi.api;
 class PhoneNumberVerification {
   /// Returns a new [PhoneNumberVerification] instance.
   PhoneNumberVerification({
+    this.object,
     required this.status,
     required this.strategy,
     required this.attempts,
     required this.expireAt,
     this.verifiedAtClient,
   });
+
+  PhoneNumberVerificationObjectEnum? object;
 
   PhoneNumberVerificationStatusEnum status;
 
@@ -34,6 +37,7 @@ class PhoneNumberVerification {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is PhoneNumberVerification &&
+          other.object == object &&
           other.status == status &&
           other.strategy == strategy &&
           other.attempts == attempts &&
@@ -43,6 +47,7 @@ class PhoneNumberVerification {
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
+      (object == null ? 0 : object!.hashCode) +
       (status.hashCode) +
       (strategy.hashCode) +
       (attempts == null ? 0 : attempts!.hashCode) +
@@ -51,10 +56,15 @@ class PhoneNumberVerification {
 
   @override
   String toString() =>
-      'PhoneNumberVerification[status=$status, strategy=$strategy, attempts=$attempts, expireAt=$expireAt, verifiedAtClient=$verifiedAtClient]';
+      'PhoneNumberVerification[object=$object, status=$status, strategy=$strategy, attempts=$attempts, expireAt=$expireAt, verifiedAtClient=$verifiedAtClient]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    if (this.object != null) {
+      json[r'object'] = this.object;
+    } else {
+      json[r'object'] = null;
+    }
     json[r'status'] = this.status;
     json[r'strategy'] = this.strategy;
     if (this.attempts != null) {
@@ -96,6 +106,7 @@ class PhoneNumberVerification {
       }());
 
       return PhoneNumberVerification(
+        object: PhoneNumberVerificationObjectEnum.fromJson(json[r'object']),
         status: PhoneNumberVerificationStatusEnum.fromJson(json[r'status'])!,
         strategy:
             PhoneNumberVerificationStrategyEnum.fromJson(json[r'strategy'])!,
@@ -163,6 +174,83 @@ class PhoneNumberVerification {
     'attempts',
     'expire_at',
   };
+}
+
+class PhoneNumberVerificationObjectEnum {
+  /// Instantiate a new enum with the provided [value].
+  const PhoneNumberVerificationObjectEnum._(this.value);
+
+  /// The underlying value of this enum member.
+  final String value;
+
+  @override
+  String toString() => value;
+
+  String toJson() => value;
+
+  static const verificationAdmin =
+      PhoneNumberVerificationObjectEnum._(r'verification_admin');
+
+  /// List of all possible values in this [enum][PhoneNumberVerificationObjectEnum].
+  static const values = <PhoneNumberVerificationObjectEnum>[
+    verificationAdmin,
+  ];
+
+  static PhoneNumberVerificationObjectEnum? fromJson(dynamic value) =>
+      PhoneNumberVerificationObjectEnumTypeTransformer().decode(value);
+
+  static List<PhoneNumberVerificationObjectEnum> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
+    final result = <PhoneNumberVerificationObjectEnum>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = PhoneNumberVerificationObjectEnum.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+}
+
+/// Transformation class that can [encode] an instance of [PhoneNumberVerificationObjectEnum] to String,
+/// and [decode] dynamic data back to [PhoneNumberVerificationObjectEnum].
+class PhoneNumberVerificationObjectEnumTypeTransformer {
+  factory PhoneNumberVerificationObjectEnumTypeTransformer() =>
+      _instance ??= const PhoneNumberVerificationObjectEnumTypeTransformer._();
+
+  const PhoneNumberVerificationObjectEnumTypeTransformer._();
+
+  String encode(PhoneNumberVerificationObjectEnum data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a PhoneNumberVerificationObjectEnum.
+  ///
+  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
+  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
+  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
+  ///
+  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
+  /// and users are still using an old app with the old code.
+  PhoneNumberVerificationObjectEnum? decode(dynamic data,
+      {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        case r'verification_admin':
+          return PhoneNumberVerificationObjectEnum.verificationAdmin;
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [PhoneNumberVerificationObjectEnumTypeTransformer] instance.
+  static PhoneNumberVerificationObjectEnumTypeTransformer? _instance;
 }
 
 class PhoneNumberVerificationStatusEnum {

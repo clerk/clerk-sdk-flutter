@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -26,6 +26,7 @@ class Session {
     required this.abandonAt,
     required this.updatedAt,
     required this.createdAt,
+    this.tasks = const [],
   });
 
   /// String representing the object's type. Objects of the same type share the same value.
@@ -59,6 +60,8 @@ class Session {
   /// Unix timestamp of creation.
   int createdAt;
 
+  List<SessionTask>? tasks;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -75,7 +78,8 @@ class Session {
           other.expireAt == expireAt &&
           other.abandonAt == abandonAt &&
           other.updatedAt == updatedAt &&
-          other.createdAt == createdAt;
+          other.createdAt == createdAt &&
+          _deepEquality.equals(other.tasks, tasks);
 
   @override
   int get hashCode =>
@@ -94,11 +98,12 @@ class Session {
       (expireAt.hashCode) +
       (abandonAt.hashCode) +
       (updatedAt.hashCode) +
-      (createdAt.hashCode);
+      (createdAt.hashCode) +
+      (tasks == null ? 0 : tasks!.hashCode);
 
   @override
   String toString() =>
-      'Session[object=$object, id=$id, userId=$userId, clientId=$clientId, actor=$actor, status=$status, lastActiveOrganizationId=$lastActiveOrganizationId, lastActiveAt=$lastActiveAt, latestActivity=$latestActivity, expireAt=$expireAt, abandonAt=$abandonAt, updatedAt=$updatedAt, createdAt=$createdAt]';
+      'Session[object=$object, id=$id, userId=$userId, clientId=$clientId, actor=$actor, status=$status, lastActiveOrganizationId=$lastActiveOrganizationId, lastActiveAt=$lastActiveAt, latestActivity=$latestActivity, expireAt=$expireAt, abandonAt=$abandonAt, updatedAt=$updatedAt, createdAt=$createdAt, tasks=$tasks]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -127,6 +132,11 @@ class Session {
     json[r'abandon_at'] = this.abandonAt;
     json[r'updated_at'] = this.updatedAt;
     json[r'created_at'] = this.createdAt;
+    if (this.tasks != null) {
+      json[r'tasks'] = this.tasks;
+    } else {
+      json[r'tasks'] = null;
+    }
     return json;
   }
 
@@ -166,6 +176,7 @@ class Session {
         abandonAt: mapValueOfType<int>(json, r'abandon_at')!,
         updatedAt: mapValueOfType<int>(json, r'updated_at')!,
         createdAt: mapValueOfType<int>(json, r'created_at')!,
+        tasks: SessionTask.listFromJson(json[r'tasks']),
       );
     }
     return null;
@@ -330,6 +341,7 @@ class SessionStatusEnum {
   static const removed = SessionStatusEnum._(r'removed');
   static const abandoned = SessionStatusEnum._(r'abandoned');
   static const replaced = SessionStatusEnum._(r'replaced');
+  static const pending = SessionStatusEnum._(r'pending');
 
   /// List of all possible values in this [enum][SessionStatusEnum].
   static const values = <SessionStatusEnum>[
@@ -340,6 +352,7 @@ class SessionStatusEnum {
     removed,
     abandoned,
     replaced,
+    pending,
   ];
 
   static SessionStatusEnum? fromJson(dynamic value) =>
@@ -397,6 +410,8 @@ class SessionStatusEnumTypeTransformer {
           return SessionStatusEnum.abandoned;
         case r'replaced':
           return SessionStatusEnum.replaced;
+        case r'pending':
+          return SessionStatusEnum.pending;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');

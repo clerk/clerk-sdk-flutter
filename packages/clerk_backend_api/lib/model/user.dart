@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -13,18 +13,19 @@ part of openapi.api;
 class User {
   /// Returns a new [User] instance.
   User({
-    this.id,
-    this.object,
-    this.externalId,
-    this.primaryEmailAddressId,
-    this.primaryPhoneNumberId,
-    this.primaryWeb3WalletId,
-    this.username,
-    this.firstName,
-    this.lastName,
+    required this.id,
+    required this.object,
+    required this.externalId,
+    required this.primaryEmailAddressId,
+    required this.primaryPhoneNumberId,
+    required this.primaryWeb3WalletId,
+    required this.username,
+    required this.firstName,
+    required this.lastName,
+    this.locale,
     this.profileImageUrl,
     this.imageUrl,
-    this.hasImage,
+    required this.hasImage,
     this.publicMetadata = const {},
     this.privateMetadata = const {},
     this.unsafeMetadata = const {},
@@ -32,38 +33,36 @@ class User {
     this.phoneNumbers = const [],
     this.web3Wallets = const [],
     this.passkeys = const [],
-    this.passwordEnabled,
-    this.twoFactorEnabled,
-    this.totpEnabled,
-    this.backupCodeEnabled,
-    this.mfaEnabledAt,
-    this.mfaDisabledAt,
+    required this.passwordEnabled,
+    required this.twoFactorEnabled,
+    required this.totpEnabled,
+    required this.backupCodeEnabled,
+    required this.mfaEnabledAt,
+    required this.mfaDisabledAt,
+    this.passwordLastUpdatedAt,
     this.externalAccounts = const [],
     this.samlAccounts = const [],
-    this.lastSignInAt,
-    this.banned,
-    this.locked,
-    this.lockoutExpiresInSeconds,
-    this.verificationAttemptsRemaining,
-    this.updatedAt,
-    this.createdAt,
-    this.deleteSelfEnabled,
-    this.createOrganizationEnabled,
+    this.enterpriseAccounts = const [],
+    this.organizationMemberships = const [],
+    required this.lastSignInAt,
+    required this.banned,
+    required this.locked,
+    required this.lockoutExpiresInSeconds,
+    required this.verificationAttemptsRemaining,
+    required this.updatedAt,
+    required this.createdAt,
+    required this.deleteSelfEnabled,
+    required this.createOrganizationEnabled,
     this.createOrganizationsLimit,
-    this.lastActiveAt,
-    this.legalAcceptedAt,
+    required this.lastActiveAt,
+    required this.legalAcceptedAt,
+    this.bypassClientTrust = false,
   });
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? id;
+  String id;
 
   /// String representing the object's type. Objects of the same type share the same value.
-  UserObjectEnum? object;
+  UserObjectEnum object;
 
   String? externalId;
 
@@ -78,6 +77,8 @@ class User {
   String? firstName;
 
   String? lastName;
+
+  String? locale;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -95,13 +96,7 @@ class User {
   ///
   String? imageUrl;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? hasImage;
+  bool hasImage;
 
   Map<String, Object> publicMetadata;
 
@@ -115,39 +110,15 @@ class User {
 
   List<Web3Wallet> web3Wallets;
 
-  List<SchemasPasskey> passkeys;
+  List<Passkey> passkeys;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? passwordEnabled;
+  bool passwordEnabled;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? twoFactorEnabled;
+  bool twoFactorEnabled;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? totpEnabled;
+  bool totpEnabled;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? backupCodeEnabled;
+  bool backupCodeEnabled;
 
   /// Unix timestamp of when MFA was last enabled for this user. It should be noted that this field is not nullified if MFA is disabled.
   int? mfaEnabledAt;
@@ -155,30 +126,25 @@ class User {
   /// Unix timestamp of when MFA was last disabled for this user. It should be noted that this field is not nullified if MFA is enabled again.
   int? mfaDisabledAt;
 
-  List<dynamic> externalAccounts;
+  /// Unix timestamp of when the user's password was last updated.
+  int? passwordLastUpdatedAt;
+
+  List<ExternalAccountWithVerification> externalAccounts;
 
   List<SAMLAccount> samlAccounts;
+
+  List<EnterpriseAccount> enterpriseAccounts;
+
+  List<OrganizationMembership> organizationMemberships;
 
   /// Unix timestamp of last sign-in.
   int? lastSignInAt;
 
   /// Flag to denote whether user is banned or not.
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? banned;
+  bool banned;
 
   /// Flag to denote whether user is currently locked, i.e. restricted from signing in or not.
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? locked;
+  bool locked;
 
   /// The number of seconds remaining until the lockout period expires for a locked user. A null value for a locked user indicates that lockout never expires.
   int? lockoutExpiresInSeconds;
@@ -187,40 +153,16 @@ class User {
   int? verificationAttemptsRemaining;
 
   /// Unix timestamp of last update.
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? updatedAt;
+  int updatedAt;
 
   /// Unix timestamp of creation.
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? createdAt;
+  int createdAt;
 
   /// If enabled, user can delete themselves via FAPI.
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? deleteSelfEnabled;
+  bool deleteSelfEnabled;
 
   /// If enabled, user can create organizations via FAPI.
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? createOrganizationEnabled;
+  bool createOrganizationEnabled;
 
   /// The maximum number of organizations the user can create. 0 means unlimited.
   int? createOrganizationsLimit;
@@ -230,6 +172,9 @@ class User {
 
   /// Unix timestamp of when the user accepted the legal requirements.
   int? legalAcceptedAt;
+
+  /// When set to `true`, the user will bypass client trust checks during sign-in.
+  bool bypassClientTrust;
 
   @override
   bool operator ==(Object other) =>
@@ -244,6 +189,7 @@ class User {
           other.username == username &&
           other.firstName == firstName &&
           other.lastName == lastName &&
+          other.locale == locale &&
           other.profileImageUrl == profileImageUrl &&
           other.imageUrl == imageUrl &&
           other.hasImage == hasImage &&
@@ -260,8 +206,12 @@ class User {
           other.backupCodeEnabled == backupCodeEnabled &&
           other.mfaEnabledAt == mfaEnabledAt &&
           other.mfaDisabledAt == mfaDisabledAt &&
+          other.passwordLastUpdatedAt == passwordLastUpdatedAt &&
           _deepEquality.equals(other.externalAccounts, externalAccounts) &&
           _deepEquality.equals(other.samlAccounts, samlAccounts) &&
+          _deepEquality.equals(other.enterpriseAccounts, enterpriseAccounts) &&
+          _deepEquality.equals(
+              other.organizationMemberships, organizationMemberships) &&
           other.lastSignInAt == lastSignInAt &&
           other.banned == banned &&
           other.locked == locked &&
@@ -274,13 +224,14 @@ class User {
           other.createOrganizationEnabled == createOrganizationEnabled &&
           other.createOrganizationsLimit == createOrganizationsLimit &&
           other.lastActiveAt == lastActiveAt &&
-          other.legalAcceptedAt == legalAcceptedAt;
+          other.legalAcceptedAt == legalAcceptedAt &&
+          other.bypassClientTrust == bypassClientTrust;
 
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
-      (id == null ? 0 : id!.hashCode) +
-      (object == null ? 0 : object!.hashCode) +
+      (id.hashCode) +
+      (object.hashCode) +
       (externalId == null ? 0 : externalId!.hashCode) +
       (primaryEmailAddressId == null ? 0 : primaryEmailAddressId!.hashCode) +
       (primaryPhoneNumberId == null ? 0 : primaryPhoneNumberId!.hashCode) +
@@ -288,9 +239,10 @@ class User {
       (username == null ? 0 : username!.hashCode) +
       (firstName == null ? 0 : firstName!.hashCode) +
       (lastName == null ? 0 : lastName!.hashCode) +
+      (locale == null ? 0 : locale!.hashCode) +
       (profileImageUrl == null ? 0 : profileImageUrl!.hashCode) +
       (imageUrl == null ? 0 : imageUrl!.hashCode) +
-      (hasImage == null ? 0 : hasImage!.hashCode) +
+      (hasImage.hashCode) +
       (publicMetadata.hashCode) +
       (privateMetadata == null ? 0 : privateMetadata!.hashCode) +
       (unsafeMetadata.hashCode) +
@@ -298,51 +250,45 @@ class User {
       (phoneNumbers.hashCode) +
       (web3Wallets.hashCode) +
       (passkeys.hashCode) +
-      (passwordEnabled == null ? 0 : passwordEnabled!.hashCode) +
-      (twoFactorEnabled == null ? 0 : twoFactorEnabled!.hashCode) +
-      (totpEnabled == null ? 0 : totpEnabled!.hashCode) +
-      (backupCodeEnabled == null ? 0 : backupCodeEnabled!.hashCode) +
+      (passwordEnabled.hashCode) +
+      (twoFactorEnabled.hashCode) +
+      (totpEnabled.hashCode) +
+      (backupCodeEnabled.hashCode) +
       (mfaEnabledAt == null ? 0 : mfaEnabledAt!.hashCode) +
       (mfaDisabledAt == null ? 0 : mfaDisabledAt!.hashCode) +
+      (passwordLastUpdatedAt == null ? 0 : passwordLastUpdatedAt!.hashCode) +
       (externalAccounts.hashCode) +
       (samlAccounts.hashCode) +
+      (enterpriseAccounts.hashCode) +
+      (organizationMemberships.hashCode) +
       (lastSignInAt == null ? 0 : lastSignInAt!.hashCode) +
-      (banned == null ? 0 : banned!.hashCode) +
-      (locked == null ? 0 : locked!.hashCode) +
+      (banned.hashCode) +
+      (locked.hashCode) +
       (lockoutExpiresInSeconds == null
           ? 0
           : lockoutExpiresInSeconds!.hashCode) +
       (verificationAttemptsRemaining == null
           ? 0
           : verificationAttemptsRemaining!.hashCode) +
-      (updatedAt == null ? 0 : updatedAt!.hashCode) +
-      (createdAt == null ? 0 : createdAt!.hashCode) +
-      (deleteSelfEnabled == null ? 0 : deleteSelfEnabled!.hashCode) +
-      (createOrganizationEnabled == null
-          ? 0
-          : createOrganizationEnabled!.hashCode) +
+      (updatedAt.hashCode) +
+      (createdAt.hashCode) +
+      (deleteSelfEnabled.hashCode) +
+      (createOrganizationEnabled.hashCode) +
       (createOrganizationsLimit == null
           ? 0
           : createOrganizationsLimit!.hashCode) +
       (lastActiveAt == null ? 0 : lastActiveAt!.hashCode) +
-      (legalAcceptedAt == null ? 0 : legalAcceptedAt!.hashCode);
+      (legalAcceptedAt == null ? 0 : legalAcceptedAt!.hashCode) +
+      (bypassClientTrust.hashCode);
 
   @override
   String toString() =>
-      'User[id=$id, object=$object, externalId=$externalId, primaryEmailAddressId=$primaryEmailAddressId, primaryPhoneNumberId=$primaryPhoneNumberId, primaryWeb3WalletId=$primaryWeb3WalletId, username=$username, firstName=$firstName, lastName=$lastName, profileImageUrl=$profileImageUrl, imageUrl=$imageUrl, hasImage=$hasImage, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, unsafeMetadata=$unsafeMetadata, emailAddresses=$emailAddresses, phoneNumbers=$phoneNumbers, web3Wallets=$web3Wallets, passkeys=$passkeys, passwordEnabled=$passwordEnabled, twoFactorEnabled=$twoFactorEnabled, totpEnabled=$totpEnabled, backupCodeEnabled=$backupCodeEnabled, mfaEnabledAt=$mfaEnabledAt, mfaDisabledAt=$mfaDisabledAt, externalAccounts=$externalAccounts, samlAccounts=$samlAccounts, lastSignInAt=$lastSignInAt, banned=$banned, locked=$locked, lockoutExpiresInSeconds=$lockoutExpiresInSeconds, verificationAttemptsRemaining=$verificationAttemptsRemaining, updatedAt=$updatedAt, createdAt=$createdAt, deleteSelfEnabled=$deleteSelfEnabled, createOrganizationEnabled=$createOrganizationEnabled, createOrganizationsLimit=$createOrganizationsLimit, lastActiveAt=$lastActiveAt, legalAcceptedAt=$legalAcceptedAt]';
+      'User[id=$id, object=$object, externalId=$externalId, primaryEmailAddressId=$primaryEmailAddressId, primaryPhoneNumberId=$primaryPhoneNumberId, primaryWeb3WalletId=$primaryWeb3WalletId, username=$username, firstName=$firstName, lastName=$lastName, locale=$locale, profileImageUrl=$profileImageUrl, imageUrl=$imageUrl, hasImage=$hasImage, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, unsafeMetadata=$unsafeMetadata, emailAddresses=$emailAddresses, phoneNumbers=$phoneNumbers, web3Wallets=$web3Wallets, passkeys=$passkeys, passwordEnabled=$passwordEnabled, twoFactorEnabled=$twoFactorEnabled, totpEnabled=$totpEnabled, backupCodeEnabled=$backupCodeEnabled, mfaEnabledAt=$mfaEnabledAt, mfaDisabledAt=$mfaDisabledAt, passwordLastUpdatedAt=$passwordLastUpdatedAt, externalAccounts=$externalAccounts, samlAccounts=$samlAccounts, enterpriseAccounts=$enterpriseAccounts, organizationMemberships=$organizationMemberships, lastSignInAt=$lastSignInAt, banned=$banned, locked=$locked, lockoutExpiresInSeconds=$lockoutExpiresInSeconds, verificationAttemptsRemaining=$verificationAttemptsRemaining, updatedAt=$updatedAt, createdAt=$createdAt, deleteSelfEnabled=$deleteSelfEnabled, createOrganizationEnabled=$createOrganizationEnabled, createOrganizationsLimit=$createOrganizationsLimit, lastActiveAt=$lastActiveAt, legalAcceptedAt=$legalAcceptedAt, bypassClientTrust=$bypassClientTrust]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.id != null) {
-      json[r'id'] = this.id;
-    } else {
-      json[r'id'] = null;
-    }
-    if (this.object != null) {
-      json[r'object'] = this.object;
-    } else {
-      json[r'object'] = null;
-    }
+    json[r'id'] = this.id;
+    json[r'object'] = this.object;
     if (this.externalId != null) {
       json[r'external_id'] = this.externalId;
     } else {
@@ -378,6 +324,11 @@ class User {
     } else {
       json[r'last_name'] = null;
     }
+    if (this.locale != null) {
+      json[r'locale'] = this.locale;
+    } else {
+      json[r'locale'] = null;
+    }
     if (this.profileImageUrl != null) {
       json[r'profile_image_url'] = this.profileImageUrl;
     } else {
@@ -388,11 +339,7 @@ class User {
     } else {
       json[r'image_url'] = null;
     }
-    if (this.hasImage != null) {
-      json[r'has_image'] = this.hasImage;
-    } else {
-      json[r'has_image'] = null;
-    }
+    json[r'has_image'] = this.hasImage;
     json[r'public_metadata'] = this.publicMetadata;
     if (this.privateMetadata != null) {
       json[r'private_metadata'] = this.privateMetadata;
@@ -404,26 +351,10 @@ class User {
     json[r'phone_numbers'] = this.phoneNumbers;
     json[r'web3_wallets'] = this.web3Wallets;
     json[r'passkeys'] = this.passkeys;
-    if (this.passwordEnabled != null) {
-      json[r'password_enabled'] = this.passwordEnabled;
-    } else {
-      json[r'password_enabled'] = null;
-    }
-    if (this.twoFactorEnabled != null) {
-      json[r'two_factor_enabled'] = this.twoFactorEnabled;
-    } else {
-      json[r'two_factor_enabled'] = null;
-    }
-    if (this.totpEnabled != null) {
-      json[r'totp_enabled'] = this.totpEnabled;
-    } else {
-      json[r'totp_enabled'] = null;
-    }
-    if (this.backupCodeEnabled != null) {
-      json[r'backup_code_enabled'] = this.backupCodeEnabled;
-    } else {
-      json[r'backup_code_enabled'] = null;
-    }
+    json[r'password_enabled'] = this.passwordEnabled;
+    json[r'two_factor_enabled'] = this.twoFactorEnabled;
+    json[r'totp_enabled'] = this.totpEnabled;
+    json[r'backup_code_enabled'] = this.backupCodeEnabled;
     if (this.mfaEnabledAt != null) {
       json[r'mfa_enabled_at'] = this.mfaEnabledAt;
     } else {
@@ -434,23 +365,22 @@ class User {
     } else {
       json[r'mfa_disabled_at'] = null;
     }
+    if (this.passwordLastUpdatedAt != null) {
+      json[r'password_last_updated_at'] = this.passwordLastUpdatedAt;
+    } else {
+      json[r'password_last_updated_at'] = null;
+    }
     json[r'external_accounts'] = this.externalAccounts;
     json[r'saml_accounts'] = this.samlAccounts;
+    json[r'enterprise_accounts'] = this.enterpriseAccounts;
+    json[r'organization_memberships'] = this.organizationMemberships;
     if (this.lastSignInAt != null) {
       json[r'last_sign_in_at'] = this.lastSignInAt;
     } else {
       json[r'last_sign_in_at'] = null;
     }
-    if (this.banned != null) {
-      json[r'banned'] = this.banned;
-    } else {
-      json[r'banned'] = null;
-    }
-    if (this.locked != null) {
-      json[r'locked'] = this.locked;
-    } else {
-      json[r'locked'] = null;
-    }
+    json[r'banned'] = this.banned;
+    json[r'locked'] = this.locked;
     if (this.lockoutExpiresInSeconds != null) {
       json[r'lockout_expires_in_seconds'] = this.lockoutExpiresInSeconds;
     } else {
@@ -462,26 +392,10 @@ class User {
     } else {
       json[r'verification_attempts_remaining'] = null;
     }
-    if (this.updatedAt != null) {
-      json[r'updated_at'] = this.updatedAt;
-    } else {
-      json[r'updated_at'] = null;
-    }
-    if (this.createdAt != null) {
-      json[r'created_at'] = this.createdAt;
-    } else {
-      json[r'created_at'] = null;
-    }
-    if (this.deleteSelfEnabled != null) {
-      json[r'delete_self_enabled'] = this.deleteSelfEnabled;
-    } else {
-      json[r'delete_self_enabled'] = null;
-    }
-    if (this.createOrganizationEnabled != null) {
-      json[r'create_organization_enabled'] = this.createOrganizationEnabled;
-    } else {
-      json[r'create_organization_enabled'] = null;
-    }
+    json[r'updated_at'] = this.updatedAt;
+    json[r'created_at'] = this.createdAt;
+    json[r'delete_self_enabled'] = this.deleteSelfEnabled;
+    json[r'create_organization_enabled'] = this.createOrganizationEnabled;
     if (this.createOrganizationsLimit != null) {
       json[r'create_organizations_limit'] = this.createOrganizationsLimit;
     } else {
@@ -497,6 +411,7 @@ class User {
     } else {
       json[r'legal_accepted_at'] = null;
     }
+    json[r'bypass_client_trust'] = this.bypassClientTrust;
     return json;
   }
 
@@ -521,8 +436,8 @@ class User {
       }());
 
       return User(
-        id: mapValueOfType<String>(json, r'id'),
-        object: UserObjectEnum.fromJson(json[r'object']),
+        id: mapValueOfType<String>(json, r'id')!,
+        object: UserObjectEnum.fromJson(json[r'object'])!,
         externalId: mapValueOfType<String>(json, r'external_id'),
         primaryEmailAddressId:
             mapValueOfType<String>(json, r'primary_email_address_id'),
@@ -533,11 +448,12 @@ class User {
         username: mapValueOfType<String>(json, r'username'),
         firstName: mapValueOfType<String>(json, r'first_name'),
         lastName: mapValueOfType<String>(json, r'last_name'),
+        locale: mapValueOfType<String>(json, r'locale'),
         profileImageUrl: mapValueOfType<String>(json, r'profile_image_url'),
         imageUrl: mapValueOfType<String>(json, r'image_url'),
-        hasImage: mapValueOfType<bool>(json, r'has_image'),
+        hasImage: mapValueOfType<bool>(json, r'has_image')!,
         publicMetadata:
-            mapCastOfType<String, Object>(json, r'public_metadata') ?? const {},
+            mapCastOfType<String, Object>(json, r'public_metadata')!,
         privateMetadata:
             mapCastOfType<String, Object>(json, r'private_metadata') ??
                 const {},
@@ -546,31 +462,40 @@ class User {
         emailAddresses: EmailAddress.listFromJson(json[r'email_addresses']),
         phoneNumbers: PhoneNumber.listFromJson(json[r'phone_numbers']),
         web3Wallets: Web3Wallet.listFromJson(json[r'web3_wallets']),
-        passkeys: SchemasPasskey.listFromJson(json[r'passkeys']),
-        passwordEnabled: mapValueOfType<bool>(json, r'password_enabled'),
-        twoFactorEnabled: mapValueOfType<bool>(json, r'two_factor_enabled'),
-        totpEnabled: mapValueOfType<bool>(json, r'totp_enabled'),
-        backupCodeEnabled: mapValueOfType<bool>(json, r'backup_code_enabled'),
+        passkeys: Passkey.listFromJson(json[r'passkeys']),
+        passwordEnabled: mapValueOfType<bool>(json, r'password_enabled')!,
+        twoFactorEnabled: mapValueOfType<bool>(json, r'two_factor_enabled')!,
+        totpEnabled: mapValueOfType<bool>(json, r'totp_enabled')!,
+        backupCodeEnabled: mapValueOfType<bool>(json, r'backup_code_enabled')!,
         mfaEnabledAt: mapValueOfType<int>(json, r'mfa_enabled_at'),
         mfaDisabledAt: mapValueOfType<int>(json, r'mfa_disabled_at'),
-        externalAccounts: (json[r'external_accounts'] as List? ?? []),
+        passwordLastUpdatedAt:
+            mapValueOfType<int>(json, r'password_last_updated_at'),
+        externalAccounts: ExternalAccountWithVerification.listFromJson(
+            json[r'external_accounts']),
         samlAccounts: SAMLAccount.listFromJson(json[r'saml_accounts']),
+        enterpriseAccounts:
+            EnterpriseAccount.listFromJson(json[r'enterprise_accounts']),
+        organizationMemberships: OrganizationMembership.listFromJson(
+            json[r'organization_memberships']),
         lastSignInAt: mapValueOfType<int>(json, r'last_sign_in_at'),
-        banned: mapValueOfType<bool>(json, r'banned'),
-        locked: mapValueOfType<bool>(json, r'locked'),
+        banned: mapValueOfType<bool>(json, r'banned')!,
+        locked: mapValueOfType<bool>(json, r'locked')!,
         lockoutExpiresInSeconds:
             mapValueOfType<int>(json, r'lockout_expires_in_seconds'),
         verificationAttemptsRemaining:
             mapValueOfType<int>(json, r'verification_attempts_remaining'),
-        updatedAt: mapValueOfType<int>(json, r'updated_at'),
-        createdAt: mapValueOfType<int>(json, r'created_at'),
-        deleteSelfEnabled: mapValueOfType<bool>(json, r'delete_self_enabled'),
+        updatedAt: mapValueOfType<int>(json, r'updated_at')!,
+        createdAt: mapValueOfType<int>(json, r'created_at')!,
+        deleteSelfEnabled: mapValueOfType<bool>(json, r'delete_self_enabled')!,
         createOrganizationEnabled:
-            mapValueOfType<bool>(json, r'create_organization_enabled'),
+            mapValueOfType<bool>(json, r'create_organization_enabled')!,
         createOrganizationsLimit:
             mapValueOfType<int>(json, r'create_organizations_limit'),
         lastActiveAt: mapValueOfType<int>(json, r'last_active_at'),
         legalAcceptedAt: mapValueOfType<int>(json, r'legal_accepted_at'),
+        bypassClientTrust:
+            mapValueOfType<bool>(json, r'bypass_client_trust') ?? false,
       );
     }
     return null;
@@ -626,7 +551,43 @@ class User {
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{};
+  static const requiredKeys = <String>{
+    'id',
+    'object',
+    'external_id',
+    'primary_email_address_id',
+    'primary_phone_number_id',
+    'primary_web3_wallet_id',
+    'username',
+    'first_name',
+    'last_name',
+    'has_image',
+    'public_metadata',
+    'email_addresses',
+    'phone_numbers',
+    'web3_wallets',
+    'passkeys',
+    'password_enabled',
+    'two_factor_enabled',
+    'totp_enabled',
+    'backup_code_enabled',
+    'mfa_enabled_at',
+    'mfa_disabled_at',
+    'external_accounts',
+    'saml_accounts',
+    'enterprise_accounts',
+    'last_sign_in_at',
+    'banned',
+    'locked',
+    'lockout_expires_in_seconds',
+    'verification_attempts_remaining',
+    'updated_at',
+    'created_at',
+    'delete_self_enabled',
+    'create_organization_enabled',
+    'last_active_at',
+    'legal_accepted_at',
+  };
 }
 
 /// String representing the object's type. Objects of the same type share the same value.

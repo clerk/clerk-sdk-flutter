@@ -1,8 +1,8 @@
-# clerk_backend_api.model.CreateSAMLConnectionRequestAttributeMapping
+# openapi.model.CreateSAMLConnectionRequestAttributeMapping
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties

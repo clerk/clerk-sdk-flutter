@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -17,6 +17,8 @@ class OrganizationWithLogo {
     required this.id,
     required this.name,
     required this.slug,
+    required this.imageUrl,
+    required this.hasImage,
     this.membersCount,
     this.missingMemberWithElevatedPermissions,
     this.pendingInvitationsCount,
@@ -27,9 +29,8 @@ class OrganizationWithLogo {
     this.createdBy,
     required this.createdAt,
     required this.updatedAt,
+    this.lastActiveAt,
     this.logoUrl,
-    required this.imageUrl,
-    required this.hasImage,
   });
 
   OrganizationWithLogoObjectEnum object;
@@ -39,6 +40,10 @@ class OrganizationWithLogo {
   String name;
 
   String slug;
+
+  String imageUrl;
+
+  bool hasImage;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -86,6 +91,15 @@ class OrganizationWithLogo {
   /// Unix timestamp of last update.
   int updatedAt;
 
+  /// Unix timestamp of last activity.
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? lastActiveAt;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -93,10 +107,6 @@ class OrganizationWithLogo {
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
   String? logoUrl;
-
-  String imageUrl;
-
-  bool hasImage;
 
   @override
   bool operator ==(Object other) =>
@@ -106,6 +116,8 @@ class OrganizationWithLogo {
           other.id == id &&
           other.name == name &&
           other.slug == slug &&
+          other.imageUrl == imageUrl &&
+          other.hasImage == hasImage &&
           other.membersCount == membersCount &&
           other.missingMemberWithElevatedPermissions ==
               missingMemberWithElevatedPermissions &&
@@ -117,9 +129,8 @@ class OrganizationWithLogo {
           other.createdBy == createdBy &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
-          other.logoUrl == logoUrl &&
-          other.imageUrl == imageUrl &&
-          other.hasImage == hasImage;
+          other.lastActiveAt == lastActiveAt &&
+          other.logoUrl == logoUrl;
 
   @override
   int get hashCode =>
@@ -128,6 +139,8 @@ class OrganizationWithLogo {
       (id.hashCode) +
       (name.hashCode) +
       (slug.hashCode) +
+      (imageUrl.hashCode) +
+      (hasImage.hashCode) +
       (membersCount == null ? 0 : membersCount!.hashCode) +
       (missingMemberWithElevatedPermissions == null
           ? 0
@@ -142,13 +155,12 @@ class OrganizationWithLogo {
       (createdBy == null ? 0 : createdBy!.hashCode) +
       (createdAt.hashCode) +
       (updatedAt.hashCode) +
-      (logoUrl == null ? 0 : logoUrl!.hashCode) +
-      (imageUrl.hashCode) +
-      (hasImage.hashCode);
+      (lastActiveAt == null ? 0 : lastActiveAt!.hashCode) +
+      (logoUrl == null ? 0 : logoUrl!.hashCode);
 
   @override
   String toString() =>
-      'OrganizationWithLogo[object=$object, id=$id, name=$name, slug=$slug, membersCount=$membersCount, missingMemberWithElevatedPermissions=$missingMemberWithElevatedPermissions, pendingInvitationsCount=$pendingInvitationsCount, maxAllowedMemberships=$maxAllowedMemberships, adminDeleteEnabled=$adminDeleteEnabled, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, createdBy=$createdBy, createdAt=$createdAt, updatedAt=$updatedAt, logoUrl=$logoUrl, imageUrl=$imageUrl, hasImage=$hasImage]';
+      'OrganizationWithLogo[object=$object, id=$id, name=$name, slug=$slug, imageUrl=$imageUrl, hasImage=$hasImage, membersCount=$membersCount, missingMemberWithElevatedPermissions=$missingMemberWithElevatedPermissions, pendingInvitationsCount=$pendingInvitationsCount, maxAllowedMemberships=$maxAllowedMemberships, adminDeleteEnabled=$adminDeleteEnabled, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, createdBy=$createdBy, createdAt=$createdAt, updatedAt=$updatedAt, lastActiveAt=$lastActiveAt, logoUrl=$logoUrl]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -156,6 +168,8 @@ class OrganizationWithLogo {
     json[r'id'] = this.id;
     json[r'name'] = this.name;
     json[r'slug'] = this.slug;
+    json[r'image_url'] = this.imageUrl;
+    json[r'has_image'] = this.hasImage;
     if (this.membersCount != null) {
       json[r'members_count'] = this.membersCount;
     } else {
@@ -183,13 +197,16 @@ class OrganizationWithLogo {
     }
     json[r'created_at'] = this.createdAt;
     json[r'updated_at'] = this.updatedAt;
+    if (this.lastActiveAt != null) {
+      json[r'last_active_at'] = this.lastActiveAt;
+    } else {
+      json[r'last_active_at'] = null;
+    }
     if (this.logoUrl != null) {
       json[r'logo_url'] = this.logoUrl;
     } else {
       json[r'logo_url'] = null;
     }
-    json[r'image_url'] = this.imageUrl;
-    json[r'has_image'] = this.hasImage;
     return json;
   }
 
@@ -218,6 +235,8 @@ class OrganizationWithLogo {
         id: mapValueOfType<String>(json, r'id')!,
         name: mapValueOfType<String>(json, r'name')!,
         slug: mapValueOfType<String>(json, r'slug')!,
+        imageUrl: mapValueOfType<String>(json, r'image_url')!,
+        hasImage: mapValueOfType<bool>(json, r'has_image')!,
         membersCount: mapValueOfType<int>(json, r'members_count'),
         missingMemberWithElevatedPermissions: mapValueOfType<bool>(
             json, r'missing_member_with_elevated_permissions'),
@@ -230,13 +249,13 @@ class OrganizationWithLogo {
         publicMetadata:
             mapCastOfType<String, Object>(json, r'public_metadata')!,
         privateMetadata:
-            mapCastOfType<String, Object>(json, r'private_metadata')!,
+            mapCastOfType<String, Object>(json, r'private_metadata') ??
+                const {},
         createdBy: mapValueOfType<String>(json, r'created_by'),
         createdAt: mapValueOfType<int>(json, r'created_at')!,
         updatedAt: mapValueOfType<int>(json, r'updated_at')!,
+        lastActiveAt: mapValueOfType<int>(json, r'last_active_at'),
         logoUrl: mapValueOfType<String>(json, r'logo_url'),
-        imageUrl: mapValueOfType<String>(json, r'image_url')!,
-        hasImage: mapValueOfType<bool>(json, r'has_image')!,
       );
     }
     return null;
@@ -297,14 +316,13 @@ class OrganizationWithLogo {
     'id',
     'name',
     'slug',
+    'image_url',
+    'has_image',
     'max_allowed_memberships',
     'admin_delete_enabled',
     'public_metadata',
-    'private_metadata',
     'created_at',
     'updated_at',
-    'image_url',
-    'has_image',
   };
 }
 

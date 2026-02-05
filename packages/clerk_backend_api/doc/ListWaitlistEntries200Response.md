@@ -1,8 +1,8 @@
-# clerk_backend_api.model.ListWaitlistEntries200Response
+# openapi.model.ListWaitlistEntries200Response
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties

@@ -1,8 +1,8 @@
-# clerk_backend_api.model.OAuthApplicationWithSecret
+# openapi.model.OAuthApplicationWithSecret
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -13,6 +13,11 @@ Name | Type | Description | Notes
 **instanceId** | **String** |  | 
 **name** | **String** |  | 
 **clientId** | **String** |  | 
+**clientUri** | **String** |  | 
+**clientImageUrl** | **String** |  | 
+**dynamicallyRegistered** | **bool** |  | 
+**consentScreenEnabled** | **bool** |  | 
+**pkceRequired** | **bool** |  | 
 **public** | **bool** |  | 
 **scopes** | **String** |  | 
 **redirectUris** | **List<String>** |  | [default to const []]

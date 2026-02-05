@@ -1,8 +1,8 @@
-# clerk_backend_api.model.RevokeInvitation200Response
+# openapi.model.RevokeInvitation200Response
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties

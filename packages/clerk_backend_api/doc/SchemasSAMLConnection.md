@@ -1,8 +1,8 @@
-# clerk_backend_api.model.SchemasSAMLConnection
+# openapi.model.SchemasSAMLConnection
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -11,7 +11,8 @@ Name | Type | Description | Notes
 **object** | **String** |  | 
 **id** | **String** |  | 
 **name** | **String** |  | 
-**domain** | **String** |  | 
+**domain** | **String** |  | [optional] 
+**domains** | **List<String>** |  | [optional] [default to const []]
 **idpEntityId** | **String** |  | 
 **idpSsoUrl** | **String** |  | 
 **idpCertificate** | **String** |  | 
@@ -26,9 +27,11 @@ Name | Type | Description | Notes
 **provider** | **String** |  | 
 **userCount** | **int** |  | 
 **syncUserAttributes** | **bool** |  | 
-**allowSubdomains** | **bool** |  | [optional] 
-**allowIdpInitiated** | **bool** |  | [optional] 
-**disableAdditionalIdentifications** | **bool** |  | [optional] 
+**allowSubdomains** | **bool** |  | 
+**allowIdpInitiated** | **bool** |  | 
+**disableAdditionalIdentifications** | **bool** |  | 
+**forceAuthn** | **bool** | Enable or deactivate ForceAuthn | 
+**enterpriseConnectionId** | **String** |  | [optional] 
 **createdAt** | **int** | Unix timestamp of creation.  | 
 **updatedAt** | **int** | Unix timestamp of last update.  | 
 

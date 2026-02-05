@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -20,6 +20,7 @@ class OrganizationMembershipPublicUserData {
     required this.imageUrl,
     required this.hasImage,
     this.identifier,
+    this.username,
   });
 
   String userId;
@@ -36,6 +37,8 @@ class OrganizationMembershipPublicUserData {
 
   String? identifier;
 
+  String? username;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -46,7 +49,8 @@ class OrganizationMembershipPublicUserData {
           other.profileImageUrl == profileImageUrl &&
           other.imageUrl == imageUrl &&
           other.hasImage == hasImage &&
-          other.identifier == identifier;
+          other.identifier == identifier &&
+          other.username == username;
 
   @override
   int get hashCode =>
@@ -57,11 +61,12 @@ class OrganizationMembershipPublicUserData {
       (profileImageUrl == null ? 0 : profileImageUrl!.hashCode) +
       (imageUrl.hashCode) +
       (hasImage.hashCode) +
-      (identifier == null ? 0 : identifier!.hashCode);
+      (identifier == null ? 0 : identifier!.hashCode) +
+      (username == null ? 0 : username!.hashCode);
 
   @override
   String toString() =>
-      'OrganizationMembershipPublicUserData[userId=$userId, firstName=$firstName, lastName=$lastName, profileImageUrl=$profileImageUrl, imageUrl=$imageUrl, hasImage=$hasImage, identifier=$identifier]';
+      'OrganizationMembershipPublicUserData[userId=$userId, firstName=$firstName, lastName=$lastName, profileImageUrl=$profileImageUrl, imageUrl=$imageUrl, hasImage=$hasImage, identifier=$identifier, username=$username]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -87,6 +92,11 @@ class OrganizationMembershipPublicUserData {
       json[r'identifier'] = this.identifier;
     } else {
       json[r'identifier'] = null;
+    }
+    if (this.username != null) {
+      json[r'username'] = this.username;
+    } else {
+      json[r'username'] = null;
     }
     return json;
   }
@@ -119,6 +129,7 @@ class OrganizationMembershipPublicUserData {
         imageUrl: mapValueOfType<String>(json, r'image_url')!,
         hasImage: mapValueOfType<bool>(json, r'has_image')!,
         identifier: mapValueOfType<String>(json, r'identifier'),
+        username: mapValueOfType<String>(json, r'username'),
       );
     }
     return null;

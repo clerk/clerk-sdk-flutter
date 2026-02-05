@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -83,7 +83,7 @@ class UsersApi {
 
   /// Create a new user
   ///
-  /// Creates a new user. Your user management settings determine how you should setup your user model.  Any email address and phone number created using this method will be marked as verified.  Note: If you are performing a migration, check out our guide on [zero downtime migrations](https://clerk.com/docs/deployments/migrate-overview).  A rate limit rule of 20 requests per 10 seconds is applied to this endpoint.
+  /// Creates a new user. Your user management settings determine how you should setup your user model.  Any email address and phone number created using this method will be marked as verified.  Note: If you are performing a migration, check out our guide on [zero downtime migrations](https://clerk.com/docs/deployments/migrate-overview).  The following rate limit rules apply to this endpoint: 1000 requests per 10 seconds for production instances and 100 requests per 10 seconds for development instances
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -118,7 +118,7 @@ class UsersApi {
 
   /// Create a new user
   ///
-  /// Creates a new user. Your user management settings determine how you should setup your user model.  Any email address and phone number created using this method will be marked as verified.  Note: If you are performing a migration, check out our guide on [zero downtime migrations](https://clerk.com/docs/deployments/migrate-overview).  A rate limit rule of 20 requests per 10 seconds is applied to this endpoint.
+  /// Creates a new user. Your user management settings determine how you should setup your user model.  Any email address and phone number created using this method will be marked as verified.  Note: If you are performing a migration, check out our guide on [zero downtime migrations](https://clerk.com/docs/deployments/migrate-overview).  The following rate limit rules apply to this endpoint: 1000 requests per 10 seconds for production instances and 100 requests per 10 seconds for development instances
   ///
   /// Parameters:
   ///
@@ -638,7 +638,7 @@ class UsersApi {
   ///
   /// * [int] offset:
   ///   Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`.
-  Future<List<GetOAuthAccessToken200ResponseInner>?> getOAuthAccessToken(
+  Future<List<OAuthAccessTokenInner>?> getOAuthAccessToken(
     String userId,
     String provider, {
     bool? paginated,
@@ -662,9 +662,8 @@ class UsersApi {
         response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
       return (await apiClient.deserializeAsync(
-                  responseBody, 'List<GetOAuthAccessToken200ResponseInner>')
-              as List)
-          .cast<GetOAuthAccessToken200ResponseInner>()
+              responseBody, 'List<OAuthAccessTokenInner>') as List)
+          .cast<OAuthAccessTokenInner>()
           .toList(growable: false);
     }
     return null;
@@ -736,6 +735,73 @@ class UsersApi {
     return null;
   }
 
+  /// Retrieve a user's billing subscription
+  ///
+  /// Retrieves the billing subscription for the specified user. This includes subscription details, active plans, billing information, and payment status. The subscription contains subscription items which represent the individual plans the user is subscribed to.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] userId (required):
+  ///   The ID of the user whose subscription to retrieve
+  Future<http.Response> getUserBillingSubscriptionWithHttpInfo(
+    String userId,
+  ) async {
+    // ignore: prefer_const_declarations
+    final path = r'/users/{user_id}/billing/subscription'
+        .replaceAll('{user_id}', userId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Retrieve a user's billing subscription
+  ///
+  /// Retrieves the billing subscription for the specified user. This includes subscription details, active plans, billing information, and payment status. The subscription contains subscription items which represent the individual plans the user is subscribed to.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] userId (required):
+  ///   The ID of the user whose subscription to retrieve
+  Future<CommerceSubscription?> getUserBillingSubscription(
+    String userId,
+  ) async {
+    final response = await getUserBillingSubscriptionWithHttpInfo(
+      userId,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'CommerceSubscription',
+      ) as CommerceSubscription;
+    }
+    return null;
+  }
+
   /// List all users
   ///
   /// Returns a list of all users. The users are returned sorted by creation date, with the newest users appearing first.
@@ -751,22 +817,22 @@ class UsersApi {
   ///   Returns users with the specified phone numbers. Accepts up to 100 phone numbers. Any phone numbers not found are ignored.
   ///
   /// * [List<String>] externalId:
-  ///   Returns users with the specified external ids. For each external id, the `+` and `-` can be prepended to the id, which denote whether the respective external id should be included or excluded from the result set. Accepts up to 100 external ids. Any external ids not found are ignored.
+  ///   Returns users with the specified external IDs. For each external ID, the `+` and `-` can be prepended to the ID, which denote whether the respective external ID should be included or excluded from the result set. Accepts up to 100 external IDs. Any external IDs not found are ignored.
   ///
   /// * [List<String>] username:
   ///   Returns users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored.
   ///
   /// * [List<String>] web3Wallet:
-  ///   Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored.
+  ///   Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored.
   ///
   /// * [List<String>] userId:
-  ///   Returns users with the user ids specified. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective user id should be included or excluded from the result set. Accepts up to 100 user ids. Any user ids not found are ignored.
+  ///   Returns users with the user IDs specified. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective user ID should be included or excluded from the result set. Accepts up to 100 user IDs. Any user IDs not found are ignored.
   ///
   /// * [List<String>] organizationId:
-  ///   Returns users that have memberships to the given organizations. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids.
+  ///   Returns users that have memberships to the given organizations. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs.
   ///
   /// * [String] query:
-  ///   Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
+  ///   Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
   ///
   /// * [String] emailAddressQuery:
   ///   Returns users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`.
@@ -798,6 +864,18 @@ class UsersApi {
   /// * [int] createdAtAfter:
   ///   Returns users who have been created after the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created after 2024-10-29.
   ///
+  /// * [int] lastSignInAtBefore:
+  ///   Returns users whose last sign-in was before the given date (with millisecond precision). Example: use 1700690400000 to retrieve users whose last sign-in was before 2023-11-23.
+  ///
+  /// * [int] lastSignInAtAfter:
+  ///   Returns users whose last sign-in was after the given date (with millisecond precision). Example: use 1700690400000 to retrieve users whose last sign-in was after 2023-11-23.
+  ///
+  /// * [String] provider:
+  ///   Returns users with external accounts for the specified OAuth provider. Must be used in combination with the `provider_user_id` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to retrieve a user with Google provider user ID 12345.
+  ///
+  /// * [List<String>] providerUserId:
+  ///   Returns users with the specified provider user IDs for a specific provider. Must be used in combination with the `provider` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to retrieve a user with Google provider user ID 12345. Accepts up to 100 provider user IDs. Any provider user IDs not found are ignored.
+  ///
   /// * [int] limit:
   ///   Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`.
   ///
@@ -825,6 +903,10 @@ class UsersApi {
     int? lastActiveAtSince,
     int? createdAtBefore,
     int? createdAtAfter,
+    int? lastSignInAtBefore,
+    int? lastSignInAtAfter,
+    String? provider,
+    List<String>? providerUserId,
     int? limit,
     int? offset,
     String? orderBy,
@@ -900,6 +982,21 @@ class UsersApi {
     if (createdAtAfter != null) {
       queryParams.addAll(_queryParams('', 'created_at_after', createdAtAfter));
     }
+    if (lastSignInAtBefore != null) {
+      queryParams.addAll(
+          _queryParams('', 'last_sign_in_at_before', lastSignInAtBefore));
+    }
+    if (lastSignInAtAfter != null) {
+      queryParams
+          .addAll(_queryParams('', 'last_sign_in_at_after', lastSignInAtAfter));
+    }
+    if (provider != null) {
+      queryParams.addAll(_queryParams('', 'provider', provider));
+    }
+    if (providerUserId != null) {
+      queryParams
+          .addAll(_queryParams('multi', 'provider_user_id', providerUserId));
+    }
     if (limit != null) {
       queryParams.addAll(_queryParams('', 'limit', limit));
     }
@@ -936,22 +1033,22 @@ class UsersApi {
   ///   Returns users with the specified phone numbers. Accepts up to 100 phone numbers. Any phone numbers not found are ignored.
   ///
   /// * [List<String>] externalId:
-  ///   Returns users with the specified external ids. For each external id, the `+` and `-` can be prepended to the id, which denote whether the respective external id should be included or excluded from the result set. Accepts up to 100 external ids. Any external ids not found are ignored.
+  ///   Returns users with the specified external IDs. For each external ID, the `+` and `-` can be prepended to the ID, which denote whether the respective external ID should be included or excluded from the result set. Accepts up to 100 external IDs. Any external IDs not found are ignored.
   ///
   /// * [List<String>] username:
   ///   Returns users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored.
   ///
   /// * [List<String>] web3Wallet:
-  ///   Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored.
+  ///   Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored.
   ///
   /// * [List<String>] userId:
-  ///   Returns users with the user ids specified. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective user id should be included or excluded from the result set. Accepts up to 100 user ids. Any user ids not found are ignored.
+  ///   Returns users with the user IDs specified. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective user ID should be included or excluded from the result set. Accepts up to 100 user IDs. Any user IDs not found are ignored.
   ///
   /// * [List<String>] organizationId:
-  ///   Returns users that have memberships to the given organizations. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids.
+  ///   Returns users that have memberships to the given organizations. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs.
   ///
   /// * [String] query:
-  ///   Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
+  ///   Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
   ///
   /// * [String] emailAddressQuery:
   ///   Returns users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`.
@@ -983,6 +1080,18 @@ class UsersApi {
   /// * [int] createdAtAfter:
   ///   Returns users who have been created after the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created after 2024-10-29.
   ///
+  /// * [int] lastSignInAtBefore:
+  ///   Returns users whose last sign-in was before the given date (with millisecond precision). Example: use 1700690400000 to retrieve users whose last sign-in was before 2023-11-23.
+  ///
+  /// * [int] lastSignInAtAfter:
+  ///   Returns users whose last sign-in was after the given date (with millisecond precision). Example: use 1700690400000 to retrieve users whose last sign-in was after 2023-11-23.
+  ///
+  /// * [String] provider:
+  ///   Returns users with external accounts for the specified OAuth provider. Must be used in combination with the `provider_user_id` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to retrieve a user with Google provider user ID 12345.
+  ///
+  /// * [List<String>] providerUserId:
+  ///   Returns users with the specified provider user IDs for a specific provider. Must be used in combination with the `provider` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to retrieve a user with Google provider user ID 12345. Accepts up to 100 provider user IDs. Any provider user IDs not found are ignored.
+  ///
   /// * [int] limit:
   ///   Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`.
   ///
@@ -1010,6 +1119,10 @@ class UsersApi {
     int? lastActiveAtSince,
     int? createdAtBefore,
     int? createdAtAfter,
+    int? lastSignInAtBefore,
+    int? lastSignInAtAfter,
+    String? provider,
+    List<String>? providerUserId,
     int? limit,
     int? offset,
     String? orderBy,
@@ -1033,6 +1146,10 @@ class UsersApi {
       lastActiveAtSince: lastActiveAtSince,
       createdAtBefore: createdAtBefore,
       createdAtAfter: createdAtAfter,
+      lastSignInAtBefore: lastSignInAtBefore,
+      lastSignInAtAfter: lastSignInAtAfter,
+      provider: provider,
+      providerUserId: providerUserId,
       limit: limit,
       offset: offset,
       orderBy: orderBy,
@@ -1069,22 +1186,22 @@ class UsersApi {
   ///   Counts users with the specified phone numbers. Accepts up to 100 phone numbers. Any phone numbers not found are ignored.
   ///
   /// * [List<String>] externalId:
-  ///   Counts users with the specified external ids. Accepts up to 100 external ids. Any external ids not found are ignored.
+  ///   Counts users with the specified external IDs. Accepts up to 100 external IDs. Any external IDs not found are ignored.
   ///
   /// * [List<String>] username:
   ///   Counts users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored.
   ///
   /// * [List<String>] web3Wallet:
-  ///   Counts users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored.
+  ///   Counts users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored.
   ///
   /// * [List<String>] userId:
-  ///   Counts users with the user ids specified. Accepts up to 100 user ids. Any user ids not found are ignored.
+  ///   Counts users with the user IDs specified. Accepts up to 100 user IDs. Any user IDs not found are ignored.
   ///
   /// * [List<String>] organizationId:
-  ///   Returns users that have memberships to the given organizations. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids.
+  ///   Returns users that have memberships to the given organizations. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs.
   ///
   /// * [String] query:
-  ///   Counts users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
+  ///   Counts users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
   ///
   /// * [String] emailAddressQuery:
   ///   Counts users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`, and will be included in the resulting count.
@@ -1115,6 +1232,18 @@ class UsersApi {
   ///
   /// * [int] createdAtAfter:
   ///   Returns users who have been created after the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created after 2024-10-29.
+  ///
+  /// * [int] lastSignInAtBefore:
+  ///   Counts users whose last sign-in was before the given date (with millisecond precision). Example: use 1700690400000 to count users whose last sign-in was before 2023-11-23.
+  ///
+  /// * [int] lastSignInAtAfter:
+  ///   Counts users whose last sign-in was after the given date (with millisecond precision). Example: use 1700690400000 to count users whose last sign-in was after 2023-11-23.
+  ///
+  /// * [String] provider:
+  ///   Counts users with external accounts for the specified OAuth provider. Must be used in combination with the `provider_user_id` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to count users with Google provider user ID 12345. Accepts up to 100 providers.
+  ///
+  /// * [List<String>] providerUserId:
+  ///   Counts users with the specified provider user IDs for a specific provider. Must be used in combination with the `provider` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to count users with Google provider user ID 12345. Accepts up to 100 provider user IDs. Any provider user IDs not found are ignored.
   Future<http.Response> getUsersCountWithHttpInfo({
     List<String>? emailAddress,
     List<String>? phoneNumber,
@@ -1134,6 +1263,10 @@ class UsersApi {
     int? lastActiveAtSince,
     int? createdAtBefore,
     int? createdAtAfter,
+    int? lastSignInAtBefore,
+    int? lastSignInAtAfter,
+    String? provider,
+    List<String>? providerUserId,
   }) async {
     // ignore: prefer_const_declarations
     final path = r'/users/count';
@@ -1206,6 +1339,21 @@ class UsersApi {
     if (createdAtAfter != null) {
       queryParams.addAll(_queryParams('', 'created_at_after', createdAtAfter));
     }
+    if (lastSignInAtBefore != null) {
+      queryParams.addAll(
+          _queryParams('', 'last_sign_in_at_before', lastSignInAtBefore));
+    }
+    if (lastSignInAtAfter != null) {
+      queryParams
+          .addAll(_queryParams('', 'last_sign_in_at_after', lastSignInAtAfter));
+    }
+    if (provider != null) {
+      queryParams.addAll(_queryParams('', 'provider', provider));
+    }
+    if (providerUserId != null) {
+      queryParams
+          .addAll(_queryParams('multi', 'provider_user_id', providerUserId));
+    }
 
     const contentTypes = <String>[];
 
@@ -1233,22 +1381,22 @@ class UsersApi {
   ///   Counts users with the specified phone numbers. Accepts up to 100 phone numbers. Any phone numbers not found are ignored.
   ///
   /// * [List<String>] externalId:
-  ///   Counts users with the specified external ids. Accepts up to 100 external ids. Any external ids not found are ignored.
+  ///   Counts users with the specified external IDs. Accepts up to 100 external IDs. Any external IDs not found are ignored.
   ///
   /// * [List<String>] username:
   ///   Counts users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored.
   ///
   /// * [List<String>] web3Wallet:
-  ///   Counts users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored.
+  ///   Counts users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored.
   ///
   /// * [List<String>] userId:
-  ///   Counts users with the user ids specified. Accepts up to 100 user ids. Any user ids not found are ignored.
+  ///   Counts users with the user IDs specified. Accepts up to 100 user IDs. Any user IDs not found are ignored.
   ///
   /// * [List<String>] organizationId:
-  ///   Returns users that have memberships to the given organizations. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids.
+  ///   Returns users that have memberships to the given organizations. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs.
   ///
   /// * [String] query:
-  ///   Counts users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
+  ///   Counts users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
   ///
   /// * [String] emailAddressQuery:
   ///   Counts users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`, and will be included in the resulting count.
@@ -1279,6 +1427,18 @@ class UsersApi {
   ///
   /// * [int] createdAtAfter:
   ///   Returns users who have been created after the given date (with millisecond precision). Example: use 1730160000000 to retrieve users who have been created after 2024-10-29.
+  ///
+  /// * [int] lastSignInAtBefore:
+  ///   Counts users whose last sign-in was before the given date (with millisecond precision). Example: use 1700690400000 to count users whose last sign-in was before 2023-11-23.
+  ///
+  /// * [int] lastSignInAtAfter:
+  ///   Counts users whose last sign-in was after the given date (with millisecond precision). Example: use 1700690400000 to count users whose last sign-in was after 2023-11-23.
+  ///
+  /// * [String] provider:
+  ///   Counts users with external accounts for the specified OAuth provider. Must be used in combination with the `provider_user_id` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to count users with Google provider user ID 12345. Accepts up to 100 providers.
+  ///
+  /// * [List<String>] providerUserId:
+  ///   Counts users with the specified provider user IDs for a specific provider. Must be used in combination with the `provider` parameter. For example, use `provider=oauth_google&provider_user_id=12345` to count users with Google provider user ID 12345. Accepts up to 100 provider user IDs. Any provider user IDs not found are ignored.
   Future<TotalCount?> getUsersCount({
     List<String>? emailAddress,
     List<String>? phoneNumber,
@@ -1298,6 +1458,10 @@ class UsersApi {
     int? lastActiveAtSince,
     int? createdAtBefore,
     int? createdAtAfter,
+    int? lastSignInAtBefore,
+    int? lastSignInAtAfter,
+    String? provider,
+    List<String>? providerUserId,
   }) async {
     final response = await getUsersCountWithHttpInfo(
       emailAddress: emailAddress,
@@ -1318,6 +1482,10 @@ class UsersApi {
       lastActiveAtSince: lastActiveAtSince,
       createdAtBefore: createdAtBefore,
       createdAtAfter: createdAtAfter,
+      lastSignInAtBefore: lastSignInAtBefore,
+      lastSignInAtAfter: lastSignInAtAfter,
+      provider: provider,
+      providerUserId: providerUserId,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -1384,6 +1552,80 @@ class UsersApi {
   ) async {
     final response = await lockUserWithHttpInfo(
       userId,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'User',
+      ) as User;
+    }
+    return null;
+  }
+
+  /// Set a user's password as compromised
+  ///
+  /// Sets the given user's password as compromised. The user will be prompted to reset their password on their next sign-in.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] userId (required):
+  ///   The ID of the user to set the password as compromised
+  ///
+  /// * [SetUserPasswordCompromisedRequest] setUserPasswordCompromisedRequest:
+  Future<http.Response> setUserPasswordCompromisedWithHttpInfo(
+    String userId, {
+    SetUserPasswordCompromisedRequest? setUserPasswordCompromisedRequest,
+  }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/users/{user_id}/password/set_compromised'
+        .replaceAll('{user_id}', userId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = setUserPasswordCompromisedRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Set a user's password as compromised
+  ///
+  /// Sets the given user's password as compromised. The user will be prompted to reset their password on their next sign-in.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] userId (required):
+  ///   The ID of the user to set the password as compromised
+  ///
+  /// * [SetUserPasswordCompromisedRequest] setUserPasswordCompromisedRequest:
+  Future<User?> setUserPasswordCompromised(
+    String userId, {
+    SetUserPasswordCompromisedRequest? setUserPasswordCompromisedRequest,
+  }) async {
+    final response = await setUserPasswordCompromisedWithHttpInfo(
+      userId,
+      setUserPasswordCompromisedRequest: setUserPasswordCompromisedRequest,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -1600,6 +1842,73 @@ class UsersApi {
     String userId,
   ) async {
     final response = await unlockUserWithHttpInfo(
+      userId,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'User',
+      ) as User;
+    }
+    return null;
+  }
+
+  /// Unset a user's password as compromised
+  ///
+  /// Sets the given user's password as no longer compromised. The user will no longer be prompted to reset their password on their next sign-in.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] userId (required):
+  ///   The ID of the user to unset the compromised status for
+  Future<http.Response> unsetUserPasswordCompromisedWithHttpInfo(
+    String userId,
+  ) async {
+    // ignore: prefer_const_declarations
+    final path = r'/users/{user_id}/password/unset_compromised'
+        .replaceAll('{user_id}', userId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Unset a user's password as compromised
+  ///
+  /// Sets the given user's password as no longer compromised. The user will no longer be prompted to reset their password on their next sign-in.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] userId (required):
+  ///   The ID of the user to unset the compromised status for
+  Future<User?> unsetUserPasswordCompromised(
+    String userId,
+  ) async {
+    final response = await unsetUserPasswordCompromisedWithHttpInfo(
       userId,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
@@ -1920,6 +2229,71 @@ class UsersApi {
     return null;
   }
 
+  /// Ban multiple users
+  ///
+  /// Marks multiple users as banned, which means that all their sessions are revoked and they are not allowed to sign in again.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [UsersBanRequest] usersBanRequest (required):
+  Future<http.Response> usersBanWithHttpInfo(
+    UsersBanRequest usersBanRequest,
+  ) async {
+    // ignore: prefer_const_declarations
+    final path = r'/users/ban';
+
+    // ignore: prefer_final_locals
+    Object? postBody = usersBanRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Ban multiple users
+  ///
+  /// Marks multiple users as banned, which means that all their sessions are revoked and they are not allowed to sign in again.
+  ///
+  /// Parameters:
+  ///
+  /// * [UsersBanRequest] usersBanRequest (required):
+  Future<List<User>?> usersBan(
+    UsersBanRequest usersBanRequest,
+  ) async {
+    final response = await usersBanWithHttpInfo(
+      usersBanRequest,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      final responseBody = await _decodeBodyBytes(response);
+      return (await apiClient.deserializeAsync(responseBody, 'List<User>')
+              as List)
+          .cast<User>()
+          .toList(growable: false);
+    }
+    return null;
+  }
+
   /// Retrieve all invitations for a user
   ///
   /// Retrieve a paginated list of the user's organization invitations
@@ -2113,6 +2487,71 @@ class UsersApi {
         await _decodeBodyBytes(response),
         'OrganizationMemberships',
       ) as OrganizationMemberships;
+    }
+    return null;
+  }
+
+  /// Unban multiple users
+  ///
+  /// Removes the ban mark from multiple users.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [UsersUnbanRequest] usersUnbanRequest (required):
+  Future<http.Response> usersUnbanWithHttpInfo(
+    UsersUnbanRequest usersUnbanRequest,
+  ) async {
+    // ignore: prefer_const_declarations
+    final path = r'/users/unban';
+
+    // ignore: prefer_final_locals
+    Object? postBody = usersUnbanRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Unban multiple users
+  ///
+  /// Removes the ban mark from multiple users.
+  ///
+  /// Parameters:
+  ///
+  /// * [UsersUnbanRequest] usersUnbanRequest (required):
+  Future<List<User>?> usersUnban(
+    UsersUnbanRequest usersUnbanRequest,
+  ) async {
+    final response = await usersUnbanWithHttpInfo(
+      usersUnbanRequest,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      final responseBody = await _decodeBodyBytes(response);
+      return (await apiClient.deserializeAsync(responseBody, 'List<User>')
+              as List)
+          .cast<User>()
+          .toList(growable: false);
     }
     return null;
   }

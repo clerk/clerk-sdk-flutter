@@ -1,8 +1,8 @@
-# clerk_backend_api.model.OrganizationDomain
+# openapi.model.OrganizationDomain
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -14,9 +14,10 @@ Name | Type | Description | Notes
 **name** | **String** | Name of the organization domain | 
 **enrollmentMode** | **String** | Mode of enrollment for the domain | 
 **affiliationEmailAddress** | **String** | Affiliation email address for the domain, if available. | 
-**verification** | [**OrganizationDomainVerification**](OrganizationDomainVerification.md) |  | 
+**verification** | [**OrganizationDomainVerification**](OrganizationDomainVerification.md) | Verification details for the domain | 
 **totalPendingInvitations** | **int** | Total number of pending invitations associated with this domain | 
 **totalPendingSuggestions** | **int** | Total number of pending suggestions associated with this domain | 
+**publicOrganizationData** | [**OrganizationInvitationPublicOrganizationData**](OrganizationInvitationPublicOrganizationData.md) | Public organization data associated with this domain | [optional] 
 **createdAt** | **int** | Unix timestamp when the domain was created | 
 **updatedAt** | **int** | Unix timestamp of the last update to the domain | 
 

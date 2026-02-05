@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -15,6 +15,7 @@ class UpdateSAMLConnectionRequest {
   UpdateSAMLConnectionRequest({
     this.name,
     this.domain,
+    this.domains = const [],
     this.idpEntityId,
     this.idpSsoUrl,
     this.idpCertificate,
@@ -27,6 +28,7 @@ class UpdateSAMLConnectionRequest {
     this.allowSubdomains,
     this.allowIdpInitiated,
     this.disableAdditionalIdentifications,
+    this.forceAuthn,
   });
 
   /// The name of the new SAML Connection
@@ -35,10 +37,13 @@ class UpdateSAMLConnectionRequest {
   /// The domain to use for the new SAML Connection
   String? domain;
 
-  /// The entity id as provided by the IdP
+  /// A list of the domains on use for the SAML connection
+  List<String>? domains;
+
+  /// The Entity ID as provided by the IdP
   String? idpEntityId;
 
-  /// The SSO url as provided by the IdP
+  /// The SSO URL as provided by the IdP
   String? idpSsoUrl;
 
   /// The x509 certificated as provided by the IdP
@@ -53,7 +58,7 @@ class UpdateSAMLConnectionRequest {
   /// The ID of the organization to which users of this SAML Connection will be added
   String? organizationId;
 
-  UpdateSAMLConnectionRequestAttributeMapping? attributeMapping;
+  CreateSAMLConnectionRequestAttributeMapping? attributeMapping;
 
   /// Activate or de-activate the SAML Connection
   bool? active;
@@ -70,12 +75,22 @@ class UpdateSAMLConnectionRequest {
   /// Enable or deactivate additional identifications
   bool? disableAdditionalIdentifications;
 
+  /// Enable or deactivate ForceAuthn
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? forceAuthn;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is UpdateSAMLConnectionRequest &&
           other.name == name &&
           other.domain == domain &&
+          _deepEquality.equals(other.domains, domains) &&
           other.idpEntityId == idpEntityId &&
           other.idpSsoUrl == idpSsoUrl &&
           other.idpCertificate == idpCertificate &&
@@ -88,13 +103,15 @@ class UpdateSAMLConnectionRequest {
           other.allowSubdomains == allowSubdomains &&
           other.allowIdpInitiated == allowIdpInitiated &&
           other.disableAdditionalIdentifications ==
-              disableAdditionalIdentifications;
+              disableAdditionalIdentifications &&
+          other.forceAuthn == forceAuthn;
 
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
       (name == null ? 0 : name!.hashCode) +
       (domain == null ? 0 : domain!.hashCode) +
+      (domains == null ? 0 : domains!.hashCode) +
       (idpEntityId == null ? 0 : idpEntityId!.hashCode) +
       (idpSsoUrl == null ? 0 : idpSsoUrl!.hashCode) +
       (idpCertificate == null ? 0 : idpCertificate!.hashCode) +
@@ -108,11 +125,12 @@ class UpdateSAMLConnectionRequest {
       (allowIdpInitiated == null ? 0 : allowIdpInitiated!.hashCode) +
       (disableAdditionalIdentifications == null
           ? 0
-          : disableAdditionalIdentifications!.hashCode);
+          : disableAdditionalIdentifications!.hashCode) +
+      (forceAuthn == null ? 0 : forceAuthn!.hashCode);
 
   @override
   String toString() =>
-      'UpdateSAMLConnectionRequest[name=$name, domain=$domain, idpEntityId=$idpEntityId, idpSsoUrl=$idpSsoUrl, idpCertificate=$idpCertificate, idpMetadataUrl=$idpMetadataUrl, idpMetadata=$idpMetadata, organizationId=$organizationId, attributeMapping=$attributeMapping, active=$active, syncUserAttributes=$syncUserAttributes, allowSubdomains=$allowSubdomains, allowIdpInitiated=$allowIdpInitiated, disableAdditionalIdentifications=$disableAdditionalIdentifications]';
+      'UpdateSAMLConnectionRequest[name=$name, domain=$domain, domains=$domains, idpEntityId=$idpEntityId, idpSsoUrl=$idpSsoUrl, idpCertificate=$idpCertificate, idpMetadataUrl=$idpMetadataUrl, idpMetadata=$idpMetadata, organizationId=$organizationId, attributeMapping=$attributeMapping, active=$active, syncUserAttributes=$syncUserAttributes, allowSubdomains=$allowSubdomains, allowIdpInitiated=$allowIdpInitiated, disableAdditionalIdentifications=$disableAdditionalIdentifications, forceAuthn=$forceAuthn]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -125,6 +143,11 @@ class UpdateSAMLConnectionRequest {
       json[r'domain'] = this.domain;
     } else {
       json[r'domain'] = null;
+    }
+    if (this.domains != null) {
+      json[r'domains'] = this.domains;
+    } else {
+      json[r'domains'] = null;
     }
     if (this.idpEntityId != null) {
       json[r'idp_entity_id'] = this.idpEntityId;
@@ -187,6 +210,11 @@ class UpdateSAMLConnectionRequest {
     } else {
       json[r'disable_additional_identifications'] = null;
     }
+    if (this.forceAuthn != null) {
+      json[r'force_authn'] = this.forceAuthn;
+    } else {
+      json[r'force_authn'] = null;
+    }
     return json;
   }
 
@@ -213,13 +241,18 @@ class UpdateSAMLConnectionRequest {
       return UpdateSAMLConnectionRequest(
         name: mapValueOfType<String>(json, r'name'),
         domain: mapValueOfType<String>(json, r'domain'),
+        domains: json[r'domains'] is Iterable
+            ? (json[r'domains'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
+            : const [],
         idpEntityId: mapValueOfType<String>(json, r'idp_entity_id'),
         idpSsoUrl: mapValueOfType<String>(json, r'idp_sso_url'),
         idpCertificate: mapValueOfType<String>(json, r'idp_certificate'),
         idpMetadataUrl: mapValueOfType<String>(json, r'idp_metadata_url'),
         idpMetadata: mapValueOfType<String>(json, r'idp_metadata'),
         organizationId: mapValueOfType<String>(json, r'organization_id'),
-        attributeMapping: UpdateSAMLConnectionRequestAttributeMapping.fromJson(
+        attributeMapping: CreateSAMLConnectionRequestAttributeMapping.fromJson(
             json[r'attribute_mapping']),
         active: mapValueOfType<bool>(json, r'active'),
         syncUserAttributes: mapValueOfType<bool>(json, r'sync_user_attributes'),
@@ -227,6 +260,7 @@ class UpdateSAMLConnectionRequest {
         allowIdpInitiated: mapValueOfType<bool>(json, r'allow_idp_initiated'),
         disableAdditionalIdentifications:
             mapValueOfType<bool>(json, r'disable_additional_identifications'),
+        forceAuthn: mapValueOfType<bool>(json, r'force_authn'),
       );
     }
     return null;

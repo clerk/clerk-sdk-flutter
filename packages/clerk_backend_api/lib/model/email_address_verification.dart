@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -13,13 +13,17 @@ part of openapi.api;
 class EmailAddressVerification {
   /// Returns a new [EmailAddressVerification] instance.
   EmailAddressVerification({
+    this.object,
     required this.status,
     required this.strategy,
     required this.attempts,
     required this.expireAt,
     this.verifiedAtClient,
     this.error,
+    this.externalVerificationRedirectUrl,
   });
+
+  EmailAddressVerificationObjectEnum? object;
 
   EmailAddressVerificationStatusEnum status;
 
@@ -31,35 +35,49 @@ class EmailAddressVerification {
 
   String? verifiedAtClient;
 
-  FromOAuthError? error;
+  VerificationFromOauthError? error;
+
+  String? externalVerificationRedirectUrl;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is EmailAddressVerification &&
+          other.object == object &&
           other.status == status &&
           other.strategy == strategy &&
           other.attempts == attempts &&
           other.expireAt == expireAt &&
           other.verifiedAtClient == verifiedAtClient &&
-          other.error == error;
+          other.error == error &&
+          other.externalVerificationRedirectUrl ==
+              externalVerificationRedirectUrl;
 
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
+      (object == null ? 0 : object!.hashCode) +
       (status.hashCode) +
       (strategy.hashCode) +
       (attempts == null ? 0 : attempts!.hashCode) +
       (expireAt == null ? 0 : expireAt!.hashCode) +
       (verifiedAtClient == null ? 0 : verifiedAtClient!.hashCode) +
-      (error == null ? 0 : error!.hashCode);
+      (error == null ? 0 : error!.hashCode) +
+      (externalVerificationRedirectUrl == null
+          ? 0
+          : externalVerificationRedirectUrl!.hashCode);
 
   @override
   String toString() =>
-      'EmailAddressVerification[status=$status, strategy=$strategy, attempts=$attempts, expireAt=$expireAt, verifiedAtClient=$verifiedAtClient, error=$error]';
+      'EmailAddressVerification[object=$object, status=$status, strategy=$strategy, attempts=$attempts, expireAt=$expireAt, verifiedAtClient=$verifiedAtClient, error=$error, externalVerificationRedirectUrl=$externalVerificationRedirectUrl]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    if (this.object != null) {
+      json[r'object'] = this.object;
+    } else {
+      json[r'object'] = null;
+    }
     json[r'status'] = this.status;
     json[r'strategy'] = this.strategy;
     if (this.attempts != null) {
@@ -81,6 +99,12 @@ class EmailAddressVerification {
       json[r'error'] = this.error;
     } else {
       json[r'error'] = null;
+    }
+    if (this.externalVerificationRedirectUrl != null) {
+      json[r'external_verification_redirect_url'] =
+          this.externalVerificationRedirectUrl;
+    } else {
+      json[r'external_verification_redirect_url'] = null;
     }
     return json;
   }
@@ -106,13 +130,16 @@ class EmailAddressVerification {
       }());
 
       return EmailAddressVerification(
+        object: EmailAddressVerificationObjectEnum.fromJson(json[r'object']),
         status: EmailAddressVerificationStatusEnum.fromJson(json[r'status'])!,
         strategy:
             EmailAddressVerificationStrategyEnum.fromJson(json[r'strategy'])!,
         attempts: mapValueOfType<int>(json, r'attempts'),
         expireAt: mapValueOfType<int>(json, r'expire_at'),
         verifiedAtClient: mapValueOfType<String>(json, r'verified_at_client'),
-        error: FromOAuthError.fromJson(json[r'error']),
+        error: VerificationFromOauthError.fromJson(json[r'error']),
+        externalVerificationRedirectUrl:
+            mapValueOfType<String>(json, r'external_verification_redirect_url'),
       );
     }
     return null;
@@ -176,6 +203,83 @@ class EmailAddressVerification {
   };
 }
 
+class EmailAddressVerificationObjectEnum {
+  /// Instantiate a new enum with the provided [value].
+  const EmailAddressVerificationObjectEnum._(this.value);
+
+  /// The underlying value of this enum member.
+  final String value;
+
+  @override
+  String toString() => value;
+
+  String toJson() => value;
+
+  static const verificationEmailLink =
+      EmailAddressVerificationObjectEnum._(r'verification_email_link');
+
+  /// List of all possible values in this [enum][EmailAddressVerificationObjectEnum].
+  static const values = <EmailAddressVerificationObjectEnum>[
+    verificationEmailLink,
+  ];
+
+  static EmailAddressVerificationObjectEnum? fromJson(dynamic value) =>
+      EmailAddressVerificationObjectEnumTypeTransformer().decode(value);
+
+  static List<EmailAddressVerificationObjectEnum> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
+    final result = <EmailAddressVerificationObjectEnum>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = EmailAddressVerificationObjectEnum.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+}
+
+/// Transformation class that can [encode] an instance of [EmailAddressVerificationObjectEnum] to String,
+/// and [decode] dynamic data back to [EmailAddressVerificationObjectEnum].
+class EmailAddressVerificationObjectEnumTypeTransformer {
+  factory EmailAddressVerificationObjectEnumTypeTransformer() =>
+      _instance ??= const EmailAddressVerificationObjectEnumTypeTransformer._();
+
+  const EmailAddressVerificationObjectEnumTypeTransformer._();
+
+  String encode(EmailAddressVerificationObjectEnum data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a EmailAddressVerificationObjectEnum.
+  ///
+  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
+  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
+  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
+  ///
+  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
+  /// and users are still using an old app with the old code.
+  EmailAddressVerificationObjectEnum? decode(dynamic data,
+      {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        case r'verification_email_link':
+          return EmailAddressVerificationObjectEnum.verificationEmailLink;
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [EmailAddressVerificationObjectEnumTypeTransformer] instance.
+  static EmailAddressVerificationObjectEnumTypeTransformer? _instance;
+}
+
 class EmailAddressVerificationStatusEnum {
   /// Instantiate a new enum with the provided [value].
   const EmailAddressVerificationStatusEnum._(this.value);
@@ -190,12 +294,14 @@ class EmailAddressVerificationStatusEnum {
 
   static const unverified = EmailAddressVerificationStatusEnum._(r'unverified');
   static const verified = EmailAddressVerificationStatusEnum._(r'verified');
+  static const failed = EmailAddressVerificationStatusEnum._(r'failed');
   static const expired = EmailAddressVerificationStatusEnum._(r'expired');
 
   /// List of all possible values in this [enum][EmailAddressVerificationStatusEnum].
   static const values = <EmailAddressVerificationStatusEnum>[
     unverified,
     verified,
+    failed,
     expired,
   ];
 
@@ -245,6 +351,8 @@ class EmailAddressVerificationStatusEnumTypeTransformer {
           return EmailAddressVerificationStatusEnum.unverified;
         case r'verified':
           return EmailAddressVerificationStatusEnum.verified;
+        case r'failed':
+          return EmailAddressVerificationStatusEnum.failed;
         case r'expired':
           return EmailAddressVerificationStatusEnum.expired;
         default:
@@ -272,11 +380,12 @@ class EmailAddressVerificationStrategyEnum {
 
   String toJson() => value;
 
-  static const ticket = EmailAddressVerificationStrategyEnum._(r'ticket');
+  static const emailLink =
+      EmailAddressVerificationStrategyEnum._(r'email_link');
 
   /// List of all possible values in this [enum][EmailAddressVerificationStrategyEnum].
   static const values = <EmailAddressVerificationStrategyEnum>[
-    ticket,
+    emailLink,
   ];
 
   static EmailAddressVerificationStrategyEnum? fromJson(dynamic value) =>
@@ -321,8 +430,8 @@ class EmailAddressVerificationStrategyEnumTypeTransformer {
       {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'ticket':
-          return EmailAddressVerificationStrategyEnum.ticket;
+        case r'email_link':
+          return EmailAddressVerificationStrategyEnum.emailLink;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');

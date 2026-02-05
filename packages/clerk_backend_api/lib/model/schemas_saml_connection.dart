@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -16,7 +16,8 @@ class SchemasSAMLConnection {
     required this.object,
     required this.id,
     required this.name,
-    required this.domain,
+    this.domain,
+    this.domains = const [],
     required this.idpEntityId,
     required this.idpSsoUrl,
     required this.idpCertificate,
@@ -31,9 +32,11 @@ class SchemasSAMLConnection {
     required this.provider,
     required this.userCount,
     required this.syncUserAttributes,
-    this.allowSubdomains,
-    this.allowIdpInitiated,
-    this.disableAdditionalIdentifications,
+    required this.allowSubdomains,
+    required this.allowIdpInitiated,
+    required this.disableAdditionalIdentifications,
+    required this.forceAuthn,
+    this.enterpriseConnectionId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -44,7 +47,15 @@ class SchemasSAMLConnection {
 
   String name;
 
-  String domain;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? domain;
+
+  List<String> domains;
 
   String? idpEntityId;
 
@@ -80,29 +91,16 @@ class SchemasSAMLConnection {
 
   bool syncUserAttributes;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? allowSubdomains;
+  bool allowSubdomains;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? allowIdpInitiated;
+  bool allowIdpInitiated;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? disableAdditionalIdentifications;
+  bool disableAdditionalIdentifications;
+
+  /// Enable or deactivate ForceAuthn
+  bool forceAuthn;
+
+  String? enterpriseConnectionId;
 
   /// Unix timestamp of creation.
   int createdAt;
@@ -118,6 +116,7 @@ class SchemasSAMLConnection {
           other.id == id &&
           other.name == name &&
           other.domain == domain &&
+          _deepEquality.equals(other.domains, domains) &&
           other.idpEntityId == idpEntityId &&
           other.idpSsoUrl == idpSsoUrl &&
           other.idpCertificate == idpCertificate &&
@@ -136,6 +135,8 @@ class SchemasSAMLConnection {
           other.allowIdpInitiated == allowIdpInitiated &&
           other.disableAdditionalIdentifications ==
               disableAdditionalIdentifications &&
+          other.forceAuthn == forceAuthn &&
+          other.enterpriseConnectionId == enterpriseConnectionId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt;
 
@@ -145,7 +146,8 @@ class SchemasSAMLConnection {
       (object.hashCode) +
       (id.hashCode) +
       (name.hashCode) +
-      (domain.hashCode) +
+      (domain == null ? 0 : domain!.hashCode) +
+      (domains.hashCode) +
       (idpEntityId == null ? 0 : idpEntityId!.hashCode) +
       (idpSsoUrl == null ? 0 : idpSsoUrl!.hashCode) +
       (idpCertificate == null ? 0 : idpCertificate!.hashCode) +
@@ -160,24 +162,29 @@ class SchemasSAMLConnection {
       (provider.hashCode) +
       (userCount.hashCode) +
       (syncUserAttributes.hashCode) +
-      (allowSubdomains == null ? 0 : allowSubdomains!.hashCode) +
-      (allowIdpInitiated == null ? 0 : allowIdpInitiated!.hashCode) +
-      (disableAdditionalIdentifications == null
-          ? 0
-          : disableAdditionalIdentifications!.hashCode) +
+      (allowSubdomains.hashCode) +
+      (allowIdpInitiated.hashCode) +
+      (disableAdditionalIdentifications.hashCode) +
+      (forceAuthn.hashCode) +
+      (enterpriseConnectionId == null ? 0 : enterpriseConnectionId!.hashCode) +
       (createdAt.hashCode) +
       (updatedAt.hashCode);
 
   @override
   String toString() =>
-      'SchemasSAMLConnection[object=$object, id=$id, name=$name, domain=$domain, idpEntityId=$idpEntityId, idpSsoUrl=$idpSsoUrl, idpCertificate=$idpCertificate, idpMetadataUrl=$idpMetadataUrl, idpMetadata=$idpMetadata, acsUrl=$acsUrl, spEntityId=$spEntityId, spMetadataUrl=$spMetadataUrl, organizationId=$organizationId, attributeMapping=$attributeMapping, active=$active, provider=$provider, userCount=$userCount, syncUserAttributes=$syncUserAttributes, allowSubdomains=$allowSubdomains, allowIdpInitiated=$allowIdpInitiated, disableAdditionalIdentifications=$disableAdditionalIdentifications, createdAt=$createdAt, updatedAt=$updatedAt]';
+      'SchemasSAMLConnection[object=$object, id=$id, name=$name, domain=$domain, domains=$domains, idpEntityId=$idpEntityId, idpSsoUrl=$idpSsoUrl, idpCertificate=$idpCertificate, idpMetadataUrl=$idpMetadataUrl, idpMetadata=$idpMetadata, acsUrl=$acsUrl, spEntityId=$spEntityId, spMetadataUrl=$spMetadataUrl, organizationId=$organizationId, attributeMapping=$attributeMapping, active=$active, provider=$provider, userCount=$userCount, syncUserAttributes=$syncUserAttributes, allowSubdomains=$allowSubdomains, allowIdpInitiated=$allowIdpInitiated, disableAdditionalIdentifications=$disableAdditionalIdentifications, forceAuthn=$forceAuthn, enterpriseConnectionId=$enterpriseConnectionId, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     json[r'object'] = this.object;
     json[r'id'] = this.id;
     json[r'name'] = this.name;
-    json[r'domain'] = this.domain;
+    if (this.domain != null) {
+      json[r'domain'] = this.domain;
+    } else {
+      json[r'domain'] = null;
+    }
+    json[r'domains'] = this.domains;
     if (this.idpEntityId != null) {
       json[r'idp_entity_id'] = this.idpEntityId;
     } else {
@@ -220,21 +227,15 @@ class SchemasSAMLConnection {
     json[r'provider'] = this.provider;
     json[r'user_count'] = this.userCount;
     json[r'sync_user_attributes'] = this.syncUserAttributes;
-    if (this.allowSubdomains != null) {
-      json[r'allow_subdomains'] = this.allowSubdomains;
+    json[r'allow_subdomains'] = this.allowSubdomains;
+    json[r'allow_idp_initiated'] = this.allowIdpInitiated;
+    json[r'disable_additional_identifications'] =
+        this.disableAdditionalIdentifications;
+    json[r'force_authn'] = this.forceAuthn;
+    if (this.enterpriseConnectionId != null) {
+      json[r'enterprise_connection_id'] = this.enterpriseConnectionId;
     } else {
-      json[r'allow_subdomains'] = null;
-    }
-    if (this.allowIdpInitiated != null) {
-      json[r'allow_idp_initiated'] = this.allowIdpInitiated;
-    } else {
-      json[r'allow_idp_initiated'] = null;
-    }
-    if (this.disableAdditionalIdentifications != null) {
-      json[r'disable_additional_identifications'] =
-          this.disableAdditionalIdentifications;
-    } else {
-      json[r'disable_additional_identifications'] = null;
+      json[r'enterprise_connection_id'] = null;
     }
     json[r'created_at'] = this.createdAt;
     json[r'updated_at'] = this.updatedAt;
@@ -265,7 +266,12 @@ class SchemasSAMLConnection {
         object: SchemasSAMLConnectionObjectEnum.fromJson(json[r'object'])!,
         id: mapValueOfType<String>(json, r'id')!,
         name: mapValueOfType<String>(json, r'name')!,
-        domain: mapValueOfType<String>(json, r'domain')!,
+        domain: mapValueOfType<String>(json, r'domain'),
+        domains: json[r'domains'] is Iterable
+            ? (json[r'domains'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
+            : const [],
         idpEntityId: mapValueOfType<String>(json, r'idp_entity_id'),
         idpSsoUrl: mapValueOfType<String>(json, r'idp_sso_url'),
         idpCertificate: mapValueOfType<String>(json, r'idp_certificate'),
@@ -282,10 +288,13 @@ class SchemasSAMLConnection {
         userCount: mapValueOfType<int>(json, r'user_count')!,
         syncUserAttributes:
             mapValueOfType<bool>(json, r'sync_user_attributes')!,
-        allowSubdomains: mapValueOfType<bool>(json, r'allow_subdomains'),
-        allowIdpInitiated: mapValueOfType<bool>(json, r'allow_idp_initiated'),
+        allowSubdomains: mapValueOfType<bool>(json, r'allow_subdomains')!,
+        allowIdpInitiated: mapValueOfType<bool>(json, r'allow_idp_initiated')!,
         disableAdditionalIdentifications:
-            mapValueOfType<bool>(json, r'disable_additional_identifications'),
+            mapValueOfType<bool>(json, r'disable_additional_identifications')!,
+        forceAuthn: mapValueOfType<bool>(json, r'force_authn')!,
+        enterpriseConnectionId:
+            mapValueOfType<String>(json, r'enterprise_connection_id'),
         createdAt: mapValueOfType<int>(json, r'created_at')!,
         updatedAt: mapValueOfType<int>(json, r'updated_at')!,
       );
@@ -347,7 +356,6 @@ class SchemasSAMLConnection {
     'object',
     'id',
     'name',
-    'domain',
     'idp_entity_id',
     'idp_sso_url',
     'idp_certificate',
@@ -358,6 +366,10 @@ class SchemasSAMLConnection {
     'provider',
     'user_count',
     'sync_user_attributes',
+    'allow_subdomains',
+    'allow_idp_initiated',
+    'disable_additional_identifications',
+    'force_authn',
     'created_at',
     'updated_at',
   };

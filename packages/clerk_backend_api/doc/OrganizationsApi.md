@@ -1,8 +1,8 @@
-# clerk_backend_api.api.OrganizationsApi
+# openapi.api.OrganizationsApi
 
 ## Load the API package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.clerk.com/v1*
@@ -13,6 +13,7 @@ Method | HTTP request | Description
 [**deleteOrganization**](OrganizationsApi.md#deleteorganization) | **DELETE** /organizations/{organization_id} | Delete an organization
 [**deleteOrganizationLogo**](OrganizationsApi.md#deleteorganizationlogo) | **DELETE** /organizations/{organization_id}/logo | Delete the organization's logo.
 [**getOrganization**](OrganizationsApi.md#getorganization) | **GET** /organizations/{organization_id} | Retrieve an organization by ID or slug
+[**getOrganizationBillingSubscription**](OrganizationsApi.md#getorganizationbillingsubscription) | **GET** /organizations/{organization_id}/billing/subscription | Retrieve an organization's billing subscription
 [**listOrganizations**](OrganizationsApi.md#listorganizations) | **GET** /organizations | Get a list of organizations for an instance
 [**mergeOrganizationMetadata**](OrganizationsApi.md#mergeorganizationmetadata) | **PATCH** /organizations/{organization_id}/metadata | Merge and update metadata for an organization
 [**updateOrganization**](OrganizationsApi.md#updateorganization) | **PATCH** /organizations/{organization_id} | Update an organization
@@ -24,11 +25,11 @@ Method | HTTP request | Description
 
 Create an organization
 
-Creates a new organization with the given name for an instance. You can specify an optional slug for the new organization. If provided, the organization slug can contain only lowercase alphanumeric characters (letters and digits) and the dash \"-\". Organization slugs must be unique for the instance. You can provide additional metadata for the organization and set any custom attribute you want. Organizations support private and public metadata. Private metadata can only be accessed from the Backend API. Public metadata can be accessed from the Backend API, and are read-only from the Frontend API. The `created_by` user will see this as their [active organization] (https://clerk.com/docs/organizations/overview#active-organization) the next time they create a session, presuming they don't explicitly set a different organization as active before then.
+Creates a new organization with the given name for an instance. You can specify an optional slug for the new organization. If provided, the organization slug can contain only lowercase alphanumeric characters (letters and digits) and the dash \"-\". Organization slugs must be unique for the instance. You can provide additional metadata for the organization and set any custom attribute you want. Organizations support private and public metadata. Private metadata can only be accessed from the Backend API. Public metadata can be accessed from the Backend API, and are read-only from the Frontend API. The `created_by` user will see this as their [active organization](https://clerk.com/docs/organizations/overview#active-organization) the next time they create a session, presuming they don't explicitly set a different organization as active before then.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -73,11 +74,11 @@ Name | Type | Description  | Notes
 
 Delete an organization
 
-Deletes the given organization. Please note that deleting an organization will also delete all memberships and invitations. This is not reversible.
+Deletes the given organization. Please note that deleting an organization will also delete all memberships and invitations. This is not reversible.  After the organization is deleted, any user's active sessions that contain the deleted organization will be cleared.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -126,7 +127,7 @@ Delete the organization's logo.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -175,7 +176,7 @@ Fetches the organization whose ID or slug matches the provided `id_or_slug` URL 
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -219,6 +220,55 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **getOrganizationBillingSubscription**
+> CommerceSubscription getOrganizationBillingSubscription(organizationId)
+
+Retrieve an organization's billing subscription
+
+Retrieves the billing subscription for the specified organization. This includes subscription details, active plans, billing information, and payment status. The subscription contains subscription items which represent the individual plans the organization is subscribed to.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: bearerAuth
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = OrganizationsApi();
+final organizationId = organizationId_example; // String | The ID of the organization whose subscription to retrieve
+
+try {
+    final result = api_instance.getOrganizationBillingSubscription(organizationId);
+    print(result);
+} catch (e) {
+    print('Exception when calling OrganizationsApi->getOrganizationBillingSubscription: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **organizationId** | **String**| The ID of the organization whose subscription to retrieve | 
+
+### Return type
+
+[**CommerceSubscription**](CommerceSubscription.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **listOrganizations**
 > Organizations listOrganizations(includeMembersCount, includeMissingMemberWithElevatedPermissions, query, userId, organizationId, orderBy, limit, offset)
 
@@ -228,7 +278,7 @@ This request returns the list of organizations for an instance. Results can be p
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -240,8 +290,8 @@ final api_instance = OrganizationsApi();
 final includeMembersCount = true; // bool | Flag to denote whether the member counts of each organization should be included in the response or not.
 final includeMissingMemberWithElevatedPermissions = true; // bool | Flag to denote whether or not to include a member with elevated permissions who is not currently a member of the organization.
 final query = query_example; // String | Returns organizations with ID, name, or slug that match the given query. Uses exact match for organization ID and partial match for name and slug.
-final userId = []; // List<String> | Returns organizations with the user ids specified. Any user ids not found are ignored. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set.
-final organizationId = []; // List<String> | Returns organizations with the organization ids specified. Any organization ids not found are ignored. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids. Example: ?organization_id=+org_1&organization_id=-org_2
+final userId = []; // List<String> | Returns organizations that include any of the specified user IDs as members. Any user IDs not found are ignored. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set.
+final organizationId = []; // List<String> | Returns organizations with the organization IDs specified. Any organization IDs not found are ignored. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs. Example: ?organization_id=+org_1&organization_id=-org_2
 final orderBy = orderBy_example; // String | Allows to return organizations in a particular order. At the moment, you can order the returned organizations either by their `name`, `created_at` or `members_count`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want organizations to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. Defaults to `-created_at`.
 final limit = 56; // int | Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`.
 final offset = 56; // int | Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`.
@@ -261,8 +311,8 @@ Name | Type | Description  | Notes
  **includeMembersCount** | **bool**| Flag to denote whether the member counts of each organization should be included in the response or not. | [optional] 
  **includeMissingMemberWithElevatedPermissions** | **bool**| Flag to denote whether or not to include a member with elevated permissions who is not currently a member of the organization. | [optional] 
  **query** | **String**| Returns organizations with ID, name, or slug that match the given query. Uses exact match for organization ID and partial match for name and slug. | [optional] 
- **userId** | [**List<String>**](String.md)| Returns organizations with the user ids specified. Any user ids not found are ignored. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. | [optional] [default to const []]
- **organizationId** | [**List<String>**](String.md)| Returns organizations with the organization ids specified. Any organization ids not found are ignored. For each organization id, the `+` and `-` can be prepended to the id, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization ids. Example: ?organization_id=+org_1&organization_id=-org_2 | [optional] [default to const []]
+ **userId** | [**List<String>**](String.md)| Returns organizations that include any of the specified user IDs as members. Any user IDs not found are ignored. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. | [optional] [default to const []]
+ **organizationId** | [**List<String>**](String.md)| Returns organizations with the organization IDs specified. Any organization IDs not found are ignored. For each organization ID, the `+` and `-` can be prepended to the ID, which denote whether the respective organization should be included or excluded from the result set. Accepts up to 100 organization IDs. Example: ?organization_id=+org_1&organization_id=-org_2 | [optional] [default to const []]
  **orderBy** | **String**| Allows to return organizations in a particular order. At the moment, you can order the returned organizations either by their `name`, `created_at` or `members_count`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want organizations to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. Defaults to `-created_at`. | [optional] [default to '-created_at']
  **limit** | **int**| Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`. | [optional] [default to 10]
  **offset** | **int**| Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`. | [optional] [default to 0]
@@ -291,7 +341,7 @@ Update organization metadata attributes by merging existing values with the prov
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -342,7 +392,7 @@ Updates an existing organization
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
@@ -389,11 +439,11 @@ Name | Type | Description  | Notes
 
 Upload a logo for the organization
 
-Set or replace an organization's logo, by uploading an image file. This endpoint uses the `multipart/form-data` request content type and accepts a file of image type. The file size cannot exceed 10MB. Only the following file content types are supported: `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/x-icon`, `image/vnd.microsoft.icon`.
+Set or replace an organization's logo, by uploading an image file. This endpoint uses the `multipart/form-data` request content type and accepts a file of image type. The file size cannot exceed 10MB. Only the following file content types are supported: `image/jpeg`, `image/png`, `image/gif`, `image/webp`.
 
 ### Example
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure HTTP Bearer authorization: bearerAuth
 // Case 1. Use String Token
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');

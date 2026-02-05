@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -23,6 +23,7 @@ class Template {
     this.position,
     this.canRevert,
     this.canDelete,
+    this.canEditBody,
     this.canToggle,
     this.subject,
     this.markup,
@@ -33,6 +34,7 @@ class Template {
     this.replyToEmailName,
     this.deliveredByClerk,
     this.enabled,
+    this.flaggedAsSuspicious,
     this.updatedAt,
     this.createdAt,
   });
@@ -48,7 +50,7 @@ class Template {
   /// String representing the object's type. Objects of the same type share the same value.
   TemplateObjectEnum? object;
 
-  /// the id of the instance the template belongs to
+  /// The ID of the instance to which the template belongs
   String? instanceId;
 
   /// whether this is a system (default) or user overridden) template
@@ -113,6 +115,15 @@ class Template {
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
   bool? canDelete;
+
+  /// whether the body of this template can be edited
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? canEditBody;
 
   /// whether this template can be enabled or disabled, true only for notification SMS templates
   ///
@@ -182,6 +193,14 @@ class Template {
   ///
   bool? enabled;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? flaggedAsSuspicious;
+
   /// Unix timestamp of last update.
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -214,6 +233,7 @@ class Template {
           other.position == position &&
           other.canRevert == canRevert &&
           other.canDelete == canDelete &&
+          other.canEditBody == canEditBody &&
           other.canToggle == canToggle &&
           other.subject == subject &&
           other.markup == markup &&
@@ -224,6 +244,7 @@ class Template {
           other.replyToEmailName == replyToEmailName &&
           other.deliveredByClerk == deliveredByClerk &&
           other.enabled == enabled &&
+          other.flaggedAsSuspicious == flaggedAsSuspicious &&
           other.updatedAt == updatedAt &&
           other.createdAt == createdAt;
 
@@ -240,6 +261,7 @@ class Template {
       (position == null ? 0 : position!.hashCode) +
       (canRevert == null ? 0 : canRevert!.hashCode) +
       (canDelete == null ? 0 : canDelete!.hashCode) +
+      (canEditBody == null ? 0 : canEditBody!.hashCode) +
       (canToggle == null ? 0 : canToggle!.hashCode) +
       (subject == null ? 0 : subject!.hashCode) +
       (markup == null ? 0 : markup!.hashCode) +
@@ -250,12 +272,13 @@ class Template {
       (replyToEmailName == null ? 0 : replyToEmailName!.hashCode) +
       (deliveredByClerk == null ? 0 : deliveredByClerk!.hashCode) +
       (enabled == null ? 0 : enabled!.hashCode) +
+      (flaggedAsSuspicious == null ? 0 : flaggedAsSuspicious!.hashCode) +
       (updatedAt == null ? 0 : updatedAt!.hashCode) +
       (createdAt == null ? 0 : createdAt!.hashCode);
 
   @override
   String toString() =>
-      'Template[id=$id, object=$object, instanceId=$instanceId, resourceType=$resourceType, templateType=$templateType, name=$name, slug=$slug, position=$position, canRevert=$canRevert, canDelete=$canDelete, canToggle=$canToggle, subject=$subject, markup=$markup, body=$body, availableVariables=$availableVariables, requiredVariables=$requiredVariables, fromEmailName=$fromEmailName, replyToEmailName=$replyToEmailName, deliveredByClerk=$deliveredByClerk, enabled=$enabled, updatedAt=$updatedAt, createdAt=$createdAt]';
+      'Template[id=$id, object=$object, instanceId=$instanceId, resourceType=$resourceType, templateType=$templateType, name=$name, slug=$slug, position=$position, canRevert=$canRevert, canDelete=$canDelete, canEditBody=$canEditBody, canToggle=$canToggle, subject=$subject, markup=$markup, body=$body, availableVariables=$availableVariables, requiredVariables=$requiredVariables, fromEmailName=$fromEmailName, replyToEmailName=$replyToEmailName, deliveredByClerk=$deliveredByClerk, enabled=$enabled, flaggedAsSuspicious=$flaggedAsSuspicious, updatedAt=$updatedAt, createdAt=$createdAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -309,6 +332,11 @@ class Template {
     } else {
       json[r'can_delete'] = null;
     }
+    if (this.canEditBody != null) {
+      json[r'can_edit_body'] = this.canEditBody;
+    } else {
+      json[r'can_edit_body'] = null;
+    }
     if (this.canToggle != null) {
       json[r'can_toggle'] = this.canToggle;
     } else {
@@ -350,6 +378,11 @@ class Template {
       json[r'enabled'] = this.enabled;
     } else {
       json[r'enabled'] = null;
+    }
+    if (this.flaggedAsSuspicious != null) {
+      json[r'flagged_as_suspicious'] = this.flaggedAsSuspicious;
+    } else {
+      json[r'flagged_as_suspicious'] = null;
     }
     if (this.updatedAt != null) {
       json[r'updated_at'] = this.updatedAt;
@@ -395,6 +428,7 @@ class Template {
         position: mapValueOfType<int>(json, r'position'),
         canRevert: mapValueOfType<bool>(json, r'can_revert'),
         canDelete: mapValueOfType<bool>(json, r'can_delete'),
+        canEditBody: mapValueOfType<bool>(json, r'can_edit_body'),
         canToggle: mapValueOfType<bool>(json, r'can_toggle'),
         subject: mapValueOfType<String>(json, r'subject'),
         markup: mapValueOfType<String>(json, r'markup'),
@@ -413,6 +447,8 @@ class Template {
         replyToEmailName: mapValueOfType<String>(json, r'reply_to_email_name'),
         deliveredByClerk: mapValueOfType<bool>(json, r'delivered_by_clerk'),
         enabled: mapValueOfType<bool>(json, r'enabled'),
+        flaggedAsSuspicious:
+            mapValueOfType<bool>(json, r'flagged_as_suspicious'),
         updatedAt: mapValueOfType<int>(json, r'updated_at'),
         createdAt: mapValueOfType<int>(json, r'created_at'),
       );

@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -15,7 +15,8 @@ class SAMLConnection {
   SAMLConnection({
     required this.id,
     required this.name,
-    required this.domain,
+    this.domain,
+    this.domains = const [],
     required this.active,
     required this.provider,
     required this.syncUserAttributes,
@@ -30,7 +31,15 @@ class SAMLConnection {
 
   String name;
 
-  String domain;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? domain;
+
+  List<String> domains;
 
   bool active;
 
@@ -75,6 +84,7 @@ class SAMLConnection {
           other.id == id &&
           other.name == name &&
           other.domain == domain &&
+          _deepEquality.equals(other.domains, domains) &&
           other.active == active &&
           other.provider == provider &&
           other.syncUserAttributes == syncUserAttributes &&
@@ -90,7 +100,8 @@ class SAMLConnection {
       // ignore: unnecessary_parenthesis
       (id.hashCode) +
       (name.hashCode) +
-      (domain.hashCode) +
+      (domain == null ? 0 : domain!.hashCode) +
+      (domains.hashCode) +
       (active.hashCode) +
       (provider.hashCode) +
       (syncUserAttributes.hashCode) +
@@ -104,13 +115,18 @@ class SAMLConnection {
 
   @override
   String toString() =>
-      'SAMLConnection[id=$id, name=$name, domain=$domain, active=$active, provider=$provider, syncUserAttributes=$syncUserAttributes, allowSubdomains=$allowSubdomains, allowIdpInitiated=$allowIdpInitiated, disableAdditionalIdentifications=$disableAdditionalIdentifications, createdAt=$createdAt, updatedAt=$updatedAt]';
+      'SAMLConnection[id=$id, name=$name, domain=$domain, domains=$domains, active=$active, provider=$provider, syncUserAttributes=$syncUserAttributes, allowSubdomains=$allowSubdomains, allowIdpInitiated=$allowIdpInitiated, disableAdditionalIdentifications=$disableAdditionalIdentifications, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     json[r'id'] = this.id;
     json[r'name'] = this.name;
-    json[r'domain'] = this.domain;
+    if (this.domain != null) {
+      json[r'domain'] = this.domain;
+    } else {
+      json[r'domain'] = null;
+    }
+    json[r'domains'] = this.domains;
     json[r'active'] = this.active;
     json[r'provider'] = this.provider;
     json[r'sync_user_attributes'] = this.syncUserAttributes;
@@ -158,7 +174,12 @@ class SAMLConnection {
       return SAMLConnection(
         id: mapValueOfType<String>(json, r'id')!,
         name: mapValueOfType<String>(json, r'name')!,
-        domain: mapValueOfType<String>(json, r'domain')!,
+        domain: mapValueOfType<String>(json, r'domain'),
+        domains: json[r'domains'] is Iterable
+            ? (json[r'domains'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
+            : const [],
         active: mapValueOfType<bool>(json, r'active')!,
         provider: mapValueOfType<String>(json, r'provider')!,
         syncUserAttributes:
@@ -227,7 +248,6 @@ class SAMLConnection {
   static const requiredKeys = <String>{
     'id',
     'name',
-    'domain',
     'active',
     'provider',
     'sync_user_attributes',

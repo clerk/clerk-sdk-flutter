@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -16,7 +16,7 @@ class CreateBlocklistIdentifierRequest {
     required this.identifier,
   });
 
-  /// The identifier to be added in the block-list. This can be an email address, a phone number or a web3 wallet.
+  /// The identifier to be added in the block-list. This can be an email address, a phone number, or a web3 wallet.
   String identifier;
 
   @override

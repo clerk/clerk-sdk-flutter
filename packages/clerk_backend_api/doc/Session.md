@@ -1,8 +1,8 @@
-# clerk_backend_api.model.Session
+# openapi.model.Session
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -21,6 +21,7 @@ Name | Type | Description | Notes
 **abandonAt** | **int** | Unix timestamp of abandonment.  | 
 **updatedAt** | **int** | Unix timestamp of last update.  | 
 **createdAt** | **int** | Unix timestamp of creation.  | 
+**tasks** | [**List<SessionTask>**](SessionTask.md) |  | [optional] [default to const []]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

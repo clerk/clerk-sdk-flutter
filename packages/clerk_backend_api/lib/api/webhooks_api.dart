@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -107,7 +107,7 @@ class WebhooksApi {
 
   /// Create a Svix Dashboard URL
   ///
-  /// Generate a new url for accessing the Svix's management dashboard for that particular instance
+  /// Generate a new URL for accessing the Svix's management dashboard for that particular instance
   ///
   /// Note: This method returns the HTTP [Response].
   Future<http.Response> generateSvixAuthURLWithHttpInfo() async {
@@ -136,7 +136,7 @@ class WebhooksApi {
 
   /// Create a Svix Dashboard URL
   ///
-  /// Generate a new url for accessing the Svix's management dashboard for that particular instance
+  /// Generate a new URL for accessing the Svix's management dashboard for that particular instance
   Future<SvixURL?> generateSvixAuthURL() async {
     final response = await generateSvixAuthURLWithHttpInfo();
     if (response.statusCode >= HttpStatus.badRequest) {

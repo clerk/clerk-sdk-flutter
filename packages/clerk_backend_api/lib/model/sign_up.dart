@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -36,6 +36,7 @@ class SignUp {
     required this.createdUserId,
     required this.abandonAt,
     required this.legalAcceptedAt,
+    this.locale,
     this.externalAccount,
   });
 
@@ -87,6 +88,9 @@ class SignUp {
   /// Unix timestamp at which the user accepted the legal requirements.
   int? legalAcceptedAt;
 
+  /// The user locale preference for the sign-up specified as a BCP-47 language tag.
+  String? locale;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -122,6 +126,7 @@ class SignUp {
           other.createdUserId == createdUserId &&
           other.abandonAt == abandonAt &&
           other.legalAcceptedAt == legalAcceptedAt &&
+          other.locale == locale &&
           other.externalAccount == externalAccount;
 
   @override
@@ -150,11 +155,12 @@ class SignUp {
       (createdUserId == null ? 0 : createdUserId!.hashCode) +
       (abandonAt.hashCode) +
       (legalAcceptedAt == null ? 0 : legalAcceptedAt!.hashCode) +
+      (locale == null ? 0 : locale!.hashCode) +
       (externalAccount == null ? 0 : externalAccount!.hashCode);
 
   @override
   String toString() =>
-      'SignUp[object=$object, id=$id, status=$status, requiredFields=$requiredFields, optionalFields=$optionalFields, missingFields=$missingFields, unverifiedFields=$unverifiedFields, verifications=$verifications, username=$username, emailAddress=$emailAddress, phoneNumber=$phoneNumber, web3Wallet=$web3Wallet, passwordEnabled=$passwordEnabled, firstName=$firstName, lastName=$lastName, unsafeMetadata=$unsafeMetadata, publicMetadata=$publicMetadata, customAction=$customAction, externalId=$externalId, createdSessionId=$createdSessionId, createdUserId=$createdUserId, abandonAt=$abandonAt, legalAcceptedAt=$legalAcceptedAt, externalAccount=$externalAccount]';
+      'SignUp[object=$object, id=$id, status=$status, requiredFields=$requiredFields, optionalFields=$optionalFields, missingFields=$missingFields, unverifiedFields=$unverifiedFields, verifications=$verifications, username=$username, emailAddress=$emailAddress, phoneNumber=$phoneNumber, web3Wallet=$web3Wallet, passwordEnabled=$passwordEnabled, firstName=$firstName, lastName=$lastName, unsafeMetadata=$unsafeMetadata, publicMetadata=$publicMetadata, customAction=$customAction, externalId=$externalId, createdSessionId=$createdSessionId, createdUserId=$createdUserId, abandonAt=$abandonAt, legalAcceptedAt=$legalAcceptedAt, locale=$locale, externalAccount=$externalAccount]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -220,6 +226,11 @@ class SignUp {
       json[r'legal_accepted_at'] = this.legalAcceptedAt;
     } else {
       json[r'legal_accepted_at'] = null;
+    }
+    if (this.locale != null) {
+      json[r'locale'] = this.locale;
+    } else {
+      json[r'locale'] = null;
     }
     if (this.externalAccount != null) {
       json[r'external_account'] = this.externalAccount;
@@ -291,6 +302,7 @@ class SignUp {
         createdUserId: mapValueOfType<String>(json, r'created_user_id'),
         abandonAt: mapValueOfType<int>(json, r'abandon_at')!,
         legalAcceptedAt: mapValueOfType<int>(json, r'legal_accepted_at'),
+        locale: mapValueOfType<String>(json, r'locale'),
         externalAccount: mapValueOfType<Object>(json, r'external_account'),
       );
     }

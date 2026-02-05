@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -46,7 +46,7 @@ class WaitlistEntry {
   /// Unix timestamp of last update.
   int updatedAt;
 
-  WaitlistEntryInvitation? invitation;
+  Invitation? invitation;
 
   @override
   bool operator ==(Object other) =>
@@ -126,7 +126,7 @@ class WaitlistEntry {
         isLocked: mapValueOfType<bool>(json, r'is_locked'),
         createdAt: mapValueOfType<int>(json, r'created_at')!,
         updatedAt: mapValueOfType<int>(json, r'updated_at')!,
-        invitation: WaitlistEntryInvitation.fromJson(json[r'invitation']),
+        invitation: Invitation.fromJson(json[r'invitation']),
       );
     }
     return null;

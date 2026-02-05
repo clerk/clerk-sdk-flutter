@@ -1,8 +1,8 @@
-# clerk_backend_api.model.CreateSessionToken200Response
+# openapi.model.CreateSessionToken200Response
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties

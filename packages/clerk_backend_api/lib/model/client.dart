@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -20,6 +20,7 @@ class Client {
     required this.signInId,
     required this.signUpId,
     required this.lastActiveSessionId,
+    required this.lastAuthenticationStrategy,
     required this.updatedAt,
     required this.createdAt,
   });
@@ -41,6 +42,9 @@ class Client {
   /// Last active session_id.
   String? lastActiveSessionId;
 
+  /// The authentication strategy that was last used to authenticate the user on this client.
+  String? lastAuthenticationStrategy;
+
   /// Unix timestamp of last update.
   int updatedAt;
 
@@ -58,6 +62,7 @@ class Client {
           other.signInId == signInId &&
           other.signUpId == signUpId &&
           other.lastActiveSessionId == lastActiveSessionId &&
+          other.lastAuthenticationStrategy == lastAuthenticationStrategy &&
           other.updatedAt == updatedAt &&
           other.createdAt == createdAt;
 
@@ -71,12 +76,15 @@ class Client {
       (signInId == null ? 0 : signInId!.hashCode) +
       (signUpId == null ? 0 : signUpId!.hashCode) +
       (lastActiveSessionId == null ? 0 : lastActiveSessionId!.hashCode) +
+      (lastAuthenticationStrategy == null
+          ? 0
+          : lastAuthenticationStrategy!.hashCode) +
       (updatedAt.hashCode) +
       (createdAt.hashCode);
 
   @override
   String toString() =>
-      'Client[object=$object, id=$id, sessionIds=$sessionIds, sessions=$sessions, signInId=$signInId, signUpId=$signUpId, lastActiveSessionId=$lastActiveSessionId, updatedAt=$updatedAt, createdAt=$createdAt]';
+      'Client[object=$object, id=$id, sessionIds=$sessionIds, sessions=$sessions, signInId=$signInId, signUpId=$signUpId, lastActiveSessionId=$lastActiveSessionId, lastAuthenticationStrategy=$lastAuthenticationStrategy, updatedAt=$updatedAt, createdAt=$createdAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -98,6 +106,11 @@ class Client {
       json[r'last_active_session_id'] = this.lastActiveSessionId;
     } else {
       json[r'last_active_session_id'] = null;
+    }
+    if (this.lastAuthenticationStrategy != null) {
+      json[r'last_authentication_strategy'] = this.lastAuthenticationStrategy;
+    } else {
+      json[r'last_authentication_strategy'] = null;
     }
     json[r'updated_at'] = this.updatedAt;
     json[r'created_at'] = this.createdAt;
@@ -137,6 +150,8 @@ class Client {
         signUpId: mapValueOfType<String>(json, r'sign_up_id'),
         lastActiveSessionId:
             mapValueOfType<String>(json, r'last_active_session_id'),
+        lastAuthenticationStrategy:
+            mapValueOfType<String>(json, r'last_authentication_strategy'),
         updatedAt: mapValueOfType<int>(json, r'updated_at')!,
         createdAt: mapValueOfType<int>(json, r'created_at')!,
       );
@@ -202,6 +217,7 @@ class Client {
     'sign_in_id',
     'sign_up_id',
     'last_active_session_id',
+    'last_authentication_strategy',
     'updated_at',
     'created_at',
   };

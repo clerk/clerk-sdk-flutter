@@ -1,8 +1,8 @@
-# clerk_backend_api.model.OrganizationInvitationWithPublicOrganizationData
+# openapi.model.OrganizationInvitationWithPublicOrganizationData
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -14,6 +14,8 @@ Name | Type | Description | Notes
 **role** | **String** |  | 
 **roleName** | **String** |  | 
 **organizationId** | **String** |  | [optional] 
+**inviterId** | **String** |  | 
+**publicInviterData** | [**OrganizationInvitationPublicUserData**](OrganizationInvitationPublicUserData.md) |  | 
 **status** | **String** |  | [optional] 
 **publicMetadata** | [**Map<String, Object>**](Object.md) |  | [default to const {}]
 **privateMetadata** | [**Map<String, Object>**](Object.md) |  | [optional] [default to const {}]

@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -16,7 +16,6 @@ class UpdateInstanceAuthConfigRequest {
     this.restrictedToAllowlist = false,
     this.fromEmailAddress,
     this.progressiveSignUp,
-    this.enhancedEmailDeliverability,
     this.testMode,
   });
 
@@ -26,11 +25,8 @@ class UpdateInstanceAuthConfigRequest {
   /// The local part of the email address from which authentication-related emails (e.g. OTP code, magic links) will be sent. Only alphanumeric values are allowed. Note that this value should contain only the local part of the address (e.g. `foo` for `foo@example.com`).
   String? fromEmailAddress;
 
-  /// Enable the Progressive Sign Up algorithm. Refer to the [docs](https://clerk.com/docs/upgrade-guides/progressive-sign-up) for more info.
+  /// Enable the Progressive Sign Up algorithm. This feature is deprecated, please contact support if you need assistance.
   bool? progressiveSignUp;
-
-  /// The \"enhanced_email_deliverability\" feature will send emails from \"verifications@clerk.dev\" instead of your domain. This can be helpful if you do not have a high domain reputation.
-  bool? enhancedEmailDeliverability;
 
   /// Toggles test mode for this instance, allowing the use of test email addresses and phone numbers. Defaults to true for development instances.
   bool? testMode;
@@ -42,7 +38,6 @@ class UpdateInstanceAuthConfigRequest {
           other.restrictedToAllowlist == restrictedToAllowlist &&
           other.fromEmailAddress == fromEmailAddress &&
           other.progressiveSignUp == progressiveSignUp &&
-          other.enhancedEmailDeliverability == enhancedEmailDeliverability &&
           other.testMode == testMode;
 
   @override
@@ -51,14 +46,11 @@ class UpdateInstanceAuthConfigRequest {
       (restrictedToAllowlist == null ? 0 : restrictedToAllowlist!.hashCode) +
       (fromEmailAddress == null ? 0 : fromEmailAddress!.hashCode) +
       (progressiveSignUp == null ? 0 : progressiveSignUp!.hashCode) +
-      (enhancedEmailDeliverability == null
-          ? 0
-          : enhancedEmailDeliverability!.hashCode) +
       (testMode == null ? 0 : testMode!.hashCode);
 
   @override
   String toString() =>
-      'UpdateInstanceAuthConfigRequest[restrictedToAllowlist=$restrictedToAllowlist, fromEmailAddress=$fromEmailAddress, progressiveSignUp=$progressiveSignUp, enhancedEmailDeliverability=$enhancedEmailDeliverability, testMode=$testMode]';
+      'UpdateInstanceAuthConfigRequest[restrictedToAllowlist=$restrictedToAllowlist, fromEmailAddress=$fromEmailAddress, progressiveSignUp=$progressiveSignUp, testMode=$testMode]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -76,11 +68,6 @@ class UpdateInstanceAuthConfigRequest {
       json[r'progressive_sign_up'] = this.progressiveSignUp;
     } else {
       json[r'progressive_sign_up'] = null;
-    }
-    if (this.enhancedEmailDeliverability != null) {
-      json[r'enhanced_email_deliverability'] = this.enhancedEmailDeliverability;
-    } else {
-      json[r'enhanced_email_deliverability'] = null;
     }
     if (this.testMode != null) {
       json[r'test_mode'] = this.testMode;
@@ -115,8 +102,6 @@ class UpdateInstanceAuthConfigRequest {
             mapValueOfType<bool>(json, r'restricted_to_allowlist') ?? false,
         fromEmailAddress: mapValueOfType<String>(json, r'from_email_address'),
         progressiveSignUp: mapValueOfType<bool>(json, r'progressive_sign_up'),
-        enhancedEmailDeliverability:
-            mapValueOfType<bool>(json, r'enhanced_email_deliverability'),
         testMode: mapValueOfType<bool>(json, r'test_mode'),
       );
     }

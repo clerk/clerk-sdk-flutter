@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -14,7 +14,8 @@ class CreateSAMLConnectionRequest {
   /// Returns a new [CreateSAMLConnectionRequest] instance.
   CreateSAMLConnectionRequest({
     required this.name,
-    required this.domain,
+    this.domain,
+    this.domains = const [],
     required this.provider,
     this.idpEntityId,
     this.idpSsoUrl,
@@ -23,13 +24,23 @@ class CreateSAMLConnectionRequest {
     this.idpMetadata,
     this.organizationId,
     this.attributeMapping,
+    this.forceAuthn,
   });
 
   /// The name to use as a label for this SAML Connection
   String name;
 
   /// The domain of your organization. Sign in flows using an email with this domain, will use this SAML Connection.
-  String domain;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? domain;
+
+  /// The domains of your organization. Sign in flows using an email with one of these domains, will use this SAML Connection.
+  List<String> domains;
 
   /// The IdP provider of the connection.
   CreateSAMLConnectionRequestProviderEnum provider;
@@ -54,12 +65,22 @@ class CreateSAMLConnectionRequest {
 
   CreateSAMLConnectionRequestAttributeMapping? attributeMapping;
 
+  /// Enable or deactivate ForceAuthn
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? forceAuthn;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is CreateSAMLConnectionRequest &&
           other.name == name &&
           other.domain == domain &&
+          _deepEquality.equals(other.domains, domains) &&
           other.provider == provider &&
           other.idpEntityId == idpEntityId &&
           other.idpSsoUrl == idpSsoUrl &&
@@ -67,13 +88,15 @@ class CreateSAMLConnectionRequest {
           other.idpMetadataUrl == idpMetadataUrl &&
           other.idpMetadata == idpMetadata &&
           other.organizationId == organizationId &&
-          other.attributeMapping == attributeMapping;
+          other.attributeMapping == attributeMapping &&
+          other.forceAuthn == forceAuthn;
 
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
       (name.hashCode) +
-      (domain.hashCode) +
+      (domain == null ? 0 : domain!.hashCode) +
+      (domains.hashCode) +
       (provider.hashCode) +
       (idpEntityId == null ? 0 : idpEntityId!.hashCode) +
       (idpSsoUrl == null ? 0 : idpSsoUrl!.hashCode) +
@@ -81,16 +104,22 @@ class CreateSAMLConnectionRequest {
       (idpMetadataUrl == null ? 0 : idpMetadataUrl!.hashCode) +
       (idpMetadata == null ? 0 : idpMetadata!.hashCode) +
       (organizationId == null ? 0 : organizationId!.hashCode) +
-      (attributeMapping == null ? 0 : attributeMapping!.hashCode);
+      (attributeMapping == null ? 0 : attributeMapping!.hashCode) +
+      (forceAuthn == null ? 0 : forceAuthn!.hashCode);
 
   @override
   String toString() =>
-      'CreateSAMLConnectionRequest[name=$name, domain=$domain, provider=$provider, idpEntityId=$idpEntityId, idpSsoUrl=$idpSsoUrl, idpCertificate=$idpCertificate, idpMetadataUrl=$idpMetadataUrl, idpMetadata=$idpMetadata, organizationId=$organizationId, attributeMapping=$attributeMapping]';
+      'CreateSAMLConnectionRequest[name=$name, domain=$domain, domains=$domains, provider=$provider, idpEntityId=$idpEntityId, idpSsoUrl=$idpSsoUrl, idpCertificate=$idpCertificate, idpMetadataUrl=$idpMetadataUrl, idpMetadata=$idpMetadata, organizationId=$organizationId, attributeMapping=$attributeMapping, forceAuthn=$forceAuthn]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     json[r'name'] = this.name;
-    json[r'domain'] = this.domain;
+    if (this.domain != null) {
+      json[r'domain'] = this.domain;
+    } else {
+      json[r'domain'] = null;
+    }
+    json[r'domains'] = this.domains;
     json[r'provider'] = this.provider;
     if (this.idpEntityId != null) {
       json[r'idp_entity_id'] = this.idpEntityId;
@@ -127,6 +156,11 @@ class CreateSAMLConnectionRequest {
     } else {
       json[r'attribute_mapping'] = null;
     }
+    if (this.forceAuthn != null) {
+      json[r'force_authn'] = this.forceAuthn;
+    } else {
+      json[r'force_authn'] = null;
+    }
     return json;
   }
 
@@ -152,7 +186,12 @@ class CreateSAMLConnectionRequest {
 
       return CreateSAMLConnectionRequest(
         name: mapValueOfType<String>(json, r'name')!,
-        domain: mapValueOfType<String>(json, r'domain')!,
+        domain: mapValueOfType<String>(json, r'domain'),
+        domains: json[r'domains'] is Iterable
+            ? (json[r'domains'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
+            : const [],
         provider: CreateSAMLConnectionRequestProviderEnum.fromJson(
             json[r'provider'])!,
         idpEntityId: mapValueOfType<String>(json, r'idp_entity_id'),
@@ -163,6 +202,7 @@ class CreateSAMLConnectionRequest {
         organizationId: mapValueOfType<String>(json, r'organization_id'),
         attributeMapping: CreateSAMLConnectionRequestAttributeMapping.fromJson(
             json[r'attribute_mapping']),
+        forceAuthn: mapValueOfType<bool>(json, r'force_authn'),
       );
     }
     return null;
@@ -220,7 +260,6 @@ class CreateSAMLConnectionRequest {
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
     'name',
-    'domain',
     'provider',
   };
 }

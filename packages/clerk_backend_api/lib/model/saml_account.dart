@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -21,6 +21,7 @@ class SAMLAccount {
     this.firstName,
     this.lastName,
     this.providerUserId,
+    this.lastAuthenticatedAt,
     this.publicMetadata = const {},
     required this.verification,
     this.samlConnection,
@@ -43,6 +44,9 @@ class SAMLAccount {
 
   String? providerUserId;
 
+  /// Unix timestamp of last authentication.
+  int? lastAuthenticatedAt;
+
   Map<String, Object> publicMetadata;
 
   SAMLAccountVerification? verification;
@@ -61,6 +65,7 @@ class SAMLAccount {
           other.firstName == firstName &&
           other.lastName == lastName &&
           other.providerUserId == providerUserId &&
+          other.lastAuthenticatedAt == lastAuthenticatedAt &&
           _deepEquality.equals(other.publicMetadata, publicMetadata) &&
           other.verification == verification &&
           other.samlConnection == samlConnection;
@@ -76,13 +81,14 @@ class SAMLAccount {
       (firstName == null ? 0 : firstName!.hashCode) +
       (lastName == null ? 0 : lastName!.hashCode) +
       (providerUserId == null ? 0 : providerUserId!.hashCode) +
+      (lastAuthenticatedAt == null ? 0 : lastAuthenticatedAt!.hashCode) +
       (publicMetadata.hashCode) +
       (verification == null ? 0 : verification!.hashCode) +
       (samlConnection == null ? 0 : samlConnection!.hashCode);
 
   @override
   String toString() =>
-      'SAMLAccount[id=$id, object=$object, provider=$provider, active=$active, emailAddress=$emailAddress, firstName=$firstName, lastName=$lastName, providerUserId=$providerUserId, publicMetadata=$publicMetadata, verification=$verification, samlConnection=$samlConnection]';
+      'SAMLAccount[id=$id, object=$object, provider=$provider, active=$active, emailAddress=$emailAddress, firstName=$firstName, lastName=$lastName, providerUserId=$providerUserId, lastAuthenticatedAt=$lastAuthenticatedAt, publicMetadata=$publicMetadata, verification=$verification, samlConnection=$samlConnection]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -105,6 +111,11 @@ class SAMLAccount {
       json[r'provider_user_id'] = this.providerUserId;
     } else {
       json[r'provider_user_id'] = null;
+    }
+    if (this.lastAuthenticatedAt != null) {
+      json[r'last_authenticated_at'] = this.lastAuthenticatedAt;
+    } else {
+      json[r'last_authenticated_at'] = null;
     }
     json[r'public_metadata'] = this.publicMetadata;
     if (this.verification != null) {
@@ -149,6 +160,8 @@ class SAMLAccount {
         firstName: mapValueOfType<String>(json, r'first_name'),
         lastName: mapValueOfType<String>(json, r'last_name'),
         providerUserId: mapValueOfType<String>(json, r'provider_user_id'),
+        lastAuthenticatedAt:
+            mapValueOfType<int>(json, r'last_authenticated_at'),
         publicMetadata:
             mapCastOfType<String, Object>(json, r'public_metadata') ?? const {},
         verification: SAMLAccountVerification.fromJson(json[r'verification']),

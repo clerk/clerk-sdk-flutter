@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -16,9 +16,9 @@ class InstanceRestrictions {
     required this.object,
     required this.allowlist,
     required this.blocklist,
+    required this.allowlistBlocklistDisabledOnSignIn,
     required this.blockEmailSubaddresses,
     required this.blockDisposableEmailDomains,
-    required this.ignoreDotsForGmailAddresses,
   });
 
   /// String representing the object's type. Objects of the same type share the same value.
@@ -28,11 +28,11 @@ class InstanceRestrictions {
 
   bool blocklist;
 
+  bool allowlistBlocklistDisabledOnSignIn;
+
   bool blockEmailSubaddresses;
 
   bool blockDisposableEmailDomains;
-
-  bool ignoreDotsForGmailAddresses;
 
   @override
   bool operator ==(Object other) =>
@@ -41,9 +41,10 @@ class InstanceRestrictions {
           other.object == object &&
           other.allowlist == allowlist &&
           other.blocklist == blocklist &&
+          other.allowlistBlocklistDisabledOnSignIn ==
+              allowlistBlocklistDisabledOnSignIn &&
           other.blockEmailSubaddresses == blockEmailSubaddresses &&
-          other.blockDisposableEmailDomains == blockDisposableEmailDomains &&
-          other.ignoreDotsForGmailAddresses == ignoreDotsForGmailAddresses;
+          other.blockDisposableEmailDomains == blockDisposableEmailDomains;
 
   @override
   int get hashCode =>
@@ -51,22 +52,23 @@ class InstanceRestrictions {
       (object.hashCode) +
       (allowlist.hashCode) +
       (blocklist.hashCode) +
+      (allowlistBlocklistDisabledOnSignIn.hashCode) +
       (blockEmailSubaddresses.hashCode) +
-      (blockDisposableEmailDomains.hashCode) +
-      (ignoreDotsForGmailAddresses.hashCode);
+      (blockDisposableEmailDomains.hashCode);
 
   @override
   String toString() =>
-      'InstanceRestrictions[object=$object, allowlist=$allowlist, blocklist=$blocklist, blockEmailSubaddresses=$blockEmailSubaddresses, blockDisposableEmailDomains=$blockDisposableEmailDomains, ignoreDotsForGmailAddresses=$ignoreDotsForGmailAddresses]';
+      'InstanceRestrictions[object=$object, allowlist=$allowlist, blocklist=$blocklist, allowlistBlocklistDisabledOnSignIn=$allowlistBlocklistDisabledOnSignIn, blockEmailSubaddresses=$blockEmailSubaddresses, blockDisposableEmailDomains=$blockDisposableEmailDomains]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     json[r'object'] = this.object;
     json[r'allowlist'] = this.allowlist;
     json[r'blocklist'] = this.blocklist;
+    json[r'allowlist_blocklist_disabled_on_sign_in'] =
+        this.allowlistBlocklistDisabledOnSignIn;
     json[r'block_email_subaddresses'] = this.blockEmailSubaddresses;
     json[r'block_disposable_email_domains'] = this.blockDisposableEmailDomains;
-    json[r'ignore_dots_for_gmail_addresses'] = this.ignoreDotsForGmailAddresses;
     return json;
   }
 
@@ -94,12 +96,12 @@ class InstanceRestrictions {
         object: InstanceRestrictionsObjectEnum.fromJson(json[r'object'])!,
         allowlist: mapValueOfType<bool>(json, r'allowlist')!,
         blocklist: mapValueOfType<bool>(json, r'blocklist')!,
+        allowlistBlocklistDisabledOnSignIn: mapValueOfType<bool>(
+            json, r'allowlist_blocklist_disabled_on_sign_in')!,
         blockEmailSubaddresses:
             mapValueOfType<bool>(json, r'block_email_subaddresses')!,
         blockDisposableEmailDomains:
             mapValueOfType<bool>(json, r'block_disposable_email_domains')!,
-        ignoreDotsForGmailAddresses:
-            mapValueOfType<bool>(json, r'ignore_dots_for_gmail_addresses')!,
       );
     }
     return null;
@@ -159,9 +161,9 @@ class InstanceRestrictions {
     'object',
     'allowlist',
     'blocklist',
+    'allowlist_blocklist_disabled_on_sign_in',
     'block_email_subaddresses',
     'block_disposable_email_domains',
-    'ignore_dots_for_gmail_addresses',
   };
 }
 

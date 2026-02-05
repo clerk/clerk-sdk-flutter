@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -22,6 +22,7 @@ class OrganizationDomain {
     required this.verification,
     required this.totalPendingInvitations,
     required this.totalPendingSuggestions,
+    this.publicOrganizationData,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -44,6 +45,7 @@ class OrganizationDomain {
   /// Affiliation email address for the domain, if available.
   String? affiliationEmailAddress;
 
+  /// Verification details for the domain
   OrganizationDomainVerification? verification;
 
   /// Total number of pending invitations associated with this domain
@@ -51,6 +53,9 @@ class OrganizationDomain {
 
   /// Total number of pending suggestions associated with this domain
   int totalPendingSuggestions;
+
+  /// Public organization data associated with this domain
+  OrganizationInvitationPublicOrganizationData? publicOrganizationData;
 
   /// Unix timestamp when the domain was created
   int createdAt;
@@ -71,6 +76,7 @@ class OrganizationDomain {
           other.verification == verification &&
           other.totalPendingInvitations == totalPendingInvitations &&
           other.totalPendingSuggestions == totalPendingSuggestions &&
+          other.publicOrganizationData == publicOrganizationData &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt;
 
@@ -88,12 +94,13 @@ class OrganizationDomain {
       (verification == null ? 0 : verification!.hashCode) +
       (totalPendingInvitations.hashCode) +
       (totalPendingSuggestions.hashCode) +
+      (publicOrganizationData == null ? 0 : publicOrganizationData!.hashCode) +
       (createdAt.hashCode) +
       (updatedAt.hashCode);
 
   @override
   String toString() =>
-      'OrganizationDomain[object=$object, id=$id, organizationId=$organizationId, name=$name, enrollmentMode=$enrollmentMode, affiliationEmailAddress=$affiliationEmailAddress, verification=$verification, totalPendingInvitations=$totalPendingInvitations, totalPendingSuggestions=$totalPendingSuggestions, createdAt=$createdAt, updatedAt=$updatedAt]';
+      'OrganizationDomain[object=$object, id=$id, organizationId=$organizationId, name=$name, enrollmentMode=$enrollmentMode, affiliationEmailAddress=$affiliationEmailAddress, verification=$verification, totalPendingInvitations=$totalPendingInvitations, totalPendingSuggestions=$totalPendingSuggestions, publicOrganizationData=$publicOrganizationData, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -114,6 +121,11 @@ class OrganizationDomain {
     }
     json[r'total_pending_invitations'] = this.totalPendingInvitations;
     json[r'total_pending_suggestions'] = this.totalPendingSuggestions;
+    if (this.publicOrganizationData != null) {
+      json[r'public_organization_data'] = this.publicOrganizationData;
+    } else {
+      json[r'public_organization_data'] = null;
+    }
     json[r'created_at'] = this.createdAt;
     json[r'updated_at'] = this.updatedAt;
     return json;
@@ -154,6 +166,9 @@ class OrganizationDomain {
             mapValueOfType<int>(json, r'total_pending_invitations')!,
         totalPendingSuggestions:
             mapValueOfType<int>(json, r'total_pending_suggestions')!,
+        publicOrganizationData:
+            OrganizationInvitationPublicOrganizationData.fromJson(
+                json[r'public_organization_data']),
         createdAt: mapValueOfType<int>(json, r'created_at')!,
         updatedAt: mapValueOfType<int>(json, r'updated_at')!,
       );

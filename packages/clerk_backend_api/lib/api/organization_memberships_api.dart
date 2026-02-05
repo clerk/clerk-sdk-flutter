@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -99,10 +99,10 @@ class OrganizationMembershipsApi {
   /// Parameters:
   ///
   /// * [String] organizationId (required):
-  ///   The ID of the organization the membership belongs to
+  ///   The ID of the organization to which this membership belongs
   ///
   /// * [String] userId (required):
-  ///   The ID of the user that this membership belongs to
+  ///   The ID of the user to which this membership belongs
   Future<http.Response> deleteOrganizationMembershipWithHttpInfo(
     String organizationId,
     String userId,
@@ -139,10 +139,10 @@ class OrganizationMembershipsApi {
   /// Parameters:
   ///
   /// * [String] organizationId (required):
-  ///   The ID of the organization the membership belongs to
+  ///   The ID of the organization to which this membership belongs
   ///
   /// * [String] userId (required):
-  ///   The ID of the user that this membership belongs to
+  ///   The ID of the user to which this membership belongs
   Future<OrganizationMembership?> deleteOrganizationMembership(
     String organizationId,
     String userId,
@@ -276,7 +276,7 @@ class OrganizationMembershipsApi {
   ///   Sorts organizations memberships by phone_number, email_address, created_at, first_name, last_name or username. By prepending one of those values with + or -, we can choose to sort in ascending (ASC) or descending (DESC) order.\"
   ///
   /// * [List<String>] userId:
-  ///   Returns users with the user ids specified. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective user id should be included or excluded from the result set. Accepts up to 100 user ids. Any user ids not found are ignored.
+  ///   Returns users with the user IDs specified. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective user ID should be included or excluded from the result set. Accepts up to 100 user IDs. Any user IDs not found are ignored.
   ///
   /// * [List<String>] emailAddress:
   ///   Returns users with the specified email addresses. Accepts up to 100 email addresses. Any email addresses not found are ignored.
@@ -288,13 +288,13 @@ class OrganizationMembershipsApi {
   ///   Returns users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored.
   ///
   /// * [List<String>] web3Wallet:
-  ///   Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored.
+  ///   Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored.
   ///
   /// * [List<String>] role:
   ///   Returns users with the specified roles. Accepts up to 100 roles. Any roles not found are ignored.
   ///
   /// * [String] query:
-  ///   Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
+  ///   Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
   ///
   /// * [String] emailAddressQuery:
   ///   Returns users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`.
@@ -443,7 +443,7 @@ class OrganizationMembershipsApi {
   ///   Sorts organizations memberships by phone_number, email_address, created_at, first_name, last_name or username. By prepending one of those values with + or -, we can choose to sort in ascending (ASC) or descending (DESC) order.\"
   ///
   /// * [List<String>] userId:
-  ///   Returns users with the user ids specified. For each user id, the `+` and `-` can be prepended to the id, which denote whether the respective user id should be included or excluded from the result set. Accepts up to 100 user ids. Any user ids not found are ignored.
+  ///   Returns users with the user IDs specified. For each user ID, the `+` and `-` can be prepended to the ID, which denote whether the respective user ID should be included or excluded from the result set. Accepts up to 100 user IDs. Any user IDs not found are ignored.
   ///
   /// * [List<String>] emailAddress:
   ///   Returns users with the specified email addresses. Accepts up to 100 email addresses. Any email addresses not found are ignored.
@@ -455,13 +455,13 @@ class OrganizationMembershipsApi {
   ///   Returns users with the specified usernames. Accepts up to 100 usernames. Any usernames not found are ignored.
   ///
   /// * [List<String>] web3Wallet:
-  ///   Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addressed not found are ignored.
+  ///   Returns users with the specified web3 wallet addresses. Accepts up to 100 web3 wallet addresses. Any web3 wallet addresses not found are ignored.
   ///
   /// * [List<String>] role:
   ///   Returns users with the specified roles. Accepts up to 100 roles. Any roles not found are ignored.
   ///
   /// * [String] query:
-  ///   Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user ids, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
+  ///   Returns users that match the given query. For possible matches, we check the email addresses, phone numbers, usernames, web3 wallets, user IDs, first and last names. The query value doesn't need to match the exact value you are looking for, it is capable of partial matches as well.
   ///
   /// * [String] emailAddressQuery:
   ///   Returns users with emails that match the given query, via case-insensitive partial match. For example, `email_address_query=ello` will match a user with the email `HELLO@example.com`.
@@ -559,10 +559,10 @@ class OrganizationMembershipsApi {
   /// Parameters:
   ///
   /// * [String] organizationId (required):
-  ///   The ID of the organization the membership belongs to
+  ///   The ID of the organization to which this membership belongs
   ///
   /// * [String] userId (required):
-  ///   The ID of the user that this membership belongs to
+  ///   The ID of the user to which this membership belongs
   ///
   /// * [UpdateOrganizationMembershipRequest] updateOrganizationMembershipRequest (required):
   Future<http.Response> updateOrganizationMembershipWithHttpInfo(
@@ -602,10 +602,10 @@ class OrganizationMembershipsApi {
   /// Parameters:
   ///
   /// * [String] organizationId (required):
-  ///   The ID of the organization the membership belongs to
+  ///   The ID of the organization to which this membership belongs
   ///
   /// * [String] userId (required):
-  ///   The ID of the user that this membership belongs to
+  ///   The ID of the user to which this membership belongs
   ///
   /// * [UpdateOrganizationMembershipRequest] updateOrganizationMembershipRequest (required):
   Future<OrganizationMembership?> updateOrganizationMembership(
@@ -643,10 +643,10 @@ class OrganizationMembershipsApi {
   /// Parameters:
   ///
   /// * [String] organizationId (required):
-  ///   The ID of the organization the membership belongs to
+  ///   The ID of the organization to which this membership belongs
   ///
   /// * [String] userId (required):
-  ///   The ID of the user that this membership belongs to
+  ///   The ID of the user to which this membership belongs
   ///
   /// * [UpdateOrganizationMembershipMetadataRequest] updateOrganizationMembershipMetadataRequest:
   Future<http.Response> updateOrganizationMembershipMetadataWithHttpInfo(
@@ -688,10 +688,10 @@ class OrganizationMembershipsApi {
   /// Parameters:
   ///
   /// * [String] organizationId (required):
-  ///   The ID of the organization the membership belongs to
+  ///   The ID of the organization to which this membership belongs
   ///
   /// * [String] userId (required):
-  ///   The ID of the user that this membership belongs to
+  ///   The ID of the user to which this membership belongs
   ///
   /// * [UpdateOrganizationMembershipMetadataRequest] updateOrganizationMembershipMetadataRequest:
   Future<OrganizationMembership?> updateOrganizationMembershipMetadata(

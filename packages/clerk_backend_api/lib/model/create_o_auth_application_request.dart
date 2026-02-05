@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -17,6 +17,8 @@ class CreateOAuthApplicationRequest {
     this.redirectUris = const [],
     this.callbackUrl,
     this.scopes = 'profile email',
+    this.consentScreenEnabled = true,
+    this.pkceRequired = false,
     this.public,
   });
 
@@ -32,6 +34,12 @@ class CreateOAuthApplicationRequest {
   /// Define the allowed scopes for the new OAuth applications that dictate the user payload of the OAuth user info endpoint. Available scopes are `profile`, `email`, `public_metadata`, `private_metadata`. Provide the requested scopes as a string, separated by spaces.
   String? scopes;
 
+  /// True to enable a consent screen to display in the authentication flow.
+  bool? consentScreenEnabled;
+
+  /// True to require the Proof Key of Code Exchange (PKCE) flow.
+  bool? pkceRequired;
+
   /// If true, this client is public and you can use the Proof Key of Code Exchange (PKCE) flow.
   bool? public;
 
@@ -43,6 +51,8 @@ class CreateOAuthApplicationRequest {
           _deepEquality.equals(other.redirectUris, redirectUris) &&
           other.callbackUrl == callbackUrl &&
           other.scopes == scopes &&
+          other.consentScreenEnabled == consentScreenEnabled &&
+          other.pkceRequired == pkceRequired &&
           other.public == public;
 
   @override
@@ -52,11 +62,13 @@ class CreateOAuthApplicationRequest {
       (redirectUris == null ? 0 : redirectUris!.hashCode) +
       (callbackUrl == null ? 0 : callbackUrl!.hashCode) +
       (scopes == null ? 0 : scopes!.hashCode) +
+      (consentScreenEnabled == null ? 0 : consentScreenEnabled!.hashCode) +
+      (pkceRequired == null ? 0 : pkceRequired!.hashCode) +
       (public == null ? 0 : public!.hashCode);
 
   @override
   String toString() =>
-      'CreateOAuthApplicationRequest[name=$name, redirectUris=$redirectUris, callbackUrl=$callbackUrl, scopes=$scopes, public=$public]';
+      'CreateOAuthApplicationRequest[name=$name, redirectUris=$redirectUris, callbackUrl=$callbackUrl, scopes=$scopes, consentScreenEnabled=$consentScreenEnabled, pkceRequired=$pkceRequired, public=$public]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -75,6 +87,16 @@ class CreateOAuthApplicationRequest {
       json[r'scopes'] = this.scopes;
     } else {
       json[r'scopes'] = null;
+    }
+    if (this.consentScreenEnabled != null) {
+      json[r'consent_screen_enabled'] = this.consentScreenEnabled;
+    } else {
+      json[r'consent_screen_enabled'] = null;
+    }
+    if (this.pkceRequired != null) {
+      json[r'pkce_required'] = this.pkceRequired;
+    } else {
+      json[r'pkce_required'] = null;
     }
     if (this.public != null) {
       json[r'public'] = this.public;
@@ -113,6 +135,9 @@ class CreateOAuthApplicationRequest {
             : const [],
         callbackUrl: mapValueOfType<String>(json, r'callback_url'),
         scopes: mapValueOfType<String>(json, r'scopes') ?? 'profile email',
+        consentScreenEnabled:
+            mapValueOfType<bool>(json, r'consent_screen_enabled') ?? true,
+        pkceRequired: mapValueOfType<bool>(json, r'pkce_required') ?? false,
         public: mapValueOfType<bool>(json, r'public'),
       );
     }

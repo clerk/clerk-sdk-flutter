@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -92,7 +92,7 @@ class OrganizationInvitationsApi {
 
   /// Bulk create and send organization invitations
   ///
-  /// Creates new organization invitations in bulk and sends out emails to the provided email addresses with a link to accept the invitation and join the organization. You can specify a different `role` for each invited organization member. New organization invitations get a \"pending\" status until they are revoked by an organization administrator or accepted by the invitee. The request body supports passing an optional `redirect_url` parameter for each invitation. When the invited user clicks the link to accept the invitation, they will be redirected to the provided URL. Use this parameter to implement a custom invitation acceptance flow. You can specify the ID of the user that will send the invitation with the `inviter_user_id` parameter. Each invitation can have a different inviter user. Inviter users must be members with administrator privileges in the organization. Only \"admin\" members can create organization invitations. You can optionally provide public and private metadata for each organization invitation. The public metadata are visible by both the Frontend and the Backend, whereas the private metadata are only visible by the Backend. When the organization invitation is accepted, the metadata will be transferred to the newly created organization membership.
+  /// Creates new organization invitations in bulk and sends out emails to the provided email addresses with a link to accept the invitation and join the organization.  This endpoint is limited to a maximum of 10 invitations per API call. If you need to send more invitations, please make multiple requests.  You can specify a different `role` for each invited organization member. New organization invitations get a \"pending\" status until they are revoked by an organization administrator or accepted by the invitee. The request body supports passing an optional `redirect_url` parameter for each invitation. When the invited user clicks the link to accept the invitation, they will be redirected to the provided URL. Use this parameter to implement a custom invitation acceptance flow. You can specify the ID of the user that will send the invitation with the `inviter_user_id` parameter. Each invitation can have a different inviter user. Inviter users must be members with administrator privileges in the organization. Only \"admin\" members can create organization invitations. You can optionally provide public and private metadata for each organization invitation. The public metadata are visible by both the Frontend and the Backend, whereas the private metadata are only visible by the Backend. When the organization invitation is accepted, the metadata will be transferred to the newly created organization membership.
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -133,7 +133,7 @@ class OrganizationInvitationsApi {
 
   /// Bulk create and send organization invitations
   ///
-  /// Creates new organization invitations in bulk and sends out emails to the provided email addresses with a link to accept the invitation and join the organization. You can specify a different `role` for each invited organization member. New organization invitations get a \"pending\" status until they are revoked by an organization administrator or accepted by the invitee. The request body supports passing an optional `redirect_url` parameter for each invitation. When the invited user clicks the link to accept the invitation, they will be redirected to the provided URL. Use this parameter to implement a custom invitation acceptance flow. You can specify the ID of the user that will send the invitation with the `inviter_user_id` parameter. Each invitation can have a different inviter user. Inviter users must be members with administrator privileges in the organization. Only \"admin\" members can create organization invitations. You can optionally provide public and private metadata for each organization invitation. The public metadata are visible by both the Frontend and the Backend, whereas the private metadata are only visible by the Backend. When the organization invitation is accepted, the metadata will be transferred to the newly created organization membership.
+  /// Creates new organization invitations in bulk and sends out emails to the provided email addresses with a link to accept the invitation and join the organization.  This endpoint is limited to a maximum of 10 invitations per API call. If you need to send more invitations, please make multiple requests.  You can specify a different `role` for each invited organization member. New organization invitations get a \"pending\" status until they are revoked by an organization administrator or accepted by the invitee. The request body supports passing an optional `redirect_url` parameter for each invitation. When the invited user clicks the link to accept the invitation, they will be redirected to the provided URL. Use this parameter to implement a custom invitation acceptance flow. You can specify the ID of the user that will send the invitation with the `inviter_user_id` parameter. Each invitation can have a different inviter user. Inviter users must be members with administrator privileges in the organization. Only \"admin\" members can create organization invitations. You can optionally provide public and private metadata for each organization invitation. The public metadata are visible by both the Frontend and the Backend, whereas the private metadata are only visible by the Backend. When the organization invitation is accepted, the metadata will be transferred to the newly created organization membership.
   ///
   /// Parameters:
   ///
@@ -376,6 +376,12 @@ class OrganizationInvitationsApi {
   /// * [String] status:
   ///   Filter organization invitations based on their status
   ///
+  /// * [String] emailAddress:
+  ///   Returns organization invitations inviting the specified email address.
+  ///
+  /// * [String] orderBy:
+  ///   Allows to return organization invitations in a particular order. You can order the returned organization invitations either by their `created_at` or `email_address`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want organization invitations to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. Defaults to `-created_at`.
+  ///
   /// * [int] limit:
   ///   Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`.
   ///
@@ -384,6 +390,8 @@ class OrganizationInvitationsApi {
   Future<http.Response> listOrganizationInvitationsWithHttpInfo(
     String organizationId, {
     String? status,
+    String? emailAddress,
+    String? orderBy,
     int? limit,
     int? offset,
   }) async {
@@ -400,6 +408,12 @@ class OrganizationInvitationsApi {
 
     if (status != null) {
       queryParams.addAll(_queryParams('', 'status', status));
+    }
+    if (emailAddress != null) {
+      queryParams.addAll(_queryParams('', 'email_address', emailAddress));
+    }
+    if (orderBy != null) {
+      queryParams.addAll(_queryParams('', 'order_by', orderBy));
     }
     if (limit != null) {
       queryParams.addAll(_queryParams('', 'limit', limit));
@@ -433,6 +447,12 @@ class OrganizationInvitationsApi {
   /// * [String] status:
   ///   Filter organization invitations based on their status
   ///
+  /// * [String] emailAddress:
+  ///   Returns organization invitations inviting the specified email address.
+  ///
+  /// * [String] orderBy:
+  ///   Allows to return organization invitations in a particular order. You can order the returned organization invitations either by their `created_at` or `email_address`. In order to specify the direction, you can use the `+/-` symbols prepended in the property to order by. For example, if you want organization invitations to be returned in descending order according to their `created_at` property, you can use `-created_at`. If you don't use `+` or `-`, then `+` is implied. Defaults to `-created_at`.
+  ///
   /// * [int] limit:
   ///   Applies a limit to the number of results returned. Can be used for paginating the results together with `offset`.
   ///
@@ -441,12 +461,16 @@ class OrganizationInvitationsApi {
   Future<OrganizationInvitations?> listOrganizationInvitations(
     String organizationId, {
     String? status,
+    String? emailAddress,
+    String? orderBy,
     int? limit,
     int? offset,
   }) async {
     final response = await listOrganizationInvitationsWithHttpInfo(
       organizationId,
       status: status,
+      emailAddress: emailAddress,
+      orderBy: orderBy,
       limit: limit,
       offset: offset,
     );

@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -19,6 +19,8 @@ class OrganizationInvitation {
     required this.role,
     required this.roleName,
     this.organizationId,
+    required this.inviterId,
+    required this.publicInviterData,
     this.status,
     this.publicMetadata = const {},
     this.privateMetadata = const {},
@@ -46,6 +48,10 @@ class OrganizationInvitation {
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
   String? organizationId;
+
+  String? inviterId;
+
+  OrganizationInvitationPublicUserData? publicInviterData;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -80,6 +86,8 @@ class OrganizationInvitation {
           other.role == role &&
           other.roleName == roleName &&
           other.organizationId == organizationId &&
+          other.inviterId == inviterId &&
+          other.publicInviterData == publicInviterData &&
           other.status == status &&
           _deepEquality.equals(other.publicMetadata, publicMetadata) &&
           _deepEquality.equals(other.privateMetadata, privateMetadata) &&
@@ -97,6 +105,8 @@ class OrganizationInvitation {
       (role.hashCode) +
       (roleName.hashCode) +
       (organizationId == null ? 0 : organizationId!.hashCode) +
+      (inviterId == null ? 0 : inviterId!.hashCode) +
+      (publicInviterData == null ? 0 : publicInviterData!.hashCode) +
       (status == null ? 0 : status!.hashCode) +
       (publicMetadata.hashCode) +
       (privateMetadata.hashCode) +
@@ -107,7 +117,7 @@ class OrganizationInvitation {
 
   @override
   String toString() =>
-      'OrganizationInvitation[object=$object, id=$id, emailAddress=$emailAddress, role=$role, roleName=$roleName, organizationId=$organizationId, status=$status, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, url=$url, expiresAt=$expiresAt, createdAt=$createdAt, updatedAt=$updatedAt]';
+      'OrganizationInvitation[object=$object, id=$id, emailAddress=$emailAddress, role=$role, roleName=$roleName, organizationId=$organizationId, inviterId=$inviterId, publicInviterData=$publicInviterData, status=$status, publicMetadata=$publicMetadata, privateMetadata=$privateMetadata, url=$url, expiresAt=$expiresAt, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -120,6 +130,16 @@ class OrganizationInvitation {
       json[r'organization_id'] = this.organizationId;
     } else {
       json[r'organization_id'] = null;
+    }
+    if (this.inviterId != null) {
+      json[r'inviter_id'] = this.inviterId;
+    } else {
+      json[r'inviter_id'] = null;
+    }
+    if (this.publicInviterData != null) {
+      json[r'public_inviter_data'] = this.publicInviterData;
+    } else {
+      json[r'public_inviter_data'] = null;
     }
     if (this.status != null) {
       json[r'status'] = this.status;
@@ -170,6 +190,9 @@ class OrganizationInvitation {
         role: mapValueOfType<String>(json, r'role')!,
         roleName: mapValueOfType<String>(json, r'role_name')!,
         organizationId: mapValueOfType<String>(json, r'organization_id'),
+        inviterId: mapValueOfType<String>(json, r'inviter_id'),
+        publicInviterData: OrganizationInvitationPublicUserData.fromJson(
+            json[r'public_inviter_data']),
         status: mapValueOfType<String>(json, r'status'),
         publicMetadata:
             mapCastOfType<String, Object>(json, r'public_metadata')!,
@@ -241,6 +264,8 @@ class OrganizationInvitation {
     'email_address',
     'role',
     'role_name',
+    'inviter_id',
+    'public_inviter_data',
     'public_metadata',
     'url',
     'expires_at',

@@ -1,7 +1,7 @@
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
-// @dart=2.12
+// @dart=2.18
 
 // ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
@@ -17,7 +17,6 @@ class ClerkError {
     required this.longMessage,
     required this.code,
     this.meta,
-    this.clerkTraceId,
   });
 
   String message;
@@ -34,14 +33,6 @@ class ClerkError {
   ///
   Object? meta;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? clerkTraceId;
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -49,8 +40,7 @@ class ClerkError {
           other.message == message &&
           other.longMessage == longMessage &&
           other.code == code &&
-          other.meta == meta &&
-          other.clerkTraceId == clerkTraceId;
+          other.meta == meta;
 
   @override
   int get hashCode =>
@@ -58,12 +48,11 @@ class ClerkError {
       (message.hashCode) +
       (longMessage.hashCode) +
       (code.hashCode) +
-      (meta == null ? 0 : meta!.hashCode) +
-      (clerkTraceId == null ? 0 : clerkTraceId!.hashCode);
+      (meta == null ? 0 : meta!.hashCode);
 
   @override
   String toString() =>
-      'ClerkError[message=$message, longMessage=$longMessage, code=$code, meta=$meta, clerkTraceId=$clerkTraceId]';
+      'ClerkError[message=$message, longMessage=$longMessage, code=$code, meta=$meta]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -74,11 +63,6 @@ class ClerkError {
       json[r'meta'] = this.meta;
     } else {
       json[r'meta'] = null;
-    }
-    if (this.clerkTraceId != null) {
-      json[r'clerk_trace_id'] = this.clerkTraceId;
-    } else {
-      json[r'clerk_trace_id'] = null;
     }
     return json;
   }
@@ -108,7 +92,6 @@ class ClerkError {
         longMessage: mapValueOfType<String>(json, r'long_message')!,
         code: mapValueOfType<String>(json, r'code')!,
         meta: mapValueOfType<Object>(json, r'meta'),
-        clerkTraceId: mapValueOfType<String>(json, r'clerk_trace_id'),
       );
     }
     return null;

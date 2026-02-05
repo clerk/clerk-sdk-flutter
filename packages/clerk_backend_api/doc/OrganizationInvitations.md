@@ -1,8 +1,8 @@
-# clerk_backend_api.model.OrganizationInvitations
+# openapi.model.OrganizationInvitations
 
 ## Load the model package
 ```dart
-import 'package:clerk_backend_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties

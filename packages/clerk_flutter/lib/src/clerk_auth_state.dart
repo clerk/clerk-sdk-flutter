@@ -37,12 +37,15 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   ClerkAuthConfig get config => _config;
   final ClerkAuthConfig _config;
 
-  StreamSubscription<ClerkDeepLink?>? _deepLinkSub;
+  StreamSubscription<Uri?>? _deepLinkSub;
 
   final _errors = StreamController<clerk.ClerkError>.broadcast();
 
   /// Stream of [clerk.ClerkError]s
   Stream<clerk.ClerkError> get errorStream => _errors.stream;
+
+  /// Lock to prevent multiple updates at once
+  final _updateLock = _UpdateLock();
 
   @override
   void handleError(clerk.ClerkError error) {
@@ -68,8 +71,8 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     _errors.close();
   }
 
-  void _processDeepLink(ClerkDeepLink? link) {
-    if (link case ClerkDeepLink link) {
+  void _processDeepLink(Uri? link) {
+    if (link case Uri link) {
       parseDeepLink(link);
     }
   }
@@ -87,8 +90,10 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
 
   @override
   void update() {
-    super.update();
-    notifyListeners();
+    if (_updateLock.isUnlocked) {
+      super.update();
+      notifyListeners();
+    }
   }
 
   @override
@@ -188,7 +193,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
           final uri = Uri.parse(redirectUrl);
           await safelyCall(
             context,
-            () => parseDeepLink(ClerkDeepLink(strategy: strategy, uri: uri)),
+            () => parseDeepLink(uri),
             onError: onError,
           );
           if (context.mounted) {
@@ -247,9 +252,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
         if (redirectUrl != null && context.mounted) {
           await safelyCall(
             context,
-            () => parseDeepLink(
-              ClerkDeepLink(strategy: strategy, uri: Uri.parse(redirectUrl)),
-            ),
+            () => parseDeepLink(Uri.parse(redirectUrl)),
             onError: onError,
           );
           if (context.mounted) {
@@ -282,22 +285,19 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   ///
   /// If the link contains no known [clerk.Strategy], it is assumed that the
   /// final element of the [uri.path] will be the name of the strategy to use
-  Future<bool> parseDeepLink(ClerkDeepLink link) async {
-    final strategy = switch (link.strategy) {
-      clerk.Strategy strategy when strategy.isKnown => strategy,
-      _ => clerk.Strategy.fromJson(link.uri.pathSegments.last),
-    };
-
-    if (strategy.isUnknown) {
-      return false;
-    } else if (strategy == clerk.Strategy.emailLink) {
-      await refreshClient();
-    } else if (link.uri.queryParameters[_kRotatingTokenNonce] case String token
-        when strategy.isSSO) {
-      await completeOAuthSignIn(strategy: strategy, token: token);
-    } else {
-      await refreshClient();
-      await transfer();
+  Future<bool> parseDeepLink(Uri uri) async {
+    if (signIn?.verification case clerk.Verification verification
+        when verification.status.isVerified == false) {
+      if (verification.strategy.isSSO) {
+        if (uri.queryParameters[_kRotatingTokenNonce] case String token) {
+          await completeOAuthSignIn(token: token);
+        } else {
+          await refreshClient();
+          await transfer();
+        }
+      }
+    } else if (user is clerk.User) {
+      update();
     }
 
     return true;
@@ -311,14 +311,21 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     ClerkErrorCallback? onError,
   }) async {
     T? result;
+
+    _updateLock.lock();
+
     final overlay = ClerkOverlay.of(context);
     _loadingOverlay.insertInto(overlay);
+
     try {
       result = await fn();
     } on clerk.ClerkError catch (error) {
       _onError(error, onError);
     } finally {
       _loadingOverlay.removeFrom(overlay);
+      if (_updateLock.release()) {
+        update();
+      }
     }
     return result;
   }
@@ -506,4 +513,16 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
       body: WebViewWidget(controller: controller),
     );
   }
+}
+
+class _UpdateLock {
+  int _lockCount = 0;
+
+  void lock() => ++_lockCount;
+
+  bool release() => _lockCount > 0 && --_lockCount == 0;
+
+  bool get isUnlocked => _lockCount == 0;
+
+  bool get isLocked => _lockCount > 0;
 }

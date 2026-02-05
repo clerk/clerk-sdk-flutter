@@ -34,6 +34,7 @@ class Closeable extends StatefulWidget {
     this.alignment = Alignment.topCenter,
     this.closingAlignment,
     this.curve = Curves.linear,
+    this.keepAlive = false,
     this.onEnd,
     this.child,
   });
@@ -64,6 +65,9 @@ class Closeable extends StatefulWidget {
   /// optional function to call when closing or opening has
   /// finished animating
   final ValueChanged<bool>? onEnd;
+
+  /// Whether to keep the child widget alive when closed
+  final bool keepAlive;
 
   /// Child [Widget] to be displayed in the panel
   final Widget? child;
@@ -116,7 +120,7 @@ class _CloseableState extends State<Closeable> {
           widthFactor: widget.axis.isHorizontal ? value : null,
           onEnd: () {
             widget.onEnd?.call(closed);
-            if (closed) {
+            if (closed && widget.keepAlive == false) {
               setState(() => _renderChild = false);
             }
           },
@@ -142,6 +146,7 @@ class Openable extends Closeable {
     super.closingAlignment,
     super.curve,
     super.onEnd,
+    super.keepAlive,
     super.child,
   }) : super(closed: open == false);
 }

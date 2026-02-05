@@ -41,29 +41,39 @@ class ExampleApp extends StatelessWidget {
   /// Publishable Key
   final String publishableKey;
 
-  /// This function maps a [Uri] into a [ClerkDeepLink], which is essentially
-  /// just a container for the [Uri]. The [ClerkDeepLink] can also
-  /// contain a [clerk.Strategy], to use in preference to a strategy
-  /// inferred from the [Uri]
-  ClerkDeepLink? handleDeepLink(Uri uri) {
-    // Check the uri to see if it should be handled by the Clerk SDK...
-    if (uri.pathSegments.first == 'auth') {
-      // ...and return a [ClerkDeepLink] which tells the SDK to handle it.
-      return ClerkDeepLink(uri: uri);
+  static const _redirectionScheme = 'clerk';
+  static const _redirectionHost = 'example.com';
+  static const _oauthRedirectionPath = '/oauth';
+  static const _emailLinkRedirectionPath = '/email_link';
+  static const _redirectionPaths = [
+    _oauthRedirectionPath,
+    _emailLinkRedirectionPath
+  ];
+
+  /// This function checks a [Uri] to see if it's a deep link that the
+  /// Clerk SDK should handle. If so, the [Uri] is returned to be consumed
+  /// by the SDK's `deepLinkStream`. If not, the [Uri] is handled another
+  /// way, and null returned to tell the Clerk SDK to ignore it.
+  Future<Uri?> handleDeepLink(Uri uri) async {
+    // Check the [Uri]] to see if it should be handled by the Clerk SDK...
+    if (uri.scheme == _redirectionScheme &&
+        uri.host == _redirectionHost &&
+        _redirectionPaths.contains(uri.path)) {
+      // ...and if so return it, telling the SDK to handle it.
+      return uri;
     }
 
     // If the host app deems the deep link to be not relevant to the Clerk SDK,
     // we can choose here to process it separately. Alternatively, we can just
     // ignore it for now, and let the app handle it in a different manner.
-    handleDeepLinkInAnotherWay(uri);
+    await handleDeepLinkInAnotherWay(uri);
 
-    // We then return [null]  instead of a [ClerkDeepLink] to inhibit further
-    // processing by the SDK.
+    // We then return [null] to inhibit further processing by the SDK.
     return null;
   }
 
   /// This function handles a deep link that is not relevant to the Clerk SDK
-  void handleDeepLinkInAnotherWay(Uri uri) {
+  Future<void> handleDeepLinkInAnotherWay(Uri uri) async {
     // do something with the deep link that is outside the remit
     // of the Clerk SDK
   }
@@ -72,13 +82,27 @@ class ExampleApp extends StatelessWidget {
   /// redirect for a given [clerk.Strategy], or [null] if redirection should
   /// be handled in-app
   Uri? generateDeepLink(BuildContext context, clerk.Strategy strategy) {
-    return Uri.parse('clerk://example.com/auth/$strategy');
+    if (strategy.isOauth) {
+      return Uri(
+        scheme: _redirectionScheme,
+        host: _redirectionHost,
+        path: _oauthRedirectionPath,
+      );
+    }
+
+    if (strategy.isEmailLink) {
+      return Uri(
+        scheme: _redirectionScheme,
+        host: _redirectionHost,
+        path: _emailLinkRedirectionPath,
+      );
+    }
 
     // if you want to use the default in-app SSO, just remove the
     // [redirectionGenerator] parameter from the [ClerkAuthConfig] object
     // below, or...
 
-    // return null;
+    return null;
   }
 
   @override
@@ -87,7 +111,7 @@ class ExampleApp extends StatelessWidget {
       config: ClerkAuthConfig(
         publishableKey: publishableKey,
         redirectionGenerator: generateDeepLink,
-        deepLinkStream: AppLinks().allUriLinkStream.map(handleDeepLink),
+        deepLinkStream: AppLinks().allUriLinkStream.asyncMap(handleDeepLink),
       ),
       child: MaterialApp(
         theme: ThemeData.light(),

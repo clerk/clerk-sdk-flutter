@@ -4,6 +4,20 @@
   it carried is no longer being used. Deep links are now passed into the Clerk SDK 
   as `Stream<Uri?> deepLinkStream` in the `ClerkAuthConfig`. 
 
+* feat: deprecate strategy in clerkdeeplink [#345]
+* fix: make sso sign up complete [#343]
+* feat: expose externalid on user object [#339]
+* feat: push error stream up to clerk_flutter [#335]
+* fix: dark-mode base inversion checking on strategy [#333]
+* fix: ensure api throws external errors rather than clerk errors [#331]
+* feat: improve sso provider logos display on dark themes [#329]
+* fix: add externalerrorcollection to autherror [#316]
+* feat: apple and google auth token support [#308]
+* feat: allow other launchmodes for sso [#307]
+* fix: sso sign up [#306]
+* fix: improve phone number handling [#304]
+* feat: add theme extension to drive colors and text styles [#298]
+
 ## 0.0.13-beta
 
 * feat: make test helpers globally available [#292]

@@ -1,3 +1,23 @@
+## 0.0.14-beta
+
+* BREAKING CHANGE: The `ClerkDeepLink` class has been removed, since the information
+  it carried is no longer being used. Deep links are now passed into the Clerk SDK 
+  as `Stream<Uri?> deepLinkStream` in the `ClerkAuthConfig`. 
+
+* feat: deprecate strategy in clerkdeeplink [#345]
+* fix: make sso sign up complete [#343]
+* feat: expose externalid on user object [#339]
+* feat: push error stream up to clerk_flutter [#335]
+* fix: ensure api throws external errors rather than clerk errors [#331]
+* feat: improve second factor flow, now supports TOTP [#325] #328
+* fix: add externalerrorcollection to autherror [#316]
+* feat: enable setting of primary email address and phone number [#310]
+* feat: apple and google auth token support [#308]
+* feat: delete identifying data [#309]
+* fix: sso sign up [#306]
+* fix: improve phone number handling [#304]
+* feat: add low-level access to api [#301]
+
 ## 0.0.13-beta
 
 * feat: make test helpers globally available [#292]

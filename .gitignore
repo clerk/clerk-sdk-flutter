@@ -35,3 +35,6 @@ pubspec_overrides.yaml
 
 packages/clerk_flutter/widgetbook/.env
 packages/clerk_flutter/example/example.env
+
+# Coverage output
+coverage/

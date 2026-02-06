@@ -88,8 +88,7 @@ scripts:
       melos run coverage:dart
       melos run coverage:flutter
 
-  # Coverage for Dart packages (clerk_auth)
-  # Note: clerk_backend_api is excluded due to test environment issues
+  # Coverage for Dart packages (clerk_auth, clerk_backend_api)
   coverage:dart:
     name: Coverage Dart packages
     description: Run tests with coverage for Dart packages
@@ -97,6 +96,7 @@ scripts:
     packageFilters:
       scope:
         - "clerk_auth"
+        - "clerk_backend_api"
 
   # Coverage for Flutter packages (clerk_flutter)
   coverage:flutter:
@@ -113,8 +113,8 @@ scripts:
     run: |
       echo "Merging coverage reports..."
       mkdir -p coverage
-      # Combine all available lcov.info files (clerk_auth and clerk_flutter)
-      cat packages/clerk_auth/coverage/lcov.info packages/clerk_flutter/coverage/lcov.info > coverage/lcov.info 2>/dev/null || true
+      # Combine all available lcov.info files
+      cat packages/clerk_auth/coverage/lcov.info packages/clerk_flutter/coverage/lcov.info packages/clerk_backend_api/coverage/lcov.info > coverage/lcov.info 2>/dev/null || true
       echo "Merged coverage report saved to coverage/lcov.info"
 
   # Generate HTML coverage report (requires lcov to be installed)

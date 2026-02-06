@@ -30,6 +30,7 @@ dependencies:
   webview_flutter: ^4.4.3
 
 dev_dependencies:
+  coverage: ^1.15.0
   flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter

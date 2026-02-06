@@ -53,3 +53,74 @@ scripts:
     run: melos exec -- arb_utils sort l10n/en.arb
     packageFilters:
       scope: "clerk_flutter"
+
+  # Run tests
+  test:
+    name: Test all
+    description: Run tests in all packages
+    run: melos exec -- dart test
+    packageFilters:
+      dirExists: test
+
+  # Run tests for Flutter packages
+  test:flutter:
+    name: Test Flutter packages
+    description: Run flutter test in Flutter packages
+    run: melos exec -- flutter test
+    packageFilters:
+      scope: "clerk_flutter"
+
+  # Run tests for Dart packages
+  test:dart:
+    name: Test Dart packages
+    description: Run dart test in Dart packages
+    run: melos exec -- dart test
+    packageFilters:
+      scope:
+        - "clerk_auth"
+        - "clerk_backend_api"
+
+  # Coverage - Run tests with coverage for all packages
+  coverage:
+    name: Coverage all
+    description: Run tests with coverage in all packages and generate lcov reports
+    run: |
+      melos run coverage:dart
+      melos run coverage:flutter
+
+  # Coverage for Dart packages (clerk_auth)
+  # Note: clerk_backend_api is excluded due to test environment issues
+  coverage:dart:
+    name: Coverage Dart packages
+    description: Run tests with coverage for Dart packages
+    run: melos exec -- dart run coverage:test_with_coverage
+    packageFilters:
+      scope:
+        - "clerk_auth"
+
+  # Coverage for Flutter packages (clerk_flutter)
+  coverage:flutter:
+    name: Coverage Flutter packages
+    description: Run tests with coverage for Flutter packages
+    run: melos exec -- flutter test --coverage
+    packageFilters:
+      scope: "clerk_flutter"
+
+  # Merge coverage reports from all packages
+  coverage:merge:
+    name: Merge coverage
+    description: Merge all lcov.info files into a single report
+    run: |
+      echo "Merging coverage reports..."
+      mkdir -p coverage
+      # Combine all available lcov.info files (clerk_auth and clerk_flutter)
+      cat packages/clerk_auth/coverage/lcov.info packages/clerk_flutter/coverage/lcov.info > coverage/lcov.info 2>/dev/null || true
+      echo "Merged coverage report saved to coverage/lcov.info"
+
+  # Generate HTML coverage report (requires lcov to be installed)
+  coverage:html:
+    name: Generate HTML coverage report
+    description: Generate HTML report from merged lcov.info (requires lcov)
+    run: |
+      genhtml coverage/lcov.info -o coverage/html
+      echo "HTML coverage report generated at coverage/html/index.html"

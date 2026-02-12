@@ -164,6 +164,141 @@ void main() {
         final signUp = _createTestSignUp();
         expect(signUp.isVerifying(Strategy.emailCode), false);
       });
+
+      test('returns false when verification is already verified', () {
+        final signUp = _createTestSignUp(
+          verifications: {
+            Field.emailAddress: Verification(
+              status: Status.verified,
+              strategy: Strategy.emailCode,
+              attempts: 1,
+              expireAt: DateTimeExt.epoch,
+            ),
+          },
+        );
+        expect(signUp.isVerifying(Strategy.emailCode), false);
+      });
+    });
+
+    group('awaiting', () {
+      test('returns true when field has unverified verification', () {
+        final signUp = _createTestSignUp(
+          verifications: {
+            Field.emailAddress: Verification(
+              status: Status.unverified,
+              strategy: Strategy.emailCode,
+              attempts: 0,
+              expireAt: DateTimeExt.epoch,
+            ),
+          },
+        );
+        expect(signUp.awaiting(Field.emailAddress));
+      });
+
+      test('returns false when field has verified verification', () {
+        final signUp = _createTestSignUp(
+          verifications: {
+            Field.emailAddress: Verification(
+              status: Status.verified,
+              strategy: Strategy.emailCode,
+              attempts: 1,
+              expireAt: DateTimeExt.epoch,
+            ),
+          },
+        );
+        expect(signUp.awaiting(Field.emailAddress), false);
+      });
+
+      test('returns false when field has no verification', () {
+        final signUp = _createTestSignUp();
+        expect(signUp.awaiting(Field.emailAddress), false);
+      });
+    });
+
+    group('isTransferable', () {
+      test('returns true when any verification is transferable', () {
+        final signUp = _createTestSignUp(
+          verifications: {
+            Field.emailAddress: Verification(
+              status: Status.transferable,
+              strategy: Strategy.emailCode,
+              attempts: 0,
+              expireAt: DateTimeExt.epoch,
+            ),
+          },
+        );
+        expect(signUp.isTransferable);
+      });
+
+      test('returns false when no verification is transferable', () {
+        final signUp = _createTestSignUp(
+          verifications: {
+            Field.emailAddress: Verification(
+              status: Status.verified,
+              strategy: Strategy.emailCode,
+              attempts: 1,
+              expireAt: DateTimeExt.epoch,
+            ),
+          },
+        );
+        expect(signUp.isTransferable, false);
+      });
+
+      test('returns false when no verifications', () {
+        final signUp = _createTestSignUp();
+        expect(signUp.isTransferable, false);
+      });
+    });
+
+    group('fromJson/toJson', () {
+      test('round-trips correctly', () {
+        final signUp = SignUp(
+          id: 'sign_up_123',
+          status: Status.missingRequirements,
+          requiredFields: [Field.emailAddress, Field.password],
+          optionalFields: [Field.firstName],
+          missingFields: [Field.password],
+          unverifiedFields: [Field.emailAddress],
+          username: 'testuser',
+          emailAddress: 'test@example.com',
+          phoneNumber: '+1234567890',
+          web3Wallet: null,
+          passwordEnabled: true,
+          firstName: 'Test',
+          lastName: 'User',
+          unsafeMetadata: <String, dynamic>{'key': 'value'},
+          publicMetadata: <String, dynamic>{},
+          verifications: {
+            Field.emailAddress: Verification(
+              status: Status.unverified,
+              strategy: Strategy.emailCode,
+              attempts: 0,
+              expireAt: DateTime.fromMillisecondsSinceEpoch(1700000000000),
+            ),
+          },
+          customAction: false,
+          externalId: null,
+          createdSessionId: null,
+          createdUserId: null,
+          abandonAt: DateTime.fromMillisecondsSinceEpoch(1700000000000),
+        );
+
+        final json = signUp.toJson();
+        final restored = SignUp.fromJson(json);
+
+        expect(restored.id, signUp.id);
+        expect(restored.status, signUp.status);
+        expect(restored.username, signUp.username);
+        expect(restored.emailAddress, signUp.emailAddress);
+        expect(restored.phoneNumber, signUp.phoneNumber);
+        expect(restored.passwordEnabled, signUp.passwordEnabled);
+        expect(restored.firstName, signUp.firstName);
+        expect(restored.lastName, signUp.lastName);
+        expect(restored.requiredFields.length, signUp.requiredFields.length);
+        expect(restored.optionalFields.length, signUp.optionalFields.length);
+        expect(restored.missingFields.length, signUp.missingFields.length);
+        expect(restored.unverifiedFields.length, signUp.unverifiedFields.length);
+      });
     });
   });
 }

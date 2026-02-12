@@ -11,92 +11,110 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for OAuthApplication
 void main() {
-  // final instance = OAuthApplication();
+  group('OAuthApplication', () {
+    late OAuthApplication instance;
 
-  group('test OAuthApplication', () {
-    // String object
-    test('to test the property `object`', () async {
-      // TODO
+    setUp(() {
+      instance = OAuthApplication(
+        object: OAuthApplicationObjectEnum.oauthApplication,
+        id: 'oauth_123',
+        instanceId: 'inst_123',
+        name: 'Test OAuth App',
+        clientId: 'client_123',
+        clientUri: 'https://example.com',
+        clientImageUrl: null,
+        dynamicallyRegistered: false,
+        consentScreenEnabled: true,
+        pkceRequired: true,
+        public: false,
+        scopes: 'openid profile email',
+        redirectUris: ['https://example.com/callback'],
+        callbackUrl: 'https://example.com/callback',
+        authorizeUrl: 'https://auth.example.com/authorize',
+        tokenFetchUrl: 'https://auth.example.com/token',
+        userInfoUrl: 'https://auth.example.com/userinfo',
+        discoveryUrl: 'https://auth.example.com/.well-known/openid-configuration',
+        tokenIntrospectionUrl: 'https://auth.example.com/introspect',
+        createdAt: 1234567890,
+        updatedAt: 1234567890,
+      );
     });
 
-    // String id
-    test('to test the property `id`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.id, 'oauth_123');
+      expect(instance.object, OAuthApplicationObjectEnum.oauthApplication);
+      expect(instance.instanceId, 'inst_123');
+      expect(instance.name, 'Test OAuth App');
+      expect(instance.clientId, 'client_123');
+      expect(instance.public, false);
+      expect(instance.pkceRequired, true);
     });
 
-    // String instanceId
-    test('to test the property `instanceId`', () async {
-      // TODO
+    test('constructor uses default values for optional lists', () {
+      final app = OAuthApplication(
+        object: OAuthApplicationObjectEnum.oauthApplication,
+        id: 'oauth_456',
+        instanceId: 'inst_456',
+        name: 'Another App',
+        clientId: 'client_456',
+        clientUri: null,
+        clientImageUrl: null,
+        dynamicallyRegistered: false,
+        consentScreenEnabled: false,
+        pkceRequired: false,
+        public: true,
+        scopes: 'openid',
+        callbackUrl: 'https://example.com/cb',
+        authorizeUrl: 'https://auth.example.com/authorize',
+        tokenFetchUrl: 'https://auth.example.com/token',
+        userInfoUrl: 'https://auth.example.com/userinfo',
+        discoveryUrl: 'https://auth.example.com/.well-known/openid-configuration',
+        tokenIntrospectionUrl: 'https://auth.example.com/introspect',
+        createdAt: 1234567890,
+        updatedAt: 1234567890,
+      );
+      expect(app.redirectUris, isEmpty);
     });
 
-    // String name
-    test('to test the property `name`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['id'], 'oauth_123');
+      expect(json['object'], OAuthApplicationObjectEnum.oauthApplication);
+      expect(json['instance_id'], 'inst_123');
+      expect(json['name'], 'Test OAuth App');
+      expect(json['client_id'], 'client_123');
+      expect(json['public'], false);
+      expect(json['scopes'], 'openid profile email');
     });
 
-    // String clientId
-    test('to test the property `clientId`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(OAuthApplication.fromJson('invalid'), isNull);
+      expect(OAuthApplication.fromJson(123), isNull);
+      expect(OAuthApplication.fromJson(null), isNull);
     });
 
-    // bool public
-    test('to test the property `public`', () async {
-      // TODO
+    test('listFromJson returns empty list for empty input', () {
+      expect(OAuthApplication.listFromJson([]), isEmpty);
+      expect(OAuthApplication.listFromJson(null), isEmpty);
     });
 
-    // String scopes
-    test('to test the property `scopes`', () async {
-      // TODO
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
     });
 
-    // List<String> redirectUris (default value: const [])
-    test('to test the property `redirectUris`', () async {
-      // TODO
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('OAuthApplication'));
+      expect(str, contains('id=oauth_123'));
     });
 
-    // Deprecated: Use redirect_uris instead.
-    // String callbackUrl
-    test('to test the property `callbackUrl`', () async {
-      // TODO
-    });
-
-    // String authorizeUrl
-    test('to test the property `authorizeUrl`', () async {
-      // TODO
-    });
-
-    // String tokenFetchUrl
-    test('to test the property `tokenFetchUrl`', () async {
-      // TODO
-    });
-
-    // String userInfoUrl
-    test('to test the property `userInfoUrl`', () async {
-      // TODO
-    });
-
-    // String discoveryUrl
-    test('to test the property `discoveryUrl`', () async {
-      // TODO
-    });
-
-    // String tokenIntrospectionUrl
-    test('to test the property `tokenIntrospectionUrl`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of creation.
-    // int createdAt
-    test('to test the property `createdAt`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of last update.
-    // int updatedAt
-    test('to test the property `updatedAt`', () async {
-      // TODO
+    test('requiredKeys contains required fields', () {
+      expect(OAuthApplication.requiredKeys, contains('object'));
+      expect(OAuthApplication.requiredKeys, contains('id'));
+      expect(OAuthApplication.requiredKeys, contains('instance_id'));
+      expect(OAuthApplication.requiredKeys, contains('name'));
+      expect(OAuthApplication.requiredKeys, contains('client_id'));
     });
   });
 }

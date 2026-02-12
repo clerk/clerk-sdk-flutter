@@ -11,39 +11,79 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for FromOAuth
 void main() {
-  // final instance = FromOAuth();
+  group('FromOAuth', () {
+    late FromOAuth instance;
 
-  group('test FromOAuth', () {
-    // String status
-    test('to test the property `status`', () async {
-      // TODO
+    setUp(() {
+      instance = FromOAuth(
+        status: FromOAuthStatusEnum.unverified,
+        strategy: 'oauth_google',
+        expireAt: 1234567890,
+        attempts: 0,
+      );
     });
 
-    // String strategy
-    test('to test the property `strategy`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.status, FromOAuthStatusEnum.unverified);
+      expect(instance.strategy, 'oauth_google');
+      expect(instance.expireAt, 1234567890);
+      expect(instance.attempts, 0);
+      expect(instance.error, isNull);
+      expect(instance.verifiedAtClient, isNull);
     });
 
-    // FromOAuthError error
-    test('to test the property `error`', () async {
-      // TODO
+    test('constructor creates instance with optional parameters', () {
+      final oauth = FromOAuth(
+        status: FromOAuthStatusEnum.verified,
+        strategy: 'oauth_github',
+        expireAt: 1234567890,
+        attempts: 1,
+        verifiedAtClient: 'client_123',
+      );
+      expect(oauth.status, FromOAuthStatusEnum.verified);
+      expect(oauth.verifiedAtClient, 'client_123');
     });
 
-    // int expireAt
-    test('to test the property `expireAt`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['status'], FromOAuthStatusEnum.unverified);
+      expect(json['strategy'], 'oauth_google');
+      expect(json['expire_at'], 1234567890);
+      expect(json['attempts'], 0);
     });
 
-    // int attempts
-    test('to test the property `attempts`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(FromOAuth.fromJson('invalid'), isNull);
+      expect(FromOAuth.fromJson(123), isNull);
+      expect(FromOAuth.fromJson(null), isNull);
     });
 
-    // String verifiedAtClient
-    test('to test the property `verifiedAtClient`', () async {
-      // TODO
+    test('listFromJson returns empty list for empty input', () {
+      expect(FromOAuth.listFromJson([]), isEmpty);
+      expect(FromOAuth.listFromJson(null), isEmpty);
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('FromOAuth'));
+      expect(str, contains('strategy=oauth_google'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(FromOAuth.requiredKeys, contains('status'));
+      expect(FromOAuth.requiredKeys, contains('strategy'));
+      expect(FromOAuth.requiredKeys, contains('expire_at'));
+      expect(FromOAuth.requiredKeys, contains('attempts'));
+    });
+
+    test('status enum values are correct', () {
+      expect(FromOAuthStatusEnum.unverified.value, 'unverified');
+      expect(FromOAuthStatusEnum.verified.value, 'verified');
     });
   });
 }

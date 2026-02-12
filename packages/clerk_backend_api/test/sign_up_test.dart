@@ -11,131 +11,102 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for SignUp
 void main() {
-  // final instance = SignUp();
+  group('SignUp', () {
+    late SignUp instance;
+    late SignUpVerifications verifications;
 
-  group('test SignUp', () {
-    // String object
-    test('to test the property `object`', () async {
-      // TODO
+    setUp(() {
+      verifications = SignUpVerifications(
+        emailAddress: null,
+        phoneNumber: null,
+        web3Wallet: null,
+        externalAccount: null,
+      );
+      instance = SignUp(
+        object: SignUpObjectEnum.signUpAttempt,
+        id: 'signup_123',
+        status: SignUpStatusEnum.missingRequirements,
+        verifications: verifications,
+        username: 'testuser',
+        emailAddress: 'test@example.com',
+        phoneNumber: null,
+        web3Wallet: null,
+        passwordEnabled: true,
+        firstName: 'Test',
+        lastName: 'User',
+        customAction: false,
+        externalId: null,
+        createdSessionId: null,
+        createdUserId: null,
+        abandonAt: 1234567890,
+        legalAcceptedAt: null,
+      );
     });
 
-    // String id
-    test('to test the property `id`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.id, 'signup_123');
+      expect(instance.object, SignUpObjectEnum.signUpAttempt);
+      expect(instance.status, SignUpStatusEnum.missingRequirements);
+      expect(instance.username, 'testuser');
+      expect(instance.emailAddress, 'test@example.com');
+      expect(instance.passwordEnabled, true);
     });
 
-    // String status
-    test('to test the property `status`', () async {
-      // TODO
+    test('constructor uses default values for optional lists', () {
+      expect(instance.requiredFields, isEmpty);
+      expect(instance.optionalFields, isEmpty);
+      expect(instance.missingFields, isEmpty);
+      expect(instance.unverifiedFields, isEmpty);
     });
 
-    // List<String> requiredFields (default value: const [])
-    test('to test the property `requiredFields`', () async {
-      // TODO
+    test('constructor uses default values for metadata', () {
+      expect(instance.unsafeMetadata, isEmpty);
+      expect(instance.publicMetadata, isEmpty);
     });
 
-    // List<String> optionalFields (default value: const [])
-    test('to test the property `optionalFields`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['id'], 'signup_123');
+      expect(json['object'], SignUpObjectEnum.signUpAttempt);
+      expect(json['status'], SignUpStatusEnum.missingRequirements);
+      expect(json['username'], 'testuser');
+      expect(json['email_address'], 'test@example.com');
+      expect(json['password_enabled'], true);
     });
 
-    // List<String> missingFields (default value: const [])
-    test('to test the property `missingFields`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(SignUp.fromJson('invalid'), isNull);
+      expect(SignUp.fromJson(123), isNull);
+      expect(SignUp.fromJson(null), isNull);
     });
 
-    // List<String> unverifiedFields (default value: const [])
-    test('to test the property `unverifiedFields`', () async {
-      // TODO
+    test('listFromJson returns empty list for empty input', () {
+      expect(SignUp.listFromJson([]), isEmpty);
+      expect(SignUp.listFromJson(null), isEmpty);
     });
 
-    // SignUpVerifications verifications
-    test('to test the property `verifications`', () async {
-      // TODO
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
     });
 
-    // String username
-    test('to test the property `username`', () async {
-      // TODO
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('SignUp'));
+      expect(str, contains('id=signup_123'));
     });
 
-    // String emailAddress
-    test('to test the property `emailAddress`', () async {
-      // TODO
+    test('requiredKeys contains required fields', () {
+      expect(SignUp.requiredKeys, contains('object'));
+      expect(SignUp.requiredKeys, contains('id'));
+      expect(SignUp.requiredKeys, contains('status'));
+      expect(SignUp.requiredKeys, contains('verifications'));
     });
 
-    // String phoneNumber
-    test('to test the property `phoneNumber`', () async {
-      // TODO
-    });
-
-    // String web3Wallet
-    test('to test the property `web3Wallet`', () async {
-      // TODO
-    });
-
-    // bool passwordEnabled
-    test('to test the property `passwordEnabled`', () async {
-      // TODO
-    });
-
-    // String firstName
-    test('to test the property `firstName`', () async {
-      // TODO
-    });
-
-    // String lastName
-    test('to test the property `lastName`', () async {
-      // TODO
-    });
-
-    // Map<String, Object> unsafeMetadata (default value: const {})
-    test('to test the property `unsafeMetadata`', () async {
-      // TODO
-    });
-
-    // Map<String, Object> publicMetadata (default value: const {})
-    test('to test the property `publicMetadata`', () async {
-      // TODO
-    });
-
-    // bool customAction
-    test('to test the property `customAction`', () async {
-      // TODO
-    });
-
-    // String externalId
-    test('to test the property `externalId`', () async {
-      // TODO
-    });
-
-    // String createdSessionId
-    test('to test the property `createdSessionId`', () async {
-      // TODO
-    });
-
-    // String createdUserId
-    test('to test the property `createdUserId`', () async {
-      // TODO
-    });
-
-    // Unix timestamp at which the user abandoned the sign up attempt.
-    // int abandonAt
-    test('to test the property `abandonAt`', () async {
-      // TODO
-    });
-
-    // Unix timestamp at which the user accepted the legal requirements.
-    // int legalAcceptedAt
-    test('to test the property `legalAcceptedAt`', () async {
-      // TODO
-    });
-
-    // Object externalAccount
-    test('to test the property `externalAccount`', () async {
-      // TODO
+    test('status enum values are correct', () {
+      expect(SignUpStatusEnum.missingRequirements.value, 'missing_requirements');
+      expect(SignUpStatusEnum.complete.value, 'complete');
+      expect(SignUpStatusEnum.abandoned.value, 'abandoned');
     });
   });
 }

@@ -11,74 +11,80 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for OrganizationDomain
 void main() {
-  // final instance = OrganizationDomain();
+  group('OrganizationDomain', () {
+    late OrganizationDomain instance;
 
-  group('test OrganizationDomain', () {
-    // String representing the object's type. Objects of the same type share the same value. Always `organization_domain`
-    // String object
-    test('to test the property `object`', () async {
-      // TODO
+    setUp(() {
+      instance = OrganizationDomain(
+        object: OrganizationDomainObjectEnum.organizationDomain,
+        id: 'orgdomain_123',
+        organizationId: 'org_123',
+        name: 'example.com',
+        enrollmentMode: OrganizationDomainEnrollmentModeEnum.manualInvitation,
+        affiliationEmailAddress: null,
+        verification: null,
+        totalPendingInvitations: 5,
+        totalPendingSuggestions: 3,
+        createdAt: 1234567890,
+        updatedAt: 1234567890,
+      );
     });
 
-    // Unique identifier for the organization domain
-    // String id
-    test('to test the property `id`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.id, 'orgdomain_123');
+      expect(instance.object, OrganizationDomainObjectEnum.organizationDomain);
+      expect(instance.organizationId, 'org_123');
+      expect(instance.name, 'example.com');
+      expect(instance.enrollmentMode, OrganizationDomainEnrollmentModeEnum.manualInvitation);
+      expect(instance.totalPendingInvitations, 5);
+      expect(instance.totalPendingSuggestions, 3);
     });
 
-    // Unique identifier for the organization
-    // String organizationId
-    test('to test the property `organizationId`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['id'], 'orgdomain_123');
+      expect(json['object'], OrganizationDomainObjectEnum.organizationDomain);
+      expect(json['organization_id'], 'org_123');
+      expect(json['name'], 'example.com');
+      expect(json['enrollment_mode'], OrganizationDomainEnrollmentModeEnum.manualInvitation);
+      expect(json['total_pending_invitations'], 5);
+      expect(json['total_pending_suggestions'], 3);
     });
 
-    // Name of the organization domain
-    // String name
-    test('to test the property `name`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(OrganizationDomain.fromJson('invalid'), isNull);
+      expect(OrganizationDomain.fromJson(123), isNull);
+      expect(OrganizationDomain.fromJson(null), isNull);
     });
 
-    // Mode of enrollment for the domain
-    // String enrollmentMode
-    test('to test the property `enrollmentMode`', () async {
-      // TODO
+    test('listFromJson returns empty list for empty input', () {
+      expect(OrganizationDomain.listFromJson([]), isEmpty);
+      expect(OrganizationDomain.listFromJson(null), isEmpty);
     });
 
-    // Affiliation email address for the domain, if available.
-    // String affiliationEmailAddress
-    test('to test the property `affiliationEmailAddress`', () async {
-      // TODO
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
     });
 
-    // OrganizationDomainVerification verification
-    test('to test the property `verification`', () async {
-      // TODO
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('OrganizationDomain'));
+      expect(str, contains('id=orgdomain_123'));
     });
 
-    // Total number of pending invitations associated with this domain
-    // int totalPendingInvitations
-    test('to test the property `totalPendingInvitations`', () async {
-      // TODO
+    test('requiredKeys contains required fields', () {
+      expect(OrganizationDomain.requiredKeys, contains('object'));
+      expect(OrganizationDomain.requiredKeys, contains('id'));
+      expect(OrganizationDomain.requiredKeys, contains('organization_id'));
+      expect(OrganizationDomain.requiredKeys, contains('name'));
+      expect(OrganizationDomain.requiredKeys, contains('enrollment_mode'));
     });
 
-    // Total number of pending suggestions associated with this domain
-    // int totalPendingSuggestions
-    test('to test the property `totalPendingSuggestions`', () async {
-      // TODO
-    });
-
-    // Unix timestamp when the domain was created
-    // int createdAt
-    test('to test the property `createdAt`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of the last update to the domain
-    // int updatedAt
-    test('to test the property `updatedAt`', () async {
-      // TODO
+    test('enrollment mode enum values are correct', () {
+      expect(OrganizationDomainEnrollmentModeEnum.manualInvitation.value, 'manual_invitation');
+      expect(OrganizationDomainEnrollmentModeEnum.automaticInvitation.value, 'automatic_invitation');
+      expect(OrganizationDomainEnrollmentModeEnum.automaticSuggestion.value, 'automatic_suggestion');
     });
   });
 }

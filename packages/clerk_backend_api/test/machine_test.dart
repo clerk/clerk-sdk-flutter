@@ -11,56 +11,70 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for Machine
 void main() {
-  // final instance = Machine();
+  group('Machine', () {
+    late Machine instance;
 
-  group('test Machine', () {
-    // String object
-    test('to test the property `object`', () async {
-      // TODO
+    setUp(() {
+      instance = Machine(
+        object: MachineObjectEnum.machine,
+        id: 'machine_123',
+        name: 'Test Machine',
+        instanceId: 'inst_123',
+        createdAt: 1234567890,
+        updatedAt: 1234567890,
+      );
     });
 
-    // Unique identifier for the machine.
-    // String id
-    test('to test the property `id`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.id, 'machine_123');
+      expect(instance.object, MachineObjectEnum.machine);
+      expect(instance.name, 'Test Machine');
+      expect(instance.instanceId, 'inst_123');
+      expect(instance.createdAt, 1234567890);
+      expect(instance.updatedAt, 1234567890);
     });
 
-    // The name of the machine.
-    // String name
-    test('to test the property `name`', () async {
-      // TODO
+    test('constructor uses default values', () {
+      expect(instance.defaultTokenTtl, 3600);
+      expect(instance.scopedMachines, isEmpty);
     });
 
-    // The ID of the instance this machine belongs to.
-    // String instanceId
-    test('to test the property `instanceId`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['id'], 'machine_123');
+      expect(json['object'], MachineObjectEnum.machine);
+      expect(json['name'], 'Test Machine');
+      expect(json['instance_id'], 'inst_123');
+      expect(json['default_token_ttl'], 3600);
     });
 
-    // Unix timestamp of creation.
-    // int createdAt
-    test('to test the property `createdAt`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(Machine.fromJson('invalid'), isNull);
+      expect(Machine.fromJson(123), isNull);
+      expect(Machine.fromJson(null), isNull);
     });
 
-    // Unix timestamp of last update.
-    // int updatedAt
-    test('to test the property `updatedAt`', () async {
-      // TODO
+    test('listFromJson returns empty list for empty input', () {
+      expect(Machine.listFromJson([]), isEmpty);
+      expect(Machine.listFromJson(null), isEmpty);
     });
 
-    // The default time-to-live (TTL) in seconds for tokens created by this machine.
-    // int defaultTokenTtl (default value: 3600)
-    test('to test the property `defaultTokenTtl`', () async {
-      // TODO
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
     });
 
-    // Array of machines this machine has access to.
-    // List<MachineWithoutScopedMachines> scopedMachines (default value: const [])
-    test('to test the property `scopedMachines`', () async {
-      // TODO
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('Machine'));
+      expect(str, contains('id=machine_123'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(Machine.requiredKeys, contains('object'));
+      expect(Machine.requiredKeys, contains('id'));
+      expect(Machine.requiredKeys, contains('name'));
+      expect(Machine.requiredKeys, contains('instance_id'));
     });
   });
 }

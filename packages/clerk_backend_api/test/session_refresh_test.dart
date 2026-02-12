@@ -11,27 +11,68 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for SessionRefresh
 void main() {
-  // final instance = SessionRefresh();
+  group('SessionRefresh', () {
+    late SessionRefresh instance;
 
-  group('test SessionRefresh', () {
-    // String representing the object's type. Objects of the same type share the same value.
-    // String object
-    test('to test the property `object`', () async {
-      // TODO
+    setUp(() {
+      instance = SessionRefresh(
+        object: SessionRefreshObjectEnum.cookies,
+        jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test',
+        cookies: ['session=abc123; Path=/; HttpOnly'],
+      );
     });
 
-    // String representing the encoded JSON Web Token (JWT) value.
-    // String jwt
-    test('to test the property `jwt`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.object, SessionRefreshObjectEnum.cookies);
+      expect(instance.jwt, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test');
+      expect(instance.cookies, ['session=abc123; Path=/; HttpOnly']);
     });
 
-    // Array of cookie directives.
-    // List<String> cookies (default value: const [])
-    test('to test the property `cookies`', () async {
-      // TODO
+    test('constructor uses default values', () {
+      final refresh = SessionRefresh(
+        object: SessionRefreshObjectEnum.cookies,
+        jwt: 'test_jwt',
+      );
+      expect(refresh.cookies, isEmpty);
+    });
+
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['object'], SessionRefreshObjectEnum.cookies);
+      expect(json['jwt'], 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test');
+      expect(json['cookies'], ['session=abc123; Path=/; HttpOnly']);
+    });
+
+    test('fromJson returns null for non-map input', () {
+      expect(SessionRefresh.fromJson('invalid'), isNull);
+      expect(SessionRefresh.fromJson(123), isNull);
+      expect(SessionRefresh.fromJson(null), isNull);
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(SessionRefresh.listFromJson([]), isEmpty);
+      expect(SessionRefresh.listFromJson(null), isEmpty);
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('SessionRefresh'));
+      expect(str, contains('jwt='));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(SessionRefresh.requiredKeys, contains('object'));
+      expect(SessionRefresh.requiredKeys, contains('jwt'));
+      expect(SessionRefresh.requiredKeys, contains('cookies'));
+    });
+
+    test('object enum values are correct', () {
+      expect(SessionRefreshObjectEnum.cookies.value, 'cookies');
     });
   });
 }

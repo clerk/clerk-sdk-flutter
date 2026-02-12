@@ -8,228 +8,452 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:convert';
+
 import 'package:clerk_backend_api/api.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:test/test.dart';
 
 /// tests for UsersApi
 void main() {
-  // final instance = UsersApi();
-
   group('tests for UsersApi', () {
-    // Ban a user
-    //
-    // Marks the given user as banned, which means that all their sessions are revoked and they are not allowed to sign in again.
-    //
-    //Future<User> banUser(String userId) async
-    test('test banUser', () async {
-      // TODO
+    late ApiClient apiClient;
+    late UsersApi usersApi;
+
+    final userJson = {
+      'id': 'user_123',
+      'object': 'user',
+      'external_id': 'ext_123',
+      'primary_email_address_id': 'email_123',
+      'primary_phone_number_id': 'phone_123',
+      'primary_web3_wallet_id': 'web3_123',
+      'username': 'testuser',
+      'first_name': 'Test',
+      'last_name': 'User',
+      'has_image': false,
+      'public_metadata': {},
+      'email_addresses': [],
+      'phone_numbers': [],
+      'web3_wallets': [],
+      'passkeys': [],
+      'password_enabled': true,
+      'two_factor_enabled': false,
+      'totp_enabled': false,
+      'backup_code_enabled': false,
+      'mfa_enabled_at': 1700000000,
+      'mfa_disabled_at': 1700000000,
+      'external_accounts': [],
+      'saml_accounts': [],
+      'enterprise_accounts': [],
+      'last_sign_in_at': 1700000000,
+      'banned': false,
+      'locked': false,
+      'lockout_expires_in_seconds': 0,
+      'verification_attempts_remaining': 5,
+      'updated_at': 1700000001,
+      'created_at': 1700000000,
+      'delete_self_enabled': true,
+      'create_organization_enabled': true,
+      'last_active_at': 1700000000,
+      'legal_accepted_at': 1700000000,
+    };
+
+    final deletedObjectJson = {
+      'object': 'deleted_object',
+      'id': 'user_123',
+      'slug': null,
+      'deleted': true,
+    };
+
+    final disableMfaJson = {
+      'user_id': 'user_123',
+    };
+
+    final totalCountJson = {
+      'object': 'total_count',
+      'total_count': 42,
+    };
+
+    group('banUser', () {
+      test('returns User on successful ban', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/users/user_123/ban'));
+          return http.Response(jsonEncode({...userJson, 'banned': true}), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.banUser('user_123');
+
+        expect(result, isNotNull);
+        expect(result!.id, equals('user_123'));
+        expect(result.banned, isTrue);
+      });
+
+      test('throws ApiException on 404', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          return http.Response('{"error": "not_found"}', 404);
+        });
+        usersApi = UsersApi(apiClient);
+
+        expect(() => usersApi.banUser('nonexistent'), throwsA(isA<ApiException>()));
+      });
     });
 
-    // Create a new user
-    //
-    // Creates a new user. Your user management settings determine how you should setup your user model.  Any email address and phone number created using this method will be marked as verified.  Note: If you are performing a migration, check out our guide on [zero downtime migrations](https://clerk.com/docs/deployments/migrate-overview).  A rate limit rule of 20 requests per 10 seconds is applied to this endpoint.
-    //
-    //Future<User> createUser(CreateUserRequest createUserRequest) async
-    test('test createUser', () async {
-      // TODO
+    group('createUser', () {
+      test('returns User on successful creation', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/users'));
+          expect(request.headers['Content-Type'], contains('application/json'));
+          return http.Response(jsonEncode(userJson), 201);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.createUser(CreateUserRequest());
+
+        expect(result, isNotNull);
+        expect(result!.id, equals('user_123'));
+      });
+
+      test('sends correct request body', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          final body = jsonDecode(request.body);
+          expect(body['email_address'], equals(['test@example.com']));
+          expect(body['first_name'], equals('John'));
+          return http.Response(jsonEncode(userJson), 201);
+        });
+        usersApi = UsersApi(apiClient);
+
+        await usersApi.createUser(CreateUserRequest(
+          emailAddress: ['test@example.com'],
+          firstName: 'John',
+        ));
+      });
     });
 
-    // Disable all user's Backup codes
-    //
-    // Disable all of a user's backup codes.
-    //
-    //Future<DisableMFA200Response> deleteBackupCode(String userId) async
-    test('test deleteBackupCode', () async {
-      // TODO
+    group('deleteUser', () {
+      test('returns DeletedObject on successful deletion', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('DELETE'));
+          expect(request.url.path, equals('/v1/users/user_123'));
+          return http.Response(jsonEncode(deletedObjectJson), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.deleteUser('user_123');
+
+        expect(result, isNotNull);
+        expect(result!.deleted, isTrue);
+        expect(result.id, equals('user_123'));
+      });
     });
 
-    // Delete External Account
-    //
-    // Delete an external account by ID.
-    //
-    //Future<DeletedObject> deleteExternalAccount(String userId, String externalAccountId) async
-    test('test deleteExternalAccount', () async {
-      // TODO
+    group('getUser', () {
+      test('returns User on successful response', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('GET'));
+          expect(request.url.path, equals('/v1/users/user_123'));
+          return http.Response(jsonEncode(userJson), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.getUser('user_123');
+
+        expect(result, isNotNull);
+        expect(result!.id, equals('user_123'));
+        expect(result.username, equals('testuser'));
+        expect(result.firstName, equals('Test'));
+        expect(result.lastName, equals('User'));
+      });
+
+      test('throws ApiException on 404', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          return http.Response('{"error": "not_found"}', 404);
+        });
+        usersApi = UsersApi(apiClient);
+
+        expect(() => usersApi.getUser('nonexistent'), throwsA(isA<ApiException>()));
+      });
     });
 
-    // Delete all the user's TOTPs
-    //
-    // Deletes all of the user's TOTPs.
-    //
-    //Future<DisableMFA200Response> deleteTOTP(String userId) async
-    test('test deleteTOTP', () async {
-      // TODO
+    group('getUserList', () {
+      test('returns list of users', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('GET'));
+          expect(request.url.path, equals('/v1/users'));
+          return http.Response(jsonEncode([userJson, userJson]), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.getUserList();
+
+        expect(result, isNotNull);
+        expect(result!.length, equals(2));
+      });
+
+      test('passes query parameters correctly', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.url.queryParameters['limit'], equals('10'));
+          expect(request.url.queryParameters['offset'], equals('5'));
+          expect(request.url.queryParameters['query'], equals('test'));
+          return http.Response(jsonEncode([userJson]), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        await usersApi.getUserList(limit: 10, offset: 5, query: 'test');
+      });
+
+      test('returns empty list on empty response', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          return http.Response(jsonEncode([]), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.getUserList();
+
+        expect(result, isNotNull);
+        expect(result!.isEmpty, isTrue);
+      });
     });
 
-    // Delete a user
-    //
-    // Delete the specified user
-    //
-    //Future<DeletedObject> deleteUser(String userId) async
-    test('test deleteUser', () async {
-      // TODO
+    group('getUsersCount', () {
+      test('returns TotalCount on successful response', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('GET'));
+          expect(request.url.path, equals('/v1/users/count'));
+          return http.Response(jsonEncode(totalCountJson), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.getUsersCount();
+
+        expect(result, isNotNull);
+        expect(result!.totalCount, equals(42));
+      });
     });
 
-    // Delete user profile image
-    //
-    // Delete a user's profile image
-    //
-    //Future<User> deleteUserProfileImage(String userId) async
-    test('test deleteUserProfileImage', () async {
-      // TODO
+    group('lockUser', () {
+      test('returns User with locked status', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/users/user_123/lock'));
+          return http.Response(jsonEncode({...userJson, 'locked': true}), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.lockUser('user_123');
+
+        expect(result, isNotNull);
+        expect(result!.locked, isTrue);
+      });
     });
 
-    // Disable a user's MFA methods
-    //
-    // Disable all of a user's MFA methods (e.g. OTP sent via SMS, TOTP on their authenticator app) at once.
-    //
-    //Future<DisableMFA200Response> disableMFA(String userId) async
-    test('test disableMFA', () async {
-      // TODO
+    group('unlockUser', () {
+      test('returns User with unlocked status', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/users/user_123/unlock'));
+          return http.Response(jsonEncode({...userJson, 'locked': false}), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.unlockUser('user_123');
+
+        expect(result, isNotNull);
+        expect(result!.locked, isFalse);
+      });
     });
 
-    // Retrieve the OAuth access token of a user
-    //
-    // Fetch the corresponding OAuth access token for a user that has previously authenticated with a particular OAuth provider. For OAuth 2.0, if the access token has expired and we have a corresponding refresh token, the access token will be refreshed transparently the new one will be returned.
-    //
-    //Future<List<GetOAuthAccessToken200ResponseInner>> getOAuthAccessToken(String userId, String provider, { bool paginated, int limit, int offset }) async
-    test('test getOAuthAccessToken', () async {
-      // TODO
+    group('unbanUser', () {
+      test('returns User with unbanned status', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/users/user_123/unban'));
+          return http.Response(jsonEncode({...userJson, 'banned': false}), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.unbanUser('user_123');
+
+        expect(result, isNotNull);
+        expect(result!.banned, isFalse);
+      });
     });
 
-    // Retrieve a user
-    //
-    // Retrieve the details of a user
-    //
-    //Future<User> getUser(String userId) async
-    test('test getUser', () async {
-      // TODO
+    group('updateUser', () {
+      test('returns updated User', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('PATCH'));
+          expect(request.url.path, equals('/v1/users/user_123'));
+          return http.Response(jsonEncode({...userJson, 'first_name': 'Updated'}), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.updateUser(
+          'user_123',
+          UpdateUserRequest(firstName: 'Updated'),
+        );
+
+        expect(result, isNotNull);
+        expect(result!.firstName, equals('Updated'));
+      });
     });
 
-    // List all users
-    //
-    // Returns a list of all users. The users are returned sorted by creation date, with the newest users appearing first.
-    //
-    //Future<List<User>> getUserList({ List<String> emailAddress, List<String> phoneNumber, List<String> externalId, List<String> username, List<String> web3Wallet, List<String> userId, List<String> organizationId, String query, String emailAddressQuery, String phoneNumberQuery, String usernameQuery, String nameQuery, bool banned, int lastActiveAtBefore, int lastActiveAtAfter, int lastActiveAtSince, int createdAtBefore, int createdAtAfter, int limit, int offset, String orderBy }) async
-    test('test getUserList', () async {
-      // TODO
+    group('disableMFA', () {
+      test('returns DisableMFA200Response on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('DELETE'));
+          expect(request.url.path, equals('/v1/users/user_123/mfa'));
+          return http.Response(jsonEncode(disableMfaJson), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.disableMFA('user_123');
+
+        expect(result, isNotNull);
+        expect(result!.userId, equals('user_123'));
+      });
     });
 
-    // Count users
-    //
-    // Returns a total count of all users that match the given filtering criteria.
-    //
-    //Future<TotalCount> getUsersCount({ List<String> emailAddress, List<String> phoneNumber, List<String> externalId, List<String> username, List<String> web3Wallet, List<String> userId, List<String> organizationId, String query, String emailAddressQuery, String phoneNumberQuery, String usernameQuery, String nameQuery, bool banned, int lastActiveAtBefore, int lastActiveAtAfter, int lastActiveAtSince, int createdAtBefore, int createdAtAfter }) async
-    test('test getUsersCount', () async {
-      // TODO
+    group('deleteBackupCode', () {
+      test('returns DisableMFA200Response on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('DELETE'));
+          expect(request.url.path, equals('/v1/users/user_123/backup_code'));
+          return http.Response(jsonEncode(disableMfaJson), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.deleteBackupCode('user_123');
+
+        expect(result, isNotNull);
+      });
     });
 
-    // Lock a user
-    //
-    // Marks the given user as locked, which means they are not allowed to sign in again until the lock expires. Lock duration can be configured in the instance's restrictions settings.
-    //
-    //Future<User> lockUser(String userId) async
-    test('test lockUser', () async {
-      // TODO
+    group('deleteTOTP', () {
+      test('returns DisableMFA200Response on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('DELETE'));
+          expect(request.url.path, equals('/v1/users/user_123/totp'));
+          return http.Response(jsonEncode(disableMfaJson), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.deleteTOTP('user_123');
+
+        expect(result, isNotNull);
+      });
     });
 
-    // Set user profile image
-    //
-    // Update a user's profile image
-    //
-    //Future<User> setUserProfileImage(String userId, { MultipartFile file }) async
-    test('test setUserProfileImage', () async {
-      // TODO
+    group('verifyPassword', () {
+      test('returns VerifyPassword200Response on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/users/user_123/verify_password'));
+          return http.Response(jsonEncode({'verified': true}), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.verifyPassword(
+          'user_123',
+          verifyPasswordRequest: VerifyPasswordRequest(password: 'test123'),
+        );
+
+        expect(result, isNotNull);
+        expect(result!.verified, isTrue);
+      });
     });
 
-    // Unban a user
-    //
-    // Removes the ban mark from the given user.
-    //
-    //Future<User> unbanUser(String userId) async
-    test('test unbanUser', () async {
-      // TODO
+    group('verifyTOTP', () {
+      test('returns VerifyTOTP200Response on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/users/user_123/verify_totp'));
+          return http.Response(jsonEncode({'verified': true, 'code_type': 'totp'}), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.verifyTOTP(
+          'user_123',
+          verifyTOTPRequest: VerifyTOTPRequest(code: '123456'),
+        );
+
+        expect(result, isNotNull);
+        expect(result!.verified, isTrue);
+      });
     });
 
-    // Unlock a user
-    //
-    // Removes the lock from the given user.
-    //
-    //Future<User> unlockUser(String userId) async
-    test('test unlockUser', () async {
-      // TODO
+    group('deleteExternalAccount', () {
+      test('returns DeletedObject on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('DELETE'));
+          expect(request.url.path, equals('/v1/users/user_123/external_accounts/ext_acc_123'));
+          return http.Response(jsonEncode({...deletedObjectJson, 'id': 'ext_acc_123'}), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.deleteExternalAccount('user_123', 'ext_acc_123');
+
+        expect(result, isNotNull);
+        expect(result!.deleted, isTrue);
+      });
     });
 
-    // Update a user
-    //
-    // Update a user's attributes.  You can set the user's primary contact identifiers (email address and phone numbers) by updating the `primary_email_address_id` and `primary_phone_number_id` attributes respectively. Both IDs should correspond to verified identifications that belong to the user.  You can remove a user's username by setting the username attribute to null or the blank string \"\". This is a destructive action; the identification will be deleted forever. Usernames can be removed only if they are optional in your instance settings and there's at least one other identifier which can be used for authentication.  This endpoint allows changing a user's password. When passing the `password` parameter directly you have two further options. You can ignore the password policy checks for your instance by setting the `skip_password_checks` parameter to `true`. You can also choose to sign the user out of all their active sessions on any device once the password is updated. Just set `sign_out_of_other_sessions` to `true`.
-    //
-    //Future<User> updateUser(String userId, UpdateUserRequest updateUserRequest) async
-    test('test updateUser', () async {
-      // TODO
+    group('userPasskeyDelete', () {
+      test('returns DeletedObject on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('DELETE'));
+          expect(request.url.path, equals('/v1/users/user_123/passkeys/passkey_123'));
+          return http.Response(jsonEncode({...deletedObjectJson, 'id': 'passkey_123'}), 200);
+        });
+        usersApi = UsersApi(apiClient);
+
+        final result = await usersApi.userPasskeyDelete('user_123', 'passkey_123');
+
+        expect(result, isNotNull);
+        expect(result!.deleted, isTrue);
+      });
     });
 
-    // Merge and update a user's metadata
-    //
-    // Update a user's metadata attributes by merging existing values with the provided parameters.  This endpoint behaves differently than the *Update a user* endpoint. Metadata values will not be replaced entirely. Instead, a deep merge will be performed. Deep means that any nested JSON objects will be merged as well.  You can remove metadata keys at any level by setting their value to `null`.
-    //
-    //Future<User> updateUserMetadata(String userId, { UpdateUserMetadataRequest updateUserMetadataRequest }) async
-    test('test updateUserMetadata', () async {
-      // TODO
-    });
+    group('userWeb3WalletDelete', () {
+      test('returns DeletedObject on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('DELETE'));
+          expect(request.url.path, equals('/v1/users/user_123/web3_wallets/wallet_123'));
+          return http.Response(jsonEncode({...deletedObjectJson, 'id': 'wallet_123'}), 200);
+        });
+        usersApi = UsersApi(apiClient);
 
-    // Delete a user passkey
-    //
-    // Delete the passkey identification for a given user and notify them through email.
-    //
-    //Future<DeletedObject> userPasskeyDelete(String userId, String passkeyIdentificationId) async
-    test('test userPasskeyDelete', () async {
-      // TODO
-    });
+        final result = await usersApi.userWeb3WalletDelete('user_123', 'wallet_123');
 
-    // Delete a user web3 wallet
-    //
-    // Delete the web3 wallet identification for a given user.
-    //
-    //Future<DeletedObject> userWeb3WalletDelete(String userId, String web3WalletIdentificationId) async
-    test('test userWeb3WalletDelete', () async {
-      // TODO
-    });
-
-    // Retrieve all invitations for a user
-    //
-    // Retrieve a paginated list of the user's organization invitations
-    //
-    //Future<OrganizationInvitationsWithPublicOrganizationData> usersGetOrganizationInvitations(String userId, { int limit, int offset, String status }) async
-    test('test usersGetOrganizationInvitations', () async {
-      // TODO
-    });
-
-    // Retrieve all memberships for a user
-    //
-    // Retrieve a paginated list of the user's organization memberships
-    //
-    //Future<OrganizationMemberships> usersGetOrganizationMemberships(String userId, { int limit, int offset }) async
-    test('test usersGetOrganizationMemberships', () async {
-      // TODO
-    });
-
-    // Verify the password of a user
-    //
-    // Check that the user's password matches the supplied input. Useful for custom auth flows and re-verification.
-    //
-    //Future<VerifyPassword200Response> verifyPassword(String userId, { VerifyPasswordRequest verifyPasswordRequest }) async
-    test('test verifyPassword', () async {
-      // TODO
-    });
-
-    // Verify a TOTP or backup code for a user
-    //
-    // Verify that the provided TOTP or backup code is valid for the user. Verifying a backup code will result it in being consumed (i.e. it will become invalid). Useful for custom auth flows and re-verification.
-    //
-    //Future<VerifyTOTP200Response> verifyTOTP(String userId, { VerifyTOTPRequest verifyTOTPRequest }) async
-    test('test verifyTOTP', () async {
-      // TODO
+        expect(result, isNotNull);
+        expect(result!.deleted, isTrue);
+      });
     });
   });
 }

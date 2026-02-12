@@ -11,51 +11,122 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for CreateOrganizationRequest
 void main() {
-  // final instance = CreateOrganizationRequest();
+  group('CreateOrganizationRequest', () {
+    late CreateOrganizationRequest instance;
+    late Map<String, Object> privateMetadata;
+    late Map<String, Object> publicMetadata;
 
-  group('test CreateOrganizationRequest', () {
-    // The name of the new organization. May not contain URLs or HTML. Max length: 256
-    // String name
-    test('to test the property `name`', () async {
-      // TODO
+    setUp(() {
+      privateMetadata = {'secret': 'value'};
+      publicMetadata = {'display': 'info'};
+      instance = CreateOrganizationRequest(
+        name: 'Acme Corp',
+        createdBy: 'user_123',
+        privateMetadata: privateMetadata,
+        publicMetadata: publicMetadata,
+        slug: 'acme-corp',
+        maxAllowedMemberships: 100,
+        createdAt: '2024-01-15T10:30:00.000Z',
+      );
     });
 
-    // The ID of the User who will become the administrator for the new organization
-    // String createdBy
-    test('to test the property `createdBy`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      final minimal = CreateOrganizationRequest(
+        name: 'Test Org',
+      );
+      expect(minimal.name, 'Test Org');
+      expect(minimal.createdBy, isNull);
+      expect(minimal.privateMetadata, isEmpty);
+      expect(minimal.publicMetadata, isEmpty);
     });
 
-    // Metadata saved on the organization, accessible only from the Backend API
-    // Map<String, Object> privateMetadata (default value: const {})
-    test('to test the property `privateMetadata`', () async {
-      // TODO
+    test('constructor creates instance with all parameters', () {
+      expect(instance.name, 'Acme Corp');
+      expect(instance.createdBy, 'user_123');
+      expect(instance.privateMetadata, privateMetadata);
+      expect(instance.publicMetadata, publicMetadata);
+      expect(instance.slug, 'acme-corp');
+      expect(instance.maxAllowedMemberships, 100);
+      expect(instance.createdAt, '2024-01-15T10:30:00.000Z');
     });
 
-    // Metadata saved on the organization, read-only from the Frontend API and fully accessible (read/write) from the Backend API
-    // Map<String, Object> publicMetadata (default value: const {})
-    test('to test the property `publicMetadata`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['name'], 'Acme Corp');
+      expect(json['created_by'], 'user_123');
+      expect(json['private_metadata'], privateMetadata);
+      expect(json['public_metadata'], publicMetadata);
+      expect(json['slug'], 'acme-corp');
+      expect(json['max_allowed_memberships'], 100);
+      expect(json['created_at'], '2024-01-15T10:30:00.000Z');
     });
 
-    // A slug for the new organization. Can contain only lowercase alphanumeric characters and the dash \"-\". Must be unique for the instance.
-    // String slug
-    test('to test the property `slug`', () async {
-      // TODO
+    test('fromJson creates instance from map', () {
+      final json = {
+        'name': 'Another Org',
+        'created_by': 'user_456',
+        'private_metadata': {'key': 'val'},
+        'public_metadata': {'pub': 'data'},
+        'slug': 'another-org',
+        'max_allowed_memberships': 50,
+        'created_at': '2024-02-20T15:00:00.000Z',
+      };
+      final result = CreateOrganizationRequest.fromJson(json);
+      expect(result, isNotNull);
+      expect(result!.name, 'Another Org');
+      expect(result.createdBy, 'user_456');
+      expect(result.slug, 'another-org');
+      expect(result.maxAllowedMemberships, 50);
     });
 
-    // The maximum number of memberships allowed for this organization
-    // int maxAllowedMemberships
-    test('to test the property `maxAllowedMemberships`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(CreateOrganizationRequest.fromJson('invalid'), isNull);
+      expect(CreateOrganizationRequest.fromJson(123), isNull);
+      expect(CreateOrganizationRequest.fromJson(null), isNull);
     });
 
-    // A custom date/time denoting _when_ the organization was created, specified in RFC3339 format (e.g. `2012-10-20T07:15:20.902Z`).
-    // String createdAt
-    test('to test the property `createdAt`', () async {
-      // TODO
+    test('listFromJson creates list from json array', () {
+      final jsonList = [
+        {'name': 'Org 1'},
+        {'name': 'Org 2', 'slug': 'org-2'},
+      ];
+      final result = CreateOrganizationRequest.listFromJson(jsonList);
+      expect(result.length, 2);
+      expect(result[0].name, 'Org 1');
+      expect(result[1].slug, 'org-2');
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(CreateOrganizationRequest.listFromJson([]), isEmpty);
+      expect(CreateOrganizationRequest.listFromJson(null), isEmpty);
+    });
+
+    test('equality operator works correctly', () {
+      final other = CreateOrganizationRequest(
+        name: 'Acme Corp',
+        createdBy: 'user_123',
+        privateMetadata: privateMetadata,
+        publicMetadata: publicMetadata,
+        slug: 'acme-corp',
+        maxAllowedMemberships: 100,
+        createdAt: '2024-01-15T10:30:00.000Z',
+      );
+      expect(instance, equals(other));
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('CreateOrganizationRequest'));
+      expect(str, contains('name=Acme Corp'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(CreateOrganizationRequest.requiredKeys, contains('name'));
     });
   });
 }

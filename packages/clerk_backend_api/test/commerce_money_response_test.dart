@@ -11,33 +11,85 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for CommerceMoneyResponse
 void main() {
-  // final instance = CommerceMoneyResponse();
+  group('CommerceMoneyResponse', () {
+    late CommerceMoneyResponse instance;
 
-  group('test CommerceMoneyResponse', () {
-    // The amount in cents.
-    // int amount
-    test('to test the property `amount`', () async {
-      // TODO
+    setUp(() {
+      instance = CommerceMoneyResponse(
+        amount: 4999,
+        amountFormatted: '\$49.99',
+        currency: 'USD',
+        currencySymbol: '\$',
+      );
     });
 
-    // The formatted amount as a string (e.g., \"$49.99\").
-    // String amountFormatted
-    test('to test the property `amountFormatted`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.amount, 4999);
+      expect(instance.amountFormatted, '\$49.99');
+      expect(instance.currency, 'USD');
+      expect(instance.currencySymbol, '\$');
     });
 
-    // The currency code (e.g., \"USD\").
-    // String currency
-    test('to test the property `currency`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['amount'], 4999);
+      expect(json['amount_formatted'], '\$49.99');
+      expect(json['currency'], 'USD');
+      expect(json['currency_symbol'], '\$');
     });
 
-    // The currency symbol (e.g., \"$\").
-    // String currencySymbol
-    test('to test the property `currencySymbol`', () async {
-      // TODO
+    test('fromJson creates instance from map', () {
+      final json = {
+        'amount': 4999,
+        'amount_formatted': '\$49.99',
+        'currency': 'USD',
+        'currency_symbol': '\$',
+      };
+      final result = CommerceMoneyResponse.fromJson(json);
+      expect(result, isNotNull);
+      expect(result!.amount, 4999);
+      expect(result.amountFormatted, '\$49.99');
+      expect(result.currency, 'USD');
+      expect(result.currencySymbol, '\$');
+    });
+
+    test('fromJson returns null for non-map input', () {
+      expect(CommerceMoneyResponse.fromJson('invalid'), isNull);
+      expect(CommerceMoneyResponse.fromJson(123), isNull);
+      expect(CommerceMoneyResponse.fromJson(null), isNull);
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(CommerceMoneyResponse.listFromJson([]), isEmpty);
+      expect(CommerceMoneyResponse.listFromJson(null), isEmpty);
+    });
+
+    test('equality works correctly', () {
+      final other = CommerceMoneyResponse(
+        amount: 4999,
+        amountFormatted: '\$49.99',
+        currency: 'USD',
+        currencySymbol: '\$',
+      );
+      expect(instance, equals(other));
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('CommerceMoneyResponse'));
+      expect(str, contains('amount=4999'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(CommerceMoneyResponse.requiredKeys, contains('amount'));
+      expect(CommerceMoneyResponse.requiredKeys, contains('amount_formatted'));
+      expect(CommerceMoneyResponse.requiredKeys, contains('currency'));
+      expect(CommerceMoneyResponse.requiredKeys, contains('currency_symbol'));
     });
   });
 }

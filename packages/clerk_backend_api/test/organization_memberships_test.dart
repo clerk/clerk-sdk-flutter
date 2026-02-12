@@ -11,20 +11,72 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for OrganizationMemberships
 void main() {
-  // final instance = OrganizationMemberships();
+  group('OrganizationMemberships', () {
+    late OrganizationMemberships instance;
 
-  group('test OrganizationMemberships', () {
-    // List<OrganizationMembership> data (default value: const [])
-    test('to test the property `data`', () async {
-      // TODO
+    setUp(() {
+      instance = OrganizationMemberships(
+        data: [],
+        totalCount: 0,
+      );
     });
 
-    // Total number of organization memberships
-    // int totalCount
-    test('to test the property `totalCount`', () async {
-      // TODO
+    test('constructor creates instance with default values', () {
+      final empty = OrganizationMemberships(totalCount: 0);
+      expect(empty.data, isEmpty);
+      expect(empty.totalCount, 0);
+    });
+
+    test('constructor creates instance with parameters', () {
+      final withData = OrganizationMemberships(
+        data: [],
+        totalCount: 5,
+      );
+      expect(withData.totalCount, 5);
+    });
+
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['data'], isA<List>());
+      expect(json['total_count'], 0);
+    });
+
+    test('fromJson creates instance from map', () {
+      final json = {
+        'data': [],
+        'total_count': 3,
+      };
+      final result = OrganizationMemberships.fromJson(json);
+      expect(result, isNotNull);
+      expect(result!.data, isEmpty);
+      expect(result.totalCount, 3);
+    });
+
+    test('fromJson returns null for non-map input', () {
+      expect(OrganizationMemberships.fromJson('invalid'), isNull);
+      expect(OrganizationMemberships.fromJson(123), isNull);
+      expect(OrganizationMemberships.fromJson(null), isNull);
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(OrganizationMemberships.listFromJson([]), isEmpty);
+      expect(OrganizationMemberships.listFromJson(null), isEmpty);
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('OrganizationMemberships'));
+      expect(str, contains('totalCount=0'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(OrganizationMemberships.requiredKeys, contains('data'));
+      expect(OrganizationMemberships.requiredKeys, contains('total_count'));
     });
   });
 }

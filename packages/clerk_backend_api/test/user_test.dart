@@ -11,219 +11,141 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for User
 void main() {
-  // final instance = User();
+  group('User', () {
+    late User instance;
 
-  group('test User', () {
-    // String id
-    test('to test the property `id`', () async {
-      // TODO
+    setUp(() {
+      instance = User(
+        id: 'user_123',
+        object: UserObjectEnum.user,
+        externalId: null,
+        primaryEmailAddressId: 'email_123',
+        primaryPhoneNumberId: null,
+        primaryWeb3WalletId: null,
+        username: 'testuser',
+        firstName: 'Test',
+        lastName: 'User',
+        hasImage: false,
+        passwordEnabled: true,
+        twoFactorEnabled: false,
+        totpEnabled: false,
+        backupCodeEnabled: false,
+        mfaEnabledAt: null,
+        mfaDisabledAt: null,
+        lastSignInAt: 1234567890,
+        banned: false,
+        locked: false,
+        lockoutExpiresInSeconds: null,
+        verificationAttemptsRemaining: null,
+        updatedAt: 1234567890,
+        createdAt: 1234567890,
+        deleteSelfEnabled: true,
+        createOrganizationEnabled: true,
+        lastActiveAt: 1234567890,
+        legalAcceptedAt: null,
+      );
     });
 
-    // String representing the object's type. Objects of the same type share the same value.
-    // String object
-    test('to test the property `object`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.id, 'user_123');
+      expect(instance.object, UserObjectEnum.user);
+      expect(instance.username, 'testuser');
+      expect(instance.firstName, 'Test');
+      expect(instance.lastName, 'User');
+      expect(instance.hasImage, false);
+      expect(instance.passwordEnabled, true);
+      expect(instance.banned, false);
     });
 
-    // String externalId
-    test('to test the property `externalId`', () async {
-      // TODO
+    test('constructor uses default values for optional lists', () {
+      expect(instance.emailAddresses, isEmpty);
+      expect(instance.phoneNumbers, isEmpty);
+      expect(instance.web3Wallets, isEmpty);
+      expect(instance.passkeys, isEmpty);
+      expect(instance.externalAccounts, isEmpty);
+      expect(instance.samlAccounts, isEmpty);
+      expect(instance.organizationMemberships, isEmpty);
     });
 
-    // String primaryEmailAddressId
-    test('to test the property `primaryEmailAddressId`', () async {
-      // TODO
+    test('constructor uses default values for metadata', () {
+      expect(instance.publicMetadata, isEmpty);
+      expect(instance.privateMetadata, isEmpty);
+      expect(instance.unsafeMetadata, isEmpty);
     });
 
-    // String primaryPhoneNumberId
-    test('to test the property `primaryPhoneNumberId`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['id'], 'user_123');
+      expect(json['object'], UserObjectEnum.user);
+      expect(json['username'], 'testuser');
+      expect(json['first_name'], 'Test');
+      expect(json['last_name'], 'User');
+      expect(json['has_image'], false);
+      expect(json['password_enabled'], true);
+      expect(json['banned'], false);
     });
 
-    // String primaryWeb3WalletId
-    test('to test the property `primaryWeb3WalletId`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(User.fromJson('invalid'), isNull);
+      expect(User.fromJson(123), isNull);
+      expect(User.fromJson(null), isNull);
     });
 
-    // String username
-    test('to test the property `username`', () async {
-      // TODO
+    test('listFromJson returns empty list for empty input', () {
+      expect(User.listFromJson([]), isEmpty);
+      expect(User.listFromJson(null), isEmpty);
     });
 
-    // String firstName
-    test('to test the property `firstName`', () async {
-      // TODO
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
     });
 
-    // String lastName
-    test('to test the property `lastName`', () async {
-      // TODO
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('User'));
+      expect(str, contains('id=user_123'));
     });
 
-    // String profileImageUrl
-    test('to test the property `profileImageUrl`', () async {
-      // TODO
+    test('requiredKeys contains required fields', () {
+      expect(User.requiredKeys, contains('id'));
+      expect(User.requiredKeys, contains('object'));
+      expect(User.requiredKeys, contains('has_image'));
+      expect(User.requiredKeys, contains('password_enabled'));
+      expect(User.requiredKeys, contains('banned'));
     });
 
-    // String imageUrl
-    test('to test the property `imageUrl`', () async {
-      // TODO
-    });
-
-    // bool hasImage
-    test('to test the property `hasImage`', () async {
-      // TODO
-    });
-
-    // Map<String, Object> publicMetadata (default value: const {})
-    test('to test the property `publicMetadata`', () async {
-      // TODO
-    });
-
-    // Map<String, Object> privateMetadata (default value: const {})
-    test('to test the property `privateMetadata`', () async {
-      // TODO
-    });
-
-    // Map<String, Object> unsafeMetadata (default value: const {})
-    test('to test the property `unsafeMetadata`', () async {
-      // TODO
-    });
-
-    // List<EmailAddress> emailAddresses (default value: const [])
-    test('to test the property `emailAddresses`', () async {
-      // TODO
-    });
-
-    // List<PhoneNumber> phoneNumbers (default value: const [])
-    test('to test the property `phoneNumbers`', () async {
-      // TODO
-    });
-
-    // List<Web3Wallet> web3Wallets (default value: const [])
-    test('to test the property `web3Wallets`', () async {
-      // TODO
-    });
-
-    // List<SchemasPasskey> passkeys (default value: const [])
-    test('to test the property `passkeys`', () async {
-      // TODO
-    });
-
-    // bool passwordEnabled
-    test('to test the property `passwordEnabled`', () async {
-      // TODO
-    });
-
-    // bool twoFactorEnabled
-    test('to test the property `twoFactorEnabled`', () async {
-      // TODO
-    });
-
-    // bool totpEnabled
-    test('to test the property `totpEnabled`', () async {
-      // TODO
-    });
-
-    // bool backupCodeEnabled
-    test('to test the property `backupCodeEnabled`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of when MFA was last enabled for this user. It should be noted that this field is not nullified if MFA is disabled.
-    // int mfaEnabledAt
-    test('to test the property `mfaEnabledAt`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of when MFA was last disabled for this user. It should be noted that this field is not nullified if MFA is enabled again.
-    // int mfaDisabledAt
-    test('to test the property `mfaDisabledAt`', () async {
-      // TODO
-    });
-
-    // List<Object> externalAccounts (default value: const [])
-    test('to test the property `externalAccounts`', () async {
-      // TODO
-    });
-
-    // List<SAMLAccount> samlAccounts (default value: const [])
-    test('to test the property `samlAccounts`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of last sign-in.
-    // int lastSignInAt
-    test('to test the property `lastSignInAt`', () async {
-      // TODO
-    });
-
-    // Flag to denote whether user is banned or not.
-    // bool banned
-    test('to test the property `banned`', () async {
-      // TODO
-    });
-
-    // Flag to denote whether user is currently locked, i.e. restricted from signing in or not.
-    // bool locked
-    test('to test the property `locked`', () async {
-      // TODO
-    });
-
-    // The number of seconds remaining until the lockout period expires for a locked user. A null value for a locked user indicates that lockout never expires.
-    // int lockoutExpiresInSeconds
-    test('to test the property `lockoutExpiresInSeconds`', () async {
-      // TODO
-    });
-
-    // The number of verification attempts remaining until the user is locked. Null if account lockout is not enabled. Note: if a user is locked explicitly via the Backend API, they may still have verification attempts remaining.
-    // int verificationAttemptsRemaining
-    test('to test the property `verificationAttemptsRemaining`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of last update.
-    // int updatedAt
-    test('to test the property `updatedAt`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of creation.
-    // int createdAt
-    test('to test the property `createdAt`', () async {
-      // TODO
-    });
-
-    // If enabled, user can delete themselves via FAPI.
-    // bool deleteSelfEnabled
-    test('to test the property `deleteSelfEnabled`', () async {
-      // TODO
-    });
-
-    // If enabled, user can create organizations via FAPI.
-    // bool createOrganizationEnabled
-    test('to test the property `createOrganizationEnabled`', () async {
-      // TODO
-    });
-
-    // The maximum number of organizations the user can create. 0 means unlimited.
-    // int createOrganizationsLimit
-    test('to test the property `createOrganizationsLimit`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of the latest session activity, with day precision.
-    // int lastActiveAt
-    test('to test the property `lastActiveAt`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of when the user accepted the legal requirements.
-    // int legalAcceptedAt
-    test('to test the property `legalAcceptedAt`', () async {
-      // TODO
+    test('equality works correctly', () {
+      final user2 = User(
+        id: 'user_123',
+        object: UserObjectEnum.user,
+        externalId: null,
+        primaryEmailAddressId: 'email_123',
+        primaryPhoneNumberId: null,
+        primaryWeb3WalletId: null,
+        username: 'testuser',
+        firstName: 'Test',
+        lastName: 'User',
+        hasImage: false,
+        passwordEnabled: true,
+        twoFactorEnabled: false,
+        totpEnabled: false,
+        backupCodeEnabled: false,
+        mfaEnabledAt: null,
+        mfaDisabledAt: null,
+        lastSignInAt: 1234567890,
+        banned: false,
+        locked: false,
+        lockoutExpiresInSeconds: null,
+        verificationAttemptsRemaining: null,
+        updatedAt: 1234567890,
+        createdAt: 1234567890,
+        deleteSelfEnabled: true,
+        createOrganizationEnabled: true,
+        lastActiveAt: 1234567890,
+        legalAcceptedAt: null,
+      );
+      expect(instance, equals(user2));
     });
   });
 }

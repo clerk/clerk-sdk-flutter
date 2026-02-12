@@ -11,27 +11,87 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for AddDomainRequest
 void main() {
-  // final instance = AddDomainRequest();
-
-  group('test AddDomainRequest', () {
-    // The new domain name. Can contain the port for development instances.
-    // String name
-    test('to test the property `name`', () async {
-      // TODO
+  group('AddDomainRequest', () {
+    test('constructor creates instance with required parameters', () {
+      final instance = AddDomainRequest(
+        name: 'example.com',
+        isSatellite: true,
+      );
+      expect(instance.name, 'example.com');
+      expect(instance.isSatellite, true);
+      expect(instance.proxyUrl, isNull);
     });
 
-    // Marks the new domain as satellite. Only `true` is accepted at the moment.
-    // bool isSatellite
-    test('to test the property `isSatellite`', () async {
-      // TODO
+    test('constructor creates instance with optional parameters', () {
+      final instance = AddDomainRequest(
+        name: 'example.com',
+        isSatellite: true,
+        proxyUrl: 'https://proxy.example.com',
+      );
+      expect(instance.proxyUrl, 'https://proxy.example.com');
     });
 
-    // The full URL of the proxy which will forward requests to the Clerk Frontend API for this domain. Applicable only to production instances.
-    // String proxyUrl
-    test('to test the property `proxyUrl`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final instance = AddDomainRequest(
+        name: 'example.com',
+        isSatellite: true,
+        proxyUrl: 'https://proxy.example.com',
+      );
+      final json = instance.toJson();
+      expect(json['name'], 'example.com');
+      expect(json['is_satellite'], true);
+      expect(json['proxy_url'], 'https://proxy.example.com');
+    });
+
+    test('fromJson creates instance from map', () {
+      final json = {
+        'name': 'example.com',
+        'is_satellite': true,
+        'proxy_url': 'https://proxy.example.com',
+      };
+      final instance = AddDomainRequest.fromJson(json);
+      expect(instance, isNotNull);
+      expect(instance!.name, 'example.com');
+      expect(instance.isSatellite, true);
+      expect(instance.proxyUrl, 'https://proxy.example.com');
+    });
+
+    test('fromJson returns null for non-map input', () {
+      expect(AddDomainRequest.fromJson(null), isNull);
+      expect(AddDomainRequest.fromJson('string'), isNull);
+    });
+
+    test('listFromJson creates list from json array', () {
+      final jsonList = [
+        {'name': 'example1.com', 'is_satellite': true},
+        {'name': 'example2.com', 'is_satellite': false},
+      ];
+      final list = AddDomainRequest.listFromJson(jsonList);
+      expect(list.length, 2);
+      expect(list[0].name, 'example1.com');
+      expect(list[1].name, 'example2.com');
+    });
+
+    test('equality operator works correctly', () {
+      final instance1 = AddDomainRequest(name: 'example.com', isSatellite: true);
+      final instance2 = AddDomainRequest(name: 'example.com', isSatellite: true);
+      final instance3 = AddDomainRequest(name: 'other.com', isSatellite: true);
+      expect(instance1, equals(instance2));
+      expect(instance1, isNot(equals(instance3)));
+    });
+
+    test('hashCode is consistent', () {
+      final instance1 = AddDomainRequest(name: 'example.com', isSatellite: true);
+      final instance2 = AddDomainRequest(name: 'example.com', isSatellite: true);
+      expect(instance1.hashCode, equals(instance2.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final instance = AddDomainRequest(name: 'example.com', isSatellite: true);
+      final str = instance.toString();
+      expect(str, contains('AddDomainRequest['));
+      expect(str, contains('name='));
     });
   });
 }

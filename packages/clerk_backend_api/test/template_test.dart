@@ -11,136 +11,157 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for Template
 void main() {
-  // final instance = Template();
+  group('Template', () {
+    late Template instance;
 
-  group('test Template', () {
-    // String id
-    test('to test the property `id`', () async {
-      // TODO
+    setUp(() {
+      instance = Template(
+        id: 'tmpl_123',
+        object: TemplateObjectEnum.template,
+        instanceId: 'inst_123',
+        resourceType: 'user',
+        templateType: 'email',
+        name: 'Welcome Email',
+        slug: 'welcome_email',
+        position: 1,
+        canRevert: true,
+        canDelete: false,
+        canEditBody: true,
+        canToggle: false,
+        subject: 'Welcome to our app!',
+        markup: '<h1>Welcome</h1>',
+        body: 'Welcome {{name}}!',
+        availableVariables: ['name', 'email'],
+        requiredVariables: ['name'],
+        fromEmailName: 'Support',
+        replyToEmailName: 'No Reply',
+        deliveredByClerk: true,
+        enabled: true,
+        flaggedAsSuspicious: false,
+        updatedAt: 1700001000,
+        createdAt: 1700000000,
+      );
     });
 
-    // String representing the object's type. Objects of the same type share the same value.
-    // String object
-    test('to test the property `object`', () async {
-      // TODO
+    test('constructor creates instance with optional parameters', () {
+      final empty = Template();
+      expect(empty.id, isNull);
+      expect(empty.object, isNull);
+      expect(empty.availableVariables, isEmpty);
+      expect(empty.requiredVariables, isEmpty);
     });
 
-    // the id of the instance the template belongs to
-    // String instanceId
-    test('to test the property `instanceId`', () async {
-      // TODO
+    test('constructor creates instance with all parameters', () {
+      expect(instance.id, 'tmpl_123');
+      expect(instance.object, TemplateObjectEnum.template);
+      expect(instance.instanceId, 'inst_123');
+      expect(instance.resourceType, 'user');
+      expect(instance.templateType, 'email');
+      expect(instance.name, 'Welcome Email');
+      expect(instance.slug, 'welcome_email');
+      expect(instance.position, 1);
+      expect(instance.canRevert, true);
+      expect(instance.canDelete, false);
+      expect(instance.canEditBody, true);
+      expect(instance.canToggle, false);
+      expect(instance.subject, 'Welcome to our app!');
+      expect(instance.body, 'Welcome {{name}}!');
+      expect(instance.availableVariables, ['name', 'email']);
+      expect(instance.requiredVariables, ['name']);
+      expect(instance.deliveredByClerk, true);
+      expect(instance.enabled, true);
     });
 
-    // whether this is a system (default) or user overridden) template
-    // String resourceType
-    test('to test the property `resourceType`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['id'], 'tmpl_123');
+      expect(json['object'], TemplateObjectEnum.template);
+      expect(json['instance_id'], 'inst_123');
+      expect(json['resource_type'], 'user');
+      expect(json['template_type'], 'email');
+      expect(json['name'], 'Welcome Email');
+      expect(json['slug'], 'welcome_email');
+      expect(json['position'], 1);
+      expect(json['can_revert'], true);
+      expect(json['can_delete'], false);
+      expect(json['subject'], 'Welcome to our app!');
+      expect(json['available_variables'], ['name', 'email']);
+      expect(json['required_variables'], ['name']);
     });
 
-    // whether this is an email or SMS template
-    // String templateType
-    test('to test the property `templateType`', () async {
-      // TODO
+    test('fromJson creates instance from map', () {
+      final json = {
+        'id': 'tmpl_456',
+        'object': 'template',
+        'instance_id': 'inst_456',
+        'resource_type': 'system',
+        'template_type': 'sms',
+        'name': 'Verification SMS',
+        'slug': 'verification_sms',
+        'position': 2,
+        'can_revert': false,
+        'can_delete': true,
+        'can_edit_body': false,
+        'can_toggle': true,
+        'body': 'Your code is {{code}}',
+        'available_variables': ['code'],
+        'required_variables': ['code'],
+        'delivered_by_clerk': false,
+        'enabled': false,
+        'updated_at': 1600001000,
+        'created_at': 1600000000,
+      };
+      final result = Template.fromJson(json);
+      expect(result, isNotNull);
+      expect(result!.id, 'tmpl_456');
+      expect(result.templateType, 'sms');
+      expect(result.name, 'Verification SMS');
+      expect(result.canToggle, true);
     });
 
-    // user-friendly name of the template
-    // String name
-    test('to test the property `name`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(Template.fromJson('invalid'), isNull);
+      expect(Template.fromJson(123), isNull);
+      expect(Template.fromJson(null), isNull);
     });
 
-    // machine-friendly name of the template
-    // String slug
-    test('to test the property `slug`', () async {
-      // TODO
+    test('listFromJson returns empty list for empty input', () {
+      expect(Template.listFromJson([]), isEmpty);
+      expect(Template.listFromJson(null), isEmpty);
     });
 
-    // position with the listing of templates
-    // int position
-    test('to test the property `position`', () async {
-      // TODO
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
     });
 
-    // whether this template can be reverted to the corresponding system default
-    // bool canRevert
-    test('to test the property `canRevert`', () async {
-      // TODO
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('Template'));
+      expect(str, contains('id=tmpl_123'));
+      expect(str, contains('name=Welcome Email'));
     });
 
-    // whether this template can be deleted
-    // bool canDelete
-    test('to test the property `canDelete`', () async {
-      // TODO
+    test('requiredKeys is empty', () {
+      expect(Template.requiredKeys, isEmpty);
+    });
+  });
+
+  group('TemplateObjectEnum', () {
+    test('values contains all enum values', () {
+      expect(TemplateObjectEnum.values, contains(TemplateObjectEnum.template));
     });
 
-    // whether this template can be enabled or disabled, true only for notification SMS templates
-    // bool canToggle
-    test('to test the property `canToggle`', () async {
-      // TODO
+    test('toJson returns correct string', () {
+      expect(TemplateObjectEnum.template.toJson(), 'template');
     });
 
-    // email subject
-    // String subject
-    test('to test the property `subject`', () async {
-      // TODO
+    test('fromJson parses correct value', () {
+      expect(TemplateObjectEnum.fromJson('template'), TemplateObjectEnum.template);
     });
 
-    // the editor markup used to generate the body of the template
-    // String markup
-    test('to test the property `markup`', () async {
-      // TODO
-    });
-
-    // the template body before variable interpolation
-    // String body
-    test('to test the property `body`', () async {
-      // TODO
-    });
-
-    // list of variables that are available for use in the template body
-    // List<String> availableVariables (default value: const [])
-    test('to test the property `availableVariables`', () async {
-      // TODO
-    });
-
-    // list of variables that must be contained in the template body
-    // List<String> requiredVariables (default value: const [])
-    test('to test the property `requiredVariables`', () async {
-      // TODO
-    });
-
-    // String fromEmailName
-    test('to test the property `fromEmailName`', () async {
-      // TODO
-    });
-
-    // String replyToEmailName
-    test('to test the property `replyToEmailName`', () async {
-      // TODO
-    });
-
-    // bool deliveredByClerk
-    test('to test the property `deliveredByClerk`', () async {
-      // TODO
-    });
-
-    // bool enabled
-    test('to test the property `enabled`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of last update.
-    // int updatedAt
-    test('to test the property `updatedAt`', () async {
-      // TODO
-    });
-
-    // Unix timestamp of creation.
-    // int createdAt
-    test('to test the property `createdAt`', () async {
-      // TODO
+    test('fromJson returns null for unknown value', () {
+      expect(TemplateObjectEnum.fromJson('unknown'), isNull);
     });
   });
 }

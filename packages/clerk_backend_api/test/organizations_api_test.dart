@@ -8,84 +8,225 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:convert';
+
 import 'package:clerk_backend_api/api.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:test/test.dart';
 
 /// tests for OrganizationsApi
 void main() {
-  // final instance = OrganizationsApi();
-
   group('tests for OrganizationsApi', () {
-    // Create an organization
-    //
-    // Creates a new organization with the given name for an instance. You can specify an optional slug for the new organization. If provided, the organization slug can contain only lowercase alphanumeric characters (letters and digits) and the dash \"-\". Organization slugs must be unique for the instance. You can provide additional metadata for the organization and set any custom attribute you want. Organizations support private and public metadata. Private metadata can only be accessed from the Backend API. Public metadata can be accessed from the Backend API, and are read-only from the Frontend API. The `created_by` user will see this as their [active organization] (https://clerk.com/docs/organizations/overview#active-organization) the next time they create a session, presuming they don't explicitly set a different organization as active before then.
-    //
-    //Future<Organization> createOrganization({ CreateOrganizationRequest createOrganizationRequest }) async
-    test('test createOrganization', () async {
-      // TODO
+    late ApiClient apiClient;
+    late OrganizationsApi organizationsApi;
+
+    final organizationJson = {
+      'object': 'organization',
+      'id': 'org_123',
+      'name': 'Test Organization',
+      'slug': 'test-org',
+      'has_image': false,
+      'max_allowed_memberships': 100,
+      'admin_delete_enabled': true,
+      'public_metadata': {},
+      'created_at': 1700000000,
+      'updated_at': 1700000001,
+    };
+
+    final deletedObjectJson = {
+      'object': 'deleted_object',
+      'id': 'org_123',
+      'slug': 'test-org',
+      'deleted': true,
+    };
+
+    final organizationsJson = {
+      'data': [organizationJson, organizationJson],
+      'total_count': 2,
+    };
+
+    group('createOrganization', () {
+      test('returns Organization on successful creation', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/organizations'));
+          return http.Response(jsonEncode(organizationJson), 201);
+        });
+        organizationsApi = OrganizationsApi(apiClient);
+
+        final result = await organizationsApi.createOrganization(
+          createOrganizationRequest: CreateOrganizationRequest(
+            name: 'Test Organization',
+          ),
+        );
+
+        expect(result, isNotNull);
+        expect(result!.id, equals('org_123'));
+        expect(result.name, equals('Test Organization'));
+      });
+
+      test('sends correct request body', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          final body = jsonDecode(request.body);
+          expect(body['name'], equals('My Org'));
+          expect(body['slug'], equals('my-org'));
+          return http.Response(jsonEncode(organizationJson), 201);
+        });
+        organizationsApi = OrganizationsApi(apiClient);
+
+        await organizationsApi.createOrganization(
+          createOrganizationRequest: CreateOrganizationRequest(
+            name: 'My Org',
+            slug: 'my-org',
+          ),
+        );
+      });
     });
 
-    // Delete an organization
-    //
-    // Deletes the given organization. Please note that deleting an organization will also delete all memberships and invitations. This is not reversible.
-    //
-    //Future<DeletedObject> deleteOrganization(String organizationId) async
-    test('test deleteOrganization', () async {
-      // TODO
+    group('deleteOrganization', () {
+      test('returns DeletedObject on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('DELETE'));
+          expect(request.url.path, equals('/v1/organizations/org_123'));
+          return http.Response(jsonEncode(deletedObjectJson), 200);
+        });
+        organizationsApi = OrganizationsApi(apiClient);
+
+        final result = await organizationsApi.deleteOrganization('org_123');
+
+        expect(result, isNotNull);
+        expect(result!.deleted, isTrue);
+      });
     });
 
-    // Delete the organization's logo.
-    //
-    // Delete the organization's logo.
-    //
-    //Future<Organization> deleteOrganizationLogo(String organizationId) async
-    test('test deleteOrganizationLogo', () async {
-      // TODO
+    group('getOrganization', () {
+      test('returns Organization on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('GET'));
+          expect(request.url.path, equals('/v1/organizations/org_123'));
+          return http.Response(jsonEncode(organizationJson), 200);
+        });
+        organizationsApi = OrganizationsApi(apiClient);
+
+        final result = await organizationsApi.getOrganization('org_123');
+
+        expect(result, isNotNull);
+        expect(result!.id, equals('org_123'));
+        expect(result.slug, equals('test-org'));
+      });
+
+      test('throws ApiException on 404', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          return http.Response('{"error": "not_found"}', 404);
+        });
+        organizationsApi = OrganizationsApi(apiClient);
+
+        expect(
+          () => organizationsApi.getOrganization('nonexistent'),
+          throwsA(isA<ApiException>()),
+        );
+      });
     });
 
-    // Retrieve an organization by ID or slug
-    //
-    // Fetches the organization whose ID or slug matches the provided `id_or_slug` URL query parameter.
-    //
-    //Future<Organization> getOrganization(String organizationId, { bool includeMembersCount, bool includeMissingMemberWithElevatedPermissions }) async
-    test('test getOrganization', () async {
-      // TODO
+    group('listOrganizations', () {
+      test('returns Organizations list', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('GET'));
+          expect(request.url.path, equals('/v1/organizations'));
+          return http.Response(jsonEncode(organizationsJson), 200);
+        });
+        organizationsApi = OrganizationsApi(apiClient);
+
+        final result = await organizationsApi.listOrganizations();
+
+        expect(result, isNotNull);
+        expect(result!.data.length, equals(2));
+        expect(result.totalCount, equals(2));
+      });
+
+      test('passes query parameters correctly', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.url.queryParameters['limit'], equals('10'));
+          expect(request.url.queryParameters['query'], equals('test'));
+          return http.Response(jsonEncode(organizationsJson), 200);
+        });
+        organizationsApi = OrganizationsApi(apiClient);
+
+        await organizationsApi.listOrganizations(limit: 10, query: 'test');
+      });
     });
 
-    // Get a list of organizations for an instance
-    //
-    // This request returns the list of organizations for an instance. Results can be paginated using the optional `limit` and `offset` query parameters. The organizations are ordered by descending creation date. Most recent organizations will be returned first.
-    //
-    //Future<Organizations> listOrganizations({ bool includeMembersCount, bool includeMissingMemberWithElevatedPermissions, String query, List<String> userId, List<String> organizationId, String orderBy, int limit, int offset }) async
-    test('test listOrganizations', () async {
-      // TODO
+    group('updateOrganization', () {
+      test('returns updated Organization', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('PATCH'));
+          expect(request.url.path, equals('/v1/organizations/org_123'));
+          return http.Response(
+            jsonEncode({...organizationJson, 'name': 'Updated Org'}),
+            200,
+          );
+        });
+        organizationsApi = OrganizationsApi(apiClient);
+
+        final result = await organizationsApi.updateOrganization(
+          'org_123',
+          UpdateOrganizationRequest(name: 'Updated Org'),
+        );
+
+        expect(result, isNotNull);
+        expect(result!.name, equals('Updated Org'));
+      });
     });
 
-    // Merge and update metadata for an organization
-    //
-    // Update organization metadata attributes by merging existing values with the provided parameters. Metadata values will be updated via a deep merge. Deep meaning that any nested JSON objects will be merged as well. You can remove metadata keys at any level by setting their value to `null`.
-    //
-    //Future<Organization> mergeOrganizationMetadata(String organizationId, MergeOrganizationMetadataRequest mergeOrganizationMetadataRequest) async
-    test('test mergeOrganizationMetadata', () async {
-      // TODO
+    group('mergeOrganizationMetadata', () {
+      test('returns Organization with merged metadata', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('PATCH'));
+          expect(request.url.path, equals('/v1/organizations/org_123/metadata'));
+          return http.Response(
+            jsonEncode({...organizationJson, 'public_metadata': {'key': 'value'}}),
+            200,
+          );
+        });
+        organizationsApi = OrganizationsApi(apiClient);
+
+        final result = await organizationsApi.mergeOrganizationMetadata(
+          'org_123',
+          MergeOrganizationMetadataRequest(publicMetadata: {'key': 'value'}),
+        );
+
+        expect(result, isNotNull);
+      });
     });
 
-    // Update an organization
-    //
-    // Updates an existing organization
-    //
-    //Future<Organization> updateOrganization(String organizationId, UpdateOrganizationRequest updateOrganizationRequest) async
-    test('test updateOrganization', () async {
-      // TODO
-    });
+    group('deleteOrganizationLogo', () {
+      test('returns Organization without logo', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('DELETE'));
+          expect(request.url.path, equals('/v1/organizations/org_123/logo'));
+          return http.Response(
+            jsonEncode({...organizationJson, 'has_image': false}),
+            200,
+          );
+        });
+        organizationsApi = OrganizationsApi(apiClient);
 
-    // Upload a logo for the organization
-    //
-    // Set or replace an organization's logo, by uploading an image file. This endpoint uses the `multipart/form-data` request content type and accepts a file of image type. The file size cannot exceed 10MB. Only the following file content types are supported: `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/x-icon`, `image/vnd.microsoft.icon`.
-    //
-    //Future<OrganizationWithLogo> uploadOrganizationLogo(String organizationId, MultipartFile file, { String uploaderUserId }) async
-    test('test uploadOrganizationLogo', () async {
-      // TODO
+        final result = await organizationsApi.deleteOrganizationLogo('org_123');
+
+        expect(result, isNotNull);
+        expect(result!.hasImage, isFalse);
+      });
     });
   });
 }

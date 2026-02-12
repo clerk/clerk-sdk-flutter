@@ -8,48 +8,150 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:convert';
+
 import 'package:clerk_backend_api/api.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:test/test.dart';
 
 /// tests for InvitationsApi
 void main() {
-  // final instance = InvitationsApi();
-
   group('tests for InvitationsApi', () {
-    // Create multiple invitations
-    //
-    // Use this API operation to create multiple invitations for the provided email addresses. You can choose to send the invitations as emails by setting the `notify` parameter to `true`. There cannot be an existing invitation for any of the email addresses you provide unless you set `ignore_existing` to `true` for specific email addresses. Please note that there must be no existing user for any of the email addresses you provide, and this rule cannot be bypassed.
-    //
-    //Future<List<Invitation>> createBulkInvitations({ List<CreateBulkInvitationsRequestInner> createBulkInvitationsRequestInner }) async
-    test('test createBulkInvitations', () async {
-      // TODO
+    late ApiClient apiClient;
+    late InvitationsApi invitationsApi;
+
+    final invitationJson = {
+      'object': 'invitation',
+      'id': 'inv_123',
+      'email_address': 'test@example.com',
+      'public_metadata': {},
+      'status': 'pending',
+      'created_at': 1700000000,
+      'updated_at': 1700000001,
+    };
+
+    group('createInvitation', () {
+      test('returns Invitation on successful creation', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/invitations'));
+          return http.Response(jsonEncode(invitationJson), 201);
+        });
+        invitationsApi = InvitationsApi(apiClient);
+
+        final result = await invitationsApi.createInvitation(
+          createInvitationRequest: CreateInvitationRequest(
+            emailAddress: 'test@example.com',
+          ),
+        );
+
+        expect(result, isNotNull);
+        expect(result!.id, equals('inv_123'));
+        expect(result.emailAddress, equals('test@example.com'));
+      });
+
+      test('sends correct request body', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          final body = jsonDecode(request.body);
+          expect(body['email_address'], equals('user@example.com'));
+          expect(body['notify'], equals(true));
+          return http.Response(jsonEncode(invitationJson), 201);
+        });
+        invitationsApi = InvitationsApi(apiClient);
+
+        await invitationsApi.createInvitation(
+          createInvitationRequest: CreateInvitationRequest(
+            emailAddress: 'user@example.com',
+            notify: true,
+          ),
+        );
+      });
     });
 
-    // Create an invitation
-    //
-    // Creates a new invitation for the given email address and sends the invitation email. Keep in mind that you cannot create an invitation if there is already one for the given email address. Also, trying to create an invitation for an email address that already exists in your application will result to an error.
-    //
-    //Future<Invitation> createInvitation({ CreateInvitationRequest createInvitationRequest }) async
-    test('test createInvitation', () async {
-      // TODO
+    group('createBulkInvitations', () {
+      test('returns list of Invitations', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/invitations/bulk'));
+          return http.Response(jsonEncode([invitationJson, invitationJson]), 201);
+        });
+        invitationsApi = InvitationsApi(apiClient);
+
+        final result = await invitationsApi.createBulkInvitations(
+          createBulkInvitationsRequestInner: [
+            CreateBulkInvitationsRequestInner(emailAddress: 'a@example.com'),
+            CreateBulkInvitationsRequestInner(emailAddress: 'b@example.com'),
+          ],
+        );
+
+        expect(result, isNotNull);
+        expect(result!.length, equals(2));
+      });
     });
 
-    // List all invitations
-    //
-    // Returns all non-revoked invitations for your application, sorted by creation date
-    //
-    //Future<List<Invitation>> listInvitations({ String status, String query, String orderBy, bool paginated, int limit, int offset }) async
-    test('test listInvitations', () async {
-      // TODO
+    group('listInvitations', () {
+      test('returns list of invitations', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('GET'));
+          expect(request.url.path, equals('/v1/invitations'));
+          return http.Response(jsonEncode([invitationJson, invitationJson]), 200);
+        });
+        invitationsApi = InvitationsApi(apiClient);
+
+        final result = await invitationsApi.listInvitations();
+
+        expect(result, isNotNull);
+        expect(result!.length, equals(2));
+      });
+
+      test('passes query parameters correctly', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.url.queryParameters['status'], equals('pending'));
+          expect(request.url.queryParameters['limit'], equals('10'));
+          return http.Response(jsonEncode([invitationJson]), 200);
+        });
+        invitationsApi = InvitationsApi(apiClient);
+
+        await invitationsApi.listInvitations(status: 'pending', limit: 10);
+      });
     });
 
-    // Revokes an invitation
-    //
-    // Revokes the given invitation. Revoking an invitation will prevent the user from using the invitation link that was sent to them. However, it doesn't prevent the user from signing up if they follow the sign up flow. Only active (i.e. non-revoked) invitations can be revoked.
-    //
-    //Future<RevokeInvitation200Response> revokeInvitation(String invitationId) async
-    test('test revokeInvitation', () async {
-      // TODO
+    group('revokeInvitation', () {
+      test('returns revoked invitation', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/invitations/inv_123/revoke'));
+          return http.Response(
+            jsonEncode({...invitationJson, 'status': 'revoked'}),
+            200,
+          );
+        });
+        invitationsApi = InvitationsApi(apiClient);
+
+        final result = await invitationsApi.revokeInvitation('inv_123');
+
+        expect(result, isNotNull);
+      });
+
+      test('throws ApiException on 404', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          return http.Response('{"error": "not_found"}', 404);
+        });
+        invitationsApi = InvitationsApi(apiClient);
+
+        expect(
+          () => invitationsApi.revokeInvitation('nonexistent'),
+          throwsA(isA<ApiException>()),
+        );
+      });
     });
   });
 }

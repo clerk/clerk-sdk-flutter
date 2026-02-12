@@ -159,5 +159,107 @@ void main() {
       expect(dt.millisecondsSinceEpoch, 1000);
     });
   });
+
+  group('Epoch', () {
+    test('add returns DateTime with duration added', () {
+      final result = DateTimeExt.epoch.add(const Duration(seconds: 10));
+      expect(result.microsecondsSinceEpoch, 10000000);
+    });
+
+    test('subtract returns DateTime with duration subtracted', () {
+      final result = DateTimeExt.epoch.subtract(const Duration(seconds: -10));
+      expect(result.microsecondsSinceEpoch, 10000000);
+    });
+
+    test('compareTo returns negative for non-epoch DateTime', () {
+      final now = DateTime.now();
+      expect(DateTimeExt.epoch.compareTo(now) < 0, true);
+    });
+
+    test('difference returns zero for two epochs', () {
+      expect(DateTimeExt.epoch.difference(DateTimeExt.epoch), Duration.zero);
+    });
+
+    test('difference returns negative duration for future DateTime', () {
+      final future = DateTime.fromMicrosecondsSinceEpoch(1000000, isUtc: true);
+      final diff = DateTimeExt.epoch.difference(future);
+      expect(diff.inMicroseconds, -1000000);
+    });
+
+    test('isAfter returns false for future DateTime', () {
+      final future = DateTime.fromMicrosecondsSinceEpoch(1000, isUtc: true);
+      expect(DateTimeExt.epoch.isAfter(future), false);
+    });
+
+    test('isBefore returns true for future DateTime', () {
+      final future = DateTime.fromMicrosecondsSinceEpoch(1000, isUtc: true);
+      expect(DateTimeExt.epoch.isBefore(future), true);
+    });
+
+    test('isAtSameMomentAs returns true for epoch', () {
+      final epoch = DateTime.fromMicrosecondsSinceEpoch(0, isUtc: true);
+      expect(DateTimeExt.epoch.isAtSameMomentAs(epoch), true);
+    });
+
+    test('isAtSameMomentAs returns false for non-epoch', () {
+      final nonEpoch = DateTime.fromMicrosecondsSinceEpoch(1, isUtc: true);
+      expect(DateTimeExt.epoch.isAtSameMomentAs(nonEpoch), false);
+    });
+
+    test('date components are correct', () {
+      expect(DateTimeExt.epoch.year, 1970);
+      expect(DateTimeExt.epoch.month, 1);
+      expect(DateTimeExt.epoch.day, 1);
+      expect(DateTimeExt.epoch.hour, 0);
+      expect(DateTimeExt.epoch.minute, 0);
+      expect(DateTimeExt.epoch.second, 0);
+      expect(DateTimeExt.epoch.millisecond, 0);
+      expect(DateTimeExt.epoch.microsecond, 0);
+    });
+
+    test('isUtc returns true', () {
+      expect(DateTimeExt.epoch.isUtc, true);
+    });
+
+    test('timeZoneName returns UTC', () {
+      expect(DateTimeExt.epoch.timeZoneName, 'UTC');
+    });
+
+    test('timeZoneOffset returns zero', () {
+      expect(DateTimeExt.epoch.timeZoneOffset, Duration.zero);
+    });
+
+    test('toIso8601String returns correct format', () {
+      expect(DateTimeExt.epoch.toIso8601String(), '1970-01-01T00:00:00.000Z');
+    });
+
+    test('toLocal returns local DateTime at epoch', () {
+      final local = DateTimeExt.epoch.toLocal();
+      expect(local.microsecondsSinceEpoch, 0);
+      expect(local.isUtc, false);
+    });
+
+    test('toUtc returns itself', () {
+      expect(DateTimeExt.epoch.toUtc(), DateTimeExt.epoch);
+    });
+
+    test('weekday returns 0', () {
+      expect(DateTimeExt.epoch.weekday, 0);
+    });
+  });
+
+  group('ObjectIdentity', () {
+    test('shortHash returns 5 character hex string', () {
+      final obj = Object();
+      expect(obj.shortHash.length, 5);
+    });
+
+    test('describeIdentity includes hash', () {
+      final obj = Object();
+      final identity = obj.describeIdentity();
+      expect(identity.contains('#'), true);
+      expect(identity.contains(obj.shortHash), true);
+    });
+  });
 }
 

@@ -11,32 +11,71 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for CreateActorTokenRequest
 void main() {
-  // final instance = CreateActorTokenRequest();
+  group('CreateActorTokenRequest', () {
+    late CreateActorTokenRequest instance;
+    late CreateActorTokenRequestActor actor;
 
-  group('test CreateActorTokenRequest', () {
-    // The ID of the user being impersonated.
-    // String userId
-    test('to test the property `userId`', () async {
-      // TODO
+    setUp(() {
+      actor = CreateActorTokenRequestActor(sub: 'admin_user_123');
+      instance = CreateActorTokenRequest(
+        userId: 'user_123',
+        actor: actor,
+      );
     });
 
-    // CreateActorTokenRequestActor actor
-    test('to test the property `actor`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.userId, 'user_123');
+      expect(instance.actor, actor);
     });
 
-    // Optional parameter to specify the life duration of the actor token in seconds. By default, the duration is 1 hour.
-    // int expiresInSeconds (default value: 3600)
-    test('to test the property `expiresInSeconds`', () async {
-      // TODO
+    test('constructor uses default values', () {
+      expect(instance.expiresInSeconds, 3600);
+      expect(instance.sessionMaxDurationInSeconds, 1800);
     });
 
-    // The maximum duration that the session which will be created by the generated actor token should last. By default, the duration of a session created via an actor token, lasts 30 minutes.
-    // int sessionMaxDurationInSeconds (default value: 1800)
-    test('to test the property `sessionMaxDurationInSeconds`', () async {
-      // TODO
+    test('constructor accepts custom values', () {
+      final custom = CreateActorTokenRequest(
+        userId: 'user_456',
+        actor: actor,
+        expiresInSeconds: 7200,
+        sessionMaxDurationInSeconds: 3600,
+      );
+      expect(custom.expiresInSeconds, 7200);
+      expect(custom.sessionMaxDurationInSeconds, 3600);
+    });
+
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['user_id'], 'user_123');
+      expect(json['expires_in_seconds'], 3600);
+      expect(json['session_max_duration_in_seconds'], 1800);
+    });
+
+    test('fromJson returns null for non-map input', () {
+      expect(CreateActorTokenRequest.fromJson('invalid'), isNull);
+      expect(CreateActorTokenRequest.fromJson(123), isNull);
+      expect(CreateActorTokenRequest.fromJson(null), isNull);
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(CreateActorTokenRequest.listFromJson([]), isEmpty);
+      expect(CreateActorTokenRequest.listFromJson(null), isEmpty);
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('CreateActorTokenRequest'));
+      expect(str, contains('userId=user_123'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(CreateActorTokenRequest.requiredKeys, contains('user_id'));
+      expect(CreateActorTokenRequest.requiredKeys, contains('actor'));
     });
   });
 }

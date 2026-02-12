@@ -106,21 +106,10 @@ scripts:
     packageFilters:
       scope: "clerk_flutter"
 
-  # Merge coverage reports from all packages
-  coverage:merge:
-    name: Merge coverage
-    description: Merge all lcov.info files into a single report
-    run: |
-      echo "Merging coverage reports..."
-      mkdir -p coverage
-      # Combine all available lcov.info files
-      cat packages/clerk_auth/coverage/lcov.info packages/clerk_flutter/coverage/lcov.info packages/clerk_backend_api/coverage/lcov.info > coverage/lcov.info 2>/dev/null || true
-      echo "Merged coverage report saved to coverage/lcov.info"
-
-  # Generate HTML coverage report (requires lcov to be installed)
+  # Generate HTML coverage reports for each package (requires genhtml/lcov)
   coverage:html:
-    name: Generate HTML coverage report
-    description: Generate HTML report from merged lcov.info (requires lcov)
-    run: |
-      genhtml coverage/lcov.info -o coverage/html
-      echo "HTML coverage report generated at coverage/html/index.html"
+    name: Generate HTML coverage reports
+    description: Generate HTML coverage report for each package from its lcov.info
+    run: melos exec -- genhtml coverage/lcov.info -o coverage/html
+    packageFilters:
+      dirExists: coverage

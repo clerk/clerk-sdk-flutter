@@ -11,63 +11,136 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for OrganizationSettings
 void main() {
-  // final instance = OrganizationSettings();
+  group('OrganizationSettings', () {
+    late OrganizationSettings instance;
 
-  group('test OrganizationSettings', () {
-    // String representing the object's type. Objects of the same type share the same value.
-    // String object
-    test('to test the property `object`', () async {
-      // TODO
+    setUp(() {
+      instance = OrganizationSettings(
+        object: OrganizationSettingsObjectEnum.organizationSettings,
+        enabled: true,
+        maxAllowedMemberships: 100,
+        maxAllowedRoles: 10,
+        maxRoleSetsAllowed: 5,
+        maxAllowedPermissions: 50,
+        creatorRole: 'admin',
+        adminDeleteEnabled: true,
+        domainsEnabled: true,
+        slugDisabled: false,
+        domainsEnrollmentModes: [
+          OrganizationSettingsDomainsEnrollmentModesEnum.manualInvitation,
+          OrganizationSettingsDomainsEnrollmentModesEnum.automaticInvitation,
+        ],
+        domainsDefaultRole: 'member',
+        initialRoleSetKey: 'default_set',
+      );
     });
 
-    // bool enabled
-    test('to test the property `enabled`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.object, OrganizationSettingsObjectEnum.organizationSettings);
+      expect(instance.enabled, true);
+      expect(instance.maxAllowedMemberships, 100);
+      expect(instance.maxAllowedRoles, 10);
+      expect(instance.creatorRole, 'admin');
+      expect(instance.adminDeleteEnabled, true);
+      expect(instance.domainsEnabled, true);
+      expect(instance.domainsDefaultRole, 'member');
     });
 
-    // int maxAllowedMemberships
-    test('to test the property `maxAllowedMemberships`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['object'], OrganizationSettingsObjectEnum.organizationSettings);
+      expect(json['enabled'], true);
+      expect(json['max_allowed_memberships'], 100);
+      expect(json['max_allowed_roles'], 10);
+      expect(json['creator_role'], 'admin');
+      expect(json['admin_delete_enabled'], true);
+      expect(json['domains_enabled'], true);
+      expect(json['domains_default_role'], 'member');
     });
 
-    // int maxAllowedRoles
-    test('to test the property `maxAllowedRoles`', () async {
-      // TODO
+    test('fromJson creates instance from map', () {
+      final json = {
+        'object': 'organization_settings',
+        'enabled': false,
+        'max_allowed_memberships': 50,
+        'max_allowed_roles': 5,
+        'creator_role': 'owner',
+        'admin_delete_enabled': false,
+        'domains_enabled': false,
+        'domains_enrollment_modes': ['manual_invitation'],
+        'domains_default_role': 'viewer',
+      };
+      final result = OrganizationSettings.fromJson(json);
+      expect(result, isNotNull);
+      expect(result!.enabled, false);
+      expect(result.maxAllowedMemberships, 50);
+      expect(result.creatorRole, 'owner');
+      expect(result.domainsDefaultRole, 'viewer');
     });
 
-    // int maxAllowedPermissions
-    test('to test the property `maxAllowedPermissions`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(OrganizationSettings.fromJson('invalid'), isNull);
+      expect(OrganizationSettings.fromJson(123), isNull);
+      expect(OrganizationSettings.fromJson(null), isNull);
     });
 
-    // The role key that a user will be assigned after creating an organization.
-    // String creatorRole
-    test('to test the property `creatorRole`', () async {
-      // TODO
+    test('listFromJson returns empty list for empty input', () {
+      expect(OrganizationSettings.listFromJson([]), isEmpty);
+      expect(OrganizationSettings.listFromJson(null), isEmpty);
     });
 
-    // The default for whether an admin can delete an organization with the Frontend API.
-    // bool adminDeleteEnabled
-    test('to test the property `adminDeleteEnabled`', () async {
-      // TODO
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
     });
 
-    // bool domainsEnabled
-    test('to test the property `domainsEnabled`', () async {
-      // TODO
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('OrganizationSettings'));
+      expect(str, contains('enabled=true'));
+      expect(str, contains('creatorRole=admin'));
     });
 
-    // List<String> domainsEnrollmentModes (default value: const [])
-    test('to test the property `domainsEnrollmentModes`', () async {
-      // TODO
+    test('requiredKeys contains required fields', () {
+      expect(OrganizationSettings.requiredKeys, contains('object'));
+      expect(OrganizationSettings.requiredKeys, contains('enabled'));
+      expect(OrganizationSettings.requiredKeys, contains('max_allowed_memberships'));
+      expect(OrganizationSettings.requiredKeys, contains('creator_role'));
+    });
+  });
+
+  group('OrganizationSettingsObjectEnum', () {
+    test('values contains all enum values', () {
+      expect(OrganizationSettingsObjectEnum.values, contains(OrganizationSettingsObjectEnum.organizationSettings));
     });
 
-    // The role key that it will be used in order to create an organization invitation or suggestion.
-    // String domainsDefaultRole
-    test('to test the property `domainsDefaultRole`', () async {
-      // TODO
+    test('toJson returns correct string', () {
+      expect(OrganizationSettingsObjectEnum.organizationSettings.toJson(), 'organization_settings');
+    });
+
+    test('fromJson parses correct value', () {
+      expect(OrganizationSettingsObjectEnum.fromJson('organization_settings'), OrganizationSettingsObjectEnum.organizationSettings);
+    });
+
+    test('fromJson returns null for unknown value', () {
+      expect(OrganizationSettingsObjectEnum.fromJson('unknown'), isNull);
+    });
+  });
+
+  group('OrganizationSettingsDomainsEnrollmentModesEnum', () {
+    test('values contains all enum values', () {
+      expect(OrganizationSettingsDomainsEnrollmentModesEnum.values, contains(OrganizationSettingsDomainsEnrollmentModesEnum.manualInvitation));
+      expect(OrganizationSettingsDomainsEnrollmentModesEnum.values, contains(OrganizationSettingsDomainsEnrollmentModesEnum.automaticInvitation));
+      expect(OrganizationSettingsDomainsEnrollmentModesEnum.values, contains(OrganizationSettingsDomainsEnrollmentModesEnum.automaticSuggestion));
+    });
+
+    test('toJson returns correct string', () {
+      expect(OrganizationSettingsDomainsEnrollmentModesEnum.manualInvitation.toJson(), 'manual_invitation');
+      expect(OrganizationSettingsDomainsEnrollmentModesEnum.automaticInvitation.toJson(), 'automatic_invitation');
+    });
+
+    test('fromJson parses correct value', () {
+      expect(OrganizationSettingsDomainsEnrollmentModesEnum.fromJson('manual_invitation'), OrganizationSettingsDomainsEnrollmentModesEnum.manualInvitation);
     });
   });
 }

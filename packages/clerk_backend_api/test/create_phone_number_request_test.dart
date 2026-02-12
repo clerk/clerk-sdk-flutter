@@ -11,39 +11,119 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for CreatePhoneNumberRequest
 void main() {
-  // final instance = CreatePhoneNumberRequest();
+  group('CreatePhoneNumberRequest', () {
+    late CreatePhoneNumberRequest instance;
 
-  group('test CreatePhoneNumberRequest', () {
-    // The ID representing the user
-    // String userId
-    test('to test the property `userId`', () async {
-      // TODO
+    setUp(() {
+      instance = CreatePhoneNumberRequest(
+        userId: 'user_123',
+        phoneNumber: '+15551234567',
+        verified: true,
+        primary: true,
+        reservedForSecondFactor: true,
+      );
     });
 
-    // The new phone number. Must adhere to the E.164 standard for phone number format.
-    // String phoneNumber
-    test('to test the property `phoneNumber`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      final minimal = CreatePhoneNumberRequest(
+        userId: 'user_456',
+        phoneNumber: '+15559876543',
+      );
+      expect(minimal.userId, 'user_456');
+      expect(minimal.phoneNumber, '+15559876543');
+      expect(minimal.verified, isNull);
+      expect(minimal.primary, isNull);
+      expect(minimal.reservedForSecondFactor, isNull);
     });
 
-    // When created, the phone number will be marked as verified.
-    // bool verified
-    test('to test the property `verified`', () async {
-      // TODO
+    test('constructor creates instance with all parameters', () {
+      expect(instance.userId, 'user_123');
+      expect(instance.phoneNumber, '+15551234567');
+      expect(instance.verified, true);
+      expect(instance.primary, true);
+      expect(instance.reservedForSecondFactor, true);
     });
 
-    // Create this phone number as the primary phone number for the user. Default: false, unless it is the first phone number.
-    // bool primary
-    test('to test the property `primary`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['user_id'], 'user_123');
+      expect(json['phone_number'], '+15551234567');
+      expect(json['verified'], true);
+      expect(json['primary'], true);
+      expect(json['reserved_for_second_factor'], true);
     });
 
-    // Create this phone number as reserved for multi-factor authentication. The phone number must also be verified. If there are no other reserved second factors, the phone number will be set as the default second factor.
-    // bool reservedForSecondFactor
-    test('to test the property `reservedForSecondFactor`', () async {
-      // TODO
+    test('fromJson creates instance from map', () {
+      final json = {
+        'user_id': 'user_789',
+        'phone_number': '+15550001111',
+        'verified': false,
+        'primary': false,
+        'reserved_for_second_factor': false,
+      };
+      final result = CreatePhoneNumberRequest.fromJson(json);
+      expect(result, isNotNull);
+      expect(result!.userId, 'user_789');
+      expect(result.phoneNumber, '+15550001111');
+      expect(result.verified, false);
+      expect(result.primary, false);
+      expect(result.reservedForSecondFactor, false);
+    });
+
+    test('fromJson returns null for non-map input', () {
+      expect(CreatePhoneNumberRequest.fromJson('invalid'), isNull);
+      expect(CreatePhoneNumberRequest.fromJson(123), isNull);
+      expect(CreatePhoneNumberRequest.fromJson(null), isNull);
+    });
+
+    test('listFromJson creates list from json array', () {
+      final jsonList = [
+        {'user_id': 'user_1', 'phone_number': '+15551111111'},
+        {'user_id': 'user_2', 'phone_number': '+15552222222', 'verified': true},
+      ];
+      final result = CreatePhoneNumberRequest.listFromJson(jsonList);
+      expect(result.length, 2);
+      expect(result[0].phoneNumber, '+15551111111');
+      expect(result[1].verified, true);
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(CreatePhoneNumberRequest.listFromJson([]), isEmpty);
+      expect(CreatePhoneNumberRequest.listFromJson(null), isEmpty);
+    });
+
+    test('equality operator works correctly', () {
+      final other = CreatePhoneNumberRequest(
+        userId: 'user_123',
+        phoneNumber: '+15551234567',
+        verified: true,
+        primary: true,
+        reservedForSecondFactor: true,
+      );
+      expect(instance, equals(other));
+
+      final different = CreatePhoneNumberRequest(
+        userId: 'user_different',
+        phoneNumber: '+15550000000',
+      );
+      expect(instance, isNot(equals(different)));
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('CreatePhoneNumberRequest'));
+      expect(str, contains('userId=user_123'));
+      expect(str, contains('phoneNumber=+15551234567'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(CreatePhoneNumberRequest.requiredKeys, contains('user_id'));
+      expect(CreatePhoneNumberRequest.requiredKeys, contains('phone_number'));
     });
   });
 }

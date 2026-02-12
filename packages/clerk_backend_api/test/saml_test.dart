@@ -11,44 +11,80 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for SAML
 void main() {
-  // final instance = SAML();
+  group('SAML', () {
+    late SAML instance;
 
-  group('test SAML', () {
-    // String status
-    test('to test the property `status`', () async {
-      // TODO
+    setUp(() {
+      instance = SAML(
+        status: SAMLStatusEnum.unverified,
+        strategy: SAMLStrategyEnum.saml,
+        externalVerificationRedirectUrl: 'https://example.com/saml',
+        expireAt: 1234567890,
+        attempts: 0,
+      );
     });
 
-    // String strategy
-    test('to test the property `strategy`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.status, SAMLStatusEnum.unverified);
+      expect(instance.strategy, SAMLStrategyEnum.saml);
+      expect(instance.externalVerificationRedirectUrl, 'https://example.com/saml');
+      expect(instance.expireAt, 1234567890);
+      expect(instance.attempts, 0);
     });
 
-    // String externalVerificationRedirectUrl
-    test('to test the property `externalVerificationRedirectUrl`', () async {
-      // TODO
+    test('constructor allows null optional parameters', () {
+      final saml = SAML(
+        status: SAMLStatusEnum.verified,
+        strategy: SAMLStrategyEnum.saml,
+        externalVerificationRedirectUrl: null,
+        expireAt: 1234567890,
+        attempts: null,
+      );
+      expect(saml.externalVerificationRedirectUrl, isNull);
+      expect(saml.error, isNull);
+      expect(saml.verifiedAtClient, isNull);
     });
 
-    // FromOAuthError error
-    test('to test the property `error`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['status'], SAMLStatusEnum.unverified);
+      expect(json['strategy'], SAMLStrategyEnum.saml);
+      expect(json['external_verification_redirect_url'], 'https://example.com/saml');
+      expect(json['expire_at'], 1234567890);
     });
 
-    // int expireAt
-    test('to test the property `expireAt`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(SAML.fromJson('invalid'), isNull);
+      expect(SAML.fromJson(123), isNull);
+      expect(SAML.fromJson(null), isNull);
     });
 
-    // int attempts
-    test('to test the property `attempts`', () async {
-      // TODO
+    test('listFromJson returns empty list for empty input', () {
+      expect(SAML.listFromJson([]), isEmpty);
+      expect(SAML.listFromJson(null), isEmpty);
     });
 
-    // String verifiedAtClient
-    test('to test the property `verifiedAtClient`', () async {
-      // TODO
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('SAML'));
+      expect(str, contains('status='));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(SAML.requiredKeys, contains('status'));
+      expect(SAML.requiredKeys, contains('strategy'));
+      expect(SAML.requiredKeys, contains('expire_at'));
+    });
+
+    test('status enum values are correct', () {
+      expect(SAMLStatusEnum.unverified.value, 'unverified');
+      expect(SAMLStatusEnum.verified.value, 'verified');
+      expect(SAMLStatusEnum.expired.value, 'expired');
     });
   });
 }

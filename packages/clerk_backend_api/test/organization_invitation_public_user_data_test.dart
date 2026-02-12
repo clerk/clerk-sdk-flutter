@@ -11,39 +11,110 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for OrganizationInvitationPublicUserData
 void main() {
-  // final instance = OrganizationInvitationPublicUserData();
+  group('OrganizationInvitationPublicUserData', () {
+    late OrganizationInvitationPublicUserData instance;
 
-  group('test OrganizationInvitationPublicUserData', () {
-    // String userId
-    test('to test the property `userId`', () async {
-      // TODO
+    setUp(() {
+      instance = OrganizationInvitationPublicUserData(
+        userId: 'user_123',
+        firstName: 'John',
+        lastName: 'Doe',
+        imageUrl: 'https://example.com/image.png',
+        hasImage: true,
+        identifier: 'john@example.com',
+      );
     });
 
-    // String firstName
-    test('to test the property `firstName`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.userId, 'user_123');
+      expect(instance.firstName, 'John');
+      expect(instance.lastName, 'Doe');
+      expect(instance.imageUrl, 'https://example.com/image.png');
+      expect(instance.hasImage, true);
+      expect(instance.identifier, 'john@example.com');
     });
 
-    // String lastName
-    test('to test the property `lastName`', () async {
-      // TODO
+    test('constructor allows null for optional fields', () {
+      final instanceWithNulls = OrganizationInvitationPublicUserData(
+        userId: 'user_456',
+        firstName: null,
+        lastName: null,
+        imageUrl: 'https://example.com/default.png',
+        hasImage: false,
+        identifier: 'user456@example.com',
+      );
+      expect(instanceWithNulls.firstName, isNull);
+      expect(instanceWithNulls.lastName, isNull);
     });
 
-    // String imageUrl
-    test('to test the property `imageUrl`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['user_id'], 'user_123');
+      expect(json['first_name'], 'John');
+      expect(json['last_name'], 'Doe');
+      expect(json['image_url'], 'https://example.com/image.png');
+      expect(json['has_image'], true);
+      expect(json['identifier'], 'john@example.com');
     });
 
-    // bool hasImage
-    test('to test the property `hasImage`', () async {
-      // TODO
+    test('fromJson creates instance from map', () {
+      final json = {
+        'user_id': 'user_789',
+        'first_name': 'Jane',
+        'last_name': 'Smith',
+        'image_url': 'https://example.com/jane.png',
+        'has_image': true,
+        'identifier': 'jane@example.com',
+      };
+      final result = OrganizationInvitationPublicUserData.fromJson(json);
+      expect(result, isNotNull);
+      expect(result!.userId, 'user_789');
+      expect(result.firstName, 'Jane');
+      expect(result.lastName, 'Smith');
     });
 
-    // String identifier
-    test('to test the property `identifier`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(OrganizationInvitationPublicUserData.fromJson('invalid'), isNull);
+      expect(OrganizationInvitationPublicUserData.fromJson(123), isNull);
+      expect(OrganizationInvitationPublicUserData.fromJson(null), isNull);
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(OrganizationInvitationPublicUserData.listFromJson([]), isEmpty);
+      expect(OrganizationInvitationPublicUserData.listFromJson(null), isEmpty);
+    });
+
+    test('equality operator works correctly', () {
+      final other = OrganizationInvitationPublicUserData(
+        userId: 'user_123',
+        firstName: 'John',
+        lastName: 'Doe',
+        imageUrl: 'https://example.com/image.png',
+        hasImage: true,
+        identifier: 'john@example.com',
+      );
+      expect(instance, equals(other));
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('OrganizationInvitationPublicUserData'));
+      expect(str, contains('userId=user_123'));
+      expect(str, contains('firstName=John'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('user_id'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('first_name'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('last_name'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('image_url'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('has_image'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('identifier'));
     });
   });
 }

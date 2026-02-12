@@ -8,75 +8,206 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:convert';
+
 import 'package:clerk_backend_api/api.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:test/test.dart';
 
 /// tests for SessionsApi
 void main() {
-  // final instance = SessionsApi();
-
   group('tests for SessionsApi', () {
-    // Create a new active session
-    //
-    // Create a new active session for the provided user ID.  **This operation is intended only for use in testing, and is not available for production instances.** If you are looking to generate a user session from the backend, we recommend using the [Sign-in Tokens](https://clerk.com/docs/reference/backend-api/tag/Sign-in-Tokens#operation/CreateSignInToken) resource instead.
-    //
-    //Future<Session> createSession({ CreateSessionRequest createSessionRequest }) async
-    test('test createSession', () async {
-      // TODO
+    late ApiClient apiClient;
+    late SessionsApi sessionsApi;
+
+    final sessionJson = {
+      'object': 'session',
+      'id': 'sess_123',
+      'user_id': 'user_123',
+      'client_id': 'client_123',
+      'status': 'active',
+      'last_active_at': 1700000000,
+      'expire_at': 1700100000,
+      'abandon_at': 1700200000,
+      'updated_at': 1700000001,
+      'created_at': 1700000000,
+    };
+
+    final tokenJson = {
+      'object': 'token',
+      'jwt': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test',
+    };
+
+    group('createSession', () {
+      test('returns Session on successful creation', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/sessions'));
+          return http.Response(jsonEncode(sessionJson), 201);
+        });
+        sessionsApi = SessionsApi(apiClient);
+
+        final result = await sessionsApi.createSession(
+          createSessionRequest: CreateSessionRequest(userId: 'user_123'),
+        );
+
+        expect(result, isNotNull);
+        expect(result!.id, equals('sess_123'));
+        expect(result.userId, equals('user_123'));
+      });
+
+      test('throws ApiException on error', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          return http.Response('{"error": "forbidden"}', 403);
+        });
+        sessionsApi = SessionsApi(apiClient);
+
+        expect(
+          () => sessionsApi.createSession(),
+          throwsA(isA<ApiException>()),
+        );
+      });
     });
 
-    // Create a session token
-    //
-    // Creates a session JSON Web Token (JWT) based on a session.
-    //
-    //Future<CreateSessionToken200Response> createSessionToken(String sessionId, { CreateSessionTokenRequest createSessionTokenRequest }) async
-    test('test createSessionToken', () async {
-      // TODO
+    group('createSessionToken', () {
+      test('returns token on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/sessions/sess_123/tokens'));
+          return http.Response(jsonEncode(tokenJson), 200);
+        });
+        sessionsApi = SessionsApi(apiClient);
+
+        final result = await sessionsApi.createSessionToken('sess_123');
+
+        expect(result, isNotNull);
+        expect(result!.jwt, contains('eyJ'));
+      });
     });
 
-    // Create a session token from a jwt template
-    //
-    // Creates a JSON Web Token(JWT) based on a session and a JWT Template name defined for your instance
-    //
-    //Future<CreateSessionToken200Response> createSessionTokenFromTemplate(String sessionId, String templateName, { CreateSessionTokenFromTemplateRequest createSessionTokenFromTemplateRequest }) async
-    test('test createSessionTokenFromTemplate', () async {
-      // TODO
+    group('createSessionTokenFromTemplate', () {
+      test('returns token from template', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/sessions/sess_123/tokens/my_template'));
+          return http.Response(jsonEncode(tokenJson), 200);
+        });
+        sessionsApi = SessionsApi(apiClient);
+
+        final result = await sessionsApi.createSessionTokenFromTemplate(
+          'sess_123',
+          'my_template',
+        );
+
+        expect(result, isNotNull);
+        expect(result!.jwt, contains('eyJ'));
+      });
     });
 
-    // Retrieve a session
-    //
-    // Retrieve the details of a session
-    //
-    //Future<Session> getSession(String sessionId) async
-    test('test getSession', () async {
-      // TODO
+    group('getSession', () {
+      test('returns Session on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('GET'));
+          expect(request.url.path, equals('/v1/sessions/sess_123'));
+          return http.Response(jsonEncode(sessionJson), 200);
+        });
+        sessionsApi = SessionsApi(apiClient);
+
+        final result = await sessionsApi.getSession('sess_123');
+
+        expect(result, isNotNull);
+        expect(result!.id, equals('sess_123'));
+        expect(result.status, equals(SessionStatusEnum.active));
+      });
+
+      test('throws ApiException on 404', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          return http.Response('{"error": "not_found"}', 404);
+        });
+        sessionsApi = SessionsApi(apiClient);
+
+        expect(
+          () => sessionsApi.getSession('nonexistent'),
+          throwsA(isA<ApiException>()),
+        );
+      });
     });
 
-    // List all sessions
-    //
-    // Returns a list of all sessions. The sessions are returned sorted by creation date, with the newest sessions appearing first. **Deprecation Notice (2024-01-01):** All parameters were initially considered optional, however moving forward at least one of `client_id` or `user_id` parameters should be provided.
-    //
-    //Future<List<Session>> getSessionList({ String clientId, String userId, String status, bool paginated, int limit, int offset }) async
-    test('test getSessionList', () async {
-      // TODO
+    group('getSessionList', () {
+      test('returns list of sessions', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('GET'));
+          expect(request.url.path, equals('/v1/sessions'));
+          return http.Response(jsonEncode([sessionJson, sessionJson]), 200);
+        });
+        sessionsApi = SessionsApi(apiClient);
+
+        final result = await sessionsApi.getSessionList();
+
+        expect(result, isNotNull);
+        expect(result!.length, equals(2));
+      });
+
+      test('passes query parameters correctly', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.url.queryParameters['user_id'], equals('user_123'));
+          expect(request.url.queryParameters['limit'], equals('10'));
+          return http.Response(jsonEncode([sessionJson]), 200);
+        });
+        sessionsApi = SessionsApi(apiClient);
+
+        await sessionsApi.getSessionList(userId: 'user_123', limit: 10);
+      });
     });
 
-    // Revoke a session
-    //
-    // Sets the status of a session as \"revoked\", which is an unauthenticated state. In multi-session mode, a revoked session will still be returned along with its client object, however the user will need to sign in again.
-    //
-    //Future<Session> revokeSession(String sessionId) async
-    test('test revokeSession', () async {
-      // TODO
+    group('revokeSession', () {
+      test('returns revoked Session', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/sessions/sess_123/revoke'));
+          return http.Response(
+            jsonEncode({...sessionJson, 'status': 'revoked'}),
+            200,
+          );
+        });
+        sessionsApi = SessionsApi(apiClient);
+
+        final result = await sessionsApi.revokeSession('sess_123');
+
+        expect(result, isNotNull);
+        expect(result!.status, equals(SessionStatusEnum.revoked));
+      });
     });
 
-    // Verify a session
-    //
-    // Returns the session if it is authenticated, otherwise returns an error. WARNING: This endpoint is deprecated and will be removed in future versions. We strongly recommend switching to networkless verification using short-lived session tokens,          which is implemented transparently in all recent SDK versions (e.g. [NodeJS SDK](https://clerk.com/docs/backend-requests/handling/nodejs#clerk-express-require-auth)).          For more details on how networkless verification works, refer to our [Session Tokens documentation](https://clerk.com/docs/backend-requests/resources/session-tokens).
-    //
-    //Future<Session> verifySession(String sessionId, { VerifySessionRequest verifySessionRequest }) async
-    test('test verifySession', () async {
-      // TODO
+    group('refreshSession', () {
+      test('returns SessionRefresh on success', () async {
+        apiClient = ApiClient();
+        apiClient.client = MockClient((request) async {
+          expect(request.method, equals('POST'));
+          expect(request.url.path, equals('/v1/sessions/sess_123/refresh'));
+          return http.Response(jsonEncode({
+            'object': 'cookies',
+            'jwt': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test',
+            'cookies': ['__session=abc123'],
+          }), 200);
+        });
+        sessionsApi = SessionsApi(apiClient);
+
+        final result = await sessionsApi.refreshSession('sess_123');
+
+        expect(result, isNotNull);
+        expect(result!.jwt, contains('eyJ'));
+      });
     });
   });
 }

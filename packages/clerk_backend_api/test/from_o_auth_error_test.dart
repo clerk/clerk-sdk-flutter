@@ -11,34 +11,83 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for FromOAuthError
 void main() {
-  // final instance = FromOAuthError();
+  group('FromOAuthError', () {
+    late FromOAuthError instance;
 
-  group('test FromOAuthError', () {
-    // String message
-    test('to test the property `message`', () async {
-      // TODO
+    setUp(() {
+      instance = FromOAuthError(
+        message: 'Error message',
+        longMessage: 'A longer error message',
+        code: 'oauth_error',
+      );
     });
 
-    // String longMessage
-    test('to test the property `longMessage`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.message, 'Error message');
+      expect(instance.longMessage, 'A longer error message');
+      expect(instance.code, 'oauth_error');
+      expect(instance.meta, isNull);
+      expect(instance.clerkTraceId, isNull);
     });
 
-    // String code
-    test('to test the property `code`', () async {
-      // TODO
+    test('constructor creates instance with optional parameters', () {
+      final error = FromOAuthError(
+        message: 'Error',
+        longMessage: 'Long error',
+        code: 'error_code',
+        meta: {'key': 'value'},
+        clerkTraceId: 'trace_123',
+      );
+      expect(error.meta, {'key': 'value'});
+      expect(error.clerkTraceId, 'trace_123');
     });
 
-    // Object meta
-    test('to test the property `meta`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['message'], 'Error message');
+      expect(json['long_message'], 'A longer error message');
+      expect(json['code'], 'oauth_error');
     });
 
-    // String clerkTraceId
-    test('to test the property `clerkTraceId`', () async {
-      // TODO
+    test('fromJson creates instance from map', () {
+      final json = {
+        'message': 'Error message',
+        'long_message': 'A longer error message',
+        'code': 'oauth_error',
+      };
+      final result = FromOAuthError.fromJson(json);
+      expect(result, isNotNull);
+      expect(result!.message, 'Error message');
+      expect(result.longMessage, 'A longer error message');
+      expect(result.code, 'oauth_error');
+    });
+
+    test('fromJson returns null for non-map input', () {
+      expect(FromOAuthError.fromJson('invalid'), isNull);
+      expect(FromOAuthError.fromJson(123), isNull);
+      expect(FromOAuthError.fromJson(null), isNull);
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(FromOAuthError.listFromJson([]), isEmpty);
+      expect(FromOAuthError.listFromJson(null), isEmpty);
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('FromOAuthError'));
+      expect(str, contains('message=Error message'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(FromOAuthError.requiredKeys, contains('message'));
+      expect(FromOAuthError.requiredKeys, contains('long_message'));
+      expect(FromOAuthError.requiredKeys, contains('code'));
     });
   });
 }

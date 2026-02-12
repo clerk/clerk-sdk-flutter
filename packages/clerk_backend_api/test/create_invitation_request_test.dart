@@ -11,51 +11,143 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for CreateInvitationRequest
 void main() {
-  // final instance = CreateInvitationRequest();
+  group('CreateInvitationRequest', () {
+    late CreateInvitationRequest instance;
+    late Map<String, Object> metadata;
 
-  group('test CreateInvitationRequest', () {
-    // The email address the invitation will be sent to
-    // String emailAddress
-    test('to test the property `emailAddress`', () async {
-      // TODO
+    setUp(() {
+      metadata = {'role': 'admin', 'team': 'engineering'};
+      instance = CreateInvitationRequest(
+        emailAddress: 'test@example.com',
+        publicMetadata: metadata,
+        redirectUrl: 'https://example.com/callback',
+        notify: true,
+        ignoreExisting: false,
+        expiresInDays: 7,
+        templateSlug: CreateInvitationRequestTemplateSlugEnum.invitation,
+      );
     });
 
-    // Metadata that will be attached to the newly created invitation. The value of this property should be a well-formed JSON object. Once the user accepts the invitation and signs up, these metadata will end up in the user's public metadata.
-    // Map<String, Object> publicMetadata (default value: const {})
-    test('to test the property `publicMetadata`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      final minimal = CreateInvitationRequest(
+        emailAddress: 'user@example.com',
+      );
+      expect(minimal.emailAddress, 'user@example.com');
+      expect(minimal.publicMetadata, isEmpty);
+      expect(minimal.notify, true); // default value
+      expect(minimal.ignoreExisting, false); // default value
     });
 
-    // Optional URL which specifies where to redirect the user once they click the invitation link. This is only required if you have implemented a [custom flow](https://clerk.com/docs/authentication/invitations#custom-flow) and you're not using Clerk Hosted Pages or Clerk Components.
-    // String redirectUrl
-    test('to test the property `redirectUrl`', () async {
-      // TODO
+    test('constructor creates instance with all parameters', () {
+      expect(instance.emailAddress, 'test@example.com');
+      expect(instance.publicMetadata, metadata);
+      expect(instance.redirectUrl, 'https://example.com/callback');
+      expect(instance.notify, true);
+      expect(instance.ignoreExisting, false);
+      expect(instance.expiresInDays, 7);
+      expect(instance.templateSlug, CreateInvitationRequestTemplateSlugEnum.invitation);
     });
 
-    // Optional flag which denotes whether an email invitation should be sent to the given email address. Defaults to `true`.
-    // bool notify (default value: true)
-    test('to test the property `notify`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['email_address'], 'test@example.com');
+      expect(json['public_metadata'], metadata);
+      expect(json['redirect_url'], 'https://example.com/callback');
+      expect(json['notify'], true);
+      expect(json['ignore_existing'], false);
+      expect(json['expires_in_days'], 7);
+      expect(json['template_slug'], CreateInvitationRequestTemplateSlugEnum.invitation);
     });
 
-    // Whether an invitation should be created if there is already an existing invitation for this email address, or it's claimed by another user.
-    // bool ignoreExisting (default value: false)
-    test('to test the property `ignoreExisting`', () async {
-      // TODO
+    test('fromJson creates instance from map', () {
+      final json = {
+        'email_address': 'another@example.com',
+        'public_metadata': {'key': 'value'},
+        'redirect_url': 'https://other.com/callback',
+        'notify': false,
+        'ignore_existing': true,
+        'expires_in_days': 14,
+        'template_slug': 'waitlist_invitation',
+      };
+      final result = CreateInvitationRequest.fromJson(json);
+      expect(result, isNotNull);
+      expect(result!.emailAddress, 'another@example.com');
+      expect(result.redirectUrl, 'https://other.com/callback');
+      expect(result.notify, false);
+      expect(result.ignoreExisting, true);
+      expect(result.expiresInDays, 14);
+      expect(result.templateSlug, CreateInvitationRequestTemplateSlugEnum.waitlistInvitation);
     });
 
-    // The number of days the invitation will be valid for. By default, the invitation expires after 30 days.
-    // int expiresInDays
-    test('to test the property `expiresInDays`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(CreateInvitationRequest.fromJson('invalid'), isNull);
+      expect(CreateInvitationRequest.fromJson(123), isNull);
+      expect(CreateInvitationRequest.fromJson(null), isNull);
     });
 
-    // The slug of the email template to use for the invitation email.
-    // String templateSlug
-    test('to test the property `templateSlug`', () async {
-      // TODO
+    test('listFromJson creates list from json array', () {
+      final jsonList = [
+        {'email_address': 'user1@example.com'},
+        {'email_address': 'user2@example.com', 'expires_in_days': 30},
+      ];
+      final result = CreateInvitationRequest.listFromJson(jsonList);
+      expect(result.length, 2);
+      expect(result[0].emailAddress, 'user1@example.com');
+      expect(result[1].expiresInDays, 30);
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(CreateInvitationRequest.listFromJson([]), isEmpty);
+      expect(CreateInvitationRequest.listFromJson(null), isEmpty);
+    });
+
+    test('equality operator works correctly', () {
+      final other = CreateInvitationRequest(
+        emailAddress: 'test@example.com',
+        publicMetadata: metadata,
+        redirectUrl: 'https://example.com/callback',
+        notify: true,
+        ignoreExisting: false,
+        expiresInDays: 7,
+        templateSlug: CreateInvitationRequestTemplateSlugEnum.invitation,
+      );
+      expect(instance, equals(other));
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('CreateInvitationRequest'));
+      expect(str, contains('emailAddress=test@example.com'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(CreateInvitationRequest.requiredKeys, contains('email_address'));
+    });
+  });
+
+  group('CreateInvitationRequestTemplateSlugEnum', () {
+    test('values contains all enum values', () {
+      expect(CreateInvitationRequestTemplateSlugEnum.values, contains(CreateInvitationRequestTemplateSlugEnum.invitation));
+      expect(CreateInvitationRequestTemplateSlugEnum.values, contains(CreateInvitationRequestTemplateSlugEnum.waitlistInvitation));
+    });
+
+    test('toJson returns correct string', () {
+      expect(CreateInvitationRequestTemplateSlugEnum.invitation.toJson(), 'invitation');
+      expect(CreateInvitationRequestTemplateSlugEnum.waitlistInvitation.toJson(), 'waitlist_invitation');
+    });
+
+    test('fromJson parses correct value', () {
+      expect(CreateInvitationRequestTemplateSlugEnum.fromJson('invitation'), CreateInvitationRequestTemplateSlugEnum.invitation);
+      expect(CreateInvitationRequestTemplateSlugEnum.fromJson('waitlist_invitation'), CreateInvitationRequestTemplateSlugEnum.waitlistInvitation);
+    });
+
+    test('fromJson returns null for unknown value', () {
+      expect(CreateInvitationRequestTemplateSlugEnum.fromJson('unknown'), isNull);
     });
   });
 }

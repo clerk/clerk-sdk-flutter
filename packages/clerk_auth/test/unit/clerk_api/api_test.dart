@@ -1,5 +1,6 @@
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/clerk_api/api.dart';
+import 'package:clerk_auth/src/models/api/external_error.dart';
 import 'package:clerk_auth/src/models/client/email.dart';
 import 'package:clerk_auth/src/models/client/external_account.dart';
 import 'package:clerk_auth/src/models/client/factor.dart';
@@ -1131,6 +1132,101 @@ void main() {
         expect(mockHttp.calls.first.method, HttpMethod.get);
       });
     });
+
+    group('prepareSignIn error handling', () {
+      test('throws error for unsupported first factor strategy', () async {
+        await api.initialize();
+
+        // Create a sign in without the required factor
+        final signIn = SignIn(
+          id: 'sia_123',
+          status: Status.needsFirstFactor,
+          identifier: 'test@example.com',
+          supportedIdentifiers: const [],
+          supportedFirstFactors: const [], // No factors available
+          supportedSecondFactors: const [],
+          firstFactorVerification: null,
+          secondFactorVerification: null,
+          userData: null,
+          createdSessionId: null,
+        );
+
+        expect(
+          () => api.prepareSignIn(signIn, stage: Stage.first, strategy: Strategy.emailCode),
+          throwsA(isA<ExternalError>()),
+        );
+      });
+
+      test('throws error for unsupported second factor strategy', () async {
+        await api.initialize();
+
+        // Create a sign in without the required second factor
+        final signIn = SignIn(
+          id: 'sia_123',
+          status: Status.needsSecondFactor,
+          identifier: 'test@example.com',
+          supportedIdentifiers: const [],
+          supportedFirstFactors: const [],
+          supportedSecondFactors: const [], // No second factors available
+          firstFactorVerification: null,
+          secondFactorVerification: null,
+          userData: null,
+          createdSessionId: null,
+        );
+
+        expect(
+          () => api.prepareSignIn(signIn, stage: Stage.second, strategy: Strategy.phoneCode),
+          throwsA(isA<ExternalError>()),
+        );
+      });
+    });
+
+    group('resetClient', () {
+      test('creates new client', () async {
+        await api.initialize();
+        mockHttp.addClientResponse();
+
+        final client = await api.resetClient();
+
+        expect(client.isNotEmpty, true);
+        expect(mockHttp.calls.first.method, HttpMethod.post);
+      });
+    });
+
+    group('signOut', () {
+      test('signs out and returns empty client', () async {
+        await api.initialize();
+        mockHttp.addResponse(MockHttpResponse(statusCode: 200, body: '{}'));
+
+        final client = await api.signOut();
+
+        expect(client.isEmpty, true);
+        expect(mockHttp.calls.first.method, HttpMethod.delete);
+      });
+    });
+
+    group('deleteUser', () {
+      test('deletes user and returns empty client', () async {
+        await api.initialize();
+        mockHttp.addResponse(MockHttpResponse(statusCode: 200, body: '{}'));
+
+        final client = await api.deleteUser();
+
+        expect(client.isEmpty, true);
+        expect(mockHttp.calls.first.method, HttpMethod.delete);
+        expect(mockHttp.calls.first.uri.path, contains('/me'));
+      });
+    });
+
+    group('sessionToken', () {
+      test('returns null when no session token cached', () async {
+        await api.initialize();
+
+        final token = api.sessionToken();
+
+        expect(token, isNull);
+      });
+    });
   });
 }
 
@@ -1385,4 +1481,6 @@ SignIn _createMockSignInWithSecondFactor() {
 
 // Note: _createTestSignUp, _createTestSession, _createTestUser are not used
 // The existing _createMockSignUp, _createMockSession, _createMockUser are used instead
+
+// Additional tests for uncovered api.dart paths are in the main test group above
 

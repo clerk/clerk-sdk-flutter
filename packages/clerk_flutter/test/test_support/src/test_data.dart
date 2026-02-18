@@ -34,6 +34,29 @@ Email createTestEmail({
   );
 }
 
+/// Creates a test PhoneNumber with sensible defaults
+PhoneNumber createTestPhoneNumber({
+  String id = 'phone_123',
+  String phoneNumber = '+1234567890',
+  Verification? verification,
+  bool reserved = false,
+  bool reservedForSecondFactor = false,
+  bool defaultSecondFactor = false,
+  DateTime? updatedAt,
+  DateTime? createdAt,
+}) {
+  return PhoneNumber(
+    id: id,
+    phoneNumber: phoneNumber,
+    verification: verification ?? createTestVerification(),
+    reserved: reserved,
+    reservedForSecondFactor: reservedForSecondFactor,
+    defaultSecondFactor: defaultSecondFactor,
+    updatedAt: updatedAt ?? DateTime.now(),
+    createdAt: createdAt ?? DateTime.now(),
+  );
+}
+
 /// Creates a test User with sensible defaults
 User createTestUser({
   String id = 'user_test_123',
@@ -44,6 +67,10 @@ User createTestUser({
   bool? hasImage = false,
   String? primaryEmailAddressId = 'email_123',
   List<Email>? emailAddresses,
+  List<PhoneNumber>? phoneNumbers,
+  List<ExternalAccount>? externalAccounts,
+  List<OrganizationMembership>? organizationMemberships,
+  bool createOrganizationEnabled = false,
 }) {
   return User(
     id: id,
@@ -61,12 +88,12 @@ User createTestUser({
     privateMetadata: const {},
     unsafeMetadata: const {},
     emailAddresses: emailAddresses ?? [createTestEmail()],
-    phoneNumbers: const [],
+    phoneNumbers: phoneNumbers ?? const [],
     web3Wallets: const [],
     passkeys: const [],
-    organizationMemberships: const [],
-    createOrganizationEnabled: false,
-    externalAccounts: const [],
+    organizationMemberships: organizationMemberships ?? const [],
+    createOrganizationEnabled: createOrganizationEnabled,
+    externalAccounts: externalAccounts ?? const [],
     passwordEnabled: true,
     twoFactorEnabled: false,
     totpEnabled: false,

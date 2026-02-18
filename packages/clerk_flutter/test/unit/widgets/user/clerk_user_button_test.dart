@@ -102,15 +102,19 @@ void main() {
     });
 
     testWidgets('renders ClerkAvatar', (tester) async {
+      final signedInAuthState = await createSignedInAuthState();
+
       await tester.pumpWidget(
         TestClerkAuthWrapper(
-          authState: authState,
+          authState: signedInAuthState,
           child: const ClerkUserButton(),
         ),
       );
       await tester.pump();
 
       expect(find.byType(ClerkAvatar), findsWidgets);
+
+      signedInAuthState.terminate();
     });
 
     group('when signed in', () {

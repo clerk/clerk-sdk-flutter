@@ -200,28 +200,31 @@ void main() {
 
       testWidgets('handles errors from callback', (tester) async {
         final authState = await createSignedOutAuthState();
-        final errors = <clerk.ClerkError>[];
-        final subscription = authState.errorStream.listen(errors.add);
 
         await tester.pumpWidget(
           TestClerkAuthWrapper(
             authState: authState,
             child: Builder(
               builder: (context) {
-                authState.safelyCall(context, () async {
-                  throw clerk.ClerkError.clientAppError(message: 'Test error');
-                });
-                return const SizedBox();
+                return ElevatedButton(
+                  onPressed: () async {
+                    await expectLater(
+                      authState.safelyCall(context, () async {
+                        throw clerk.ClerkError.clientAppError(message: 'Test error');
+                      }),
+                      throwsA(isA<clerk.ClerkError>()),
+                    );
+                  },
+                  child: const Text('Test'),
+                );
               },
             ),
           ),
         );
-        await tester.pump();
+
+        await tester.tap(find.text('Test'));
         await tester.pump();
 
-        expect(errors.length, greaterThan(0));
-
-        await subscription.cancel();
         authState.terminate();
       });
     });

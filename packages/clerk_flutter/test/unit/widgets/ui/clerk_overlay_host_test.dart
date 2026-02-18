@@ -147,6 +147,37 @@ void main() {
       const overlayWidget = Text('Overlay');
       expect(overlay.isDisplaying(overlayWidget), isFalse);
     });
+
+    testWidgets('child is ignored when overlay is displayed', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ClerkOverlayHost(
+            child: Builder(
+              builder: (context) {
+                return const Text('Test');
+              },
+            ),
+          ),
+        ),
+      );
+
+      final overlay = ClerkOverlay.of(
+        tester.element(find.text('Test')),
+      );
+
+      // Insert an overlay
+      const overlayWidget = Text('Overlay');
+      overlay.insert(overlayWidget);
+      await tester.pump();
+
+      // Find the IgnorePointer widget that wraps the child
+      final ignorePointers = tester.widgetList<IgnorePointer>(
+        find.byType(IgnorePointer),
+      );
+
+      // When overlay is present, at least one IgnorePointer should be ignoring
+      expect(ignorePointers.any((ip) => ip.ignoring), isTrue);
+    });
   });
 }
 

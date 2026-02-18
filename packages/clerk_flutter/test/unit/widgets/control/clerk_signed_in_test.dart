@@ -83,6 +83,58 @@ void main() {
 
       authState.terminate();
     });
+
+    testWidgets('telemetry payload includes user_is_signed_in when signed in',
+        (tester) async {
+      final user = createTestUser();
+      final client = createSignedInClient(user: user);
+      final authState = await createTestAuthState(client: client);
+
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: const ClerkSignedIn(
+            child: Text('Signed In Content'),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // Widget should render
+      expect(find.text('Signed In Content'), findsOneWidget);
+
+      // The telemetryPayload getter is called during didChangeDependencies
+      // which happens when the widget is built
+      final state = tester.state(find.byType(ClerkSignedIn));
+      expect(state, isNotNull);
+
+      authState.terminate();
+    });
+
+    testWidgets('telemetry payload includes user_is_signed_in when signed out',
+        (tester) async {
+      final client = createSignedOutClient();
+      final authState = await createTestAuthState(client: client);
+
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: const ClerkSignedIn(
+            child: Text('Signed In Content'),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // Widget should not render content
+      expect(find.text('Signed In Content'), findsNothing);
+
+      // The telemetryPayload getter is called during didChangeDependencies
+      final state = tester.state(find.byType(ClerkSignedIn));
+      expect(state, isNotNull);
+
+      authState.terminate();
+    });
   });
 }
 

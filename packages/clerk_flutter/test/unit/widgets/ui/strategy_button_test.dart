@@ -19,20 +19,17 @@ void main() {
     });
 
     testWidgets('renders with totp strategy', (tester) async {
-      var clicked = false;
-
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
           child: StrategyButton(
             strategy: clerk.Strategy.totp,
-            onClick: () => clicked = true,
+            onClick: () {},
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(clicked, isTrue);
       expect(find.byIcon(Icons.lock_clock), findsOneWidget);
       expect(find.byType(MaterialButton), findsOneWidget);
     });

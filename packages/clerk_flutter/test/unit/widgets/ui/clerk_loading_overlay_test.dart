@@ -72,7 +72,8 @@ void main() {
       final loadingOverlay = ClerkLoadingOverlay(config);
 
       await tester.pumpWidget(const _MockOverlay());
-      final mockState = tester.state<_MockOverlayState>(find.byType(_MockOverlay));
+      final mockState =
+          tester.state<_MockOverlayState>(find.byType(_MockOverlay));
 
       loadingOverlay.insertInto(mockState);
       expect(loadingOverlay.count, 0);
@@ -85,7 +86,8 @@ void main() {
       final loadingOverlay = ClerkLoadingOverlay(config);
 
       await tester.pumpWidget(const _MockOverlay());
-      final mockState = tester.state<_MockOverlayState>(find.byType(_MockOverlay));
+      final mockState =
+          tester.state<_MockOverlayState>(find.byType(_MockOverlay));
 
       loadingOverlay.removeFrom(mockState);
       expect(loadingOverlay.count, 0);
@@ -101,7 +103,8 @@ void main() {
       final loadingOverlay = ClerkLoadingOverlay(config);
 
       await tester.pumpWidget(const _MockOverlay());
-      final mockState = tester.state<_MockOverlayState>(find.byType(_MockOverlay));
+      final mockState =
+          tester.state<_MockOverlayState>(find.byType(_MockOverlay));
 
       expect(loadingOverlay.count, 0);
       loadingOverlay.insertInto(mockState);
@@ -109,8 +112,9 @@ void main() {
       loadingOverlay.insertInto(mockState);
       expect(loadingOverlay.count, 2);
 
-      // Clean up timers
-      await tester.pumpAndSettle();
+      // Clean up timers by removing the overlay
+      loadingOverlay.removeFrom(mockState);
+      loadingOverlay.removeFrom(mockState);
     });
 
     testWidgets('removeFrom decrements count', (tester) async {
@@ -122,7 +126,8 @@ void main() {
       final loadingOverlay = ClerkLoadingOverlay(config);
 
       await tester.pumpWidget(const _MockOverlay());
-      final mockState = tester.state<_MockOverlayState>(find.byType(_MockOverlay));
+      final mockState =
+          tester.state<_MockOverlayState>(find.byType(_MockOverlay));
 
       loadingOverlay.insertInto(mockState);
       loadingOverlay.insertInto(mockState);
@@ -144,7 +149,8 @@ void main() {
       final loadingOverlay = ClerkLoadingOverlay(config);
 
       await tester.pumpWidget(const _MockOverlay());
-      final mockState = tester.state<_MockOverlayState>(find.byType(_MockOverlay));
+      final mockState =
+          tester.state<_MockOverlayState>(find.byType(_MockOverlay));
 
       expect(loadingOverlay.count, 0);
       loadingOverlay.removeFrom(mockState);
@@ -161,7 +167,8 @@ void main() {
       final loadingOverlay = ClerkLoadingOverlay(config);
 
       await tester.pumpWidget(const _MockOverlay());
-      final mockState = tester.state<_MockOverlayState>(find.byType(_MockOverlay));
+      final mockState =
+          tester.state<_MockOverlayState>(find.byType(_MockOverlay));
 
       loadingOverlay.insertInto(mockState);
       expect(mockState.overlays, isEmpty);
@@ -179,7 +186,8 @@ void main() {
       final loadingOverlay = ClerkLoadingOverlay(config);
 
       await tester.pumpWidget(const _MockOverlay());
-      final mockState = tester.state<_MockOverlayState>(find.byType(_MockOverlay));
+      final mockState =
+          tester.state<_MockOverlayState>(find.byType(_MockOverlay));
 
       loadingOverlay.insertInto(mockState);
       loadingOverlay.insertInto(mockState);
@@ -187,7 +195,103 @@ void main() {
 
       await tester.pump(ClerkLoadingOverlay.startupDuration);
       expect(mockState.overlays.length, 1);
+
+      // Clean up - need to match the number of insertInto calls
+      loadingOverlay.removeFrom(mockState);
+      loadingOverlay.removeFrom(mockState);
+      loadingOverlay.removeFrom(mockState);
+      // Wait for hide timer to complete
+      await tester.pump(ClerkLoadingOverlay.minimumOnScreenDuration);
+    });
+
+    testWidgets('removeFrom waits for minimum duration before hiding',
+        (tester) async {
+      final config = ClerkAuthConfig(
+        publishableKey: 'pk_test_key',
+        persistor: Persistor.none,
+        loading: const CircularProgressIndicator(),
+      );
+      final loadingOverlay = ClerkLoadingOverlay(config);
+
+      await tester.pumpWidget(const _MockOverlay());
+      final mockState =
+          tester.state<_MockOverlayState>(find.byType(_MockOverlay));
+
+      loadingOverlay.insertInto(mockState);
+      await tester.pump(ClerkLoadingOverlay.startupDuration);
+      expect(mockState.overlays, isNotEmpty);
+
+      // Remove immediately without waiting for minimum duration
+      loadingOverlay.removeFrom(mockState);
+      await tester.pump();
+      expect(mockState.overlays, isNotEmpty); // Still visible
+
+      // Wait for minimum duration
+      await tester.pump(ClerkLoadingOverlay.minimumOnScreenDuration);
+      expect(mockState.overlays, isEmpty); // Now hidden
+    });
+
+    testWidgets('insertInto cancels hide timer if called while hiding',
+        (tester) async {
+      final config = ClerkAuthConfig(
+        publishableKey: 'pk_test_key',
+        persistor: Persistor.none,
+        loading: const CircularProgressIndicator(),
+      );
+      final loadingOverlay = ClerkLoadingOverlay(config);
+
+      await tester.pumpWidget(const _MockOverlay());
+      final mockState =
+          tester.state<_MockOverlayState>(find.byType(_MockOverlay));
+
+      // Show overlay
+      loadingOverlay.insertInto(mockState);
+      await tester.pump(ClerkLoadingOverlay.startupDuration);
+      expect(mockState.overlays, isNotEmpty);
+
+      // Start hiding
+      loadingOverlay.removeFrom(mockState);
+      await tester.pump();
+
+      // Insert again before hide timer completes
+      loadingOverlay.insertInto(mockState);
+      expect(loadingOverlay.count, 1);
+      expect(mockState.overlays, isNotEmpty);
+
+      // Wait and verify overlay is still visible
+      await tester.pump(ClerkLoadingOverlay.minimumOnScreenDuration);
+      expect(mockState.overlays, isNotEmpty);
+
+      // Clean up
+      loadingOverlay.removeFrom(mockState);
+      await tester.pump(ClerkLoadingOverlay.minimumOnScreenDuration);
+    });
+
+    testWidgets('insertInto does not display if already displaying',
+        (tester) async {
+      final config = ClerkAuthConfig(
+        publishableKey: 'pk_test_key',
+        persistor: Persistor.none,
+        loading: const CircularProgressIndicator(),
+      );
+      final loadingOverlay = ClerkLoadingOverlay(config);
+
+      await tester.pumpWidget(const _MockOverlay());
+      final mockState =
+          tester.state<_MockOverlayState>(find.byType(_MockOverlay));
+
+      // Manually insert the overlay to simulate it already being displayed
+      mockState.insert(config.loading!);
+
+      loadingOverlay.insertInto(mockState);
+      await tester.pump(ClerkLoadingOverlay.startupDuration);
+
+      // Should still only have one overlay
+      expect(mockState.overlays.length, 1);
+
+      // Clean up
+      loadingOverlay.removeFrom(mockState);
+      await tester.pump(ClerkLoadingOverlay.minimumOnScreenDuration);
     });
   });
 }
-

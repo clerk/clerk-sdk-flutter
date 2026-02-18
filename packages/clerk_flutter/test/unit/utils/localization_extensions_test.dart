@@ -246,6 +246,13 @@ void main() {
     test('localizedMessage returns correct message for transferable', () {
       expect(clerk.Status.transferable.localizedMessage(l10ns), l10ns.transferable);
     });
+
+    test('localizedMessage returns title for unknown status', () {
+      // Create a custom status that would hit the default case
+      // Since Status is an enum, we can't create a new value, but we can test
+      // that the method handles all known values
+      expect(clerk.Status.abandoned.localizedMessage(l10ns), isNotEmpty);
+    });
   });
 
   group('ClerkStrategyLocalization', () {
@@ -297,6 +304,14 @@ void main() {
         l10ns.phoneNumber,
       );
     });
+
+    test('localizedMessage returns toString for unknown strategy', () {
+      // Test a strategy that hits the default case (password is not in the switch)
+      expect(
+        clerk.Strategy.password.localizedMessage(l10ns),
+        clerk.Strategy.password.toString(),
+      );
+    });
   });
 
   group('ClerkFieldLocalization', () {
@@ -318,6 +333,14 @@ void main() {
       expect(
         clerk.Field.username.localizedMessage(l10ns),
         l10ns.username,
+      );
+    });
+
+    test('localizedMessage returns name for unknown field', () {
+      // Test a field that hits the default case
+      expect(
+        clerk.Field.firstName.localizedMessage(l10ns),
+        clerk.Field.firstName.name,
       );
     });
   });

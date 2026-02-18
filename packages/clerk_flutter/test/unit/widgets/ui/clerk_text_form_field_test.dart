@@ -87,7 +87,8 @@ void main() {
     test('stores validator callback', () {
       bool validator(String? value) => true;
       final widget = ClerkTextFormField(validator: validator);
-      expect(widget.validator, validator);
+      expect(widget.validator, isNotNull);
+      expect(identical(widget.validator, validator), isTrue);
     });
 
     test('stores initial parameter', () {

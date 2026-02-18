@@ -2,6 +2,7 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/multi_digit_code_input.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../test_support/test_support.dart';
@@ -68,9 +69,13 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: ClerkCodeInput(
-            isTextual: true,
-            onSubmit: (code) async => true,
+          child: Scaffold(
+            body: SingleChildScrollView(
+              child: ClerkCodeInput(
+                isTextual: true,
+                onSubmit: (code) async => true,
+              ),
+            ),
           ),
         ),
       );

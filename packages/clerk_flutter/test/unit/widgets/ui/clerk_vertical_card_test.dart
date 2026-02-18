@@ -149,5 +149,71 @@ void main() {
 
       expect(find.text('Content'), findsOneWidget);
     });
+
+    testWidgets('renders development mode warning when showDevmodeWarning is true', (tester) async {
+      // Create auth state with showDevmodeWarning = true
+      final config = TestClerkAuthConfig(
+        initialEnvironment: const clerk.Environment(
+          config: clerk.Config(
+            singleSessionMode: true,
+          ),
+          display: clerk.DisplayConfig(
+            branded: false,
+            showDevmodeWarning: true,
+          ),
+        ),
+      );
+      final devModeAuthState = await createTestAuthState(config: config);
+
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: devModeAuthState,
+          child: const ClerkVerticalCard(
+            topPortion: Text('Content'),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // Verify the widget renders
+      expect(find.text('Content'), findsOneWidget);
+      // The development mode warning should be present
+      expect(find.text('Development mode'), findsOneWidget);
+
+      devModeAuthState.terminate();
+    });
+
+    testWidgets('renders development mode warning with branded display', (tester) async {
+      // Create auth state with both branded and showDevmodeWarning = true
+      final config = TestClerkAuthConfig(
+        initialEnvironment: const clerk.Environment(
+          config: clerk.Config(
+            singleSessionMode: true,
+          ),
+          display: clerk.DisplayConfig(
+            branded: true,
+            showDevmodeWarning: true,
+          ),
+        ),
+      );
+      final devModeBrandedAuthState = await createTestAuthState(config: config);
+
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: devModeBrandedAuthState,
+          child: const ClerkVerticalCard(
+            topPortion: Text('Content'),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // Verify the widget renders
+      expect(find.text('Content'), findsOneWidget);
+      // The development mode warning should be present
+      expect(find.text('Development mode'), findsOneWidget);
+
+      devModeBrandedAuthState.terminate();
+    });
   });
 }

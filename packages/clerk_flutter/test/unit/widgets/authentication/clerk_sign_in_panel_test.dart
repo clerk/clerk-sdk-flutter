@@ -49,9 +49,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: Scaffold(
+          child: const Scaffold(
             body: SingleChildScrollView(
-              child: const ClerkSignInPanel(),
+              child: ClerkSignInPanel(),
             ),
           ),
         ),
@@ -65,9 +65,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: Scaffold(
+          child: const Scaffold(
             body: SingleChildScrollView(
-              child: const ClerkSignInPanel(),
+              child: ClerkSignInPanel(),
             ),
           ),
         ),
@@ -82,9 +82,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: Scaffold(
+          child: const Scaffold(
             body: SingleChildScrollView(
-              child: const ClerkSignInPanel(),
+              child: ClerkSignInPanel(),
             ),
           ),
         ),
@@ -99,9 +99,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: Scaffold(
+          child: const Scaffold(
             body: SingleChildScrollView(
-              child: const ClerkSignInPanel(),
+              child: ClerkSignInPanel(),
             ),
           ),
         ),
@@ -115,9 +115,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: Scaffold(
+          child: const Scaffold(
             body: SingleChildScrollView(
-              child: const ClerkSignInPanel(),
+              child: ClerkSignInPanel(),
             ),
           ),
         ),
@@ -131,9 +131,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: Scaffold(
+          child: const Scaffold(
             body: SingleChildScrollView(
-              child: const ClerkSignInPanel(),
+              child: ClerkSignInPanel(),
             ),
           ),
         ),
@@ -148,9 +148,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: Scaffold(
+          child: const Scaffold(
             body: SingleChildScrollView(
-              child: const ClerkSignInPanel(),
+              child: ClerkSignInPanel(),
             ),
           ),
         ),
@@ -164,9 +164,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: Scaffold(
+          child: const Scaffold(
             body: SingleChildScrollView(
-              child: const ClerkSignInPanel(),
+              child: ClerkSignInPanel(),
             ),
           ),
         ),
@@ -208,9 +208,9 @@ void main() {
         await tester.pumpWidget(
           TestClerkAuthWrapper(
             authState: authStateWithSignIn,
-            child: Scaffold(
+            child: const Scaffold(
               body: SingleChildScrollView(
-                child: const ClerkSignInPanel(),
+                child: ClerkSignInPanel(),
               ),
             ),
           ),
@@ -237,9 +237,9 @@ void main() {
         await tester.pumpWidget(
           TestClerkAuthWrapper(
             authState: authStateWithSignIn,
-            child: Scaffold(
+            child: const Scaffold(
               body: SingleChildScrollView(
-                child: const ClerkSignInPanel(),
+                child: ClerkSignInPanel(),
               ),
             ),
           ),
@@ -266,9 +266,9 @@ void main() {
         await tester.pumpWidget(
           TestClerkAuthWrapper(
             authState: authStateWithSignIn,
-            child: Scaffold(
+            child: const Scaffold(
               body: SingleChildScrollView(
-                child: const ClerkSignInPanel(),
+                child: ClerkSignInPanel(),
               ),
             ),
           ),
@@ -295,9 +295,9 @@ void main() {
         await tester.pumpWidget(
           TestClerkAuthWrapper(
             authState: authStateWithSignIn,
-            child: Scaffold(
+            child: const Scaffold(
               body: SingleChildScrollView(
-                child: const ClerkSignInPanel(),
+                child: ClerkSignInPanel(),
               ),
             ),
           ),

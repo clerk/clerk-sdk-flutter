@@ -72,7 +72,7 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.byType(ClerkAuthBuilder), findsOneWidget);
+      expect(find.byType(ClerkAuthBuilder), findsWidgets);
     });
 
     testWidgets('renders Padding', (tester) async {

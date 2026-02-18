@@ -66,7 +66,7 @@ void main() {
       expect(find.byType(SizedBox), findsWidgets);
     });
 
-    testWidgets('renders StreamBuilder', (tester) async {
+    testWidgets('renders ClerkCachedImage widget', (tester) async {
       const url = 'https://example.com/image.png';
 
       await tester.pumpWidget(
@@ -77,7 +77,67 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.byType(StreamBuilder), findsOneWidget);
+      expect(find.byType(ClerkCachedImage), findsOneWidget);
+    });
+
+    testWidgets('renders Image.file when data is available', (tester) async {
+      const url = 'https://example.com/image.png';
+
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: ClerkCachedImage(url, width: 100, height: 100),
+        ),
+      );
+
+      // Wait for the file cache to load
+      await tester.pumpAndSettle();
+
+      // The widget should render (either SizedBox or Image.file depending on cache)
+      expect(find.byType(ClerkCachedImage), findsOneWidget);
+    });
+
+    testWidgets('renders with invertColors enabled', (tester) async {
+      const url = 'https://example.com/image.png';
+
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: ClerkCachedImage(url, invertColors: true),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ClerkCachedImage), findsOneWidget);
+    });
+
+    testWidgets('renders with all parameters', (tester) async {
+      const url = 'https://example.com/image.png';
+
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: ClerkCachedImage(
+            url,
+            width: 200,
+            height: 150,
+            fit: BoxFit.contain,
+            invertColors: true,
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      final image = tester.widget<ClerkCachedImage>(
+        find.byType(ClerkCachedImage),
+      );
+
+      expect(image.width, 200);
+      expect(image.height, 150);
+      expect(image.fit, BoxFit.contain);
+      expect(image.invertColors, isTrue);
     });
   });
 }

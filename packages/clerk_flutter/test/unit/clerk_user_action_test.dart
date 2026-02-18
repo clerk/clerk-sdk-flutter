@@ -14,17 +14,15 @@ void main() {
     });
 
     test('stores callback correctly', () {
-      var callbackCalled = false;
+      void callback(BuildContext context, ClerkAuthState authState) {}
 
       final action = ClerkUserAction(
         label: 'Action',
-        callback: (context, authState) {
-          callbackCalled = true;
-        },
+        callback: callback,
       );
 
-      expect(callbackCalled, isTrue);
       expect(action.callback, isNotNull);
+      expect(identical(action.callback, callback), isTrue);
     });
 
     test('stores icon correctly', () {

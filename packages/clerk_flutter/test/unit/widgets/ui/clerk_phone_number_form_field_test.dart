@@ -98,9 +98,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: const Scaffold(
+          child: Scaffold(
             body: SingleChildScrollView(
-              child: ClerkPhoneNumberFormField(onChanged: null),
+              child: ClerkPhoneNumberFormField(onChanged: (_) {}),
             ),
           ),
         ),
@@ -114,10 +114,10 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: const Scaffold(
+          child: Scaffold(
             body: SingleChildScrollView(
               child: ClerkPhoneNumberFormField(
-                onChanged: null,
+                onChanged: (_) {},
                 label: 'Phone',
               ),
             ),
@@ -133,9 +133,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: const Scaffold(
+          child: Scaffold(
             body: SingleChildScrollView(
-              child: ClerkPhoneNumberFormField(onChanged: null),
+              child: ClerkPhoneNumberFormField(onChanged: (_) {}),
             ),
           ),
         ),
@@ -149,10 +149,10 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: const Scaffold(
+          child: Scaffold(
             body: SingleChildScrollView(
               child: ClerkPhoneNumberFormField(
-                onChanged: null,
+                onChanged: (_) {},
                 label: 'Phone Number',
               ),
             ),

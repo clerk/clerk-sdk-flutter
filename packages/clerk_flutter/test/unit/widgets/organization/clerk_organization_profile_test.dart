@@ -54,16 +54,18 @@ void main() {
       expect(find.byType(ClerkOrganizationProfile), findsOneWidget);
     });
 
-    testWidgets('renders Column when signed in', (tester) async {
+    testWidgets('renders ListView when signed in', (tester) async {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: signedInAuthState,
-          child: ClerkOrganizationProfile(membership: membership),
+          child: Scaffold(
+            body: ClerkOrganizationProfile(membership: membership),
+          ),
         ),
       );
       await tester.pump();
 
-      expect(find.byType(Column), findsWidgets);
+      expect(find.byType(ListView), findsOneWidget);
     });
 
     testWidgets('does not render Closeable widget by default', (tester) async {

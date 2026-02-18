@@ -1,5 +1,4 @@
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -27,4 +26,3 @@ void main() {
     });
   });
 }
-

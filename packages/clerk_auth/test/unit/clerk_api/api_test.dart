@@ -1,17 +1,6 @@
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/clerk_api/api.dart';
 import 'package:clerk_auth/src/models/api/external_error.dart';
-import 'package:clerk_auth/src/models/client/email.dart';
-import 'package:clerk_auth/src/models/client/external_account.dart';
-import 'package:clerk_auth/src/models/client/factor.dart';
-import 'package:clerk_auth/src/models/client/organization_invitation.dart';
-import 'package:clerk_auth/src/models/client/session.dart';
-import 'package:clerk_auth/src/models/client/sign_in.dart';
-import 'package:clerk_auth/src/models/client/sign_up.dart';
-import 'package:clerk_auth/src/models/client/user.dart';
-import 'package:clerk_auth/src/models/client/user_public.dart';
-import 'package:clerk_auth/src/models/client/verification.dart';
-import 'package:clerk_auth/src/models/status.dart';
 
 import '../../test_helpers.dart';
 
@@ -194,7 +183,8 @@ void main() {
         final signUp = _createMockSignUp();
         await api.prepareSignUp(signUp, strategy: Strategy.emailCode);
 
-        expect(mockHttp.calls.first.uri.path, contains('/prepare_verification'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/prepare_verification'));
       });
 
       test('attemptSignUp sends attempt_verification request', () async {
@@ -202,9 +192,11 @@ void main() {
         mockHttp.addClientResponse(signUp: _createMockSignUpJson());
 
         final signUp = _createMockSignUp();
-        await api.attemptSignUp(signUp, strategy: Strategy.emailCode, code: '123456');
+        await api.attemptSignUp(signUp,
+            strategy: Strategy.emailCode, code: '123456');
 
-        expect(mockHttp.calls.first.uri.path, contains('/attempt_verification'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/attempt_verification'));
       });
     });
 
@@ -224,9 +216,11 @@ void main() {
         mockHttp.addClientResponse(signIn: _createMockSignInJson());
 
         final signIn = _createMockSignIn();
-        await api.prepareSignIn(signIn, stage: Stage.first, strategy: Strategy.emailCode);
+        await api.prepareSignIn(signIn,
+            stage: Stage.first, strategy: Strategy.emailCode);
 
-        expect(mockHttp.calls.first.uri.path, contains('/prepare_first_factor'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/prepare_first_factor'));
       });
 
       test('attemptSignIn sends attempt_first_factor request', () async {
@@ -241,7 +235,8 @@ void main() {
           code: '123456',
         );
 
-        expect(mockHttp.calls.first.uri.path, contains('/attempt_first_factor'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/attempt_first_factor'));
       });
     });
 
@@ -357,7 +352,8 @@ void main() {
         await api.fetchOrganizationInvitations();
 
         expect(mockHttp.calls.first.method, HttpMethod.get);
-        expect(mockHttp.calls.first.uri.path, contains('/organization_invitations'));
+        expect(mockHttp.calls.first.uri.path,
+            contains('/organization_invitations'));
       });
 
       test('setActiveOrganization sends touch request', () async {
@@ -377,7 +373,8 @@ void main() {
         await api.leaveOrganization(org);
 
         expect(mockHttp.calls.first.method, HttpMethod.delete);
-        expect(mockHttp.calls.first.uri.path, contains('/organization_memberships'));
+        expect(mockHttp.calls.first.uri.path,
+            contains('/organization_memberships'));
       });
     });
 
@@ -393,7 +390,11 @@ void main() {
         await api.initialize();
         // Add a response with error status code
         mockHttp.addJsonResponse(
-          {'errors': [{'message': 'Error', 'code': 'test_error'}]},
+          {
+            'errors': [
+              {'message': 'Error', 'code': 'test_error'}
+            ]
+          },
           statusCode: 400,
         );
 
@@ -457,14 +458,16 @@ void main() {
         expect(mockHttp.calls.first.uri.path, contains('/phone_numbers'));
       });
 
-      test('prepareIdentifyingDataVerification sends prepare request', () async {
+      test('prepareIdentifyingDataVerification sends prepare request',
+          () async {
         await api.initialize();
         mockHttp.addClientResponse();
 
         final identifier = _createMockEmailAddress();
         await api.prepareIdentifyingDataVerification(identifier);
 
-        expect(mockHttp.calls.first.uri.path, contains('/prepare_verification'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/prepare_verification'));
       });
 
       test('verifyIdentifyingData sends attempt request', () async {
@@ -474,7 +477,8 @@ void main() {
         final identifier = _createMockEmailAddress();
         await api.verifyIdentifyingData(identifier, '123456');
 
-        expect(mockHttp.calls.first.uri.path, contains('/attempt_verification'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/attempt_verification'));
       });
 
       test('deleteIdentifyingData sends delete request', () async {
@@ -536,7 +540,8 @@ void main() {
           EnrollmentMode.automaticInvitation,
         );
 
-        expect(mockHttp.calls.first.uri.path, contains('/update_enrollment_mode'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/update_enrollment_mode'));
       });
 
       test('updateOrganization sends patch request', () async {
@@ -608,9 +613,11 @@ void main() {
         mockHttp.addClientResponse(signIn: _createMockSignInJson());
 
         final signIn = _createMockSignInWithSecondFactor();
-        await api.prepareSignIn(signIn, stage: Stage.second, strategy: Strategy.phoneCode);
+        await api.prepareSignIn(signIn,
+            stage: Stage.second, strategy: Strategy.phoneCode);
 
-        expect(mockHttp.calls.first.uri.path, contains('/prepare_second_factor'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/prepare_second_factor'));
       });
 
       test('attemptSignIn sends attempt_second_factor request', () async {
@@ -625,7 +632,8 @@ void main() {
           code: '123456',
         );
 
-        expect(mockHttp.calls.first.uri.path, contains('/attempt_second_factor'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/attempt_second_factor'));
       });
     });
 
@@ -764,7 +772,8 @@ void main() {
           redirectUrl: 'https://example.com/verify',
         );
 
-        expect(mockHttp.calls.first.uri.path, contains('/prepare_verification'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/prepare_verification'));
       });
     });
 
@@ -780,7 +789,8 @@ void main() {
           signature: '0x123abc',
         );
 
-        expect(mockHttp.calls.first.uri.path, contains('/attempt_verification'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/attempt_verification'));
       });
     });
 
@@ -797,7 +807,8 @@ void main() {
           password: 'password123',
         );
 
-        expect(mockHttp.calls.first.uri.path, contains('/attempt_first_factor'));
+        expect(
+            mockHttp.calls.first.uri.path, contains('/attempt_first_factor'));
       });
     });
 
@@ -980,7 +991,8 @@ void main() {
         await api.acceptOrganizationInvitation(invitation);
 
         expect(mockHttp.calls.first.method, HttpMethod.post);
-        expect(mockHttp.calls.first.uri.path, contains('/organization_invitations/'));
+        expect(mockHttp.calls.first.uri.path,
+            contains('/organization_invitations/'));
       });
     });
 
@@ -1138,13 +1150,14 @@ void main() {
         await api.initialize();
 
         // Create a sign in without the required factor
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sia_123',
           status: Status.needsFirstFactor,
           identifier: 'test@example.com',
-          supportedIdentifiers: const [],
-          supportedFirstFactors: const [], // No factors available
-          supportedSecondFactors: const [],
+          supportedIdentifiers: [],
+          supportedFirstFactors: [],
+          // No factors available
+          supportedSecondFactors: [],
           firstFactorVerification: null,
           secondFactorVerification: null,
           userData: null,
@@ -1152,7 +1165,8 @@ void main() {
         );
 
         expect(
-          () => api.prepareSignIn(signIn, stage: Stage.first, strategy: Strategy.emailCode),
+          () => api.prepareSignIn(signIn,
+              stage: Stage.first, strategy: Strategy.emailCode),
           throwsA(isA<ExternalError>()),
         );
       });
@@ -1161,13 +1175,14 @@ void main() {
         await api.initialize();
 
         // Create a sign in without the required second factor
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sia_123',
           status: Status.needsSecondFactor,
           identifier: 'test@example.com',
-          supportedIdentifiers: const [],
-          supportedFirstFactors: const [],
-          supportedSecondFactors: const [], // No second factors available
+          supportedIdentifiers: [],
+          supportedFirstFactors: [],
+          supportedSecondFactors: [],
+          // No second factors available
           firstFactorVerification: null,
           secondFactorVerification: null,
           userData: null,
@@ -1175,7 +1190,8 @@ void main() {
         );
 
         expect(
-          () => api.prepareSignIn(signIn, stage: Stage.second, strategy: Strategy.phoneCode),
+          () => api.prepareSignIn(signIn,
+              stage: Stage.second, strategy: Strategy.phoneCode),
           throwsA(isA<ExternalError>()),
         );
       });
@@ -1264,7 +1280,7 @@ User _createMockUser() {
     primaryPhoneNumberId: null,
     primaryWeb3WalletId: null,
     publicMetadata: null,
-    privateMetadata: {},
+    privateMetadata: const {},
     unsafeMetadata: null,
     emailAddresses: null,
     phoneNumbers: null,
@@ -1332,7 +1348,8 @@ Map<String, dynamic> _createMockSignUpJson() {
     'public_metadata': {},
     'verifications': {},
     'custom_action': false,
-    'abandon_at': DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch,
+    'abandon_at':
+        DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch,
   };
 }
 
@@ -1483,4 +1500,3 @@ SignIn _createMockSignInWithSecondFactor() {
 // The existing _createMockSignUp, _createMockSession, _createMockUser are used instead
 
 // Additional tests for uncovered api.dart paths are in the main test group above
-

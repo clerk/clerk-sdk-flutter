@@ -149,3 +149,171 @@ Client createSignedOutClient() {
   return createTestClient(sessions: []);
 }
 
+/// Creates a test SignUp with sensible defaults
+SignUp createTestSignUp({
+  String id = 'signup_test_123',
+  Status status = Status.missingRequirements,
+  List<Field> requiredFields = const [],
+  List<Field> optionalFields = const [],
+  List<Field> missingFields = const [],
+  List<Field> unverifiedFields = const [],
+  String? username,
+  String? emailAddress,
+  String? phoneNumber,
+  bool passwordEnabled = false,
+  String? firstName,
+  String? lastName,
+  Map<Field, Verification> verifications = const {},
+}) {
+  return SignUp(
+    id: id,
+    status: status,
+    requiredFields: requiredFields,
+    optionalFields: optionalFields,
+    missingFields: missingFields,
+    unverifiedFields: unverifiedFields,
+    username: username,
+    emailAddress: emailAddress,
+    phoneNumber: phoneNumber,
+    web3Wallet: null,
+    passwordEnabled: passwordEnabled,
+    firstName: firstName,
+    lastName: lastName,
+    unsafeMetadata: const {},
+    publicMetadata: const {},
+    verifications: verifications,
+    customAction: false,
+    externalId: null,
+    createdSessionId: null,
+    createdUserId: null,
+    abandonAt: DateTime.now().add(const Duration(days: 7)),
+  );
+}
+
+/// Creates a test SignIn with sensible defaults
+SignIn createTestSignIn({
+  String id = 'signin_test_123',
+  Status status = Status.needsIdentifier,
+  List<String> supportedIdentifiers = const [],
+  List<Factor> supportedFirstFactors = const [],
+  List<Factor> supportedSecondFactors = const [],
+  String? identifier,
+  Verification? firstFactorVerification,
+  Verification? secondFactorVerification,
+}) {
+  return SignIn(
+    id: id,
+    status: status,
+    supportedIdentifiers: supportedIdentifiers,
+    supportedFirstFactors: supportedFirstFactors,
+    supportedSecondFactors: supportedSecondFactors,
+    identifier: identifier,
+    firstFactorVerification: firstFactorVerification,
+    secondFactorVerification: secondFactorVerification,
+    userData: null,
+    createdSessionId: null,
+    abandonAt: DateTime.now().add(const Duration(days: 7)),
+  );
+}
+
+/// Creates a test Factor with sensible defaults
+Factor createTestFactor({
+  Strategy strategy = Strategy.password,
+  String? safeIdentifier,
+  String? emailAddressId,
+  String? phoneNumberId,
+  String? web3WalletId,
+  String? passkeyId,
+  bool isPrimary = false,
+  bool isDefault = false,
+}) {
+  return Factor(
+    strategy: strategy,
+    safeIdentifier: safeIdentifier,
+    emailAddressId: emailAddressId,
+    phoneNumberId: phoneNumberId,
+    web3WalletId: web3WalletId,
+    passkeyId: passkeyId,
+    isPrimary: isPrimary,
+    isDefault: isDefault,
+  );
+}
+
+/// Creates a test Organization with sensible defaults
+Organization createTestOrganization({
+  String id = 'org_test_123',
+  String name = 'Test Organization',
+  String slug = 'test-org',
+  String imageUrl = '',
+  bool hasImage = false,
+  int maxAllowedMemberships = 100,
+}) {
+  return Organization(
+    id: id,
+    name: name,
+    slug: slug,
+    imageUrl: imageUrl,
+    hasImage: hasImage,
+    membersCount: 1,
+    pendingInvitationsCount: 0,
+    maxAllowedMemberships: maxAllowedMemberships,
+    adminDeleteEnabled: true,
+    publicMetadata: const {},
+    updatedAt: DateTime.now(),
+    createdAt: DateTime.now(),
+  );
+}
+
+/// Creates a test OrganizationMembership with sensible defaults
+OrganizationMembership createTestOrganizationMembership({
+  String id = 'orgmem_test_123',
+  String role = 'org:member',
+  String roleName = 'Member',
+  Organization? organization,
+  UserPublic? publicUserData,
+  List<Permission>? permissions,
+}) {
+  return OrganizationMembership(
+    id: id,
+    role: role,
+    roleName: roleName,
+    organization: organization ?? createTestOrganization(),
+    publicUserData: publicUserData,
+    permissions: permissions ?? const [],
+    updatedAt: DateTime.now(),
+    createdAt: DateTime.now(),
+  );
+}
+
+/// Creates a test ExternalAccount with sensible defaults
+ExternalAccount createTestExternalAccount({
+  String id = 'extacc_test_123',
+  String provider = 'google',
+  String providerUserId = 'google_123',
+  String approvedScopes = 'email profile',
+  String emailAddress = 'john.doe@gmail.com',
+  String? username,
+  String? firstName = 'John',
+  String? lastName = 'Doe',
+  Verification? verification,
+}) {
+  return ExternalAccount(
+    id: id,
+    provider: provider,
+    providerUserId: providerUserId,
+    approvedScopes: approvedScopes,
+    emailAddress: emailAddress,
+    username: username,
+    firstName: firstName,
+    lastName: lastName,
+    avatarUrl: null,
+    imageUrl: null,
+    label: null,
+    publicMetadata: const {},
+    verification: verification ?? createTestVerification(),
+    updatedAt: DateTime.now(),
+    createdAt: DateTime.now(),
+  );
+}
+
+

@@ -24,7 +24,7 @@ void main() {
       });
 
       test('returns true when password is in first factors', () {
-        final env = Environment(
+        const env = Environment(
           config: Config(
             firstFactors: [Strategy.password],
           ),
@@ -35,7 +35,7 @@ void main() {
 
     group('strategies', () {
       test('returns identification strategies from config', () {
-        final env = Environment(
+        const env = Environment(
           config: Config(
             identificationStrategies: [Strategy.emailAddress, Strategy.username],
           ),
@@ -48,7 +48,7 @@ void main() {
 
     group('identificationStrategies', () {
       test('filters to only email, username, and phone strategies', () {
-        final env = Environment(
+        const env = Environment(
           config: Config(
             identificationStrategies: [
               Strategy.emailAddress,
@@ -74,7 +74,7 @@ void main() {
       });
 
       test('returns true when has identification strategies', () {
-        final env = Environment(
+        const env = Environment(
           config: Config(
             identificationStrategies: [Strategy.emailAddress],
           ),
@@ -85,7 +85,7 @@ void main() {
 
     group('oauthStrategies', () {
       test('filters to only oauth strategies', () {
-        final env = Environment(
+        const env = Environment(
           config: Config(
             identificationStrategies: [
               Strategy.emailAddress,
@@ -108,7 +108,7 @@ void main() {
       });
 
       test('returns true when has oauth strategies', () {
-        final env = Environment(
+        const env = Environment(
           config: Config(
             identificationStrategies: [Strategy.oauthGoogle],
           ),
@@ -119,7 +119,7 @@ void main() {
 
     group('otherStrategies', () {
       test('filters to other strategies', () {
-        final env = Environment(
+        const env = Environment(
           config: Config(
             identificationStrategies: [
               Strategy.emailAddress,
@@ -136,7 +136,7 @@ void main() {
 
     group('hasOtherStrategies', () {
       test('returns false when only oauth strategies', () {
-        final env = Environment(
+        const env = Environment(
           config: Config(
             identificationStrategies: [Strategy.oauthGoogle, Strategy.oauthApple],
           ),
@@ -145,7 +145,7 @@ void main() {
       });
 
       test('returns false when only password strategies', () {
-        final env = Environment(
+        const env = Environment(
           config: Config(
             identificationStrategies: [Strategy.password],
           ),
@@ -154,7 +154,7 @@ void main() {
       });
 
       test('returns true when has other strategies', () {
-        final env = Environment(
+        const env = Environment(
           config: Config(
             identificationStrategies: [Strategy.emailCode, Strategy.phoneCode],
           ),
@@ -176,7 +176,7 @@ void main() {
       });
 
       test('round-trip preserves maintenanceMode', () {
-        final env = Environment(maintenanceMode: true);
+        const env = Environment(maintenanceMode: true);
         final json = env.toJson();
         final restored = Environment.fromJson(json);
         expect(restored.maintenanceMode);

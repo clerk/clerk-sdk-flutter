@@ -12,12 +12,11 @@ import 'test_data.dart';
 class TestClerkAuthConfig extends ClerkAuthConfig {
   /// Create a test configuration with sensible defaults for testing
   TestClerkAuthConfig({
-    String publishableKey = 'pk_test_dGVzdC5jbGVyay5kZXYk',
+    super.publishableKey = 'pk_test_dGVzdC5jbGVyay5kZXYk',
     TestHttpService? httpService,
     Client? initialClient,
     Environment? initialEnvironment,
   }) : super(
-          publishableKey: publishableKey,
           httpService: httpService ??
               TestHttpService(
                 client: initialClient,
@@ -87,7 +86,7 @@ class TestHttpService implements HttpService {
     if (path.contains('/environment')) {
       final envJson = environment?.toJson() ?? {};
       return Future.value(Response(
-        jsonEncode({'response': envJson}),
+        jsonEncode(envJson),
         200,
       ));
     }

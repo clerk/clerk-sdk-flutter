@@ -44,45 +44,49 @@ class ClerkInputDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = ClerkAuth.localizationsOf(context);
-    return Padding(
-      padding: allPadding16 + MediaQuery.viewInsetsOf(context),
-      child: Center(
-        child: ClerkVerticalCard(
-          topPortion: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ClerkAuth(
-                  authState: authState,
-                  child: child,
-                ),
-                verticalMargin16,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ClerkMaterialButton(
-                      label: Text(localizations.cancel),
-                      onPressed: () => Navigator.of(context).pop(false),
-                      style: ClerkMaterialButtonStyle.light,
-                      height: 16,
-                    ),
-                    if (showOk) ...[
-                      horizontalMargin8,
-                      ClerkMaterialButton(
-                        label: Text(localizations.ok),
-                        onPressed: () => Navigator.of(context).pop(true),
-                        style: ClerkMaterialButtonStyle.light,
-                        height: 16,
+    return ClerkAuth(
+      authState: authState,
+      child: Builder(
+        builder: (context) {
+          final localizations = ClerkAuth.localizationsOf(context);
+          return Padding(
+            padding: allPadding16 + MediaQuery.viewInsetsOf(context),
+            child: Center(
+              child: ClerkVerticalCard(
+                topPortion: Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      child,
+                      verticalMargin16,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ClerkMaterialButton(
+                            label: Text(localizations.cancel),
+                            onPressed: () => Navigator.of(context).pop(false),
+                            style: ClerkMaterialButtonStyle.light,
+                            height: 16,
+                          ),
+                          if (showOk) ...[
+                            horizontalMargin8,
+                            ClerkMaterialButton(
+                              label: Text(localizations.ok),
+                              onPressed: () => Navigator.of(context).pop(true),
+                              style: ClerkMaterialButtonStyle.light,
+                              height: 16,
+                            ),
+                          ],
+                        ],
                       ),
                     ],
-                  ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

@@ -149,7 +149,7 @@ void main() {
       test('returns true when verification for strategy is in progress', () {
         final signUp = _createTestSignUp(
           verifications: {
-            Field.emailAddress: Verification(
+            Field.emailAddress: const Verification(
               status: Status.unverified,
               strategy: Strategy.emailCode,
               attempts: 0,
@@ -168,7 +168,7 @@ void main() {
       test('returns false when verification is already verified', () {
         final signUp = _createTestSignUp(
           verifications: {
-            Field.emailAddress: Verification(
+            Field.emailAddress: const Verification(
               status: Status.verified,
               strategy: Strategy.emailCode,
               attempts: 1,
@@ -184,7 +184,7 @@ void main() {
       test('returns true when field has unverified verification', () {
         final signUp = _createTestSignUp(
           verifications: {
-            Field.emailAddress: Verification(
+            Field.emailAddress: const Verification(
               status: Status.unverified,
               strategy: Strategy.emailCode,
               attempts: 0,
@@ -198,7 +198,7 @@ void main() {
       test('returns false when field has verified verification', () {
         final signUp = _createTestSignUp(
           verifications: {
-            Field.emailAddress: Verification(
+            Field.emailAddress: const Verification(
               status: Status.verified,
               strategy: Strategy.emailCode,
               attempts: 1,
@@ -219,7 +219,7 @@ void main() {
       test('returns true when any verification is transferable', () {
         final signUp = _createTestSignUp(
           verifications: {
-            Field.emailAddress: Verification(
+            Field.emailAddress: const Verification(
               status: Status.transferable,
               strategy: Strategy.emailCode,
               attempts: 0,
@@ -233,7 +233,7 @@ void main() {
       test('returns false when no verification is transferable', () {
         final signUp = _createTestSignUp(
           verifications: {
-            Field.emailAddress: Verification(
+            Field.emailAddress: const Verification(
               status: Status.verified,
               strategy: Strategy.emailCode,
               attempts: 1,
@@ -255,10 +255,10 @@ void main() {
         final signUp = SignUp(
           id: 'sign_up_123',
           status: Status.missingRequirements,
-          requiredFields: [Field.emailAddress, Field.password],
-          optionalFields: [Field.firstName],
-          missingFields: [Field.password],
-          unverifiedFields: [Field.emailAddress],
+          requiredFields: const [Field.emailAddress, Field.password],
+          optionalFields: const [Field.firstName],
+          missingFields: const [Field.password],
+          unverifiedFields: const [Field.emailAddress],
           username: 'testuser',
           emailAddress: 'test@example.com',
           phoneNumber: '+1234567890',
@@ -266,8 +266,8 @@ void main() {
           passwordEnabled: true,
           firstName: 'Test',
           lastName: 'User',
-          unsafeMetadata: <String, dynamic>{'key': 'value'},
-          publicMetadata: <String, dynamic>{},
+          unsafeMetadata: const <String, dynamic>{'key': 'value'},
+          publicMetadata: const <String, dynamic>{},
           verifications: {
             Field.emailAddress: Verification(
               status: Status.unverified,

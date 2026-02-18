@@ -54,7 +54,7 @@ void main() {
     });
 
     test('isVerified returns false when verification is null', () {
-      final domain = OrganizationDomain(
+      const domain = OrganizationDomain(
         id: 'dom_123',
         orgId: 'org_123',
         name: 'example.com',
@@ -71,7 +71,7 @@ void main() {
     });
 
     test('equality is based on id', () {
-      final domain1 = OrganizationDomain(
+      const domain1 = OrganizationDomain(
         id: 'dom_123',
         orgId: 'org_123',
         name: 'example.com',
@@ -130,7 +130,7 @@ void main() {
     });
 
     test('toJson serializes domain', () {
-      final domain = OrganizationDomain(
+      const domain = OrganizationDomain(
         id: 'dom_789',
         orgId: 'org_abc',
         name: 'company.io',

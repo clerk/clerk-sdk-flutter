@@ -3,7 +3,6 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
 import 'test_clerk_auth_config.dart';
-import 'test_data.dart';
 
 /// Creates a ClerkAuthState for testing with the given configuration
 Future<ClerkAuthState> createTestAuthState({
@@ -22,7 +21,15 @@ Future<ClerkAuthState> createTestAuthState({
 }
 
 /// Creates a ClerkAuthState for a signed-in user
-Future<ClerkAuthState> createSignedInAuthState({clerk.User? user}) async {
+Future<ClerkAuthState> createSignedInAuthState({
+  clerk.User? user,
+  clerk.Client? client,
+}) async {
+  if (client != null) {
+    return createTestAuthState(
+      config: TestClerkAuthConfig(initialClient: client),
+    );
+  }
   return createTestAuthState(
     config: TestClerkAuthConfig.signedIn(user: user),
   );
@@ -130,4 +137,3 @@ class _TestClerkAuthWrapperAsyncState extends State<TestClerkAuthWrapperAsync> {
     );
   }
 }
-

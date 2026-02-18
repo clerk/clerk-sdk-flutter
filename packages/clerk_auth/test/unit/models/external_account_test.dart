@@ -34,7 +34,7 @@ ExternalAccount _createExternalAccount({
     avatarUrl: 'https://example.com/avatar.png',
     imageUrl: 'https://example.com/image.png',
     label: 'Personal',
-    publicMetadata: {'key': 'value'},
+    publicMetadata: const {'key': 'value'},
     verification: verification ?? _createVerification(),
     updatedAt: DateTimeExt.epoch,
     createdAt: DateTimeExt.epoch,

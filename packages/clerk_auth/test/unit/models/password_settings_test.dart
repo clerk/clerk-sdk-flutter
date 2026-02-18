@@ -22,90 +22,90 @@ void main() {
 
     group('meetsLengthCriteria', () {
       test('returns true when password meets min length', () {
-        final settings = PasswordSettings(minLength: 8);
+        const settings = PasswordSettings(minLength: 8);
         expect(settings.meetsLengthCriteria('password'));
       });
 
       test('returns false when password is too short', () {
-        final settings = PasswordSettings(minLength: 8);
+        const settings = PasswordSettings(minLength: 8);
         expect(settings.meetsLengthCriteria('pass'), false);
       });
 
       test('returns true when password meets max length', () {
-        final settings = PasswordSettings(minLength: 4, maxLength: 10);
+        const settings = PasswordSettings(minLength: 4, maxLength: 10);
         expect(settings.meetsLengthCriteria('password'));
       });
 
       test('returns false when password exceeds max length', () {
-        final settings = PasswordSettings(minLength: 4, maxLength: 10);
+        const settings = PasswordSettings(minLength: 4, maxLength: 10);
         expect(settings.meetsLengthCriteria('verylongpassword'), false);
       });
 
       test('ignores max length when set to 0', () {
-        final settings = PasswordSettings(minLength: 4, maxLength: 0);
+        const settings = PasswordSettings(minLength: 4, maxLength: 0);
         expect(settings.meetsLengthCriteria('verylongpasswordthatexceedsanylimit'));
       });
     });
 
     group('meetsLowerCaseCriteria', () {
       test('returns true when lowercase not required', () {
-        final settings = PasswordSettings(requireLowercase: false);
+        const settings = PasswordSettings(requireLowercase: false);
         expect(settings.meetsLowerCaseCriteria('UPPERCASE'));
       });
 
       test('returns true when password has lowercase', () {
-        final settings = PasswordSettings(requireLowercase: true);
+        const settings = PasswordSettings(requireLowercase: true);
         expect(settings.meetsLowerCaseCriteria('Password'));
       });
 
       test('returns false when password has no lowercase', () {
-        final settings = PasswordSettings(requireLowercase: true);
+        const settings = PasswordSettings(requireLowercase: true);
         expect(settings.meetsLowerCaseCriteria('PASSWORD123'), false);
       });
     });
 
     group('meetsUpperCaseCriteria', () {
       test('returns true when uppercase not required', () {
-        final settings = PasswordSettings(requireUppercase: false);
+        const settings = PasswordSettings(requireUppercase: false);
         expect(settings.meetsUpperCaseCriteria('lowercase'));
       });
 
       test('returns true when password has uppercase', () {
-        final settings = PasswordSettings(requireUppercase: true);
+        const settings = PasswordSettings(requireUppercase: true);
         expect(settings.meetsUpperCaseCriteria('Password'));
       });
 
       test('returns false when password has no uppercase', () {
-        final settings = PasswordSettings(requireUppercase: true);
+        const settings = PasswordSettings(requireUppercase: true);
         expect(settings.meetsUpperCaseCriteria('password123'), false);
       });
     });
 
     group('meetsNumberCriteria', () {
       test('returns true when numbers not required', () {
-        final settings = PasswordSettings(requireNumbers: false);
+        const settings = PasswordSettings(requireNumbers: false);
         expect(settings.meetsNumberCriteria('password'));
       });
 
       test('returns true when password has numbers', () {
-        final settings = PasswordSettings(requireNumbers: true);
+        const settings = PasswordSettings(requireNumbers: true);
         expect(settings.meetsNumberCriteria('password123'));
       });
 
       test('returns false when password has no numbers', () {
-        final settings = PasswordSettings(requireNumbers: true);
+        const settings = PasswordSettings(requireNumbers: true);
         expect(settings.meetsNumberCriteria('password'), false);
       });
     });
 
     group('meetsSpecialCharCriteria', () {
       test('returns true when special chars not required', () {
-        final settings = PasswordSettings(requireSpecialChar: false);
+        const settings = PasswordSettings(requireSpecialChar: false);
         expect(settings.meetsSpecialCharCriteria('password'));
       });
 
       test('returns true when password has allowed special char', () {
-        final settings = PasswordSettings(
+        const settings = PasswordSettings(
           requireSpecialChar: true,
           allowedSpecialCharacters: '!@#\$%',
         );
@@ -113,7 +113,7 @@ void main() {
       });
 
       test('returns false when password has no special chars', () {
-        final settings = PasswordSettings(
+        const settings = PasswordSettings(
           requireSpecialChar: true,
           allowedSpecialCharacters: '!@#\$%',
         );
@@ -123,7 +123,7 @@ void main() {
 
     group('meetsRequiredCriteria', () {
       test('returns true when all criteria met', () {
-        final settings = PasswordSettings(
+        const settings = PasswordSettings(
           minLength: 8,
           requireLowercase: true,
           requireUppercase: true,
@@ -135,7 +135,7 @@ void main() {
       });
 
       test('returns false when any criteria not met', () {
-        final settings = PasswordSettings(
+        const settings = PasswordSettings(
           minLength: 8,
           requireLowercase: true,
           requireUppercase: true,
@@ -147,7 +147,7 @@ void main() {
 
     group('fromJson and toJson', () {
       test('round-trip serialization works', () {
-        final settings = PasswordSettings(
+        const settings = PasswordSettings(
           minLength: 8,
           maxLength: 20,
           requireLowercase: true,

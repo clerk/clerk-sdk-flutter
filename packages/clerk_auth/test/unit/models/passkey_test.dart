@@ -31,7 +31,7 @@ void main() {
     });
 
     test('toJson serializes passkey', () {
-      final passkey = Passkey(
+      const passkey = Passkey(
         id: 'pk_456',
         name: 'Work Passkey',
         verification: Verification(

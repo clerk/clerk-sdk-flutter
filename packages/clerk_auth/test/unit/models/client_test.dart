@@ -26,7 +26,7 @@ User _createTestUser({
     primaryPhoneNumberId: null,
     primaryWeb3WalletId: null,
     publicMetadata: null,
-    privateMetadata: {},
+    privateMetadata: const {},
     unsafeMetadata: null,
     emailAddresses: null,
     phoneNumbers: null,
@@ -88,7 +88,7 @@ void main() {
     });
 
     test('non-empty client is not empty', () {
-      final client = Client(id: 'client_123');
+      const client = Client(id: 'client_123');
       expect(client.isEmpty, false);
       expect(client.isNotEmpty);
     });
@@ -220,7 +220,7 @@ void main() {
 
     group('JSON serialization', () {
       test('toJson produces valid map', () {
-        final client = Client(
+        const client = Client(
           id: 'client_123',
           lastActiveSessionId: 'sess_1',
         );
@@ -245,7 +245,7 @@ void main() {
       });
 
       test('round-trip serialization preserves data', () {
-        final original = Client(
+        const original = Client(
           id: 'client_789',
           lastActiveSessionId: 'sess_3',
           sessions: [],
@@ -260,4 +260,3 @@ void main() {
     });
   });
 }
-

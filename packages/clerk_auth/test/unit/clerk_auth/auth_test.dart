@@ -1,17 +1,6 @@
 import 'dart:async';
 
 import 'package:clerk_auth/clerk_auth.dart';
-import 'package:clerk_auth/src/clerk_auth/auth.dart';
-import 'package:clerk_auth/src/models/client/external_account.dart';
-import 'package:clerk_auth/src/models/client/organization_invitation.dart';
-import 'package:clerk_auth/src/models/client/session.dart';
-import 'package:clerk_auth/src/models/client/sign_in.dart';
-import 'package:clerk_auth/src/models/client/user.dart';
-import 'package:clerk_auth/src/models/client/user_public.dart';
-import 'package:clerk_auth/src/models/client/verification.dart';
-import 'package:clerk_auth/src/models/enums.dart';
-import 'package:clerk_auth/src/models/status.dart';
-import 'package:clerk_auth/src/utils/extensions.dart';
 
 import '../../test_helpers.dart';
 
@@ -36,7 +25,7 @@ User _createTestUser({
     primaryPhoneNumberId: null,
     primaryWeb3WalletId: null,
     publicMetadata: null,
-    privateMetadata: {},
+    privateMetadata: const {},
     unsafeMetadata: null,
     emailAddresses: null,
     phoneNumbers: null,
@@ -325,8 +314,8 @@ void main() {
         final auth = Auth(
           config: const TestAuthConfig(publishableKey: _validPublishableKey),
         );
-        final signIn = SignIn.empty;
-        final newClient = Client(
+        const signIn = SignIn.empty;
+        const newClient = Client(
           id: 'client_123',
           signIn: signIn,
         );
@@ -397,7 +386,7 @@ void main() {
         final auth = Auth(
           config: const TestAuthConfig(publishableKey: _validPublishableKey),
         );
-        final newClient = Client(
+        const newClient = Client(
           id: 'client_123',
           sessions: [],
         );
@@ -581,7 +570,8 @@ void main() {
         test('clears client', () async {
           mockHttp.addClientResponse(clientId: 'client_123');
           mockHttp.addEnvironmentResponse();
-          mockHttp.addClientResponse(clientId: ''); // Empty client after signout
+          mockHttp.addClientResponse(
+              clientId: ''); // Empty client after signout
 
           auth = Auth(
             config: TestAuthConfig(
@@ -1117,7 +1107,8 @@ void main() {
 
           final org = _createTestOrganization();
 
-          final domains = await auth.fetchOrganizationDomains(organization: org);
+          final domains =
+              await auth.fetchOrganizationDomains(organization: org);
 
           expect(domains, isEmpty);
 
@@ -1210,7 +1201,8 @@ void main() {
           );
 
           await auth.initialize();
-          await auth.addIdentifyingData('new@example.com', IdentifierType.emailAddress);
+          await auth.addIdentifyingData(
+              'new@example.com', IdentifierType.emailAddress);
 
           expect(mockHttp.calls.length, greaterThanOrEqualTo(3));
 
@@ -1230,7 +1222,8 @@ void main() {
           );
 
           await auth.initialize();
-          await auth.addIdentifyingData('+1234567890', IdentifierType.phoneNumber);
+          await auth.addIdentifyingData(
+              '+1234567890', IdentifierType.phoneNumber);
 
           expect(mockHttp.calls.length, greaterThanOrEqualTo(3));
 
@@ -1272,7 +1265,8 @@ void main() {
           );
 
           await auth.initialize();
-          await auth.updateUserPassword('old_password', 'new_password', signOut: false);
+          await auth.updateUserPassword('old_password', 'new_password',
+              signOut: false);
 
           expect(mockHttp.calls.length, greaterThanOrEqualTo(3));
 
@@ -1722,7 +1716,8 @@ void main() {
           await auth.initialize();
 
           final org = _createTestOrganization();
-          final domains = await auth.fetchOrganizationDomains(organization: org);
+          final domains =
+              await auth.fetchOrganizationDomains(organization: org);
 
           expect(domains, isA<List<OrganizationDomain>>());
           expect(domains.length, 1);
@@ -1804,7 +1799,8 @@ void main() {
           await auth.initialize();
 
           final org = _createTestOrganization();
-          final domains = await auth.fetchOrganizationDomains(organization: org);
+          final domains =
+              await auth.fetchOrganizationDomains(organization: org);
 
           expect(domains, isA<List<OrganizationDomain>>());
           expect(domains.length, 25);
@@ -1838,7 +1834,8 @@ void main() {
           await auth.initialize();
 
           final org = _createTestOrganization();
-          final domains = await auth.fetchOrganizationDomains(organization: org);
+          final domains =
+              await auth.fetchOrganizationDomains(organization: org);
 
           expect(domains, isA<List<OrganizationDomain>>());
           expect(domains.isEmpty, true);
@@ -1980,11 +1977,15 @@ void main() {
               'status': 'transferable',
               'strategy': 'oauth_google',
               'attempts': 0,
-              'expire_at': DateTime.now().add(const Duration(hours: 1)).millisecondsSinceEpoch,
+              'expire_at': DateTime.now()
+                  .add(const Duration(hours: 1))
+                  .millisecondsSinceEpoch,
             },
             'second_factor_verification': null,
             'created_session_id': null,
-            'abandon_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 1))
+                .millisecondsSinceEpoch,
           };
           mockHttp.addClientResponse(signIn: signInJson);
           mockHttp.addEnvironmentResponse();
@@ -2003,7 +2004,9 @@ void main() {
               'custom_action': false,
               'unsafe_metadata': {},
               'public_metadata': {},
-              'abandon_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+              'abandon_at': DateTime.now()
+                  .add(const Duration(days: 1))
+                  .millisecondsSinceEpoch,
             },
             'client': {
               'object': 'client',
@@ -2025,7 +2028,8 @@ void main() {
           await auth.transfer();
 
           // Verify transferSignUp was called (calls /client/sign_ups with transfer=true)
-          expect(mockHttp.calls.any((c) => c.uri.path.contains('sign_ups')), true);
+          expect(
+              mockHttp.calls.any((c) => c.uri.path.contains('sign_ups')), true);
 
           auth.terminate();
         });
@@ -2045,14 +2049,18 @@ void main() {
                 'status': 'transferable',
                 'strategy': 'oauth_google',
                 'attempts': 0,
-                'expire_at': DateTime.now().add(const Duration(hours: 1)).millisecondsSinceEpoch,
+                'expire_at': DateTime.now()
+                    .add(const Duration(hours: 1))
+                    .millisecondsSinceEpoch,
               },
             },
             'password_enabled': false,
             'custom_action': false,
             'unsafe_metadata': {},
             'public_metadata': {},
-            'abandon_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 1))
+                .millisecondsSinceEpoch,
           };
           mockHttp.addClientResponse(signUp: signUpJson);
           mockHttp.addEnvironmentResponse();
@@ -2069,7 +2077,9 @@ void main() {
               'first_factor_verification': null,
               'second_factor_verification': null,
               'created_session_id': null,
-              'abandon_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+              'abandon_at': DateTime.now()
+                  .add(const Duration(days: 1))
+                  .millisecondsSinceEpoch,
             },
             'client': {
               'object': 'client',
@@ -2091,7 +2101,8 @@ void main() {
           await auth.transfer();
 
           // Verify transferSignIn was called (calls /client/sign_ins with transfer=true)
-          expect(mockHttp.calls.any((c) => c.uri.path.contains('sign_ins')), true);
+          expect(
+              mockHttp.calls.any((c) => c.uri.path.contains('sign_ins')), true);
 
           auth.terminate();
         });
@@ -2112,7 +2123,9 @@ void main() {
             'first_factor_verification': null,
             'second_factor_verification': null,
             'created_session_id': null,
-            'abandon_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 1))
+                .millisecondsSinceEpoch,
           };
           mockHttp.addClientResponse(signIn: signInJson);
           mockHttp.addEnvironmentResponse();
@@ -2143,7 +2156,8 @@ void main() {
           await auth.completeOAuthSignIn(token: 'oauth_token_123');
 
           // Verify sendOauthToken was called
-          expect(mockHttp.calls.any((c) => c.uri.path.contains('signin_123')), true);
+          expect(mockHttp.calls.any((c) => c.uri.path.contains('signin_123')),
+              true);
 
           auth.terminate();
         });
@@ -2162,7 +2176,9 @@ void main() {
             'custom_action': false,
             'unsafe_metadata': {},
             'public_metadata': {},
-            'abandon_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 1))
+                .millisecondsSinceEpoch,
           };
           mockHttp.addClientResponse(signUp: signUpJson);
           mockHttp.addEnvironmentResponse();
@@ -2193,7 +2209,8 @@ void main() {
           await auth.completeOAuthSignIn(token: 'oauth_token_123');
 
           // Verify sendOauthToken was called
-          expect(mockHttp.calls.any((c) => c.uri.path.contains('signup_123')), true);
+          expect(mockHttp.calls.any((c) => c.uri.path.contains('signup_123')),
+              true);
 
           auth.terminate();
         });
@@ -2227,8 +2244,11 @@ void main() {
             'status': 'unverified',
             'strategy': 'oauth_google',
             'attempts': 0,
-            'expire_at': DateTime.now().add(const Duration(hours: 1)).millisecondsSinceEpoch,
-            'external_verification_redirect_url': 'https://accounts.google.com/oauth',
+            'expire_at': DateTime.now()
+                .add(const Duration(hours: 1))
+                .millisecondsSinceEpoch,
+            'external_verification_redirect_url':
+                'https://accounts.google.com/oauth',
           },
         );
 
@@ -2239,7 +2259,8 @@ void main() {
         );
 
         // Verify createSignIn was called
-        expect(mockHttp.calls.any((c) => c.uri.path.contains('sign_ins')), true);
+        expect(
+            mockHttp.calls.any((c) => c.uri.path.contains('sign_ins')), true);
 
         auth.terminate();
       });
@@ -2270,7 +2291,9 @@ void main() {
             'first_factor_verification': null,
             'second_factor_verification': null,
             'created_session_id': null,
-            'abandon_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 1))
+                .millisecondsSinceEpoch,
           },
         );
         mockHttp.addEnvironmentResponse();
@@ -2313,7 +2336,9 @@ void main() {
             'first_factor_verification': null,
             'second_factor_verification': null,
             'created_session_id': null,
-            'abandon_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 1))
+                .millisecondsSinceEpoch,
           },
         );
         mockHttp.addEnvironmentResponse();
@@ -2360,7 +2385,9 @@ void main() {
             'first_factor_verification': null,
             'second_factor_verification': null,
             'created_session_id': null,
-            'abandon_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 1))
+                .millisecondsSinceEpoch,
           },
         );
         mockHttp.addEnvironmentResponse();
@@ -2417,14 +2444,18 @@ void main() {
                 'status': 'unverified',
                 'strategy': 'saml',
                 'attempts': 0,
-                'expire_at': DateTime.now().add(const Duration(hours: 1)).millisecondsSinceEpoch,
+                'expire_at': DateTime.now()
+                    .add(const Duration(hours: 1))
+                    .millisecondsSinceEpoch,
               },
             },
             'custom_action': false,
             'external_id': null,
             'created_session_id': null,
             'created_user_id': null,
-            'abandon_at': DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 7))
+                .millisecondsSinceEpoch,
           },
         );
         mockHttp.addEnvironmentResponse();
@@ -2441,12 +2472,15 @@ void main() {
         );
 
         // Verify update was called
-        expect(mockHttp.calls.any((c) => c.uri.path.contains('sign_ups')), true);
+        expect(
+            mockHttp.calls.any((c) => c.uri.path.contains('sign_ups')), true);
 
         auth.terminate();
       });
 
-      test('handles missing requirements with empty missing fields and unverified fields', () async {
+      test(
+          'handles missing requirements with empty missing fields and unverified fields',
+          () async {
         final mockHttp = MockHttpService();
         final auth = Auth(
           config: TestAuthConfig(
@@ -2482,7 +2516,9 @@ void main() {
             'external_id': null,
             'created_session_id': null,
             'created_user_id': null,
-            'abandon_at': DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 7))
+                .millisecondsSinceEpoch,
           },
         );
         mockHttp.addEnvironmentResponse();
@@ -2530,7 +2566,8 @@ void main() {
         await auth.setActiveOrganization(org);
 
         // Verify setActiveOrganization was called
-        expect(mockHttp.calls.any((c) => c.uri.path.contains('sessions')), true);
+        expect(
+            mockHttp.calls.any((c) => c.uri.path.contains('sessions')), true);
 
         auth.terminate();
       });
@@ -2615,8 +2652,12 @@ void main() {
           'id': 'sess_123',
           'status': 'active',
           'last_active_at': DateTime.now().millisecondsSinceEpoch,
-          'expire_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
-          'abandon_at': DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch,
+          'expire_at': DateTime.now()
+              .add(const Duration(days: 1))
+              .millisecondsSinceEpoch,
+          'abandon_at': DateTime.now()
+              .add(const Duration(days: 7))
+              .millisecondsSinceEpoch,
           'last_active_organization_id': null,
           'user': userWithOrg,
           'public_user_data': {
@@ -2644,13 +2685,15 @@ void main() {
         // Create organization response
         mockHttp.addOrganizationResponse(orgId: 'org_new', name: 'New Org');
         // Update organization response (for slug)
-        mockHttp.addOrganizationResponse(orgId: 'org_new', name: 'New Org', slug: 'custom-slug');
+        mockHttp.addOrganizationResponse(
+            orgId: 'org_new', name: 'New Org', slug: 'custom-slug');
 
         await auth.initialize();
         await auth.createOrganization(name: 'New Org', slug: 'custom-slug');
 
         // Verify organization was created and updated
-        expect(mockHttp.calls.any((c) => c.uri.path.contains('organizations')), true);
+        expect(mockHttp.calls.any((c) => c.uri.path.contains('organizations')),
+            true);
 
         auth.terminate();
       });
@@ -2765,7 +2808,10 @@ void main() {
               'enforce_hibp_on_sign_in': false,
               'allowed_special_characters': r'+$-_',
             },
-            'passkey_settings': {'allow_autofill': false, 'show_sign_in_button': false},
+            'passkey_settings': {
+              'allow_autofill': false,
+              'show_sign_in_button': false
+            },
             'saml': {'enabled': false},
           },
           'organization_settings': {
@@ -2886,7 +2932,10 @@ void main() {
               'enforce_hibp_on_sign_in': false,
               'allowed_special_characters': r'+$-_',
             },
-            'passkey_settings': {'allow_autofill': false, 'show_sign_in_button': false},
+            'passkey_settings': {
+              'allow_autofill': false,
+              'show_sign_in_button': false
+            },
             'saml': {'enabled': false},
           },
           'organization_settings': {
@@ -3036,7 +3085,10 @@ void main() {
               'enforce_hibp_on_sign_in': false,
               'allowed_special_characters': r'+$-_',
             },
-            'passkey_settings': {'allow_autofill': false, 'show_sign_in_button': false},
+            'passkey_settings': {
+              'allow_autofill': false,
+              'show_sign_in_button': false
+            },
             'saml': {'enabled': false},
           },
           'organization_settings': {
@@ -3080,7 +3132,8 @@ void main() {
         await auth.updateOrganization(organization: org, name: 'Updated Org');
 
         // Verify update was called
-        expect(mockHttp.calls.any((c) => c.uri.path.contains('organizations')), true);
+        expect(mockHttp.calls.any((c) => c.uri.path.contains('organizations')),
+            true);
 
         auth.terminate();
       });
@@ -3104,7 +3157,13 @@ void main() {
         await auth.updateOrganization(organization: org, name: 'Test Org');
 
         // Verify no update was called (name is the same)
-        expect(mockHttp.calls.where((c) => c.uri.path.contains('organizations') && c.method == HttpMethod.patch).length, 0);
+        expect(
+            mockHttp.calls
+                .where((c) =>
+                    c.uri.path.contains('organizations') &&
+                    c.method == HttpMethod.patch)
+                .length,
+            0);
 
         auth.terminate();
       });
@@ -3157,7 +3216,11 @@ void main() {
         await auth.deleteUserImage();
 
         // Verify delete was called
-        expect(mockHttp.calls.any((c) => c.uri.path.contains('profile_image') && c.method == HttpMethod.delete), true);
+        expect(
+            mockHttp.calls.any((c) =>
+                c.uri.path.contains('profile_image') &&
+                c.method == HttpMethod.delete),
+            true);
 
         auth.terminate();
       });
@@ -3183,7 +3246,9 @@ void main() {
         await auth.updateUserPassword('oldPassword123', 'newPassword456');
 
         // Verify update was called
-        expect(mockHttp.calls.any((c) => c.uri.path.contains('change_password')), true);
+        expect(
+            mockHttp.calls.any((c) => c.uri.path.contains('change_password')),
+            true);
 
         auth.terminate();
       });
@@ -3209,7 +3274,9 @@ void main() {
         await auth.deleteUserPassword('currentPassword123');
 
         // Verify delete was called
-        expect(mockHttp.calls.any((c) => c.uri.path.contains('remove_password')), true);
+        expect(
+            mockHttp.calls.any((c) => c.uri.path.contains('remove_password')),
+            true);
 
         auth.terminate();
       });

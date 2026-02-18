@@ -30,7 +30,7 @@ void main() {
 
     test('copyWith creates new instance with updated colors', () {
       final original = ClerkThemeExtension.light;
-      final customColors = ClerkThemeColors(
+      const customColors = ClerkThemeColors(
         background: Colors.blue,
         altBackground: Colors.blueGrey,
         borderSide: Colors.grey,

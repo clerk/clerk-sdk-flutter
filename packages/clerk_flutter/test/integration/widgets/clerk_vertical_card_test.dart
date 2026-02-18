@@ -51,9 +51,9 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: ClerkVerticalCard(
+          child: const ClerkVerticalCard(
             topPortion: Column(
-              children: const [
+              children: [
                 Text('Header'),
                 Text('Subheader'),
               ],
@@ -71,11 +71,11 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: ClerkVerticalCard(
-            topPortion: const Text('Top'),
+          child: const ClerkVerticalCard(
+            topPortion: Text('Top'),
             bottomPortion: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Text('Link 1'),
                 Text(' | '),
                 Text('Link 2'),

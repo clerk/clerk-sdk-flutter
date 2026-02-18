@@ -65,7 +65,7 @@ void main() {
     });
 
     test('toJson serializes web3 wallet', () {
-      final wallet = Web3Wallet(
+      const wallet = Web3Wallet(
         id: 'w3w_789',
         web3Wallet: '0x123abc',
         verification: Verification(

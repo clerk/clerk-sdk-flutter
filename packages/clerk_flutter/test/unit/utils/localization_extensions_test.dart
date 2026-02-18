@@ -13,7 +13,7 @@ void main() {
 
   group('ClerkAuthErrorExtension', () {
     test('localizedMessage returns cannotDeleteSelf for cannotDeleteSelf code', () {
-      final error = clerk.ClerkError(
+      const error = clerk.ClerkError(
         code: clerk.ClerkErrorCode.cannotDeleteSelf,
         message: 'test',
       );
@@ -21,7 +21,7 @@ void main() {
     });
 
     test('localizedMessage returns jwtPoorlyFormatted with argument', () {
-      final error = clerk.ClerkError(
+      const error = clerk.ClerkError(
         code: clerk.ClerkErrorCode.jwtPoorlyFormatted,
         message: 'test',
         argument: 'bad_token',
@@ -30,7 +30,7 @@ void main() {
     });
 
     test('localizedMessage returns noSessionTokenRetrieved', () {
-      final error = clerk.ClerkError(
+      const error = clerk.ClerkError(
         code: clerk.ClerkErrorCode.noSessionTokenRetrieved,
         message: 'test',
       );
@@ -38,7 +38,7 @@ void main() {
     });
 
     test('localizedMessage returns passwordMatchError', () {
-      final error = clerk.ClerkError(
+      const error = clerk.ClerkError(
         code: clerk.ClerkErrorCode.passwordMatchError,
         message: 'test',
       );
@@ -46,7 +46,7 @@ void main() {
     });
 
     test('localizedMessage returns tooManyRetries', () {
-      final error = clerk.ClerkError(
+      const error = clerk.ClerkError(
         code: clerk.ClerkErrorCode.tooManyRetries,
         message: 'test',
       );
@@ -57,6 +57,96 @@ void main() {
       final error = clerk.ClerkError.clientAppError(message: 'Custom error');
       final result = error.localizedMessage(l10ns);
       expect(result, contains('Custom error'));
+    });
+
+    test('localizedMessage returns noAssociatedCodeRetrievalMethod with argument', () {
+      const error = clerk.ClerkError(
+        code: clerk.ClerkErrorCode.noAssociatedCodeRetrievalMethod,
+        message: 'test',
+        argument: 'email',
+      );
+      expect(error.localizedMessage(l10ns), l10ns.noAssociatedCodeRetrievalMethod('email'));
+    });
+
+    test('localizedMessage returns noAssociatedStrategy with argument', () {
+      const error = clerk.ClerkError(
+        code: clerk.ClerkErrorCode.noAssociatedStrategy,
+        message: 'test',
+        argument: 'password',
+      );
+      expect(error.localizedMessage(l10ns), l10ns.noAssociatedStrategy('password'));
+    });
+
+    test('localizedMessage returns noSessionFoundForUser with argument', () {
+      const error = clerk.ClerkError(
+        code: clerk.ClerkErrorCode.noSessionFoundForUser,
+        message: 'test',
+        argument: 'user_123',
+      );
+      expect(error.localizedMessage(l10ns), l10ns.noSessionFoundForUser('user_123'));
+    });
+
+    test('localizedMessage returns noStageForStatus with argument', () {
+      const error = clerk.ClerkError(
+        code: clerk.ClerkErrorCode.noStageForStatus,
+        message: 'test',
+        argument: 'complete',
+      );
+      expect(error.localizedMessage(l10ns), l10ns.noStageForStatus('complete'));
+    });
+
+    test('localizedMessage returns noSuchFirstFactorStrategy with argument', () {
+      const error = clerk.ClerkError(
+        code: clerk.ClerkErrorCode.noSuchFirstFactorStrategy,
+        message: 'test',
+        argument: 'email_code',
+      );
+      expect(error.localizedMessage(l10ns), l10ns.noSuchFirstFactorStrategy('email_code'));
+    });
+
+    test('localizedMessage returns noSuchSecondFactorStrategy with argument', () {
+      const error = clerk.ClerkError(
+        code: clerk.ClerkErrorCode.noSuchSecondFactorStrategy,
+        message: 'test',
+        argument: 'totp',
+      );
+      expect(error.localizedMessage(l10ns), l10ns.noSuchSecondFactorStrategy('totp'));
+    });
+
+    test('localizedMessage returns noUserAttributeForField with argument', () {
+      const error = clerk.ClerkError(
+        code: clerk.ClerkErrorCode.noUserAttributeForField,
+        message: 'test',
+        argument: 'email_address',
+      );
+      expect(error.localizedMessage(l10ns), l10ns.noUserAttributeForField('email_address'));
+    });
+
+    test('localizedMessage returns passwordResetStrategyError with argument', () {
+      const error = clerk.ClerkError(
+        code: clerk.ClerkErrorCode.passwordResetStrategyError,
+        message: 'test',
+        argument: 'invalid_strategy',
+      );
+      expect(error.localizedMessage(l10ns), l10ns.unsupportedPasswordResetStrategy('invalid_strategy'));
+    });
+
+    test('localizedMessage returns serverErrorResponse with argument', () {
+      const error = clerk.ClerkError(
+        code: clerk.ClerkErrorCode.serverErrorResponse,
+        message: 'test',
+        argument: '500 Internal Server Error',
+      );
+      expect(error.localizedMessage(l10ns), l10ns.serverErrorResponse('500 Internal Server Error'));
+    });
+
+    test('localizedMessage returns unknownError with argument', () {
+      const error = clerk.ClerkError(
+        code: clerk.ClerkErrorCode.unknownError,
+        message: 'test',
+        argument: 'Something went wrong',
+      );
+      expect(error.localizedMessage(l10ns), l10ns.unknownError('Something went wrong'));
     });
   });
 
@@ -136,6 +226,26 @@ void main() {
     test('localizedMessage returns correct message for unverified', () {
       expect(clerk.Status.unverified.localizedMessage(l10ns), l10ns.unverified);
     });
+
+    test('localizedMessage returns correct message for missingRequirements', () {
+      expect(clerk.Status.missingRequirements.localizedMessage(l10ns), l10ns.missingRequirements);
+    });
+
+    test('localizedMessage returns correct message for needsFirstFactor', () {
+      expect(clerk.Status.needsFirstFactor.localizedMessage(l10ns), l10ns.needsFirstFactor);
+    });
+
+    test('localizedMessage returns correct message for needsIdentifier', () {
+      expect(clerk.Status.needsIdentifier.localizedMessage(l10ns), l10ns.needsIdentifier);
+    });
+
+    test('localizedMessage returns correct message for needsSecondFactor', () {
+      expect(clerk.Status.needsSecondFactor.localizedMessage(l10ns), l10ns.needsSecondFactor);
+    });
+
+    test('localizedMessage returns correct message for transferable', () {
+      expect(clerk.Status.transferable.localizedMessage(l10ns), l10ns.transferable);
+    });
   });
 
   group('ClerkStrategyLocalization', () {
@@ -157,6 +267,136 @@ void main() {
       expect(
         clerk.Strategy.phoneNumber.localizedMessage(l10ns),
         l10ns.phoneNumber,
+      );
+    });
+
+    test('localizedMessage returns concise phoneNumber when concise is true', () {
+      expect(
+        clerk.Strategy.phoneNumber.localizedMessage(l10ns, concise: true),
+        l10ns.phoneNumberConcise,
+      );
+    });
+
+    test('localizedMessage returns username for username strategy', () {
+      expect(
+        clerk.Strategy.username.localizedMessage(l10ns),
+        l10ns.username,
+      );
+    });
+
+    test('localizedMessage returns emailAddress for resetPasswordEmailCode', () {
+      expect(
+        clerk.Strategy.resetPasswordEmailCode.localizedMessage(l10ns),
+        l10ns.emailAddress,
+      );
+    });
+
+    test('localizedMessage returns phoneNumber for resetPasswordPhoneCode', () {
+      expect(
+        clerk.Strategy.resetPasswordPhoneCode.localizedMessage(l10ns),
+        l10ns.phoneNumber,
+      );
+    });
+  });
+
+  group('ClerkFieldLocalization', () {
+    test('localizedMessage returns emailAddress for emailAddress field', () {
+      expect(
+        clerk.Field.emailAddress.localizedMessage(l10ns),
+        l10ns.emailAddress,
+      );
+    });
+
+    test('localizedMessage returns phoneNumber for phoneNumber field', () {
+      expect(
+        clerk.Field.phoneNumber.localizedMessage(l10ns),
+        l10ns.phoneNumber,
+      );
+    });
+
+    test('localizedMessage returns username for username field', () {
+      expect(
+        clerk.Field.username.localizedMessage(l10ns),
+        l10ns.username,
+      );
+    });
+  });
+
+  group('ClerkUserAttributeLocalization', () {
+    test('localizedMessage returns emailAddress for emailAddress attribute', () {
+      expect(
+        clerk.UserAttribute.emailAddress.localizedMessage(l10ns),
+        l10ns.emailAddress,
+      );
+    });
+
+    test('localizedMessage returns phoneNumber for phoneNumber attribute', () {
+      expect(
+        clerk.UserAttribute.phoneNumber.localizedMessage(l10ns),
+        l10ns.phoneNumber,
+      );
+    });
+
+    test('localizedMessage returns username for username attribute', () {
+      expect(
+        clerk.UserAttribute.username.localizedMessage(l10ns),
+        l10ns.username,
+      );
+    });
+
+    test('localizedMessage returns firstName for firstName attribute', () {
+      expect(
+        clerk.UserAttribute.firstName.localizedMessage(l10ns),
+        l10ns.firstName,
+      );
+    });
+
+    test('localizedMessage returns lastName for lastName attribute', () {
+      expect(
+        clerk.UserAttribute.lastName.localizedMessage(l10ns),
+        l10ns.lastName,
+      );
+    });
+
+    test('localizedMessage returns password for password attribute', () {
+      expect(
+        clerk.UserAttribute.password.localizedMessage(l10ns),
+        l10ns.password,
+      );
+    });
+
+    test('localizedMessage returns passwordConfirmation for passwordConfirmation attribute', () {
+      expect(
+        clerk.UserAttribute.passwordConfirmation.localizedMessage(l10ns),
+        l10ns.passwordConfirmation,
+      );
+    });
+
+    test('localizedMessage returns web3Wallet for web3Wallet attribute', () {
+      expect(
+        clerk.UserAttribute.web3Wallet.localizedMessage(l10ns),
+        l10ns.web3Wallet,
+      );
+    });
+
+    test('localizedMessage returns authenticatorApp for authenticatorApp attribute', () {
+      expect(
+        clerk.UserAttribute.authenticatorApp.localizedMessage(l10ns),
+        l10ns.authenticatorApp,
+      );
+    });
+
+    test('localizedMessage returns backupCode for backupCode attribute', () {
+      expect(
+        clerk.UserAttribute.backupCode.localizedMessage(l10ns),
+        l10ns.backupCode,
+      );
+    });
+
+    test('localizedMessage returns passkey for passkey attribute', () {
+      expect(
+        clerk.UserAttribute.passkey.localizedMessage(l10ns),
+        l10ns.passkey,
       );
     });
   });

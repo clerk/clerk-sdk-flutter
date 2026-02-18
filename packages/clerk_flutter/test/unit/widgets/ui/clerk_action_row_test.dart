@@ -1,5 +1,5 @@
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'package:clerk_flutter/src/clerk_user_action.dart';
+import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_action_row.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
 import 'package:flutter/material.dart';
@@ -57,14 +57,18 @@ void main() {
     testWidgets('renders asset icon when provided', (tester) async {
       final action = ClerkUserAction(
         label: 'Test Action',
-        asset: 'test_asset',
+        asset: ClerkAssets.gearIcon,
         callback: (context, authState) {},
       );
 
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: ClerkActionRow(action: action),
+          child: Scaffold(
+            body: SingleChildScrollView(
+              child: ClerkActionRow(action: action),
+            ),
+          ),
         ),
       );
       await tester.pump();
@@ -84,7 +88,11 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: ClerkActionRow(action: action),
+          child: Scaffold(
+            body: SingleChildScrollView(
+              child: ClerkActionRow(action: action),
+            ),
+          ),
         ),
       );
       await tester.pump();

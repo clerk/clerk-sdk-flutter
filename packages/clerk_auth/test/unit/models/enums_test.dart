@@ -1,5 +1,4 @@
 import 'package:clerk_auth/clerk_auth.dart';
-import 'package:clerk_auth/src/models/status.dart';
 
 import '../../test_helpers.dart';
 

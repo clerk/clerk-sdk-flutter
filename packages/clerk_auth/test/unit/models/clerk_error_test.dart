@@ -33,7 +33,7 @@ void main() {
 
     group('factory constructors', () {
       test('from creates error from ExternalErrorCollection', () {
-        final externalErrors = ExternalErrorCollection(
+        const externalErrors = ExternalErrorCollection(
           errors: [
             ExternalError(
               message: 'External error message',
@@ -119,11 +119,13 @@ void main() {
 
   group('ClerkErrorCode', () {
     test('has all expected error codes', () {
-      expect(ClerkErrorCode.values.contains(ClerkErrorCode.serverErrorResponse));
-      expect(ClerkErrorCode.values.contains(ClerkErrorCode.noStageForStatus));
       expect(
-          ClerkErrorCode.values.contains(ClerkErrorCode.noSessionTokenRetrieved));
-      expect(ClerkErrorCode.values.contains(ClerkErrorCode.noAssociatedStrategy));
+          ClerkErrorCode.values.contains(ClerkErrorCode.serverErrorResponse));
+      expect(ClerkErrorCode.values.contains(ClerkErrorCode.noStageForStatus));
+      expect(ClerkErrorCode.values
+          .contains(ClerkErrorCode.noSessionTokenRetrieved));
+      expect(
+          ClerkErrorCode.values.contains(ClerkErrorCode.noAssociatedStrategy));
       expect(ClerkErrorCode.values
           .contains(ClerkErrorCode.noAssociatedCodeRetrievalMethod));
       expect(ClerkErrorCode.values.contains(ClerkErrorCode.passwordMatchError));
@@ -145,4 +147,3 @@ void main() {
     });
   });
 }
-

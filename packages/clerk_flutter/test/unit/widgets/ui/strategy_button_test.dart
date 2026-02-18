@@ -32,6 +32,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
+      expect(clicked, isTrue);
       expect(find.byIcon(Icons.lock_clock), findsOneWidget);
       expect(find.byType(MaterialButton), findsOneWidget);
     });
@@ -133,7 +134,7 @@ void main() {
     });
 
     test('supports returns true for supported strategies', () {
-      final totpFactor = clerk.Factor(
+      const totpFactor = clerk.Factor(
         strategy: clerk.Strategy.totp,
         safeIdentifier: null,
         emailAddressId: null,
@@ -147,7 +148,7 @@ void main() {
     });
 
     test('supports returns false for unsupported strategies', () {
-      final passwordFactor = clerk.Factor(
+      const passwordFactor = clerk.Factor(
         strategy: clerk.Strategy.password,
         safeIdentifier: null,
         emailAddressId: null,
@@ -161,4 +162,3 @@ void main() {
     });
   });
 }
-

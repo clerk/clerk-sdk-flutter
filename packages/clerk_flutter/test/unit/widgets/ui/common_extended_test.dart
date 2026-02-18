@@ -9,7 +9,7 @@ import '../../../test_support/test_support.dart';
 void main() {
   group('PhoneNumberExtension', () {
     test('intlFormattedNsn formats phone number correctly', () {
-      final phoneNumber = PhoneNumber(isoCode: IsoCode.US, nsn: '5551234567');
+      const phoneNumber = PhoneNumber(isoCode: IsoCode.US, nsn: '5551234567');
       expect(phoneNumber.intlFormattedNsn, contains('+1'));
       expect(phoneNumber.intlFormattedNsn, contains('555'));
     });
@@ -58,7 +58,8 @@ void main() {
         expect(borderSide.color, isA<Color>());
       });
 
-      testWidgets('outlineInputBorder returns OutlineInputBorder', (tester) async {
+      testWidgets('outlineInputBorder returns OutlineInputBorder',
+          (tester) async {
         late OutlineInputBorder border;
 
         await tester.pumpWidget(
@@ -76,7 +77,8 @@ void main() {
         expect(border, isA<OutlineInputBorder>());
       });
 
-      testWidgets('inputBoxBorder returns RoundedRectangleBorder', (tester) async {
+      testWidgets('inputBoxBorder returns RoundedRectangleBorder',
+          (tester) async {
         late OutlinedBorder border;
 
         await tester.pumpWidget(
@@ -94,7 +96,8 @@ void main() {
         expect(border, isA<RoundedRectangleBorder>());
       });
 
-      testWidgets('inputBoxBorderDecoration returns ShapeDecoration', (tester) async {
+      testWidgets('inputBoxBorderDecoration returns ShapeDecoration',
+          (tester) async {
         late ShapeDecoration decoration;
 
         await tester.pumpWidget(
@@ -112,7 +115,8 @@ void main() {
         expect(decoration, isA<ShapeDecoration>());
       });
 
-      testWidgets('divider returns Divider with correct properties', (tester) async {
+      testWidgets('divider returns Divider with correct properties',
+          (tester) async {
         late Divider div;
 
         await tester.pumpWidget(
@@ -131,7 +135,8 @@ void main() {
         expect(div.height, 1.0);
       });
 
-      testWidgets('narrowDivider returns Divider with zero thickness', (tester) async {
+      testWidgets('narrowDivider returns Divider with zero thickness',
+          (tester) async {
         late Divider div;
 
         await tester.pumpWidget(
@@ -154,16 +159,15 @@ void main() {
 
   group('Additional Margins', () {
     test('horizontalMargin8 has correct width', () {
-      expect((horizontalMargin8 as SizedBox).width, 8.0);
+      expect(horizontalMargin8.width, 8.0);
     });
 
     test('horizontalMargin12 has correct width', () {
-      expect((horizontalMargin12 as SizedBox).width, 12.0);
+      expect(horizontalMargin12.width, 12.0);
     });
 
     test('horizontalMargin14 has correct width', () {
-      expect((horizontalMargin14 as SizedBox).width, 14.0);
+      expect(horizontalMargin14.width, 14.0);
     });
   });
 }
-

@@ -1,9 +1,8 @@
 import 'package:clerk_auth/src/models/client/email.dart';
 import 'package:clerk_auth/src/models/client/phone_number.dart';
+import 'package:clerk_auth/src/models/client/strategy.dart';
 import 'package:clerk_auth/src/models/client/user.dart';
 import 'package:clerk_auth/src/models/client/verification.dart';
-import 'package:clerk_auth/src/models/client/strategy.dart';
-import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 
@@ -33,7 +32,7 @@ User _createTestUser({
     primaryPhoneNumberId: primaryPhoneNumberId,
     primaryWeb3WalletId: null,
     publicMetadata: null,
-    privateMetadata: {},
+    privateMetadata: const {},
     unsafeMetadata: unsafeMetadata,
     emailAddresses: emailAddresses,
     phoneNumbers: phoneNumbers,
@@ -65,7 +64,7 @@ Email _createTestEmail({
   return Email(
     id: id,
     emailAddress: emailAddress,
-    verification: Verification(
+    verification: const Verification(
       status: Status.verified,
       strategy: Strategy.emailCode,
       attempts: 0,
@@ -84,7 +83,7 @@ PhoneNumber _createTestPhoneNumber({
   return PhoneNumber(
     id: id,
     phoneNumber: phoneNumber,
-    verification: Verification(
+    verification: const Verification(
       status: Status.verified,
       strategy: Strategy.phoneCode,
       attempts: 0,
@@ -300,7 +299,7 @@ void main() {
       });
 
       test('returns false when organizationMemberships is empty', () {
-        final user = User(
+        const user = User(
           id: 'user_123',
           externalId: null,
           username: null,
@@ -341,4 +340,3 @@ void main() {
     });
   });
 }
-

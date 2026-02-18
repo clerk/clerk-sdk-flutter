@@ -28,7 +28,7 @@ void main() {
 
     group('needsFirstFactor', () {
       test('returns true when status is needsFirstFactor', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -42,7 +42,7 @@ void main() {
 
     group('needsSecondFactor', () {
       test('returns true when status is needsSecondFactor', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsSecondFactor,
           supportedFirstFactors: [],
@@ -56,21 +56,21 @@ void main() {
 
     group('needsFactor', () {
       test('returns true when needs first or second factor', () {
-        final signInFirst = SignIn(
+        const signInFirst = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
           supportedSecondFactors: [],
           supportedIdentifiers: [],
         );
-        final signInSecond = SignIn(
+        const signInSecond = SignIn(
           id: 'sign_in_2',
           status: Status.needsSecondFactor,
           supportedFirstFactors: [],
           supportedSecondFactors: [],
           supportedIdentifiers: [],
         );
-        final signInComplete = SignIn(
+        const signInComplete = SignIn(
           id: 'sign_in_3',
           status: Status.complete,
           supportedFirstFactors: [],
@@ -86,13 +86,13 @@ void main() {
 
     group('verification', () {
       test('returns firstFactorVerification when needsFirstFactor', () {
-        final verification = Verification(
+        const verification = Verification(
           status: Status.unverified,
           strategy: Strategy.emailCode,
           attempts: 0,
           expireAt: DateTimeExt.epoch,
         );
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -104,13 +104,13 @@ void main() {
       });
 
       test('returns secondFactorVerification when needsSecondFactor', () {
-        final verification = Verification(
+        const verification = Verification(
           status: Status.unverified,
           strategy: Strategy.totp,
           attempts: 0,
           expireAt: DateTimeExt.epoch,
         );
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsSecondFactor,
           supportedFirstFactors: [],
@@ -124,7 +124,7 @@ void main() {
 
     group('hasVerification', () {
       test('returns true when verification exists', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -147,7 +147,7 @@ void main() {
 
     group('canUsePassword', () {
       test('returns true when password factor is available', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [
@@ -179,7 +179,7 @@ void main() {
       });
 
       test('returns false when no password factor', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [
@@ -204,7 +204,7 @@ void main() {
     group('requiresPreparationFor', () {
       test('returns true when strategy requires preparation and no verification',
           () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -215,7 +215,7 @@ void main() {
       });
 
       test('returns false when strategy does not require preparation', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -226,7 +226,7 @@ void main() {
       });
 
       test('returns false when verification exists', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -245,7 +245,7 @@ void main() {
 
     group('isTransferable', () {
       test('returns true when verification status is transferable', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -262,7 +262,7 @@ void main() {
       });
 
       test('returns false when verification status is not transferable', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -285,13 +285,13 @@ void main() {
 
     group('verificationFor', () {
       test('returns firstFactorVerification for Stage.first', () {
-        final firstVerification = Verification(
+        const firstVerification = Verification(
           status: Status.unverified,
           strategy: Strategy.emailCode,
           attempts: 0,
           expireAt: DateTimeExt.epoch,
         );
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -303,13 +303,13 @@ void main() {
       });
 
       test('returns secondFactorVerification for Stage.second', () {
-        final secondVerification = Verification(
+        const secondVerification = Verification(
           status: Status.unverified,
           strategy: Strategy.totp,
           attempts: 0,
           expireAt: DateTimeExt.epoch,
         );
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsSecondFactor,
           supportedFirstFactors: [],
@@ -324,7 +324,7 @@ void main() {
     group('factorsFor', () {
       test('returns supportedFirstFactors for Stage.first', () {
         final factors = [
-          Factor(
+          const Factor(
             strategy: Strategy.password,
             safeIdentifier: null,
             emailAddressId: null,
@@ -339,15 +339,15 @@ void main() {
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: factors,
-          supportedSecondFactors: [],
-          supportedIdentifiers: [],
+          supportedSecondFactors: const [],
+          supportedIdentifiers: const [],
         );
         expect(signIn.factorsFor(Stage.first), factors);
       });
 
       test('returns supportedSecondFactors for Stage.second', () {
         final factors = [
-          Factor(
+          const Factor(
             strategy: Strategy.totp,
             safeIdentifier: null,
             emailAddressId: null,
@@ -361,9 +361,9 @@ void main() {
         final signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsSecondFactor,
-          supportedFirstFactors: [],
+          supportedFirstFactors: const [],
           supportedSecondFactors: factors,
-          supportedIdentifiers: [],
+          supportedIdentifiers: const [],
         );
         expect(signIn.factorsFor(Stage.second), factors);
       });
@@ -371,7 +371,7 @@ void main() {
 
     group('needsFactorsFor', () {
       test('returns true for Stage.first when needsFirstFactor', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -383,7 +383,7 @@ void main() {
       });
 
       test('returns true for Stage.second when needsSecondFactor', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsSecondFactor,
           supportedFirstFactors: [],
@@ -398,7 +398,7 @@ void main() {
     group('factors', () {
       test('returns supportedFirstFactors when needsFirstFactor', () {
         final firstFactors = [
-          Factor(
+          const Factor(
             strategy: Strategy.password,
             safeIdentifier: null,
             emailAddressId: null,
@@ -413,15 +413,15 @@ void main() {
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: firstFactors,
-          supportedSecondFactors: [],
-          supportedIdentifiers: [],
+          supportedSecondFactors: const [],
+          supportedIdentifiers: const [],
         );
         expect(signIn.factors, firstFactors);
       });
 
       test('returns supportedSecondFactors when needsSecondFactor', () {
         final secondFactors = [
-          Factor(
+          const Factor(
             strategy: Strategy.totp,
             safeIdentifier: null,
             emailAddressId: null,
@@ -435,15 +435,15 @@ void main() {
         final signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsSecondFactor,
-          supportedFirstFactors: [],
+          supportedFirstFactors: const [],
           supportedSecondFactors: secondFactors,
-          supportedIdentifiers: [],
+          supportedIdentifiers: const [],
         );
         expect(signIn.factors, secondFactors);
       });
 
       test('returns empty list for other statuses', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.complete,
           supportedFirstFactors: [
@@ -467,7 +467,7 @@ void main() {
 
     group('factorFor', () {
       test('finds factor by strategy in current factors', () {
-        final passwordFactor = Factor(
+        const passwordFactor = Factor(
           strategy: Strategy.password,
           safeIdentifier: null,
           emailAddressId: null,
@@ -477,7 +477,7 @@ void main() {
           isPrimary: false,
           isDefault: false,
         );
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [passwordFactor],
@@ -488,7 +488,7 @@ void main() {
       });
 
       test('finds factor by strategy and stage', () {
-        final totpFactor = Factor(
+        const totpFactor = Factor(
           strategy: Strategy.totp,
           safeIdentifier: null,
           emailAddressId: null,
@@ -498,7 +498,7 @@ void main() {
           isPrimary: false,
           isDefault: false,
         );
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -509,7 +509,7 @@ void main() {
       });
 
       test('returns null when factor not found', () {
-        final signIn = SignIn(
+        const signIn = SignIn(
           id: 'sign_in_1',
           status: Status.needsFirstFactor,
           supportedFirstFactors: [],
@@ -525,8 +525,8 @@ void main() {
         final signIn = SignIn(
           id: 'sign_in_123',
           status: Status.needsFirstFactor,
-          supportedIdentifiers: ['email_address', 'phone_number'],
-          supportedFirstFactors: [
+          supportedIdentifiers: const ['email_address', 'phone_number'],
+          supportedFirstFactors: const [
             Factor(
               strategy: Strategy.password,
               safeIdentifier: 'test@example.com',
@@ -538,7 +538,7 @@ void main() {
               isDefault: true,
             ),
           ],
-          supportedSecondFactors: [],
+          supportedSecondFactors: const [],
           identifier: 'test@example.com',
           abandonAt: DateTime.fromMillisecondsSinceEpoch(1700000000000),
         );

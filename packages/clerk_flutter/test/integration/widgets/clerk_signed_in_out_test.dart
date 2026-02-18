@@ -35,9 +35,9 @@ void main() {
         await tester.pumpWidget(
           TestClerkAuthWrapper(
             authState: authState,
-            child: ClerkSignedIn(
+            child: const ClerkSignedIn(
               child: Column(
-                children: const [
+                children: [
                   Text('Welcome'),
                   Text('User'),
                 ],
@@ -110,9 +110,9 @@ void main() {
         await tester.pumpWidget(
           TestClerkAuthWrapper(
             authState: authState,
-            child: ClerkSignedOut(
+            child: const ClerkSignedOut(
               child: Column(
-                children: const [
+                children: [
                   Text('Please'),
                   Text('Sign In'),
                 ],

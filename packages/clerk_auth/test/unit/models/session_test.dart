@@ -24,7 +24,7 @@ User _createTestUser({
     primaryPhoneNumberId: null,
     primaryWeb3WalletId: null,
     publicMetadata: null,
-    privateMetadata: {},
+    privateMetadata: const {},
     unsafeMetadata: null,
     emailAddresses: null,
     phoneNumbers: null,

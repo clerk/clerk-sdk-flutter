@@ -23,6 +23,7 @@ void main() {
         },
       );
 
+      expect(callbackCalled, isTrue);
       expect(action.callback, isNotNull);
     });
 
@@ -69,4 +70,3 @@ void main() {
     });
   });
 }
-

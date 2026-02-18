@@ -29,8 +29,12 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: CreateOrganizationPanel(
-            onSubmit: (name, slug, image) async {},
+          child: Scaffold(
+            body: SingleChildScrollView(
+              child: CreateOrganizationPanel(
+                onSubmit: (name, slug, image) async {},
+              ),
+            ),
           ),
         ),
       );
@@ -43,8 +47,12 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: CreateOrganizationPanel(
-            onSubmit: (name, slug, image) async {},
+          child: Scaffold(
+            body: SingleChildScrollView(
+              child: CreateOrganizationPanel(
+                onSubmit: (name, slug, image) async {},
+              ),
+            ),
           ),
         ),
       );
@@ -57,8 +65,12 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: CreateOrganizationPanel(
-            onSubmit: (name, slug, image) async {},
+          child: Scaffold(
+            body: SingleChildScrollView(
+              child: CreateOrganizationPanel(
+                onSubmit: (name, slug, image) async {},
+              ),
+            ),
           ),
         ),
       );

@@ -19,7 +19,7 @@ void main() {
     });
 
     testWidgets('renders with social connection', (tester) async {
-      final connection = clerk.SocialConnection(
+      const connection = clerk.SocialConnection(
         strategy: clerk.Strategy.oauthGoogle,
         name: 'Google',
         logoUrl: 'https://example.com/google.png',
@@ -41,7 +41,7 @@ void main() {
 
     testWidgets('calls onPressed when tapped', (tester) async {
       var pressed = false;
-      final connection = clerk.SocialConnection(
+      const connection = clerk.SocialConnection(
         strategy: clerk.Strategy.oauthGoogle,
         name: 'Google',
         logoUrl: 'https://example.com/google.png',
@@ -65,7 +65,7 @@ void main() {
     });
 
     testWidgets('shows reduced opacity when disabled', (tester) async {
-      final connection = clerk.SocialConnection(
+      const connection = clerk.SocialConnection(
         strategy: clerk.Strategy.oauthGoogle,
         name: 'Google',
         logoUrl: 'https://example.com/google.png',
@@ -74,7 +74,7 @@ void main() {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
-          child: SocialConnectionButton(
+          child: const SocialConnectionButton(
             connection: connection,
             onPressed: null,
           ),
@@ -89,7 +89,7 @@ void main() {
     });
 
     testWidgets('shows full opacity when enabled', (tester) async {
-      final connection = clerk.SocialConnection(
+      const connection = clerk.SocialConnection(
         strategy: clerk.Strategy.oauthGoogle,
         name: 'Google',
         logoUrl: 'https://example.com/google.png',
@@ -113,7 +113,7 @@ void main() {
     });
 
     testWidgets('renders initials when logoUrl is empty', (tester) async {
-      final connection = clerk.SocialConnection(
+      const connection = clerk.SocialConnection(
         strategy: clerk.Strategy.oauthGoogle,
         name: 'Google',
         logoUrl: '',
@@ -134,7 +134,7 @@ void main() {
     });
 
     testWidgets('has fixed size', (tester) async {
-      final connection = clerk.SocialConnection(
+      const connection = clerk.SocialConnection(
         strategy: clerk.Strategy.oauthGoogle,
         name: 'Google',
         logoUrl: 'https://example.com/google.png',

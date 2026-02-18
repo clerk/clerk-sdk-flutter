@@ -2,7 +2,6 @@ import 'package:clerk_auth/src/models/client/organization.dart';
 import 'package:clerk_auth/src/models/client/organization_invitation.dart';
 import 'package:clerk_auth/src/models/client/organization_membership.dart';
 import 'package:clerk_auth/src/models/client/permission.dart';
-import 'package:clerk_auth/src/models/client/user_public.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 
@@ -23,12 +22,14 @@ void main() {
       expect(org.isPersonal, false);
     });
 
-    test('hasUnlimitedMembership returns true when maxAllowedMemberships is 0', () {
+    test('hasUnlimitedMembership returns true when maxAllowedMemberships is 0',
+        () {
       const org = Organization(maxAllowedMemberships: 0);
       expect(org.hasUnlimitedMembership, true);
     });
 
-    test('hasUnlimitedMembership returns false when maxAllowedMemberships > 0', () {
+    test('hasUnlimitedMembership returns false when maxAllowedMemberships > 0',
+        () {
       const org = Organization(maxAllowedMemberships: 10);
       expect(org.hasUnlimitedMembership, false);
     });
@@ -110,11 +111,11 @@ void main() {
     });
 
     test('toJson serializes invitation', () {
-      final invitation = OrganizationInvitation(
+      const invitation = OrganizationInvitation(
         id: 'inv_456',
         status: Status.pending,
         roleName: 'member',
-        organization: const Organization(id: 'org_789', name: 'Org'),
+        organization: Organization(id: 'org_789', name: 'Org'),
         updatedAt: DateTimeExt.epoch,
         createdAt: DateTimeExt.epoch,
       );
@@ -128,11 +129,11 @@ void main() {
 
   group('OrganizationMembership', () {
     test('hasPermission returns true when permission exists', () {
-      final membership = OrganizationMembership(
+      const membership = OrganizationMembership(
         id: 'mem_123',
         role: 'admin',
         roleName: 'Admin',
-        organization: const Organization(id: 'org_123'),
+        organization: Organization(id: 'org_123'),
         publicUserData: null,
         permissions: [Permission.profileManage, Permission.membershipsRead],
         updatedAt: DateTimeExt.epoch,
@@ -144,11 +145,11 @@ void main() {
     });
 
     test('hasPermission returns false when permission does not exist', () {
-      final membership = OrganizationMembership(
+      const membership = OrganizationMembership(
         id: 'mem_123',
         role: 'member',
         roleName: 'Member',
-        organization: const Organization(id: 'org_123'),
+        organization: Organization(id: 'org_123'),
         publicUserData: null,
         permissions: [Permission.membershipsRead],
         updatedAt: DateTimeExt.epoch,
@@ -160,4 +161,3 @@ void main() {
     });
   });
 }
-

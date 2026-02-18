@@ -22,7 +22,7 @@ void main() {
     });
 
     test('clerkThemeExtension returns custom extension when provided', () {
-      final customColors = ClerkThemeColors(
+      const customColors = ClerkThemeColors(
         background: Colors.blue,
         altBackground: Colors.blueGrey,
         borderSide: Colors.grey,

@@ -1,4 +1,3 @@
-import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/widgets/organization/clerk_organization_profile.dart';
 import 'package:clerk_flutter/src/widgets/ui/editable_profile_data.dart';

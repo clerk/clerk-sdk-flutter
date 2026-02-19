@@ -130,6 +130,38 @@ void main() {
       expect(find.byType(MaterialButton), findsOneWidget);
     });
 
+    testWidgets('renders with safeIdentifier for emailCode', (tester) async {
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: StrategyButton(
+            strategy: clerk.Strategy.emailCode,
+            onClick: () {},
+            safeIdentifier: 'test@example.com',
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(MaterialButton), findsOneWidget);
+    });
+
+    testWidgets('renders with safeIdentifier for phoneCode', (tester) async {
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: StrategyButton(
+            strategy: clerk.Strategy.phoneCode,
+            onClick: () {},
+            safeIdentifier: '+1234567890',
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(MaterialButton), findsOneWidget);
+    });
+
     test('supports returns true for supported strategies', () {
       const totpFactor = clerk.Factor(
         strategy: clerk.Strategy.totp,

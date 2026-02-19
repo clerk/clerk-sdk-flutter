@@ -94,6 +94,66 @@ void main() {
 
       expect(find.text('Replaced'), findsOneWidget);
     });
+
+    testWidgets('calls onChange when data changes', (tester) async {
+      var data = <String>[];
+      var onChangeCalled = false;
+      BuildContext? capturedContext;
+
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: ClerkChangeObserver<String>(
+            builder: (context) => const Text('Observer'),
+            onChange: (context) {
+              onChangeCalled = true;
+              capturedContext = context;
+            },
+            accumulateData: () => data,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(onChangeCalled, isFalse);
+
+      // Change the data
+      data = ['new-item'];
+
+      // Trigger a change by notifying listeners
+      authState.notifyListeners();
+      await tester.pump();
+
+      expect(onChangeCalled, isTrue);
+      expect(capturedContext, isNotNull);
+    });
+
+    testWidgets('does not call onChange when data is unchanged', (tester) async {
+      final data = <String>['item1', 'item2'];
+      var onChangeCalled = false;
+
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: ClerkChangeObserver<String>(
+            builder: (context) => const Text('Observer'),
+            onChange: (context) {
+              onChangeCalled = true;
+            },
+            accumulateData: () => data,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(onChangeCalled, isFalse);
+
+      // Trigger a change but data is the same
+      authState.notifyListeners();
+      await tester.pump();
+
+      expect(onChangeCalled, isFalse);
+    });
   });
 }
 

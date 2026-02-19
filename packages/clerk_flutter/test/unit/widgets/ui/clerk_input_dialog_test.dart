@@ -156,6 +156,73 @@ void main() {
 
       expect(find.byType(Center), findsWidgets);
     });
+
+    testWidgets('returns false when cancel button is pressed', (tester) async {
+      bool? result;
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () async {
+                  result = await ClerkInputDialog.show(
+                    context,
+                    child: const Text('Test'),
+                  );
+                },
+                child: const Text('Show Dialog'),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.text('Show Dialog'));
+      await tester.pumpAndSettle();
+
+      // Find and tap the Cancel button
+      final cancelButtons = find.byType(ClerkMaterialButton);
+      await tester.tap(cancelButtons.first);
+      await tester.pumpAndSettle();
+
+      expect(result, isFalse);
+    });
+
+    testWidgets('returns true when OK button is pressed', (tester) async {
+      bool? result;
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: authState,
+          child: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () async {
+                  result = await ClerkInputDialog.show(
+                    context,
+                    child: const Text('Test'),
+                    showOk: true,
+                  );
+                },
+                child: const Text('Show Dialog'),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.text('Show Dialog'));
+      await tester.pumpAndSettle();
+
+      // Find and tap the OK button (second button)
+      final buttons = find.byType(ClerkMaterialButton);
+      await tester.tap(buttons.last);
+      await tester.pumpAndSettle();
+
+      expect(result, isTrue);
+    });
   });
 }
 

@@ -58,6 +58,38 @@ void main() {
 
       expect(find.byType(Text), findsWidgets);
     });
+
+    testWidgets('calls signOut when button is pressed', (tester) async {
+      final signedInAuthState = await createTestAuthState(
+        config: TestClerkAuthConfig(
+          initialClient: createTestClient(
+            sessions: [createTestSession(user: createTestUser())],
+          ),
+        ),
+      );
+      addTearDown(signedInAuthState.terminate);
+
+      await tester.pumpWidget(
+        TestClerkAuthWrapper(
+          authState: signedInAuthState,
+          child: const ClerkSignOutPanel(),
+        ),
+      );
+      await tester.pump();
+
+      // Verify user is signed in
+      expect(signedInAuthState.user, isNotNull);
+
+      // Tap the sign out button
+      await tester.tap(find.byType(ClerkMaterialButton));
+      await tester.pump();
+
+      // Wait for the timer to complete
+      await tester.pump(const Duration(milliseconds: 600));
+
+      // Verify user is signed out
+      expect(signedInAuthState.user, isNull);
+    });
   });
 }
 

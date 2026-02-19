@@ -163,6 +163,98 @@ void main() {
         );
         expect(result, 'first or second');
       });
+
+      testWidgets('joins two items with "and" when inclusive', (tester) async {
+        late BuildContext capturedContext;
+        await tester.pumpWidget(
+          TestClerkAuthWrapper(
+            authState: authState,
+            child: Builder(
+              builder: (context) {
+                capturedContext = context;
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final result = grammar.toLitany(
+          ['first', 'second'],
+          context: capturedContext,
+          inclusive: true,
+        );
+        expect(result, 'first and second');
+      });
+
+      testWidgets('joins three items with commas and "or"', (tester) async {
+        late BuildContext capturedContext;
+        await tester.pumpWidget(
+          TestClerkAuthWrapper(
+            authState: authState,
+            child: Builder(
+              builder: (context) {
+                capturedContext = context;
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final result = grammar.toLitany(
+          ['first', 'second', 'third'],
+          context: capturedContext,
+          inclusive: false,
+        );
+        expect(result, 'first, second or third');
+      });
+
+      testWidgets('joins three items with commas and "and"', (tester) async {
+        late BuildContext capturedContext;
+        await tester.pumpWidget(
+          TestClerkAuthWrapper(
+            authState: authState,
+            child: Builder(
+              builder: (context) {
+                capturedContext = context;
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final result = grammar.toLitany(
+          ['first', 'second', 'third'],
+          context: capturedContext,
+          inclusive: true,
+        );
+        expect(result, 'first, second and third');
+      });
+
+      testWidgets('includes note as prefix', (tester) async {
+        late BuildContext capturedContext;
+        await tester.pumpWidget(
+          TestClerkAuthWrapper(
+            authState: authState,
+            child: Builder(
+              builder: (context) {
+                capturedContext = context;
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final result = grammar.toLitany(
+          ['first', 'second'],
+          context: capturedContext,
+          note: 'Choose',
+        );
+        expect(result, 'Choose first or second');
+      });
     });
   });
 }

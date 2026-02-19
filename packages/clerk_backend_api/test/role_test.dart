@@ -99,8 +99,28 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'role', 'id': 'r1', 'name': 'Role 1', 'key': 'k1', 'description': 'd1', 'is_creator_eligible': true, 'permissions': [], 'created_at': 1, 'updated_at': 2},
-        {'object': 'role', 'id': 'r2', 'name': 'Role 2', 'key': 'k2', 'description': 'd2', 'is_creator_eligible': false, 'permissions': [], 'created_at': 3, 'updated_at': 4},
+        {
+          'object': 'role',
+          'id': 'r1',
+          'name': 'Role 1',
+          'key': 'k1',
+          'description': 'd1',
+          'is_creator_eligible': true,
+          'permissions': [],
+          'created_at': 1,
+          'updated_at': 2
+        },
+        {
+          'object': 'role',
+          'id': 'r2',
+          'name': 'Role 2',
+          'key': 'k2',
+          'description': 'd2',
+          'is_creator_eligible': false,
+          'permissions': [],
+          'created_at': 3,
+          'updated_at': 4
+        },
       ];
       final list = Role.listFromJson(jsonArray);
       expect(list.length, 2);

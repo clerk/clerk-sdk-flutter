@@ -6,7 +6,8 @@ import '../../../test_support/test_support.dart';
 
 void main() {
   group('ClerkAuthBuilder comprehensive tests', () {
-    testWidgets('renders signed in builder when user is signed in', (tester) async {
+    testWidgets('renders signed in builder when user is signed in',
+        (tester) async {
       final user = createTestUser();
       final authState = await createSignedInAuthState(user: user);
 
@@ -27,7 +28,8 @@ void main() {
       authState.terminate();
     });
 
-    testWidgets('renders signed out builder when user is signed out', (tester) async {
+    testWidgets('renders signed out builder when user is signed out',
+        (tester) async {
       final authState = await createSignedOutAuthState();
 
       await tester.pumpWidget(
@@ -55,7 +57,8 @@ void main() {
         TestClerkAuthWrapper(
           authState: authState,
           child: ClerkAuthBuilder(
-            signedInBuilder: (context, state) => Text(state.user?.firstName ?? ''),
+            signedInBuilder: (context, state) =>
+                Text(state.user?.firstName ?? ''),
             signedOutBuilder: (context, authState) => const Text('Signed Out'),
           ),
         ),
@@ -75,7 +78,8 @@ void main() {
           authState: authState,
           child: ClerkAuthBuilder(
             signedInBuilder: (context, authState) => const Text('Signed In'),
-            signedOutBuilder: (context, state) => Text(state.user == null ? 'No User' : 'Has User'),
+            signedOutBuilder: (context, state) =>
+                Text(state.user == null ? 'No User' : 'Has User'),
           ),
         ),
       );
@@ -157,4 +161,3 @@ void main() {
     });
   });
 }
-

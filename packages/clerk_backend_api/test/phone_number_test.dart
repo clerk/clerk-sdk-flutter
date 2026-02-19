@@ -208,7 +208,8 @@ void main() {
 
   group('PhoneNumberObjectEnum', () {
     test('values contains all enum values', () {
-      expect(PhoneNumberObjectEnum.values, contains(PhoneNumberObjectEnum.phoneNumber));
+      expect(PhoneNumberObjectEnum.values,
+          contains(PhoneNumberObjectEnum.phoneNumber));
     });
 
     test('toJson returns correct string', () {
@@ -216,7 +217,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(PhoneNumberObjectEnum.fromJson('phone_number'), PhoneNumberObjectEnum.phoneNumber);
+      expect(PhoneNumberObjectEnum.fromJson('phone_number'),
+          PhoneNumberObjectEnum.phoneNumber);
     });
 
     test('fromJson returns null for unknown value', () {

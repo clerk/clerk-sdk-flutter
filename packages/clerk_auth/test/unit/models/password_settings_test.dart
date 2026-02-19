@@ -43,7 +43,8 @@ void main() {
 
       test('ignores max length when set to 0', () {
         const settings = PasswordSettings(minLength: 4, maxLength: 0);
-        expect(settings.meetsLengthCriteria('verylongpasswordthatexceedsanylimit'));
+        expect(settings
+            .meetsLengthCriteria('verylongpasswordthatexceedsanylimit'));
       });
     });
 
@@ -163,4 +164,3 @@ void main() {
     });
   });
 }
-

@@ -74,7 +74,11 @@ void main() {
     test('listFromJson creates list from json array', () {
       final jsonList = [
         {'user_id': 'user_1', 'email_address': 'user1@example.com'},
-        {'user_id': 'user_2', 'email_address': 'user2@example.com', 'verified': true},
+        {
+          'user_id': 'user_2',
+          'email_address': 'user2@example.com',
+          'verified': true
+        },
       ];
       final result = CreateEmailAddressRequest.listFromJson(jsonList);
       expect(result.length, 2);

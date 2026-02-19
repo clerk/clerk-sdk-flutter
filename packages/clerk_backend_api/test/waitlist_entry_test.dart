@@ -78,8 +78,22 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'waitlist_entry', 'id': 'w1', 'email_address': 'a@a.com', 'status': 'pending', 'created_at': 1, 'updated_at': 2},
-        {'object': 'waitlist_entry', 'id': 'w2', 'email_address': 'b@b.com', 'status': 'completed', 'created_at': 3, 'updated_at': 4},
+        {
+          'object': 'waitlist_entry',
+          'id': 'w1',
+          'email_address': 'a@a.com',
+          'status': 'pending',
+          'created_at': 1,
+          'updated_at': 2
+        },
+        {
+          'object': 'waitlist_entry',
+          'id': 'w2',
+          'email_address': 'b@b.com',
+          'status': 'completed',
+          'created_at': 3,
+          'updated_at': 4
+        },
       ];
       final list = WaitlistEntry.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -133,7 +147,8 @@ void main() {
 
   group('WaitlistEntryObjectEnum', () {
     test('values contains all enum values', () {
-      expect(WaitlistEntryObjectEnum.values, contains(WaitlistEntryObjectEnum.waitlistEntry));
+      expect(WaitlistEntryObjectEnum.values,
+          contains(WaitlistEntryObjectEnum.waitlistEntry));
     });
 
     test('toJson returns correct string', () {
@@ -141,7 +156,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(WaitlistEntryObjectEnum.fromJson('waitlist_entry'), WaitlistEntryObjectEnum.waitlistEntry);
+      expect(WaitlistEntryObjectEnum.fromJson('waitlist_entry'),
+          WaitlistEntryObjectEnum.waitlistEntry);
     });
 
     test('fromJson returns null for unknown value', () {
@@ -152,10 +168,14 @@ void main() {
   group('WaitlistEntryStatusEnum', () {
     test('values contains all enum values', () {
       expect(WaitlistEntryStatusEnum.values, hasLength(4));
-      expect(WaitlistEntryStatusEnum.values, contains(WaitlistEntryStatusEnum.pending));
-      expect(WaitlistEntryStatusEnum.values, contains(WaitlistEntryStatusEnum.invited));
-      expect(WaitlistEntryStatusEnum.values, contains(WaitlistEntryStatusEnum.rejected));
-      expect(WaitlistEntryStatusEnum.values, contains(WaitlistEntryStatusEnum.completed));
+      expect(WaitlistEntryStatusEnum.values,
+          contains(WaitlistEntryStatusEnum.pending));
+      expect(WaitlistEntryStatusEnum.values,
+          contains(WaitlistEntryStatusEnum.invited));
+      expect(WaitlistEntryStatusEnum.values,
+          contains(WaitlistEntryStatusEnum.rejected));
+      expect(WaitlistEntryStatusEnum.values,
+          contains(WaitlistEntryStatusEnum.completed));
     });
 
     test('toJson returns correct string', () {
@@ -166,10 +186,14 @@ void main() {
     });
 
     test('fromJson parses correct values', () {
-      expect(WaitlistEntryStatusEnum.fromJson('pending'), WaitlistEntryStatusEnum.pending);
-      expect(WaitlistEntryStatusEnum.fromJson('invited'), WaitlistEntryStatusEnum.invited);
-      expect(WaitlistEntryStatusEnum.fromJson('rejected'), WaitlistEntryStatusEnum.rejected);
-      expect(WaitlistEntryStatusEnum.fromJson('completed'), WaitlistEntryStatusEnum.completed);
+      expect(WaitlistEntryStatusEnum.fromJson('pending'),
+          WaitlistEntryStatusEnum.pending);
+      expect(WaitlistEntryStatusEnum.fromJson('invited'),
+          WaitlistEntryStatusEnum.invited);
+      expect(WaitlistEntryStatusEnum.fromJson('rejected'),
+          WaitlistEntryStatusEnum.rejected);
+      expect(WaitlistEntryStatusEnum.fromJson('completed'),
+          WaitlistEntryStatusEnum.completed);
     });
 
     test('fromJson returns null for unknown value', () {

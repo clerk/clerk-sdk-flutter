@@ -147,7 +147,8 @@ void main() {
       authState.terminate();
     });
 
-    testWidgets('renders with mixed required and optional fields', (tester) async {
+    testWidgets('renders with mixed required and optional fields',
+        (tester) async {
       final signUp = createTestSignUp(
         status: clerk.Status.missingRequirements,
         missingFields: [clerk.Field.emailAddress],
@@ -177,4 +178,3 @@ void main() {
     });
   });
 }
-

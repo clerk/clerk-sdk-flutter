@@ -19,7 +19,8 @@ void main() {
       authState.terminate();
     });
 
-    testWidgets('renders with default title from display config', (tester) async {
+    testWidgets('renders with default title from display config',
+        (tester) async {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
@@ -92,4 +93,3 @@ void main() {
     });
   });
 }
-

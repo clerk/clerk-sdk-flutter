@@ -41,8 +41,14 @@ void main() {
 
     test('fromJson creates instance from map', () {
       final json = {
-        'email_address': {'next_action': 'needs_prepare', 'supported_strategies': ['email_code']},
-        'phone_number': {'next_action': 'needs_attempt', 'supported_strategies': ['phone_code']},
+        'email_address': {
+          'next_action': 'needs_prepare',
+          'supported_strategies': ['email_code']
+        },
+        'phone_number': {
+          'next_action': 'needs_attempt',
+          'supported_strategies': ['phone_code']
+        },
         'web3_wallet': {'supported_strategies': []},
         'external_account': {'provider': 'google'},
       };

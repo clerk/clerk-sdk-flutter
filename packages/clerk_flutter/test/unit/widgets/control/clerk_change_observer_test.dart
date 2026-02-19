@@ -128,7 +128,8 @@ void main() {
       expect(capturedContext, isNotNull);
     });
 
-    testWidgets('does not call onChange when data is unchanged', (tester) async {
+    testWidgets('does not call onChange when data is unchanged',
+        (tester) async {
       final data = <String>['item1', 'item2'];
       var onChangeCalled = false;
 
@@ -156,4 +157,3 @@ void main() {
     });
   });
 }
-

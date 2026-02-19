@@ -42,7 +42,8 @@ void main() {
     });
 
     test('constructor creates instance with all parameters', () {
-      expect(instance.object, PasskeyVerificationObjectEnum.verificationPasskey);
+      expect(
+          instance.object, PasskeyVerificationObjectEnum.verificationPasskey);
       expect(instance.status, PasskeyVerificationStatusEnum.verified);
       expect(instance.strategy, PasskeyVerificationStrategyEnum.passkey);
       expect(instance.nonce, PasskeyVerificationNonceEnum.nonce);
@@ -152,7 +153,8 @@ void main() {
 
   group('PasskeyVerificationStatusEnum', () {
     test('values contains all enum values', () {
-      expect(PasskeyVerificationStatusEnum.values, contains(PasskeyVerificationStatusEnum.verified));
+      expect(PasskeyVerificationStatusEnum.values,
+          contains(PasskeyVerificationStatusEnum.verified));
     });
 
     test('toJson returns correct string', () {
@@ -160,7 +162,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(PasskeyVerificationStatusEnum.fromJson('verified'), PasskeyVerificationStatusEnum.verified);
+      expect(PasskeyVerificationStatusEnum.fromJson('verified'),
+          PasskeyVerificationStatusEnum.verified);
     });
 
     test('fromJson returns null for unknown value', () {
@@ -170,7 +173,8 @@ void main() {
 
   group('PasskeyVerificationStrategyEnum', () {
     test('values contains all enum values', () {
-      expect(PasskeyVerificationStrategyEnum.values, contains(PasskeyVerificationStrategyEnum.passkey));
+      expect(PasskeyVerificationStrategyEnum.values,
+          contains(PasskeyVerificationStrategyEnum.passkey));
     });
 
     test('toJson returns correct string', () {
@@ -178,7 +182,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(PasskeyVerificationStrategyEnum.fromJson('passkey'), PasskeyVerificationStrategyEnum.passkey);
+      expect(PasskeyVerificationStrategyEnum.fromJson('passkey'),
+          PasskeyVerificationStrategyEnum.passkey);
     });
 
     test('fromJson returns null for unknown value', () {
@@ -188,7 +193,8 @@ void main() {
 
   group('PasskeyVerificationNonceEnum', () {
     test('values contains all enum values', () {
-      expect(PasskeyVerificationNonceEnum.values, contains(PasskeyVerificationNonceEnum.nonce));
+      expect(PasskeyVerificationNonceEnum.values,
+          contains(PasskeyVerificationNonceEnum.nonce));
     });
 
     test('toJson returns correct string', () {
@@ -196,7 +202,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(PasskeyVerificationNonceEnum.fromJson('nonce'), PasskeyVerificationNonceEnum.nonce);
+      expect(PasskeyVerificationNonceEnum.fromJson('nonce'),
+          PasskeyVerificationNonceEnum.nonce);
     });
 
     test('fromJson returns null for unknown value', () {

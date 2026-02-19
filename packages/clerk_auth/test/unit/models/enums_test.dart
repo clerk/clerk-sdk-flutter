@@ -5,11 +5,13 @@ import '../../test_helpers.dart';
 void main() {
   group('EnrollmentMode', () {
     test('automaticSuggestion toString returns correct value', () {
-      expect(EnrollmentMode.automaticSuggestion.toString(), 'automatic_suggestion');
+      expect(EnrollmentMode.automaticSuggestion.toString(),
+          'automatic_suggestion');
     });
 
     test('automaticInvitation toString returns correct value', () {
-      expect(EnrollmentMode.automaticInvitation.toString(), 'automatic_invitation');
+      expect(EnrollmentMode.automaticInvitation.toString(),
+          'automatic_invitation');
     });
 
     test('manualInvitation toString returns correct value', () {
@@ -18,8 +20,10 @@ void main() {
 
     test('values contains all enrollment modes', () {
       expect(EnrollmentMode.values.length, 3);
-      expect(EnrollmentMode.values.contains(EnrollmentMode.automaticSuggestion));
-      expect(EnrollmentMode.values.contains(EnrollmentMode.automaticInvitation));
+      expect(
+          EnrollmentMode.values.contains(EnrollmentMode.automaticSuggestion));
+      expect(
+          EnrollmentMode.values.contains(EnrollmentMode.automaticInvitation));
       expect(EnrollmentMode.values.contains(EnrollmentMode.manualInvitation));
     });
   });
@@ -50,7 +54,8 @@ void main() {
     });
 
     test('passwordConfirmation toString returns correct value', () {
-      expect(UserAttribute.passwordConfirmation.toString(), 'password_confirmation');
+      expect(UserAttribute.passwordConfirmation.toString(),
+          'password_confirmation');
     });
 
     test('web3Wallet toString returns correct value', () {
@@ -167,7 +172,8 @@ void main() {
     });
 
     test('sanitize phoneNumber removes non-digits and adds plus', () {
-      expect(IdentifierType.phoneNumber.sanitize('(123) 456-7890'), '+1234567890');
+      expect(
+          IdentifierType.phoneNumber.sanitize('(123) 456-7890'), '+1234567890');
     });
 
     test('sanitize phoneNumber handles already formatted number', () {
@@ -175,7 +181,8 @@ void main() {
     });
 
     test('sanitize emailAddress trims whitespace', () {
-      expect(IdentifierType.emailAddress.sanitize('  test@example.com  '), 'test@example.com');
+      expect(IdentifierType.emailAddress.sanitize('  test@example.com  '),
+          'test@example.com');
     });
 
     test('sanitize web3wallet trims whitespace', () {
@@ -183,11 +190,13 @@ void main() {
     });
 
     test('phoneNumber has phoneCode verification strategy', () {
-      expect(IdentifierType.phoneNumber.verificationStrategy, Strategy.phoneCode);
+      expect(
+          IdentifierType.phoneNumber.verificationStrategy, Strategy.phoneCode);
     });
 
     test('emailAddress has emailCode verification strategy', () {
-      expect(IdentifierType.emailAddress.verificationStrategy, Strategy.emailCode);
+      expect(
+          IdentifierType.emailAddress.verificationStrategy, Strategy.emailCode);
     });
   });
 
@@ -207,4 +216,3 @@ void main() {
     });
   });
 }
-

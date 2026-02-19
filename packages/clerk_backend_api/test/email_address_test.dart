@@ -94,10 +94,31 @@ void main() {
     });
 
     test('listFromJson creates list from json array', () {
-      final verification = {'status': 'verified', 'strategy': 'email_link', 'attempts': 1, 'expire_at': 100};
+      final verification = {
+        'status': 'verified',
+        'strategy': 'email_link',
+        'attempts': 1,
+        'expire_at': 100
+      };
       final jsonArray = [
-        {'object': 'email_address', 'email_address': 'a@test.com', 'reserved': false, 'verification': verification, 'linked_to': [], 'created_at': 1, 'updated_at': 2},
-        {'object': 'email_address', 'email_address': 'b@test.com', 'reserved': true, 'verification': verification, 'linked_to': [], 'created_at': 3, 'updated_at': 4},
+        {
+          'object': 'email_address',
+          'email_address': 'a@test.com',
+          'reserved': false,
+          'verification': verification,
+          'linked_to': [],
+          'created_at': 1,
+          'updated_at': 2
+        },
+        {
+          'object': 'email_address',
+          'email_address': 'b@test.com',
+          'reserved': true,
+          'verification': verification,
+          'linked_to': [],
+          'created_at': 3,
+          'updated_at': 4
+        },
       ];
       final list = EmailAddress.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -168,7 +189,8 @@ void main() {
 
   group('EmailAddressObjectEnum', () {
     test('values contains all enum values', () {
-      expect(EmailAddressObjectEnum.values, contains(EmailAddressObjectEnum.emailAddress));
+      expect(EmailAddressObjectEnum.values,
+          contains(EmailAddressObjectEnum.emailAddress));
     });
 
     test('toJson returns correct string', () {
@@ -176,7 +198,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(EmailAddressObjectEnum.fromJson('email_address'), EmailAddressObjectEnum.emailAddress);
+      expect(EmailAddressObjectEnum.fromJson('email_address'),
+          EmailAddressObjectEnum.emailAddress);
     });
 
     test('fromJson returns null for unknown value', () {

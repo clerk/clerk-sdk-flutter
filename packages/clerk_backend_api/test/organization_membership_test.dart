@@ -66,7 +66,8 @@ void main() {
 
     test('constructor creates instance with all parameters', () {
       expect(instance.id, 'mem_123');
-      expect(instance.object, OrganizationMembershipObjectEnum.organizationMembership);
+      expect(instance.object,
+          OrganizationMembershipObjectEnum.organizationMembership);
       expect(instance.role, 'admin');
       expect(instance.roleName, 'Administrator');
       expect(instance.permissions, ['read', 'write', 'delete']);
@@ -80,7 +81,8 @@ void main() {
     test('toJson produces correct map', () {
       final json = instance.toJson();
       expect(json['id'], 'mem_123');
-      expect(json['object'], OrganizationMembershipObjectEnum.organizationMembership);
+      expect(json['object'],
+          OrganizationMembershipObjectEnum.organizationMembership);
       expect(json['role'], 'admin');
       expect(json['role_name'], 'Administrator');
       expect(json['permissions'], ['read', 'write', 'delete']);
@@ -159,15 +161,19 @@ void main() {
 
   group('OrganizationMembershipObjectEnum', () {
     test('values contains all enum values', () {
-      expect(OrganizationMembershipObjectEnum.values, contains(OrganizationMembershipObjectEnum.organizationMembership));
+      expect(OrganizationMembershipObjectEnum.values,
+          contains(OrganizationMembershipObjectEnum.organizationMembership));
     });
 
     test('toJson returns correct string', () {
-      expect(OrganizationMembershipObjectEnum.organizationMembership.toJson(), 'organization_membership');
+      expect(OrganizationMembershipObjectEnum.organizationMembership.toJson(),
+          'organization_membership');
     });
 
     test('fromJson parses correct value', () {
-      expect(OrganizationMembershipObjectEnum.fromJson('organization_membership'), OrganizationMembershipObjectEnum.organizationMembership);
+      expect(
+          OrganizationMembershipObjectEnum.fromJson('organization_membership'),
+          OrganizationMembershipObjectEnum.organizationMembership);
     });
 
     test('fromJson returns null for unknown value', () {

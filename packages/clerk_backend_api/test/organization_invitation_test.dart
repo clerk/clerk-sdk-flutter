@@ -37,7 +37,8 @@ void main() {
 
     test('constructor creates instance with required parameters', () {
       expect(instance.id, 'inv_123');
-      expect(instance.object, OrganizationInvitationObjectEnum.organizationInvitation);
+      expect(instance.object,
+          OrganizationInvitationObjectEnum.organizationInvitation);
       expect(instance.emailAddress, 'test@example.com');
       expect(instance.role, 'admin');
       expect(instance.roleName, 'Administrator');
@@ -52,7 +53,8 @@ void main() {
 
     test('toJson produces correct map', () {
       final json = instance.toJson();
-      expect(json['object'], OrganizationInvitationObjectEnum.organizationInvitation);
+      expect(json['object'],
+          OrganizationInvitationObjectEnum.organizationInvitation);
       expect(json['id'], 'inv_123');
       expect(json['email_address'], 'test@example.com');
       expect(json['role'], 'admin');
@@ -132,15 +134,19 @@ void main() {
 
   group('OrganizationInvitationObjectEnum', () {
     test('values contains all enum values', () {
-      expect(OrganizationInvitationObjectEnum.values, contains(OrganizationInvitationObjectEnum.organizationInvitation));
+      expect(OrganizationInvitationObjectEnum.values,
+          contains(OrganizationInvitationObjectEnum.organizationInvitation));
     });
 
     test('toJson returns correct string', () {
-      expect(OrganizationInvitationObjectEnum.organizationInvitation.toJson(), 'organization_invitation');
+      expect(OrganizationInvitationObjectEnum.organizationInvitation.toJson(),
+          'organization_invitation');
     });
 
     test('fromJson parses correct value', () {
-      expect(OrganizationInvitationObjectEnum.fromJson('organization_invitation'), OrganizationInvitationObjectEnum.organizationInvitation);
+      expect(
+          OrganizationInvitationObjectEnum.fromJson('organization_invitation'),
+          OrganizationInvitationObjectEnum.organizationInvitation);
     });
 
     test('fromJson returns null for unknown value', () {

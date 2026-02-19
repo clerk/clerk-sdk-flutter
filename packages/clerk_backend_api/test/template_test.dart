@@ -157,7 +157,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(TemplateObjectEnum.fromJson('template'), TemplateObjectEnum.template);
+      expect(
+          TemplateObjectEnum.fromJson('template'), TemplateObjectEnum.template);
     });
 
     test('fromJson returns null for unknown value', () {

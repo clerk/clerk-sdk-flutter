@@ -46,7 +46,8 @@ void main() {
       expect(instance.notify, true);
       expect(instance.ignoreExisting, false);
       expect(instance.expiresInDays, 7);
-      expect(instance.templateSlug, CreateInvitationRequestTemplateSlugEnum.invitation);
+      expect(instance.templateSlug,
+          CreateInvitationRequestTemplateSlugEnum.invitation);
     });
 
     test('toJson produces correct map', () {
@@ -57,7 +58,8 @@ void main() {
       expect(json['notify'], true);
       expect(json['ignore_existing'], false);
       expect(json['expires_in_days'], 7);
-      expect(json['template_slug'], CreateInvitationRequestTemplateSlugEnum.invitation);
+      expect(json['template_slug'],
+          CreateInvitationRequestTemplateSlugEnum.invitation);
     });
 
     test('fromJson creates instance from map', () {
@@ -77,7 +79,8 @@ void main() {
       expect(result.notify, false);
       expect(result.ignoreExisting, true);
       expect(result.expiresInDays, 14);
-      expect(result.templateSlug, CreateInvitationRequestTemplateSlugEnum.waitlistInvitation);
+      expect(result.templateSlug,
+          CreateInvitationRequestTemplateSlugEnum.waitlistInvitation);
     });
 
     test('fromJson returns null for non-map input', () {
@@ -132,22 +135,32 @@ void main() {
 
   group('CreateInvitationRequestTemplateSlugEnum', () {
     test('values contains all enum values', () {
-      expect(CreateInvitationRequestTemplateSlugEnum.values, contains(CreateInvitationRequestTemplateSlugEnum.invitation));
-      expect(CreateInvitationRequestTemplateSlugEnum.values, contains(CreateInvitationRequestTemplateSlugEnum.waitlistInvitation));
+      expect(CreateInvitationRequestTemplateSlugEnum.values,
+          contains(CreateInvitationRequestTemplateSlugEnum.invitation));
+      expect(CreateInvitationRequestTemplateSlugEnum.values,
+          contains(CreateInvitationRequestTemplateSlugEnum.waitlistInvitation));
     });
 
     test('toJson returns correct string', () {
-      expect(CreateInvitationRequestTemplateSlugEnum.invitation.toJson(), 'invitation');
-      expect(CreateInvitationRequestTemplateSlugEnum.waitlistInvitation.toJson(), 'waitlist_invitation');
+      expect(CreateInvitationRequestTemplateSlugEnum.invitation.toJson(),
+          'invitation');
+      expect(
+          CreateInvitationRequestTemplateSlugEnum.waitlistInvitation.toJson(),
+          'waitlist_invitation');
     });
 
     test('fromJson parses correct value', () {
-      expect(CreateInvitationRequestTemplateSlugEnum.fromJson('invitation'), CreateInvitationRequestTemplateSlugEnum.invitation);
-      expect(CreateInvitationRequestTemplateSlugEnum.fromJson('waitlist_invitation'), CreateInvitationRequestTemplateSlugEnum.waitlistInvitation);
+      expect(CreateInvitationRequestTemplateSlugEnum.fromJson('invitation'),
+          CreateInvitationRequestTemplateSlugEnum.invitation);
+      expect(
+          CreateInvitationRequestTemplateSlugEnum.fromJson(
+              'waitlist_invitation'),
+          CreateInvitationRequestTemplateSlugEnum.waitlistInvitation);
     });
 
     test('fromJson returns null for unknown value', () {
-      expect(CreateInvitationRequestTemplateSlugEnum.fromJson('unknown'), isNull);
+      expect(
+          CreateInvitationRequestTemplateSlugEnum.fromJson('unknown'), isNull);
     });
   });
 }

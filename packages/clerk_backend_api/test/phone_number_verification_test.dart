@@ -40,7 +40,8 @@ void main() {
     });
 
     test('constructor creates instance with all parameters', () {
-      expect(instance.object, PhoneNumberVerificationObjectEnum.verificationAdmin);
+      expect(
+          instance.object, PhoneNumberVerificationObjectEnum.verificationAdmin);
       expect(instance.status, PhoneNumberVerificationStatusEnum.verified);
       expect(instance.strategy, PhoneNumberVerificationStrategyEnum.admin);
       expect(instance.attempts, 3);
@@ -50,7 +51,8 @@ void main() {
 
     test('toJson produces correct map', () {
       final json = instance.toJson();
-      expect(json['object'], PhoneNumberVerificationObjectEnum.verificationAdmin);
+      expect(
+          json['object'], PhoneNumberVerificationObjectEnum.verificationAdmin);
       expect(json['status'], PhoneNumberVerificationStatusEnum.verified);
       expect(json['strategy'], PhoneNumberVerificationStrategyEnum.admin);
       expect(json['attempts'], 3);
@@ -69,7 +71,8 @@ void main() {
       };
       final result = PhoneNumberVerification.fromJson(json);
       expect(result, isNotNull);
-      expect(result!.object, PhoneNumberVerificationObjectEnum.verificationAdmin);
+      expect(
+          result!.object, PhoneNumberVerificationObjectEnum.verificationAdmin);
       expect(result.status, PhoneNumberVerificationStatusEnum.verified);
       expect(result.strategy, PhoneNumberVerificationStrategyEnum.admin);
       expect(result.attempts, 2);
@@ -141,7 +144,8 @@ void main() {
 
   group('PhoneNumberVerificationStatusEnum', () {
     test('values contains all enum values', () {
-      expect(PhoneNumberVerificationStatusEnum.values, contains(PhoneNumberVerificationStatusEnum.verified));
+      expect(PhoneNumberVerificationStatusEnum.values,
+          contains(PhoneNumberVerificationStatusEnum.verified));
     });
 
     test('toJson returns correct string', () {
@@ -149,7 +153,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(PhoneNumberVerificationStatusEnum.fromJson('verified'), PhoneNumberVerificationStatusEnum.verified);
+      expect(PhoneNumberVerificationStatusEnum.fromJson('verified'),
+          PhoneNumberVerificationStatusEnum.verified);
     });
 
     test('fromJson returns null for unknown value', () {
@@ -159,7 +164,8 @@ void main() {
 
   group('PhoneNumberVerificationStrategyEnum', () {
     test('values contains all enum values', () {
-      expect(PhoneNumberVerificationStrategyEnum.values, contains(PhoneNumberVerificationStrategyEnum.admin));
+      expect(PhoneNumberVerificationStrategyEnum.values,
+          contains(PhoneNumberVerificationStrategyEnum.admin));
     });
 
     test('toJson returns correct string', () {
@@ -167,7 +173,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(PhoneNumberVerificationStrategyEnum.fromJson('admin'), PhoneNumberVerificationStrategyEnum.admin);
+      expect(PhoneNumberVerificationStrategyEnum.fromJson('admin'),
+          PhoneNumberVerificationStrategyEnum.admin);
     });
 
     test('fromJson returns null for unknown value', () {

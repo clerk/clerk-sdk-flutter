@@ -277,7 +277,8 @@ void main() {
       testWidgets('displays organization with long name', (tester) async {
         final org = createTestOrganization(
           id: 'org_long_name',
-          name: 'This is a Very Long Organization Name That Should Be Truncated',
+          name:
+              'This is a Very Long Organization Name That Should Be Truncated',
         );
         final membership = createTestOrganizationMembership(
           id: 'mem_1',
@@ -469,5 +470,3 @@ void main() {
     });
   });
 }
-
-

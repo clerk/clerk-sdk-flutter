@@ -108,7 +108,8 @@ void main() {
     });
 
     test('requiredKeys contains required fields', () {
-      expect(CreateAllowlistIdentifierRequest.requiredKeys, contains('identifier'));
+      expect(CreateAllowlistIdentifierRequest.requiredKeys,
+          contains('identifier'));
     });
   });
 }

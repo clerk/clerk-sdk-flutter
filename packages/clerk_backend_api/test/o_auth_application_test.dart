@@ -34,7 +34,8 @@ void main() {
         authorizeUrl: 'https://auth.example.com/authorize',
         tokenFetchUrl: 'https://auth.example.com/token',
         userInfoUrl: 'https://auth.example.com/userinfo',
-        discoveryUrl: 'https://auth.example.com/.well-known/openid-configuration',
+        discoveryUrl:
+            'https://auth.example.com/.well-known/openid-configuration',
         tokenIntrospectionUrl: 'https://auth.example.com/introspect',
         createdAt: 1234567890,
         updatedAt: 1234567890,
@@ -69,7 +70,8 @@ void main() {
         authorizeUrl: 'https://auth.example.com/authorize',
         tokenFetchUrl: 'https://auth.example.com/token',
         userInfoUrl: 'https://auth.example.com/userinfo',
-        discoveryUrl: 'https://auth.example.com/.well-known/openid-configuration',
+        discoveryUrl:
+            'https://auth.example.com/.well-known/openid-configuration',
         tokenIntrospectionUrl: 'https://auth.example.com/introspect',
         createdAt: 1234567890,
         updatedAt: 1234567890,

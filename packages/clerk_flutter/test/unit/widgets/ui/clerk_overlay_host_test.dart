@@ -103,7 +103,8 @@ void main() {
       expect(find.text('Overlay'), findsNothing);
     });
 
-    testWidgets('isDisplaying returns true when overlay is shown', (tester) async {
+    testWidgets('isDisplaying returns true when overlay is shown',
+        (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ClerkOverlayHost(
@@ -127,7 +128,8 @@ void main() {
       expect(overlay.isDisplaying(overlayWidget), isTrue);
     });
 
-    testWidgets('isDisplaying returns false when overlay is not shown', (tester) async {
+    testWidgets('isDisplaying returns false when overlay is not shown',
+        (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ClerkOverlayHost(
@@ -180,4 +182,3 @@ void main() {
     });
   });
 }
-

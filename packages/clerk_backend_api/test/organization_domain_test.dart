@@ -36,7 +36,8 @@ void main() {
       expect(instance.object, OrganizationDomainObjectEnum.organizationDomain);
       expect(instance.organizationId, 'org_123');
       expect(instance.name, 'example.com');
-      expect(instance.enrollmentMode, OrganizationDomainEnrollmentModeEnum.manualInvitation);
+      expect(instance.enrollmentMode,
+          OrganizationDomainEnrollmentModeEnum.manualInvitation);
       expect(instance.totalPendingInvitations, 5);
       expect(instance.totalPendingSuggestions, 3);
     });
@@ -47,7 +48,8 @@ void main() {
       expect(json['object'], OrganizationDomainObjectEnum.organizationDomain);
       expect(json['organization_id'], 'org_123');
       expect(json['name'], 'example.com');
-      expect(json['enrollment_mode'], OrganizationDomainEnrollmentModeEnum.manualInvitation);
+      expect(json['enrollment_mode'],
+          OrganizationDomainEnrollmentModeEnum.manualInvitation);
       expect(json['total_pending_invitations'], 5);
       expect(json['total_pending_suggestions'], 3);
     });
@@ -82,9 +84,12 @@ void main() {
     });
 
     test('enrollment mode enum values are correct', () {
-      expect(OrganizationDomainEnrollmentModeEnum.manualInvitation.value, 'manual_invitation');
-      expect(OrganizationDomainEnrollmentModeEnum.automaticInvitation.value, 'automatic_invitation');
-      expect(OrganizationDomainEnrollmentModeEnum.automaticSuggestion.value, 'automatic_suggestion');
+      expect(OrganizationDomainEnrollmentModeEnum.manualInvitation.value,
+          'manual_invitation');
+      expect(OrganizationDomainEnrollmentModeEnum.automaticInvitation.value,
+          'automatic_invitation');
+      expect(OrganizationDomainEnrollmentModeEnum.automaticSuggestion.value,
+          'automatic_suggestion');
     });
   });
 }

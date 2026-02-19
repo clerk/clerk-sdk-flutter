@@ -149,8 +149,8 @@ Client createTestClient({
   return Client(
     id: id,
     sessions: testSessions,
-    lastActiveSessionId:
-        lastActiveSessionId ?? (testSessions.isNotEmpty ? testSessions.first.id : null),
+    lastActiveSessionId: lastActiveSessionId ??
+        (testSessions.isNotEmpty ? testSessions.first.id : null),
     signIn: signIn,
     signUp: signUp,
     updatedAt: DateTime.now(),
@@ -342,5 +342,3 @@ ExternalAccount createTestExternalAccount({
     createdAt: DateTime.now(),
   );
 }
-
-

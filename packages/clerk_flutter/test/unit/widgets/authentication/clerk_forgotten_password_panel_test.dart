@@ -56,7 +56,8 @@ void main() {
       expect(find.byType(ClerkPanelHeader), findsOneWidget);
     });
 
-    testWidgets('renders ClerkIdentifierInput in unstarted state', (tester) async {
+    testWidgets('renders ClerkIdentifierInput in unstarted state',
+        (tester) async {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
@@ -67,8 +68,6 @@ void main() {
 
       expect(find.byType(ClerkIdentifierInput), findsOneWidget);
     });
-
-
 
     testWidgets('renders AlertDialog wrapper', (tester) async {
       await tester.pumpWidget(
@@ -83,4 +82,3 @@ void main() {
     });
   });
 }
-

@@ -93,8 +93,24 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'invitation', 'id': 'inv_1', 'email_address': 'a@test.com', 'public_metadata': {}, 'status': 'pending', 'created_at': 1, 'updated_at': 2},
-        {'object': 'invitation', 'id': 'inv_2', 'email_address': 'b@test.com', 'public_metadata': {}, 'status': 'accepted', 'created_at': 3, 'updated_at': 4},
+        {
+          'object': 'invitation',
+          'id': 'inv_1',
+          'email_address': 'a@test.com',
+          'public_metadata': {},
+          'status': 'pending',
+          'created_at': 1,
+          'updated_at': 2
+        },
+        {
+          'object': 'invitation',
+          'id': 'inv_2',
+          'email_address': 'b@test.com',
+          'public_metadata': {},
+          'status': 'accepted',
+          'created_at': 3,
+          'updated_at': 4
+        },
       ];
       final list = Invitation.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -168,7 +184,8 @@ void main() {
 
   group('InvitationObjectEnum', () {
     test('values contains all enum values', () {
-      expect(InvitationObjectEnum.values, contains(InvitationObjectEnum.invitation));
+      expect(InvitationObjectEnum.values,
+          contains(InvitationObjectEnum.invitation));
     });
 
     test('toJson returns correct string', () {
@@ -176,7 +193,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(InvitationObjectEnum.fromJson('invitation'), InvitationObjectEnum.invitation);
+      expect(InvitationObjectEnum.fromJson('invitation'),
+          InvitationObjectEnum.invitation);
     });
 
     test('fromJson returns null for unknown value', () {
@@ -187,10 +205,14 @@ void main() {
   group('InvitationStatusEnum', () {
     test('values contains all enum values', () {
       expect(InvitationStatusEnum.values, hasLength(4));
-      expect(InvitationStatusEnum.values, contains(InvitationStatusEnum.pending));
-      expect(InvitationStatusEnum.values, contains(InvitationStatusEnum.accepted));
-      expect(InvitationStatusEnum.values, contains(InvitationStatusEnum.revoked));
-      expect(InvitationStatusEnum.values, contains(InvitationStatusEnum.expired));
+      expect(
+          InvitationStatusEnum.values, contains(InvitationStatusEnum.pending));
+      expect(
+          InvitationStatusEnum.values, contains(InvitationStatusEnum.accepted));
+      expect(
+          InvitationStatusEnum.values, contains(InvitationStatusEnum.revoked));
+      expect(
+          InvitationStatusEnum.values, contains(InvitationStatusEnum.expired));
     });
 
     test('toJson returns correct string', () {
@@ -201,10 +223,14 @@ void main() {
     });
 
     test('fromJson parses correct values', () {
-      expect(InvitationStatusEnum.fromJson('pending'), InvitationStatusEnum.pending);
-      expect(InvitationStatusEnum.fromJson('accepted'), InvitationStatusEnum.accepted);
-      expect(InvitationStatusEnum.fromJson('revoked'), InvitationStatusEnum.revoked);
-      expect(InvitationStatusEnum.fromJson('expired'), InvitationStatusEnum.expired);
+      expect(InvitationStatusEnum.fromJson('pending'),
+          InvitationStatusEnum.pending);
+      expect(InvitationStatusEnum.fromJson('accepted'),
+          InvitationStatusEnum.accepted);
+      expect(InvitationStatusEnum.fromJson('revoked'),
+          InvitationStatusEnum.revoked);
+      expect(InvitationStatusEnum.fromJson('expired'),
+          InvitationStatusEnum.expired);
     });
 
     test('fromJson returns null for unknown value', () {

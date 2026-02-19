@@ -116,8 +116,30 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'organization', 'id': 'org_1', 'name': 'Org 1', 'slug': 'org-1', 'has_image': false, 'max_allowed_memberships': 10, 'admin_delete_enabled': true, 'public_metadata': {}, 'created_at': 1, 'updated_at': 2},
-        {'object': 'organization', 'id': 'org_2', 'name': 'Org 2', 'slug': 'org-2', 'has_image': true, 'max_allowed_memberships': 20, 'admin_delete_enabled': false, 'public_metadata': {}, 'created_at': 3, 'updated_at': 4},
+        {
+          'object': 'organization',
+          'id': 'org_1',
+          'name': 'Org 1',
+          'slug': 'org-1',
+          'has_image': false,
+          'max_allowed_memberships': 10,
+          'admin_delete_enabled': true,
+          'public_metadata': {},
+          'created_at': 1,
+          'updated_at': 2
+        },
+        {
+          'object': 'organization',
+          'id': 'org_2',
+          'name': 'Org 2',
+          'slug': 'org-2',
+          'has_image': true,
+          'max_allowed_memberships': 20,
+          'admin_delete_enabled': false,
+          'public_metadata': {},
+          'created_at': 3,
+          'updated_at': 4
+        },
       ];
       final list = Organization.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -188,7 +210,8 @@ void main() {
 
   group('OrganizationObjectEnum', () {
     test('values contains all enum values', () {
-      expect(OrganizationObjectEnum.values, contains(OrganizationObjectEnum.organization));
+      expect(OrganizationObjectEnum.values,
+          contains(OrganizationObjectEnum.organization));
     });
 
     test('toJson returns correct string', () {
@@ -196,7 +219,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(OrganizationObjectEnum.fromJson('organization'), OrganizationObjectEnum.organization);
+      expect(OrganizationObjectEnum.fromJson('organization'),
+          OrganizationObjectEnum.organization);
     });
 
     test('fromJson returns null for unknown value', () {

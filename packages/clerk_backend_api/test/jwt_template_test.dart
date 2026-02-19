@@ -89,8 +89,30 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'jwt_template', 'id': 'j1', 'name': 'JWT 1', 'claims': {}, 'lifetime': 100, 'allowed_clock_skew': 1, 'custom_signing_key': false, 'signing_algorithm': 'RS256', 'created_at': 1, 'updated_at': 2},
-        {'object': 'jwt_template', 'id': 'j2', 'name': 'JWT 2', 'claims': {}, 'lifetime': 200, 'allowed_clock_skew': 2, 'custom_signing_key': true, 'signing_algorithm': 'ES256', 'created_at': 3, 'updated_at': 4},
+        {
+          'object': 'jwt_template',
+          'id': 'j1',
+          'name': 'JWT 1',
+          'claims': {},
+          'lifetime': 100,
+          'allowed_clock_skew': 1,
+          'custom_signing_key': false,
+          'signing_algorithm': 'RS256',
+          'created_at': 1,
+          'updated_at': 2
+        },
+        {
+          'object': 'jwt_template',
+          'id': 'j2',
+          'name': 'JWT 2',
+          'claims': {},
+          'lifetime': 200,
+          'allowed_clock_skew': 2,
+          'custom_signing_key': true,
+          'signing_algorithm': 'ES256',
+          'created_at': 3,
+          'updated_at': 4
+        },
       ];
       final list = JWTTemplate.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -155,7 +177,8 @@ void main() {
 
   group('JWTTemplateObjectEnum', () {
     test('values contains all enum values', () {
-      expect(JWTTemplateObjectEnum.values, contains(JWTTemplateObjectEnum.jwtTemplate));
+      expect(JWTTemplateObjectEnum.values,
+          contains(JWTTemplateObjectEnum.jwtTemplate));
     });
 
     test('toJson returns correct string', () {
@@ -163,7 +186,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(JWTTemplateObjectEnum.fromJson('jwt_template'), JWTTemplateObjectEnum.jwtTemplate);
+      expect(JWTTemplateObjectEnum.fromJson('jwt_template'),
+          JWTTemplateObjectEnum.jwtTemplate);
     });
 
     test('fromJson returns null for unknown value', () {

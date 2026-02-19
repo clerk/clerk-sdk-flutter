@@ -42,7 +42,8 @@ void main() {
     });
 
     test('constructor creates instance with all parameters', () {
-      expect(instance.object, Web3WalletVerificationObjectEnum.verificationAdmin);
+      expect(
+          instance.object, Web3WalletVerificationObjectEnum.verificationAdmin);
       expect(instance.status, Web3WalletVerificationStatusEnum.verified);
       expect(instance.strategy, Web3WalletVerificationStrategyEnum.admin);
       expect(instance.nonce, 'nonce_123');
@@ -54,7 +55,8 @@ void main() {
 
     test('toJson produces correct map', () {
       final json = instance.toJson();
-      expect(json['object'], Web3WalletVerificationObjectEnum.verificationAdmin);
+      expect(
+          json['object'], Web3WalletVerificationObjectEnum.verificationAdmin);
       expect(json['status'], Web3WalletVerificationStatusEnum.verified);
       expect(json['strategy'], Web3WalletVerificationStrategyEnum.admin);
       expect(json['nonce'], 'nonce_123');
@@ -77,7 +79,8 @@ void main() {
       };
       final result = Web3WalletVerification.fromJson(json);
       expect(result, isNotNull);
-      expect(result!.object, Web3WalletVerificationObjectEnum.verificationAdmin);
+      expect(
+          result!.object, Web3WalletVerificationObjectEnum.verificationAdmin);
       expect(result.status, Web3WalletVerificationStatusEnum.verified);
       expect(result.strategy, Web3WalletVerificationStrategyEnum.admin);
       expect(result.nonce, 'nonce_456');
@@ -152,7 +155,8 @@ void main() {
 
   group('Web3WalletVerificationStatusEnum', () {
     test('values contains all enum values', () {
-      expect(Web3WalletVerificationStatusEnum.values, contains(Web3WalletVerificationStatusEnum.verified));
+      expect(Web3WalletVerificationStatusEnum.values,
+          contains(Web3WalletVerificationStatusEnum.verified));
     });
 
     test('toJson returns correct string', () {
@@ -160,7 +164,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(Web3WalletVerificationStatusEnum.fromJson('verified'), Web3WalletVerificationStatusEnum.verified);
+      expect(Web3WalletVerificationStatusEnum.fromJson('verified'),
+          Web3WalletVerificationStatusEnum.verified);
     });
 
     test('fromJson returns null for unknown value', () {
@@ -170,7 +175,8 @@ void main() {
 
   group('Web3WalletVerificationStrategyEnum', () {
     test('values contains all enum values', () {
-      expect(Web3WalletVerificationStrategyEnum.values, contains(Web3WalletVerificationStrategyEnum.admin));
+      expect(Web3WalletVerificationStrategyEnum.values,
+          contains(Web3WalletVerificationStrategyEnum.admin));
     });
 
     test('toJson returns correct string', () {
@@ -178,7 +184,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(Web3WalletVerificationStrategyEnum.fromJson('admin'), Web3WalletVerificationStrategyEnum.admin);
+      expect(Web3WalletVerificationStrategyEnum.fromJson('admin'),
+          Web3WalletVerificationStrategyEnum.admin);
     });
 
     test('fromJson returns null for unknown value', () {

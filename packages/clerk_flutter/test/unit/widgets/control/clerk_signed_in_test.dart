@@ -27,7 +27,8 @@ void main() {
       authState.terminate();
     });
 
-    testWidgets('does not render child when user is signed out', (tester) async {
+    testWidgets('does not render child when user is signed out',
+        (tester) async {
       final client = createSignedOutClient();
       final authState = await createTestAuthState(client: client);
 
@@ -137,4 +138,3 @@ void main() {
     });
   });
 }
-

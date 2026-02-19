@@ -202,7 +202,8 @@ void main() {
     });
 
     group('requiresPreparationFor', () {
-      test('returns true when strategy requires preparation and no verification',
+      test(
+          'returns true when strategy requires preparation and no verification',
           () {
         const signIn = SignIn(
           id: 'sign_in_1',
@@ -505,7 +506,8 @@ void main() {
           supportedSecondFactors: [totpFactor],
           supportedIdentifiers: [],
         );
-        expect(signIn.factorFor(Strategy.totp, stage: Stage.second), totpFactor);
+        expect(
+            signIn.factorFor(Strategy.totp, stage: Stage.second), totpFactor);
       });
 
       test('returns null when factor not found', () {
@@ -556,4 +558,3 @@ void main() {
     });
   });
 }
-

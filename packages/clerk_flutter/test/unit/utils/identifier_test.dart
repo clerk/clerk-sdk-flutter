@@ -27,7 +27,8 @@ void main() {
 
   group('PhoneNumberIdentifier', () {
     test('stores identifier and prettyIdentifier correctly', () {
-      const identifier = PhoneNumberIdentifier('+1234567890', '(+1) 234-567-890');
+      const identifier =
+          PhoneNumberIdentifier('+1234567890', '(+1) 234-567-890');
       expect(identifier.identifier, '+1234567890');
       expect(identifier.prettyIdentifier, '(+1) 234-567-890');
     });
@@ -54,4 +55,3 @@ void main() {
     });
   });
 }
-

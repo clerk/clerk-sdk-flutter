@@ -138,8 +138,7 @@ void main() {
         authState.terminate();
       });
 
-      testWidgets('does not render child when user is present',
-          (tester) async {
+      testWidgets('does not render child when user is present', (tester) async {
         await tester.pumpWidget(
           TestClerkAuthWrapper(
             authState: authState,
@@ -155,4 +154,3 @@ void main() {
     });
   });
 }
-

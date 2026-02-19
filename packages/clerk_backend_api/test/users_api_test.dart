@@ -99,7 +99,8 @@ void main() {
         });
         usersApi = UsersApi(apiClient);
 
-        expect(() => usersApi.banUser('nonexistent'), throwsA(isA<ApiException>()));
+        expect(() => usersApi.banUser('nonexistent'),
+            throwsA(isA<ApiException>()));
       });
     });
 
@@ -181,7 +182,8 @@ void main() {
         });
         usersApi = UsersApi(apiClient);
 
-        expect(() => usersApi.getUser('nonexistent'), throwsA(isA<ApiException>()));
+        expect(() => usersApi.getUser('nonexistent'),
+            throwsA(isA<ApiException>()));
       });
     });
 
@@ -302,7 +304,8 @@ void main() {
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('PATCH'));
           expect(request.url.path, equals('/v1/users/user_123'));
-          return http.Response(jsonEncode({...userJson, 'first_name': 'Updated'}), 200);
+          return http.Response(
+              jsonEncode({...userJson, 'first_name': 'Updated'}), 200);
         });
         usersApi = UsersApi(apiClient);
 
@@ -370,7 +373,8 @@ void main() {
         apiClient = ApiClient();
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('POST'));
-          expect(request.url.path, equals('/v1/users/user_123/verify_password'));
+          expect(
+              request.url.path, equals('/v1/users/user_123/verify_password'));
           return http.Response(jsonEncode({'verified': true}), 200);
         });
         usersApi = UsersApi(apiClient);
@@ -391,7 +395,8 @@ void main() {
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('POST'));
           expect(request.url.path, equals('/v1/users/user_123/verify_totp'));
-          return http.Response(jsonEncode({'verified': true, 'code_type': 'totp'}), 200);
+          return http.Response(
+              jsonEncode({'verified': true, 'code_type': 'totp'}), 200);
         });
         usersApi = UsersApi(apiClient);
 
@@ -410,12 +415,15 @@ void main() {
         apiClient = ApiClient();
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('DELETE'));
-          expect(request.url.path, equals('/v1/users/user_123/external_accounts/ext_acc_123'));
-          return http.Response(jsonEncode({...deletedObjectJson, 'id': 'ext_acc_123'}), 200);
+          expect(request.url.path,
+              equals('/v1/users/user_123/external_accounts/ext_acc_123'));
+          return http.Response(
+              jsonEncode({...deletedObjectJson, 'id': 'ext_acc_123'}), 200);
         });
         usersApi = UsersApi(apiClient);
 
-        final result = await usersApi.deleteExternalAccount('user_123', 'ext_acc_123');
+        final result =
+            await usersApi.deleteExternalAccount('user_123', 'ext_acc_123');
 
         expect(result, isNotNull);
         expect(result!.deleted, isTrue);
@@ -427,12 +435,15 @@ void main() {
         apiClient = ApiClient();
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('DELETE'));
-          expect(request.url.path, equals('/v1/users/user_123/passkeys/passkey_123'));
-          return http.Response(jsonEncode({...deletedObjectJson, 'id': 'passkey_123'}), 200);
+          expect(request.url.path,
+              equals('/v1/users/user_123/passkeys/passkey_123'));
+          return http.Response(
+              jsonEncode({...deletedObjectJson, 'id': 'passkey_123'}), 200);
         });
         usersApi = UsersApi(apiClient);
 
-        final result = await usersApi.userPasskeyDelete('user_123', 'passkey_123');
+        final result =
+            await usersApi.userPasskeyDelete('user_123', 'passkey_123');
 
         expect(result, isNotNull);
         expect(result!.deleted, isTrue);
@@ -444,12 +455,15 @@ void main() {
         apiClient = ApiClient();
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('DELETE'));
-          expect(request.url.path, equals('/v1/users/user_123/web3_wallets/wallet_123'));
-          return http.Response(jsonEncode({...deletedObjectJson, 'id': 'wallet_123'}), 200);
+          expect(request.url.path,
+              equals('/v1/users/user_123/web3_wallets/wallet_123'));
+          return http.Response(
+              jsonEncode({...deletedObjectJson, 'id': 'wallet_123'}), 200);
         });
         usersApi = UsersApi(apiClient);
 
-        final result = await usersApi.userWeb3WalletDelete('user_123', 'wallet_123');
+        final result =
+            await usersApi.userWeb3WalletDelete('user_123', 'wallet_123');
 
         expect(result, isNotNull);
         expect(result!.deleted, isTrue);

@@ -180,7 +180,8 @@ void main() {
     test('toString returns expected format', () {
       final str = instance.toString();
       expect(str, contains('Web3Wallet'));
-      expect(str, contains('web3Wallet=0x1234567890abcdef1234567890abcdef12345678'));
+      expect(str,
+          contains('web3Wallet=0x1234567890abcdef1234567890abcdef12345678'));
     });
 
     test('requiredKeys contains required fields', () {
@@ -194,7 +195,8 @@ void main() {
 
   group('Web3WalletObjectEnum', () {
     test('values contains all enum values', () {
-      expect(Web3WalletObjectEnum.values, contains(Web3WalletObjectEnum.web3Wallet));
+      expect(Web3WalletObjectEnum.values,
+          contains(Web3WalletObjectEnum.web3Wallet));
     });
 
     test('toJson returns correct string', () {
@@ -202,7 +204,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(Web3WalletObjectEnum.fromJson('web3_wallet'), Web3WalletObjectEnum.web3Wallet);
+      expect(Web3WalletObjectEnum.fromJson('web3_wallet'),
+          Web3WalletObjectEnum.web3Wallet);
     });
 
     test('fromJson returns null for unknown value', () {

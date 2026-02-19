@@ -97,18 +97,23 @@ void main() {
 
   group('VerifyTOTP200ResponseCodeTypeEnum', () {
     test('values contains all enum values', () {
-      expect(VerifyTOTP200ResponseCodeTypeEnum.values, contains(VerifyTOTP200ResponseCodeTypeEnum.totp));
-      expect(VerifyTOTP200ResponseCodeTypeEnum.values, contains(VerifyTOTP200ResponseCodeTypeEnum.backupCode));
+      expect(VerifyTOTP200ResponseCodeTypeEnum.values,
+          contains(VerifyTOTP200ResponseCodeTypeEnum.totp));
+      expect(VerifyTOTP200ResponseCodeTypeEnum.values,
+          contains(VerifyTOTP200ResponseCodeTypeEnum.backupCode));
     });
 
     test('toJson returns correct string', () {
       expect(VerifyTOTP200ResponseCodeTypeEnum.totp.toJson(), 'totp');
-      expect(VerifyTOTP200ResponseCodeTypeEnum.backupCode.toJson(), 'backup_code');
+      expect(
+          VerifyTOTP200ResponseCodeTypeEnum.backupCode.toJson(), 'backup_code');
     });
 
     test('fromJson parses correct value', () {
-      expect(VerifyTOTP200ResponseCodeTypeEnum.fromJson('totp'), VerifyTOTP200ResponseCodeTypeEnum.totp);
-      expect(VerifyTOTP200ResponseCodeTypeEnum.fromJson('backup_code'), VerifyTOTP200ResponseCodeTypeEnum.backupCode);
+      expect(VerifyTOTP200ResponseCodeTypeEnum.fromJson('totp'),
+          VerifyTOTP200ResponseCodeTypeEnum.totp);
+      expect(VerifyTOTP200ResponseCodeTypeEnum.fromJson('backup_code'),
+          VerifyTOTP200ResponseCodeTypeEnum.backupCode);
     });
 
     test('fromJson returns null for unknown value', () {

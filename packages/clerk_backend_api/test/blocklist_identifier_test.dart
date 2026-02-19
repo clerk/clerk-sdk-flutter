@@ -28,10 +28,12 @@ void main() {
     });
 
     test('constructor creates instance with all parameters', () {
-      expect(instance.object, BlocklistIdentifierObjectEnum.blocklistIdentifier);
+      expect(
+          instance.object, BlocklistIdentifierObjectEnum.blocklistIdentifier);
       expect(instance.id, 'blid_123');
       expect(instance.identifier, 'blocked@example.com');
-      expect(instance.identifierType, BlocklistIdentifierIdentifierTypeEnum.emailAddress);
+      expect(instance.identifierType,
+          BlocklistIdentifierIdentifierTypeEnum.emailAddress);
       expect(instance.instanceId, 'ins_456');
       expect(instance.createdAt, 1700000000);
       expect(instance.updatedAt, 1700000001);
@@ -53,7 +55,8 @@ void main() {
       expect(json['object'], BlocklistIdentifierObjectEnum.blocklistIdentifier);
       expect(json['id'], 'blid_123');
       expect(json['identifier'], 'blocked@example.com');
-      expect(json['identifier_type'], BlocklistIdentifierIdentifierTypeEnum.emailAddress);
+      expect(json['identifier_type'],
+          BlocklistIdentifierIdentifierTypeEnum.emailAddress);
       expect(json['instance_id'], 'ins_456');
       expect(json['created_at'], 1700000000);
       expect(json['updated_at'], 1700000001);
@@ -74,7 +77,8 @@ void main() {
       expect(parsed!.object, BlocklistIdentifierObjectEnum.blocklistIdentifier);
       expect(parsed.id, 'blid_789');
       expect(parsed.identifier, '+1234567890');
-      expect(parsed.identifierType, BlocklistIdentifierIdentifierTypeEnum.phoneNumber);
+      expect(parsed.identifierType,
+          BlocklistIdentifierIdentifierTypeEnum.phoneNumber);
       expect(parsed.instanceId, 'ins_abc');
       expect(parsed.createdAt, 1700000002);
       expect(parsed.updatedAt, 1700000003);
@@ -87,8 +91,18 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'blocklist_identifier', 'id': 'blid_1', 'identifier': 'a@test.com', 'identifier_type': 'email_address'},
-        {'object': 'blocklist_identifier', 'id': 'blid_2', 'identifier': 'b@test.com', 'identifier_type': 'email_address'},
+        {
+          'object': 'blocklist_identifier',
+          'id': 'blid_1',
+          'identifier': 'a@test.com',
+          'identifier_type': 'email_address'
+        },
+        {
+          'object': 'blocklist_identifier',
+          'id': 'blid_2',
+          'identifier': 'b@test.com',
+          'identifier_type': 'email_address'
+        },
       ];
       final list = BlocklistIdentifier.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -157,15 +171,18 @@ void main() {
 
   group('BlocklistIdentifierObjectEnum', () {
     test('values contains all enum values', () {
-      expect(BlocklistIdentifierObjectEnum.values, contains(BlocklistIdentifierObjectEnum.blocklistIdentifier));
+      expect(BlocklistIdentifierObjectEnum.values,
+          contains(BlocklistIdentifierObjectEnum.blocklistIdentifier));
     });
 
     test('toJson returns correct string', () {
-      expect(BlocklistIdentifierObjectEnum.blocklistIdentifier.toJson(), 'blocklist_identifier');
+      expect(BlocklistIdentifierObjectEnum.blocklistIdentifier.toJson(),
+          'blocklist_identifier');
     });
 
     test('fromJson parses correct value', () {
-      expect(BlocklistIdentifierObjectEnum.fromJson('blocklist_identifier'), BlocklistIdentifierObjectEnum.blocklistIdentifier);
+      expect(BlocklistIdentifierObjectEnum.fromJson('blocklist_identifier'),
+          BlocklistIdentifierObjectEnum.blocklistIdentifier);
     });
 
     test('fromJson returns null for unknown value', () {
@@ -173,28 +190,38 @@ void main() {
     });
 
     test('toString returns value', () {
-      expect(BlocklistIdentifierObjectEnum.blocklistIdentifier.toString(), 'blocklist_identifier');
+      expect(BlocklistIdentifierObjectEnum.blocklistIdentifier.toString(),
+          'blocklist_identifier');
     });
   });
 
   group('BlocklistIdentifierIdentifierTypeEnum', () {
     test('values contains all enum values', () {
       expect(BlocklistIdentifierIdentifierTypeEnum.values, hasLength(3));
-      expect(BlocklistIdentifierIdentifierTypeEnum.values, contains(BlocklistIdentifierIdentifierTypeEnum.emailAddress));
-      expect(BlocklistIdentifierIdentifierTypeEnum.values, contains(BlocklistIdentifierIdentifierTypeEnum.phoneNumber));
-      expect(BlocklistIdentifierIdentifierTypeEnum.values, contains(BlocklistIdentifierIdentifierTypeEnum.web3Wallet));
+      expect(BlocklistIdentifierIdentifierTypeEnum.values,
+          contains(BlocklistIdentifierIdentifierTypeEnum.emailAddress));
+      expect(BlocklistIdentifierIdentifierTypeEnum.values,
+          contains(BlocklistIdentifierIdentifierTypeEnum.phoneNumber));
+      expect(BlocklistIdentifierIdentifierTypeEnum.values,
+          contains(BlocklistIdentifierIdentifierTypeEnum.web3Wallet));
     });
 
     test('toJson returns correct string', () {
-      expect(BlocklistIdentifierIdentifierTypeEnum.emailAddress.toJson(), 'email_address');
-      expect(BlocklistIdentifierIdentifierTypeEnum.phoneNumber.toJson(), 'phone_number');
-      expect(BlocklistIdentifierIdentifierTypeEnum.web3Wallet.toJson(), 'web3_wallet');
+      expect(BlocklistIdentifierIdentifierTypeEnum.emailAddress.toJson(),
+          'email_address');
+      expect(BlocklistIdentifierIdentifierTypeEnum.phoneNumber.toJson(),
+          'phone_number');
+      expect(BlocklistIdentifierIdentifierTypeEnum.web3Wallet.toJson(),
+          'web3_wallet');
     });
 
     test('fromJson parses correct values', () {
-      expect(BlocklistIdentifierIdentifierTypeEnum.fromJson('email_address'), BlocklistIdentifierIdentifierTypeEnum.emailAddress);
-      expect(BlocklistIdentifierIdentifierTypeEnum.fromJson('phone_number'), BlocklistIdentifierIdentifierTypeEnum.phoneNumber);
-      expect(BlocklistIdentifierIdentifierTypeEnum.fromJson('web3_wallet'), BlocklistIdentifierIdentifierTypeEnum.web3Wallet);
+      expect(BlocklistIdentifierIdentifierTypeEnum.fromJson('email_address'),
+          BlocklistIdentifierIdentifierTypeEnum.emailAddress);
+      expect(BlocklistIdentifierIdentifierTypeEnum.fromJson('phone_number'),
+          BlocklistIdentifierIdentifierTypeEnum.phoneNumber);
+      expect(BlocklistIdentifierIdentifierTypeEnum.fromJson('web3_wallet'),
+          BlocklistIdentifierIdentifierTypeEnum.web3Wallet);
     });
 
     test('fromJson returns null for unknown value', () {

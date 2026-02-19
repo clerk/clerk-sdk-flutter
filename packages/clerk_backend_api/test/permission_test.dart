@@ -79,8 +79,26 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'permission', 'id': 'p1', 'name': 'Perm 1', 'key': 'k1', 'description': 'd1', 'type': 't1', 'created_at': 1, 'updated_at': 2},
-        {'object': 'permission', 'id': 'p2', 'name': 'Perm 2', 'key': 'k2', 'description': 'd2', 'type': 't2', 'created_at': 3, 'updated_at': 4},
+        {
+          'object': 'permission',
+          'id': 'p1',
+          'name': 'Perm 1',
+          'key': 'k1',
+          'description': 'd1',
+          'type': 't1',
+          'created_at': 1,
+          'updated_at': 2
+        },
+        {
+          'object': 'permission',
+          'id': 'p2',
+          'name': 'Perm 2',
+          'key': 'k2',
+          'description': 'd2',
+          'type': 't2',
+          'created_at': 3,
+          'updated_at': 4
+        },
       ];
       final list = Permission.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -153,7 +171,8 @@ void main() {
 
   group('PermissionObjectEnum', () {
     test('values contains all enum values', () {
-      expect(PermissionObjectEnum.values, contains(PermissionObjectEnum.permission));
+      expect(PermissionObjectEnum.values,
+          contains(PermissionObjectEnum.permission));
     });
 
     test('toJson returns correct string', () {
@@ -161,7 +180,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(PermissionObjectEnum.fromJson('permission'), PermissionObjectEnum.permission);
+      expect(PermissionObjectEnum.fromJson('permission'),
+          PermissionObjectEnum.permission);
     });
 
     test('fromJson returns null for unknown value', () {

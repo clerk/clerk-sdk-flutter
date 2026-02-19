@@ -12,7 +12,8 @@ void main() {
   });
 
   group('ClerkAuthErrorExtension', () {
-    test('localizedMessage returns cannotDeleteSelf for cannotDeleteSelf code', () {
+    test('localizedMessage returns cannotDeleteSelf for cannotDeleteSelf code',
+        () {
       const error = clerk.ClerkError(
         code: clerk.ClerkErrorCode.cannotDeleteSelf,
         message: 'test',
@@ -26,7 +27,8 @@ void main() {
         message: 'test',
         argument: 'bad_token',
       );
-      expect(error.localizedMessage(l10ns), l10ns.jwtPoorlyFormatted('bad_token'));
+      expect(
+          error.localizedMessage(l10ns), l10ns.jwtPoorlyFormatted('bad_token'));
     });
 
     test('localizedMessage returns noSessionTokenRetrieved', () {
@@ -59,13 +61,16 @@ void main() {
       expect(result, contains('Custom error'));
     });
 
-    test('localizedMessage returns noAssociatedCodeRetrievalMethod with argument', () {
+    test(
+        'localizedMessage returns noAssociatedCodeRetrievalMethod with argument',
+        () {
       const error = clerk.ClerkError(
         code: clerk.ClerkErrorCode.noAssociatedCodeRetrievalMethod,
         message: 'test',
         argument: 'email',
       );
-      expect(error.localizedMessage(l10ns), l10ns.noAssociatedCodeRetrievalMethod('email'));
+      expect(error.localizedMessage(l10ns),
+          l10ns.noAssociatedCodeRetrievalMethod('email'));
     });
 
     test('localizedMessage returns noAssociatedStrategy with argument', () {
@@ -74,7 +79,8 @@ void main() {
         message: 'test',
         argument: 'password',
       );
-      expect(error.localizedMessage(l10ns), l10ns.noAssociatedStrategy('password'));
+      expect(error.localizedMessage(l10ns),
+          l10ns.noAssociatedStrategy('password'));
     });
 
     test('localizedMessage returns noSessionFoundForUser with argument', () {
@@ -83,7 +89,8 @@ void main() {
         message: 'test',
         argument: 'user_123',
       );
-      expect(error.localizedMessage(l10ns), l10ns.noSessionFoundForUser('user_123'));
+      expect(error.localizedMessage(l10ns),
+          l10ns.noSessionFoundForUser('user_123'));
     });
 
     test('localizedMessage returns noStageForStatus with argument', () {
@@ -95,22 +102,26 @@ void main() {
       expect(error.localizedMessage(l10ns), l10ns.noStageForStatus('complete'));
     });
 
-    test('localizedMessage returns noSuchFirstFactorStrategy with argument', () {
+    test('localizedMessage returns noSuchFirstFactorStrategy with argument',
+        () {
       const error = clerk.ClerkError(
         code: clerk.ClerkErrorCode.noSuchFirstFactorStrategy,
         message: 'test',
         argument: 'email_code',
       );
-      expect(error.localizedMessage(l10ns), l10ns.noSuchFirstFactorStrategy('email_code'));
+      expect(error.localizedMessage(l10ns),
+          l10ns.noSuchFirstFactorStrategy('email_code'));
     });
 
-    test('localizedMessage returns noSuchSecondFactorStrategy with argument', () {
+    test('localizedMessage returns noSuchSecondFactorStrategy with argument',
+        () {
       const error = clerk.ClerkError(
         code: clerk.ClerkErrorCode.noSuchSecondFactorStrategy,
         message: 'test',
         argument: 'totp',
       );
-      expect(error.localizedMessage(l10ns), l10ns.noSuchSecondFactorStrategy('totp'));
+      expect(error.localizedMessage(l10ns),
+          l10ns.noSuchSecondFactorStrategy('totp'));
     });
 
     test('localizedMessage returns noUserAttributeForField with argument', () {
@@ -119,16 +130,19 @@ void main() {
         message: 'test',
         argument: 'email_address',
       );
-      expect(error.localizedMessage(l10ns), l10ns.noUserAttributeForField('email_address'));
+      expect(error.localizedMessage(l10ns),
+          l10ns.noUserAttributeForField('email_address'));
     });
 
-    test('localizedMessage returns passwordResetStrategyError with argument', () {
+    test('localizedMessage returns passwordResetStrategyError with argument',
+        () {
       const error = clerk.ClerkError(
         code: clerk.ClerkErrorCode.passwordResetStrategyError,
         message: 'test',
         argument: 'invalid_strategy',
       );
-      expect(error.localizedMessage(l10ns), l10ns.unsupportedPasswordResetStrategy('invalid_strategy'));
+      expect(error.localizedMessage(l10ns),
+          l10ns.unsupportedPasswordResetStrategy('invalid_strategy'));
     });
 
     test('localizedMessage returns serverErrorResponse with argument', () {
@@ -137,7 +151,8 @@ void main() {
         message: 'test',
         argument: '500 Internal Server Error',
       );
-      expect(error.localizedMessage(l10ns), l10ns.serverErrorResponse('500 Internal Server Error'));
+      expect(error.localizedMessage(l10ns),
+          l10ns.serverErrorResponse('500 Internal Server Error'));
     });
 
     test('localizedMessage returns unknownError with argument', () {
@@ -146,26 +161,30 @@ void main() {
         message: 'test',
         argument: 'Something went wrong',
       );
-      expect(error.localizedMessage(l10ns), l10ns.unknownError('Something went wrong'));
+      expect(error.localizedMessage(l10ns),
+          l10ns.unknownError('Something went wrong'));
     });
   });
 
   group('ClerkEnrollmentTypeExtension', () {
-    test('viaInvitationMessage returns correct message for manualInvitation', () {
+    test('viaInvitationMessage returns correct message for manualInvitation',
+        () {
       expect(
         clerk.EnrollmentMode.manualInvitation.viaInvitationMessage(l10ns),
         l10ns.viaManualInvitation,
       );
     });
 
-    test('viaInvitationMessage returns correct message for automaticInvitation', () {
+    test('viaInvitationMessage returns correct message for automaticInvitation',
+        () {
       expect(
         clerk.EnrollmentMode.automaticInvitation.viaInvitationMessage(l10ns),
         l10ns.viaAutomaticInvitation,
       );
     });
 
-    test('viaInvitationMessage returns correct message for automaticSuggestion', () {
+    test('viaInvitationMessage returns correct message for automaticSuggestion',
+        () {
       expect(
         clerk.EnrollmentMode.automaticSuggestion.viaInvitationMessage(l10ns),
         l10ns.viaAutomaticSuggestion,
@@ -227,24 +246,30 @@ void main() {
       expect(clerk.Status.unverified.localizedMessage(l10ns), l10ns.unverified);
     });
 
-    test('localizedMessage returns correct message for missingRequirements', () {
-      expect(clerk.Status.missingRequirements.localizedMessage(l10ns), l10ns.missingRequirements);
+    test('localizedMessage returns correct message for missingRequirements',
+        () {
+      expect(clerk.Status.missingRequirements.localizedMessage(l10ns),
+          l10ns.missingRequirements);
     });
 
     test('localizedMessage returns correct message for needsFirstFactor', () {
-      expect(clerk.Status.needsFirstFactor.localizedMessage(l10ns), l10ns.needsFirstFactor);
+      expect(clerk.Status.needsFirstFactor.localizedMessage(l10ns),
+          l10ns.needsFirstFactor);
     });
 
     test('localizedMessage returns correct message for needsIdentifier', () {
-      expect(clerk.Status.needsIdentifier.localizedMessage(l10ns), l10ns.needsIdentifier);
+      expect(clerk.Status.needsIdentifier.localizedMessage(l10ns),
+          l10ns.needsIdentifier);
     });
 
     test('localizedMessage returns correct message for needsSecondFactor', () {
-      expect(clerk.Status.needsSecondFactor.localizedMessage(l10ns), l10ns.needsSecondFactor);
+      expect(clerk.Status.needsSecondFactor.localizedMessage(l10ns),
+          l10ns.needsSecondFactor);
     });
 
     test('localizedMessage returns correct message for transferable', () {
-      expect(clerk.Status.transferable.localizedMessage(l10ns), l10ns.transferable);
+      expect(clerk.Status.transferable.localizedMessage(l10ns),
+          l10ns.transferable);
     });
 
     test('localizedMessage returns title for unknown status', () {
@@ -263,7 +288,8 @@ void main() {
       );
     });
 
-    test('localizedMessage returns concise emailAddress when concise is true', () {
+    test('localizedMessage returns concise emailAddress when concise is true',
+        () {
       expect(
         clerk.Strategy.emailAddress.localizedMessage(l10ns, concise: true),
         l10ns.emailAddressConcise,
@@ -277,7 +303,8 @@ void main() {
       );
     });
 
-    test('localizedMessage returns concise phoneNumber when concise is true', () {
+    test('localizedMessage returns concise phoneNumber when concise is true',
+        () {
       expect(
         clerk.Strategy.phoneNumber.localizedMessage(l10ns, concise: true),
         l10ns.phoneNumberConcise,
@@ -291,7 +318,8 @@ void main() {
       );
     });
 
-    test('localizedMessage returns emailAddress for resetPasswordEmailCode', () {
+    test('localizedMessage returns emailAddress for resetPasswordEmailCode',
+        () {
       expect(
         clerk.Strategy.resetPasswordEmailCode.localizedMessage(l10ns),
         l10ns.emailAddress,
@@ -346,7 +374,8 @@ void main() {
   });
 
   group('ClerkUserAttributeLocalization', () {
-    test('localizedMessage returns emailAddress for emailAddress attribute', () {
+    test('localizedMessage returns emailAddress for emailAddress attribute',
+        () {
       expect(
         clerk.UserAttribute.emailAddress.localizedMessage(l10ns),
         l10ns.emailAddress,
@@ -388,7 +417,9 @@ void main() {
       );
     });
 
-    test('localizedMessage returns passwordConfirmation for passwordConfirmation attribute', () {
+    test(
+        'localizedMessage returns passwordConfirmation for passwordConfirmation attribute',
+        () {
       expect(
         clerk.UserAttribute.passwordConfirmation.localizedMessage(l10ns),
         l10ns.passwordConfirmation,
@@ -402,7 +433,9 @@ void main() {
       );
     });
 
-    test('localizedMessage returns authenticatorApp for authenticatorApp attribute', () {
+    test(
+        'localizedMessage returns authenticatorApp for authenticatorApp attribute',
+        () {
       expect(
         clerk.UserAttribute.authenticatorApp.localizedMessage(l10ns),
         l10ns.authenticatorApp,
@@ -424,4 +457,3 @@ void main() {
     });
   });
 }
-

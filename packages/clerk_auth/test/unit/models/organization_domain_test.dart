@@ -31,7 +31,8 @@ void main() {
       expect(domain.isVerified, true);
     });
 
-    test('isVerified returns false when verification status is not verified', () {
+    test('isVerified returns false when verification status is not verified',
+        () {
       final domain = OrganizationDomain(
         id: 'dom_123',
         orgId: 'org_123',
@@ -151,4 +152,3 @@ void main() {
     });
   });
 }
-

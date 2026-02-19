@@ -109,7 +109,8 @@ void main() {
 
   group('TestingTokenObjectEnum', () {
     test('values contains all enum values', () {
-      expect(TestingTokenObjectEnum.values, contains(TestingTokenObjectEnum.testingToken));
+      expect(TestingTokenObjectEnum.values,
+          contains(TestingTokenObjectEnum.testingToken));
     });
 
     test('toJson returns correct string', () {
@@ -117,7 +118,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(TestingTokenObjectEnum.fromJson('testing_token'), TestingTokenObjectEnum.testingToken);
+      expect(TestingTokenObjectEnum.fromJson('testing_token'),
+          TestingTokenObjectEnum.testingToken);
     });
 
     test('fromJson returns null for unknown value', () {

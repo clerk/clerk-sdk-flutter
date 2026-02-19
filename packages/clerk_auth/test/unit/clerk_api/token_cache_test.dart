@@ -112,7 +112,8 @@ void main() {
         final sessionTokenData = jsonEncode({
           '': {'jwt': jwt, 'template_name': null},
         });
-        await persistor.write('_clerkSession_Tokens_$cacheId', sessionTokenData);
+        await persistor.write(
+            '_clerkSession_Tokens_$cacheId', sessionTokenData);
 
         await tokenCache.initialize();
 
@@ -130,7 +131,8 @@ void main() {
         final sessionTokenData = jsonEncode({
           '': {'jwt': jwt, 'template_name': null},
         });
-        await persistor.write('_clerkSession_Tokens_$cacheId', sessionTokenData);
+        await persistor.write(
+            '_clerkSession_Tokens_$cacheId', sessionTokenData);
 
         await tokenCache.initialize();
 
@@ -152,7 +154,8 @@ void main() {
         expect(tokenCache.canRefreshSessionToken, false);
       });
 
-      test('returns true when both client token and session ID exist', () async {
+      test('returns true when both client token and session ID exist',
+          () async {
         final cacheId = publishableKey.hashCode;
         await persistor.write('_clerkClient_Token_$cacheId', 'token_abc');
         await persistor.write('_clerkSession_Id_$cacheId', 'sess_123');
@@ -246,7 +249,8 @@ void main() {
       test('returns token for organization', () async {
         await tokenCache.initialize();
         final now = DateTime.timestamp().millisecondsSinceEpoch ~/ 1000;
-        final jwt = createTestJwt(exp: now + 3600, nbf: now - 60, orgId: 'org_123');
+        final jwt =
+            createTestJwt(exp: now + 3600, nbf: now - 60, orgId: 'org_123');
 
         tokenCache.makeAndCacheSessionToken(jwt);
 
@@ -266,4 +270,3 @@ void main() {
     });
   });
 }
-

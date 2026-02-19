@@ -77,7 +77,8 @@ void main() {
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('POST'));
           expect(request.url.path, equals('/v1/invitations/bulk'));
-          return http.Response(jsonEncode([invitationJson, invitationJson]), 201);
+          return http.Response(
+              jsonEncode([invitationJson, invitationJson]), 201);
         });
         invitationsApi = InvitationsApi(apiClient);
 
@@ -99,7 +100,8 @@ void main() {
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('GET'));
           expect(request.url.path, equals('/v1/invitations'));
-          return http.Response(jsonEncode([invitationJson, invitationJson]), 200);
+          return http.Response(
+              jsonEncode([invitationJson, invitationJson]), 200);
         });
         invitationsApi = InvitationsApi(apiClient);
 

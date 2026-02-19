@@ -84,7 +84,8 @@ void main() {
     });
 
     test('requiredKeys contains required fields', () {
-      expect(CreateBlocklistIdentifierRequest.requiredKeys, contains('identifier'));
+      expect(CreateBlocklistIdentifierRequest.requiredKeys,
+          contains('identifier'));
     });
   });
 }

@@ -297,9 +297,9 @@ void main() {
         expect(restored.requiredFields.length, signUp.requiredFields.length);
         expect(restored.optionalFields.length, signUp.optionalFields.length);
         expect(restored.missingFields.length, signUp.missingFields.length);
-        expect(restored.unverifiedFields.length, signUp.unverifiedFields.length);
+        expect(
+            restored.unverifiedFields.length, signUp.unverifiedFields.length);
       });
     });
   });
 }
-

@@ -101,8 +101,16 @@ void main() {
 
     test('mapFromJson creates map from json', () {
       final jsonMap = {
-        'err1': {'message': 'Error 1', 'long_message': 'Long 1', 'code': 'code1'},
-        'err2': {'message': 'Error 2', 'long_message': 'Long 2', 'code': 'code2'},
+        'err1': {
+          'message': 'Error 1',
+          'long_message': 'Long 1',
+          'code': 'code1'
+        },
+        'err2': {
+          'message': 'Error 2',
+          'long_message': 'Long 2',
+          'code': 'code2'
+        },
       };
       final map = ClerkError.mapFromJson(jsonMap);
       expect(map.length, 2);

@@ -109,12 +109,18 @@ void main() {
     });
 
     test('requiredKeys contains required fields', () {
-      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('user_id'));
-      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('first_name'));
-      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('last_name'));
-      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('image_url'));
-      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('has_image'));
-      expect(OrganizationInvitationPublicUserData.requiredKeys, contains('identifier'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys,
+          contains('user_id'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys,
+          contains('first_name'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys,
+          contains('last_name'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys,
+          contains('image_url'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys,
+          contains('has_image'));
+      expect(OrganizationInvitationPublicUserData.requiredKeys,
+          contains('identifier'));
     });
   });
 }

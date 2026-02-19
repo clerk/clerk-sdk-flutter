@@ -150,7 +150,9 @@ void main() {
       expect(find.text('Content'), findsOneWidget);
     });
 
-    testWidgets('renders development mode warning when showDevmodeWarning is true', (tester) async {
+    testWidgets(
+        'renders development mode warning when showDevmodeWarning is true',
+        (tester) async {
       // Create auth state with showDevmodeWarning = true
       final config = TestClerkAuthConfig(
         initialEnvironment: const clerk.Environment(
@@ -183,7 +185,8 @@ void main() {
       devModeAuthState.terminate();
     });
 
-    testWidgets('renders development mode warning with branded display', (tester) async {
+    testWidgets('renders development mode warning with branded display',
+        (tester) async {
       // Create auth state with both branded and showDevmodeWarning = true
       final config = TestClerkAuthConfig(
         initialEnvironment: const clerk.Environment(

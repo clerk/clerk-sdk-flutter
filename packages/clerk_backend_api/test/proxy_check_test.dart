@@ -77,14 +77,24 @@ void main() {
     test('listFromJson creates list from json array', () {
       final jsonArray = [
         {
-          'object': 'proxy_check', 'id': 'p1', 'domain_id': 'd1',
-          'last_run_at': 1, 'proxy_url': 'u1', 'successful': true,
-          'created_at': 1, 'updated_at': 1
+          'object': 'proxy_check',
+          'id': 'p1',
+          'domain_id': 'd1',
+          'last_run_at': 1,
+          'proxy_url': 'u1',
+          'successful': true,
+          'created_at': 1,
+          'updated_at': 1
         },
         {
-          'object': 'proxy_check', 'id': 'p2', 'domain_id': 'd2',
-          'last_run_at': 2, 'proxy_url': 'u2', 'successful': false,
-          'created_at': 2, 'updated_at': 2
+          'object': 'proxy_check',
+          'id': 'p2',
+          'domain_id': 'd2',
+          'last_run_at': 2,
+          'proxy_url': 'u2',
+          'successful': false,
+          'created_at': 2,
+          'updated_at': 2
         },
       ];
       final list = ProxyCheck.listFromJson(jsonArray);
@@ -140,7 +150,8 @@ void main() {
 
   group('ProxyCheckObjectEnum', () {
     test('values contains all enum values', () {
-      expect(ProxyCheckObjectEnum.values, contains(ProxyCheckObjectEnum.proxyCheck));
+      expect(ProxyCheckObjectEnum.values,
+          contains(ProxyCheckObjectEnum.proxyCheck));
     });
 
     test('toJson returns correct string', () {
@@ -148,7 +159,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(ProxyCheckObjectEnum.fromJson('proxy_check'), ProxyCheckObjectEnum.proxyCheck);
+      expect(ProxyCheckObjectEnum.fromJson('proxy_check'),
+          ProxyCheckObjectEnum.proxyCheck);
     });
 
     test('fromJson returns null for unknown value', () {

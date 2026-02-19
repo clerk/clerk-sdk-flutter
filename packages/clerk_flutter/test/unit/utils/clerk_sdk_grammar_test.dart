@@ -82,7 +82,8 @@ void main() {
       });
 
       test('handles mixed case and special chars', () {
-        expect(grammar.toSlug('My Organization Name!'), 'my-organization-name-');
+        expect(
+            grammar.toSlug('My Organization Name!'), 'my-organization-name-');
       });
     });
 
@@ -141,7 +142,8 @@ void main() {
         expect(result, 'first');
       });
 
-      testWidgets('joins two items with "or" when not inclusive', (tester) async {
+      testWidgets('joins two items with "or" when not inclusive',
+          (tester) async {
         late BuildContext capturedContext;
         await tester.pumpWidget(
           TestClerkAuthWrapper(
@@ -258,4 +260,3 @@ void main() {
     });
   });
 }
-

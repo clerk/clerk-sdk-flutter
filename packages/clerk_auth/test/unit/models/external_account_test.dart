@@ -50,7 +50,8 @@ void main() {
       expect(account.isVerified, true);
     });
 
-    test('isVerified returns false when verification status is not verified', () {
+    test('isVerified returns false when verification status is not verified',
+        () {
       final account = _createExternalAccount(
         verification: _createVerification(status: Status.pending),
       );
@@ -127,4 +128,3 @@ void main() {
     });
   });
 }
-

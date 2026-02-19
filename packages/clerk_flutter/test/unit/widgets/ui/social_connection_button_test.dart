@@ -152,8 +152,8 @@ void main() {
       await tester.pumpAndSettle();
 
       final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
-      expect(sizedBoxes.any((box) => box.width == 45 && box.height == 30), isTrue);
+      expect(
+          sizedBoxes.any((box) => box.width == 45 && box.height == 30), isTrue);
     });
   });
 }
-

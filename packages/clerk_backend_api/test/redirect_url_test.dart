@@ -64,8 +64,20 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'redirect_url', 'id': 'r1', 'url': 'https://a.com', 'created_at': 1, 'updated_at': 2},
-        {'object': 'redirect_url', 'id': 'r2', 'url': 'https://b.com', 'created_at': 3, 'updated_at': 4},
+        {
+          'object': 'redirect_url',
+          'id': 'r1',
+          'url': 'https://a.com',
+          'created_at': 1,
+          'updated_at': 2
+        },
+        {
+          'object': 'redirect_url',
+          'id': 'r2',
+          'url': 'https://b.com',
+          'created_at': 3,
+          'updated_at': 4
+        },
       ];
       final list = RedirectURL.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -126,7 +138,8 @@ void main() {
 
   group('RedirectURLObjectEnum', () {
     test('values contains all enum values', () {
-      expect(RedirectURLObjectEnum.values, contains(RedirectURLObjectEnum.redirectUrl));
+      expect(RedirectURLObjectEnum.values,
+          contains(RedirectURLObjectEnum.redirectUrl));
     });
 
     test('toJson returns correct string', () {
@@ -134,7 +147,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(RedirectURLObjectEnum.fromJson('redirect_url'), RedirectURLObjectEnum.redirectUrl);
+      expect(RedirectURLObjectEnum.fromJson('redirect_url'),
+          RedirectURLObjectEnum.redirectUrl);
     });
 
     test('fromJson returns null for unknown value', () {

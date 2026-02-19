@@ -26,7 +26,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final decoratedBox = tester.widget<DecoratedBox>(find.byType(DecoratedBox).first);
+      final decoratedBox =
+          tester.widget<DecoratedBox>(find.byType(DecoratedBox).first);
       expect(decoratedBox, isNotNull);
     });
 
@@ -96,9 +97,11 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final decoratedBox = tester.widget<DecoratedBox>(find.byType(DecoratedBox).first);
+      final decoratedBox =
+          tester.widget<DecoratedBox>(find.byType(DecoratedBox).first);
       final decoration = decoratedBox.decoration as BoxDecoration;
-      expect(decoration.borderRadius, const BorderRadius.all(Radius.circular(8)));
+      expect(
+          decoration.borderRadius, const BorderRadius.all(Radius.circular(8)));
     });
 
     testWidgets('uses circular border radius by default', (tester) async {
@@ -113,7 +116,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final decoratedBox = tester.widget<DecoratedBox>(find.byType(DecoratedBox).first);
+      final decoratedBox =
+          tester.widget<DecoratedBox>(find.byType(DecoratedBox).first);
       final decoration = decoratedBox.decoration as BoxDecoration;
       // Default border radius should be diameter / 2 = 16
       expect(decoration.borderRadius, BorderRadius.circular(16));
@@ -129,7 +133,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final decoratedBox = tester.widget<DecoratedBox>(find.byType(DecoratedBox).first);
+      final decoratedBox =
+          tester.widget<DecoratedBox>(find.byType(DecoratedBox).first);
       final decoration = decoratedBox.decoration as BoxDecoration;
       expect(decoration.color, ClerkThemeExtension.light.colors.text);
     });
@@ -144,10 +149,10 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final decoratedBox = tester.widget<DecoratedBox>(find.byType(DecoratedBox).first);
+      final decoratedBox =
+          tester.widget<DecoratedBox>(find.byType(DecoratedBox).first);
       final decoration = decoratedBox.decoration as BoxDecoration;
       expect(decoration.color, ClerkThemeExtension.dark.colors.text);
     });
   });
 }
-

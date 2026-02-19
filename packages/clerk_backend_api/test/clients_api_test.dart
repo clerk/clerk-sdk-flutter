@@ -183,7 +183,8 @@ void main() {
         clientsApi = ClientsApi(apiClient);
 
         await clientsApi.verifyClient(
-          verifyClientRequest: VerifyClientRequest(token: 'my_verification_token'),
+          verifyClientRequest:
+              VerifyClientRequest(token: 'my_verification_token'),
         );
       });
 

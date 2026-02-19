@@ -335,7 +335,10 @@ void main() {
           user: clerk.UserSettings(
             attributes: {
               clerk.UserAttribute.emailAddress: clerk.UserAttributeData(
-                verifications: [clerk.Strategy.emailCode, clerk.Strategy.emailLink],
+                verifications: [
+                  clerk.Strategy.emailCode,
+                  clerk.Strategy.emailLink
+                ],
               ),
               clerk.UserAttribute.phoneNumber: clerk.UserAttributeData(
                 verifications: [clerk.Strategy.phoneCode],

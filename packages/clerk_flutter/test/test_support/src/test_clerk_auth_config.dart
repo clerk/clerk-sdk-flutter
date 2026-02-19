@@ -123,4 +123,3 @@ class TestFileCache implements ClerkFileCache {
     return const Stream.empty();
   }
 }
-

@@ -27,7 +27,8 @@ void main() {
     });
 
     test('constructor creates instance with required parameters', () {
-      expect(instance.object, InstanceRestrictionsObjectEnum.instanceRestrictions);
+      expect(
+          instance.object, InstanceRestrictionsObjectEnum.instanceRestrictions);
       expect(instance.allowlist, true);
       expect(instance.blocklist, false);
       expect(instance.allowlistBlocklistDisabledOnSignIn, true);
@@ -37,7 +38,8 @@ void main() {
 
     test('toJson produces correct map', () {
       final json = instance.toJson();
-      expect(json['object'], InstanceRestrictionsObjectEnum.instanceRestrictions);
+      expect(
+          json['object'], InstanceRestrictionsObjectEnum.instanceRestrictions);
       expect(json['allowlist'], true);
       expect(json['blocklist'], false);
       expect(json['allowlist_blocklist_disabled_on_sign_in'], true);
@@ -56,7 +58,8 @@ void main() {
       };
       final result = InstanceRestrictions.fromJson(json);
       expect(result, isNotNull);
-      expect(result!.object, InstanceRestrictionsObjectEnum.instanceRestrictions);
+      expect(
+          result!.object, InstanceRestrictionsObjectEnum.instanceRestrictions);
       expect(result.allowlist, false);
       expect(result.blocklist, true);
       expect(result.allowlistBlocklistDisabledOnSignIn, false);
@@ -126,23 +129,29 @@ void main() {
       expect(InstanceRestrictions.requiredKeys, contains('object'));
       expect(InstanceRestrictions.requiredKeys, contains('allowlist'));
       expect(InstanceRestrictions.requiredKeys, contains('blocklist'));
-      expect(InstanceRestrictions.requiredKeys, contains('allowlist_blocklist_disabled_on_sign_in'));
-      expect(InstanceRestrictions.requiredKeys, contains('block_email_subaddresses'));
-      expect(InstanceRestrictions.requiredKeys, contains('block_disposable_email_domains'));
+      expect(InstanceRestrictions.requiredKeys,
+          contains('allowlist_blocklist_disabled_on_sign_in'));
+      expect(InstanceRestrictions.requiredKeys,
+          contains('block_email_subaddresses'));
+      expect(InstanceRestrictions.requiredKeys,
+          contains('block_disposable_email_domains'));
     });
   });
 
   group('InstanceRestrictionsObjectEnum', () {
     test('values contains all enum values', () {
-      expect(InstanceRestrictionsObjectEnum.values, contains(InstanceRestrictionsObjectEnum.instanceRestrictions));
+      expect(InstanceRestrictionsObjectEnum.values,
+          contains(InstanceRestrictionsObjectEnum.instanceRestrictions));
     });
 
     test('toJson returns correct string', () {
-      expect(InstanceRestrictionsObjectEnum.instanceRestrictions.toJson(), 'instance_restrictions');
+      expect(InstanceRestrictionsObjectEnum.instanceRestrictions.toJson(),
+          'instance_restrictions');
     });
 
     test('fromJson parses correct value', () {
-      expect(InstanceRestrictionsObjectEnum.fromJson('instance_restrictions'), InstanceRestrictionsObjectEnum.instanceRestrictions);
+      expect(InstanceRestrictionsObjectEnum.fromJson('instance_restrictions'),
+          InstanceRestrictionsObjectEnum.instanceRestrictions);
     });
 
     test('fromJson returns null for unknown value', () {

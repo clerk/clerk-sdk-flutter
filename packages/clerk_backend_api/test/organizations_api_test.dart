@@ -192,9 +192,13 @@ void main() {
         apiClient = ApiClient();
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('PATCH'));
-          expect(request.url.path, equals('/v1/organizations/org_123/metadata'));
+          expect(
+              request.url.path, equals('/v1/organizations/org_123/metadata'));
           return http.Response(
-            jsonEncode({...organizationJson, 'public_metadata': {'key': 'value'}}),
+            jsonEncode({
+              ...organizationJson,
+              'public_metadata': {'key': 'value'}
+            }),
             200,
           );
         });

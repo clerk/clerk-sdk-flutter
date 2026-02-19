@@ -37,7 +37,8 @@ void main() {
     });
 
     test('constructor creates instance with required parameters', () {
-      expect(instance.object, OrganizationSettingsObjectEnum.organizationSettings);
+      expect(
+          instance.object, OrganizationSettingsObjectEnum.organizationSettings);
       expect(instance.enabled, true);
       expect(instance.maxAllowedMemberships, 100);
       expect(instance.maxAllowedRoles, 10);
@@ -49,7 +50,8 @@ void main() {
 
     test('toJson produces correct map', () {
       final json = instance.toJson();
-      expect(json['object'], OrganizationSettingsObjectEnum.organizationSettings);
+      expect(
+          json['object'], OrganizationSettingsObjectEnum.organizationSettings);
       expect(json['enabled'], true);
       expect(json['max_allowed_memberships'], 100);
       expect(json['max_allowed_roles'], 10);
@@ -104,22 +106,26 @@ void main() {
     test('requiredKeys contains required fields', () {
       expect(OrganizationSettings.requiredKeys, contains('object'));
       expect(OrganizationSettings.requiredKeys, contains('enabled'));
-      expect(OrganizationSettings.requiredKeys, contains('max_allowed_memberships'));
+      expect(OrganizationSettings.requiredKeys,
+          contains('max_allowed_memberships'));
       expect(OrganizationSettings.requiredKeys, contains('creator_role'));
     });
   });
 
   group('OrganizationSettingsObjectEnum', () {
     test('values contains all enum values', () {
-      expect(OrganizationSettingsObjectEnum.values, contains(OrganizationSettingsObjectEnum.organizationSettings));
+      expect(OrganizationSettingsObjectEnum.values,
+          contains(OrganizationSettingsObjectEnum.organizationSettings));
     });
 
     test('toJson returns correct string', () {
-      expect(OrganizationSettingsObjectEnum.organizationSettings.toJson(), 'organization_settings');
+      expect(OrganizationSettingsObjectEnum.organizationSettings.toJson(),
+          'organization_settings');
     });
 
     test('fromJson parses correct value', () {
-      expect(OrganizationSettingsObjectEnum.fromJson('organization_settings'), OrganizationSettingsObjectEnum.organizationSettings);
+      expect(OrganizationSettingsObjectEnum.fromJson('organization_settings'),
+          OrganizationSettingsObjectEnum.organizationSettings);
     });
 
     test('fromJson returns null for unknown value', () {
@@ -129,18 +135,36 @@ void main() {
 
   group('OrganizationSettingsDomainsEnrollmentModesEnum', () {
     test('values contains all enum values', () {
-      expect(OrganizationSettingsDomainsEnrollmentModesEnum.values, contains(OrganizationSettingsDomainsEnrollmentModesEnum.manualInvitation));
-      expect(OrganizationSettingsDomainsEnrollmentModesEnum.values, contains(OrganizationSettingsDomainsEnrollmentModesEnum.automaticInvitation));
-      expect(OrganizationSettingsDomainsEnrollmentModesEnum.values, contains(OrganizationSettingsDomainsEnrollmentModesEnum.automaticSuggestion));
+      expect(
+          OrganizationSettingsDomainsEnrollmentModesEnum.values,
+          contains(
+              OrganizationSettingsDomainsEnrollmentModesEnum.manualInvitation));
+      expect(
+          OrganizationSettingsDomainsEnrollmentModesEnum.values,
+          contains(OrganizationSettingsDomainsEnrollmentModesEnum
+              .automaticInvitation));
+      expect(
+          OrganizationSettingsDomainsEnrollmentModesEnum.values,
+          contains(OrganizationSettingsDomainsEnrollmentModesEnum
+              .automaticSuggestion));
     });
 
     test('toJson returns correct string', () {
-      expect(OrganizationSettingsDomainsEnrollmentModesEnum.manualInvitation.toJson(), 'manual_invitation');
-      expect(OrganizationSettingsDomainsEnrollmentModesEnum.automaticInvitation.toJson(), 'automatic_invitation');
+      expect(
+          OrganizationSettingsDomainsEnrollmentModesEnum.manualInvitation
+              .toJson(),
+          'manual_invitation');
+      expect(
+          OrganizationSettingsDomainsEnrollmentModesEnum.automaticInvitation
+              .toJson(),
+          'automatic_invitation');
     });
 
     test('fromJson parses correct value', () {
-      expect(OrganizationSettingsDomainsEnrollmentModesEnum.fromJson('manual_invitation'), OrganizationSettingsDomainsEnrollmentModesEnum.manualInvitation);
+      expect(
+          OrganizationSettingsDomainsEnrollmentModesEnum.fromJson(
+              'manual_invitation'),
+          OrganizationSettingsDomainsEnrollmentModesEnum.manualInvitation);
     });
   });
 }

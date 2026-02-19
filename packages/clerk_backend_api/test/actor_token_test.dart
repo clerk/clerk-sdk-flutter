@@ -191,11 +191,13 @@ void main() {
 
   group('ActorTokenObjectEnum', () {
     test('values contains all enum values', () {
-      expect(ActorTokenObjectEnum.values, contains(ActorTokenObjectEnum.actorToken));
+      expect(ActorTokenObjectEnum.values,
+          contains(ActorTokenObjectEnum.actorToken));
     });
 
     test('fromJson parses valid value', () {
-      expect(ActorTokenObjectEnum.fromJson('actor_token'), ActorTokenObjectEnum.actorToken);
+      expect(ActorTokenObjectEnum.fromJson('actor_token'),
+          ActorTokenObjectEnum.actorToken);
     });
 
     test('fromJson returns null for invalid value', () {
@@ -209,15 +211,21 @@ void main() {
 
   group('ActorTokenStatusEnum', () {
     test('values contains all enum values', () {
-      expect(ActorTokenStatusEnum.values, contains(ActorTokenStatusEnum.pending));
-      expect(ActorTokenStatusEnum.values, contains(ActorTokenStatusEnum.accepted));
-      expect(ActorTokenStatusEnum.values, contains(ActorTokenStatusEnum.revoked));
+      expect(
+          ActorTokenStatusEnum.values, contains(ActorTokenStatusEnum.pending));
+      expect(
+          ActorTokenStatusEnum.values, contains(ActorTokenStatusEnum.accepted));
+      expect(
+          ActorTokenStatusEnum.values, contains(ActorTokenStatusEnum.revoked));
     });
 
     test('fromJson parses valid values', () {
-      expect(ActorTokenStatusEnum.fromJson('pending'), ActorTokenStatusEnum.pending);
-      expect(ActorTokenStatusEnum.fromJson('accepted'), ActorTokenStatusEnum.accepted);
-      expect(ActorTokenStatusEnum.fromJson('revoked'), ActorTokenStatusEnum.revoked);
+      expect(ActorTokenStatusEnum.fromJson('pending'),
+          ActorTokenStatusEnum.pending);
+      expect(ActorTokenStatusEnum.fromJson('accepted'),
+          ActorTokenStatusEnum.accepted);
+      expect(ActorTokenStatusEnum.fromJson('revoked'),
+          ActorTokenStatusEnum.revoked);
     });
 
     test('fromJson returns null for invalid value', () {

@@ -101,7 +101,8 @@ void main() {
       expect(find.byType(ClerkMaterialButton), findsNWidgets(2));
     });
 
-    testWidgets('does not render OK button when showOk is false', (tester) async {
+    testWidgets('does not render OK button when showOk is false',
+        (tester) async {
       await tester.pumpWidget(
         TestClerkAuthWrapper(
           authState: authState,
@@ -225,4 +226,3 @@ void main() {
     });
   });
 }
-

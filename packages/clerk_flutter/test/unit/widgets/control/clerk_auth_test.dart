@@ -36,7 +36,8 @@ void main() {
         expect(result, equals(authState));
       });
 
-      testWidgets('of with listen=false returns ClerkAuthState', (tester) async {
+      testWidgets('of with listen=false returns ClerkAuthState',
+          (tester) async {
         late ClerkAuthState result;
 
         await tester.pumpWidget(
@@ -165,4 +166,3 @@ void main() {
     });
   });
 }
-

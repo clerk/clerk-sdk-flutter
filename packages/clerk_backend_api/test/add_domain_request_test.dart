@@ -74,16 +74,20 @@ void main() {
     });
 
     test('equality operator works correctly', () {
-      final instance1 = AddDomainRequest(name: 'example.com', isSatellite: true);
-      final instance2 = AddDomainRequest(name: 'example.com', isSatellite: true);
+      final instance1 =
+          AddDomainRequest(name: 'example.com', isSatellite: true);
+      final instance2 =
+          AddDomainRequest(name: 'example.com', isSatellite: true);
       final instance3 = AddDomainRequest(name: 'other.com', isSatellite: true);
       expect(instance1, equals(instance2));
       expect(instance1, isNot(equals(instance3)));
     });
 
     test('hashCode is consistent', () {
-      final instance1 = AddDomainRequest(name: 'example.com', isSatellite: true);
-      final instance2 = AddDomainRequest(name: 'example.com', isSatellite: true);
+      final instance1 =
+          AddDomainRequest(name: 'example.com', isSatellite: true);
+      final instance2 =
+          AddDomainRequest(name: 'example.com', isSatellite: true);
       expect(instance1.hashCode, equals(instance2.hashCode));
     });
 

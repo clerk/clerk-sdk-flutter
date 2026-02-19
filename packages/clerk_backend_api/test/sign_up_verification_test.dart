@@ -29,13 +29,15 @@ void main() {
     });
 
     test('constructor creates instance with parameters', () {
-      expect(instance.nextAction, SignUpVerificationNextActionEnum.needsPrepare);
+      expect(
+          instance.nextAction, SignUpVerificationNextActionEnum.needsPrepare);
       expect(instance.supportedStrategies, ['email_code', 'phone_code']);
     });
 
     test('toJson produces correct map', () {
       final json = instance.toJson();
-      expect(json['next_action'], SignUpVerificationNextActionEnum.needsPrepare);
+      expect(
+          json['next_action'], SignUpVerificationNextActionEnum.needsPrepare);
       expect(json['supported_strategies'], ['email_code', 'phone_code']);
     });
 
@@ -78,20 +80,27 @@ void main() {
 
   group('SignUpVerificationNextActionEnum', () {
     test('values contains all enum values', () {
-      expect(SignUpVerificationNextActionEnum.values, contains(SignUpVerificationNextActionEnum.needsPrepare));
-      expect(SignUpVerificationNextActionEnum.values, contains(SignUpVerificationNextActionEnum.needsAttempt));
-      expect(SignUpVerificationNextActionEnum.values, contains(SignUpVerificationNextActionEnum.empty));
+      expect(SignUpVerificationNextActionEnum.values,
+          contains(SignUpVerificationNextActionEnum.needsPrepare));
+      expect(SignUpVerificationNextActionEnum.values,
+          contains(SignUpVerificationNextActionEnum.needsAttempt));
+      expect(SignUpVerificationNextActionEnum.values,
+          contains(SignUpVerificationNextActionEnum.empty));
     });
 
     test('toJson returns correct string', () {
-      expect(SignUpVerificationNextActionEnum.needsPrepare.toJson(), 'needs_prepare');
-      expect(SignUpVerificationNextActionEnum.needsAttempt.toJson(), 'needs_attempt');
+      expect(SignUpVerificationNextActionEnum.needsPrepare.toJson(),
+          'needs_prepare');
+      expect(SignUpVerificationNextActionEnum.needsAttempt.toJson(),
+          'needs_attempt');
       expect(SignUpVerificationNextActionEnum.empty.toJson(), '');
     });
 
     test('fromJson parses correct value', () {
-      expect(SignUpVerificationNextActionEnum.fromJson('needs_prepare'), SignUpVerificationNextActionEnum.needsPrepare);
-      expect(SignUpVerificationNextActionEnum.fromJson('needs_attempt'), SignUpVerificationNextActionEnum.needsAttempt);
+      expect(SignUpVerificationNextActionEnum.fromJson('needs_prepare'),
+          SignUpVerificationNextActionEnum.needsPrepare);
+      expect(SignUpVerificationNextActionEnum.fromJson('needs_attempt'),
+          SignUpVerificationNextActionEnum.needsAttempt);
     });
 
     test('fromJson returns null for unknown value', () {

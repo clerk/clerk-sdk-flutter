@@ -91,8 +91,30 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'client', 'id': 'c1', 'session_ids': [], 'sessions': [], 'sign_in_id': 's1', 'sign_up_id': 'su1', 'last_active_session_id': 'sess1', 'last_authentication_strategy': 'password', 'updated_at': 1, 'created_at': 2},
-        {'object': 'client', 'id': 'c2', 'session_ids': [], 'sessions': [], 'sign_in_id': 's2', 'sign_up_id': 'su2', 'last_active_session_id': 'sess2', 'last_authentication_strategy': 'oauth', 'updated_at': 3, 'created_at': 4},
+        {
+          'object': 'client',
+          'id': 'c1',
+          'session_ids': [],
+          'sessions': [],
+          'sign_in_id': 's1',
+          'sign_up_id': 'su1',
+          'last_active_session_id': 'sess1',
+          'last_authentication_strategy': 'password',
+          'updated_at': 1,
+          'created_at': 2
+        },
+        {
+          'object': 'client',
+          'id': 'c2',
+          'session_ids': [],
+          'sessions': [],
+          'sign_in_id': 's2',
+          'sign_up_id': 'su2',
+          'last_active_session_id': 'sess2',
+          'last_authentication_strategy': 'oauth',
+          'updated_at': 3,
+          'created_at': 4
+        },
       ];
       final list = Client.listFromJson(jsonArray);
       expect(list.length, 2);

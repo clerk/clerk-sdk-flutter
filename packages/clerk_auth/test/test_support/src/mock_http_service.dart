@@ -118,7 +118,10 @@ class MockHttpService implements HttpService {
           'enforce_hibp_on_sign_in': false,
           'allowed_special_characters': r'+$-_',
         },
-        'passkey_settings': {'allow_autofill': false, 'show_sign_in_button': false},
+        'passkey_settings': {
+          'allow_autofill': false,
+          'show_sign_in_button': false
+        },
         'saml': {'enabled': false},
       },
       'organization_settings': {
@@ -154,11 +157,17 @@ class MockHttpService implements HttpService {
     Map<String, dynamic>? params,
     String? body,
   }) async {
-    calls.add(MockHttpCall(method: method, uri: uri, headers: headers, params: params, body: body));
+    calls.add(MockHttpCall(
+        method: method,
+        uri: uri,
+        headers: headers,
+        params: params,
+        body: body));
 
     if (_responseIndex < responses.length) {
       final response = responses[_responseIndex++];
-      return Response(response.body, response.statusCode, headers: response.headers);
+      return Response(response.body, response.statusCode,
+          headers: response.headers);
     }
     return Response('{}', 200);
   }
@@ -174,14 +183,20 @@ class MockHttpService implements HttpService {
     calls.add(MockHttpCall(method: method, uri: uri, headers: headers));
     if (_responseIndex < responses.length) {
       final response = responses[_responseIndex++];
-      return Response(response.body, response.statusCode, headers: response.headers);
+      return Response(response.body, response.statusCode,
+          headers: response.headers);
     }
     return Response('{}', 200);
   }
 }
 
 class MockHttpCall {
-  MockHttpCall({required this.method, required this.uri, this.headers, this.params, this.body});
+  MockHttpCall(
+      {required this.method,
+      required this.uri,
+      this.headers,
+      this.params,
+      this.body});
   final HttpMethod method;
   final Uri uri;
   final Map<String, String>? headers;
@@ -190,7 +205,8 @@ class MockHttpCall {
 }
 
 class MockHttpResponse {
-  MockHttpResponse({required this.body, this.statusCode = 200, this.headers = const {}});
+  MockHttpResponse(
+      {required this.body, this.statusCode = 200, this.headers = const {}});
   final String body;
   final int statusCode;
   final Map<String, String> headers;
@@ -221,9 +237,11 @@ extension MockHttpServiceExtensions on MockHttpService {
       'first_factor_verification': firstFactorVerification,
       'second_factor_verification': secondFactorVerification,
       'created_session_id': null,
-      'abandon_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+      'abandon_at':
+          DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
     };
-    addJsonResponse({'response': signInJson, 'client': _emptyClientJson()}, statusCode: statusCode);
+    addJsonResponse({'response': signInJson, 'client': _emptyClientJson()},
+        statusCode: statusCode);
   }
 
   /// Add a sign-up response
@@ -263,9 +281,11 @@ extension MockHttpServiceExtensions on MockHttpService {
       'external_id': null,
       'created_session_id': null,
       'created_user_id': null,
-      'abandon_at': DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch,
+      'abandon_at':
+          DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch,
     };
-    addJsonResponse({'response': signUpJson, 'client': _emptyClientJson()}, statusCode: statusCode);
+    addJsonResponse({'response': signUpJson, 'client': _emptyClientJson()},
+        statusCode: statusCode);
   }
 
   /// Add a session response
@@ -275,8 +295,10 @@ extension MockHttpServiceExtensions on MockHttpService {
     String userId = 'user_123',
     int statusCode = 200,
   }) {
-    final sessionJson = _createSessionJson(sessionId: sessionId, status: status, userId: userId);
-    addJsonResponse({'response': sessionJson, 'client': _emptyClientJson()}, statusCode: statusCode);
+    final sessionJson = _createSessionJson(
+        sessionId: sessionId, status: status, userId: userId);
+    addJsonResponse({'response': sessionJson, 'client': _emptyClientJson()},
+        statusCode: statusCode);
   }
 
   /// Add a client response with active session
@@ -286,7 +308,8 @@ extension MockHttpServiceExtensions on MockHttpService {
     String userId = 'user_123',
     int statusCode = 200,
   }) {
-    final sessionJson = _createSessionJson(sessionId: sessionId, userId: userId);
+    final sessionJson =
+        _createSessionJson(sessionId: sessionId, userId: userId);
     final clientJson = {
       'object': 'client',
       'id': clientId,
@@ -322,7 +345,8 @@ extension MockHttpServiceExtensions on MockHttpService {
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     };
-    addJsonResponse({'response': orgJson, 'client': _emptyClientJson()}, statusCode: statusCode);
+    addJsonResponse({'response': orgJson, 'client': _emptyClientJson()},
+        statusCode: statusCode);
   }
 
   /// Add an organization invitation list response
@@ -365,7 +389,8 @@ extension MockHttpServiceExtensions on MockHttpService {
       lastName: lastName,
       username: username,
     );
-    addJsonResponse({'response': userJson, 'client': _emptyClientJson()}, statusCode: statusCode);
+    addJsonResponse({'response': userJson, 'client': _emptyClientJson()},
+        statusCode: statusCode);
   }
 
   /// Add an API response (generic)
@@ -412,8 +437,10 @@ extension MockHttpServiceExtensions on MockHttpService {
         'id': sessionId,
         'status': status,
         'last_active_at': DateTime.now().millisecondsSinceEpoch,
-        'expire_at': DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
-        'abandon_at': DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch,
+        'expire_at':
+            DateTime.now().add(const Duration(days: 1)).millisecondsSinceEpoch,
+        'abandon_at':
+            DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch,
         'last_active_organization_id': null,
         'user': _createUserJson(userId: userId),
         'public_user_data': {

@@ -210,7 +210,8 @@ void main() {
                   onPressed: () async {
                     await expectLater(
                       authState.safelyCall(context, () async {
-                        throw clerk.ClerkError.clientAppError(message: 'Test error');
+                        throw clerk.ClerkError.clientAppError(
+                            message: 'Test error');
                       }),
                       throwsA(isA<clerk.ClerkError>()),
                     );

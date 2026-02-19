@@ -78,8 +78,18 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonList = [
-        {'status': 'verified', 'strategy': 'admin', 'attempts': 1, 'expire_at': 1700000000},
-        {'status': 'verified', 'strategy': 'admin', 'attempts': 2, 'expire_at': 1700000001},
+        {
+          'status': 'verified',
+          'strategy': 'admin',
+          'attempts': 1,
+          'expire_at': 1700000000
+        },
+        {
+          'status': 'verified',
+          'strategy': 'admin',
+          'attempts': 2,
+          'expire_at': 1700000001
+        },
       ];
       final list = Admin.listFromJson(jsonList);
       expect(list.length, 2);

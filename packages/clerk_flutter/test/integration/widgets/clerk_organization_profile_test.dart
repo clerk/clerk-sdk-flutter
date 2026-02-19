@@ -34,8 +34,7 @@ void main() {
       authState.terminate();
     });
 
-    testWidgets('renders organization profile with name',
-        (tester) async {
+    testWidgets('renders organization profile with name', (tester) async {
       final membership = authState.user!.organizationMemberships!.first;
 
       await tester.pumpWidget(
@@ -114,8 +113,5 @@ void main() {
       expect(find.text('Test Organization'), findsOneWidget);
       expect(find.byType(ClerkOrganizationProfile), findsOneWidget);
     });
-
-
   });
 }
-

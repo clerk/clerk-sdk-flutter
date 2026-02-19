@@ -18,7 +18,10 @@ void main() {
     setUp(() {
       instance = Cookies(
         object: CookiesObjectEnum.cookies,
-        cookies: ['__session=abc123; Path=/; HttpOnly', '__client=xyz789; Path=/'],
+        cookies: [
+          '__session=abc123; Path=/; HttpOnly',
+          '__client=xyz789; Path=/'
+        ],
       );
     });
 
@@ -57,8 +60,14 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'cookies', 'cookies': ['a=1']},
-        {'object': 'cookies', 'cookies': ['b=2']},
+        {
+          'object': 'cookies',
+          'cookies': ['a=1']
+        },
+        {
+          'object': 'cookies',
+          'cookies': ['b=2']
+        },
       ];
       final list = Cookies.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -72,7 +81,10 @@ void main() {
     test('equality operator works correctly', () {
       final same = Cookies(
         object: CookiesObjectEnum.cookies,
-        cookies: ['__session=abc123; Path=/; HttpOnly', '__client=xyz789; Path=/'],
+        cookies: [
+          '__session=abc123; Path=/; HttpOnly',
+          '__client=xyz789; Path=/'
+        ],
       );
       final different = Cookies(
         object: CookiesObjectEnum.cookies,

@@ -68,8 +68,18 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'status': 'unverified', 'strategy': 'ticket', 'attempts': 1, 'expire_at': 1},
-        {'status': 'verified', 'strategy': 'ticket', 'attempts': 2, 'expire_at': 2},
+        {
+          'status': 'unverified',
+          'strategy': 'ticket',
+          'attempts': 1,
+          'expire_at': 1
+        },
+        {
+          'status': 'verified',
+          'strategy': 'ticket',
+          'attempts': 2,
+          'expire_at': 2
+        },
       ];
       final list = Ticket.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -129,7 +139,8 @@ void main() {
     });
 
     test('fromJson parses correct values', () {
-      expect(TicketStatusEnum.fromJson('unverified'), TicketStatusEnum.unverified);
+      expect(
+          TicketStatusEnum.fromJson('unverified'), TicketStatusEnum.unverified);
       expect(TicketStatusEnum.fromJson('verified'), TicketStatusEnum.verified);
       expect(TicketStatusEnum.fromJson('expired'), TicketStatusEnum.expired);
     });

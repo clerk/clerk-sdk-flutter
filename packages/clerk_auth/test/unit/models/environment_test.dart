@@ -37,7 +37,10 @@ void main() {
       test('returns identification strategies from config', () {
         const env = Environment(
           config: Config(
-            identificationStrategies: [Strategy.emailAddress, Strategy.username],
+            identificationStrategies: [
+              Strategy.emailAddress,
+              Strategy.username
+            ],
           ),
         );
         expect(env.strategies.length, 2);
@@ -138,7 +141,10 @@ void main() {
       test('returns false when only oauth strategies', () {
         const env = Environment(
           config: Config(
-            identificationStrategies: [Strategy.oauthGoogle, Strategy.oauthApple],
+            identificationStrategies: [
+              Strategy.oauthGoogle,
+              Strategy.oauthApple
+            ],
           ),
         );
         expect(env.hasOtherStrategies, false);
@@ -184,4 +190,3 @@ void main() {
     });
   });
 }
-

@@ -104,7 +104,8 @@ void main() {
     });
 
     test('status enum values are correct', () {
-      expect(SignUpStatusEnum.missingRequirements.value, 'missing_requirements');
+      expect(
+          SignUpStatusEnum.missingRequirements.value, 'missing_requirements');
       expect(SignUpStatusEnum.complete.value, 'complete');
       expect(SignUpStatusEnum.abandoned.value, 'abandoned');
     });

@@ -94,7 +94,8 @@ void main() {
         apiClient = ApiClient();
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('POST'));
-          expect(request.url.path, equals('/v1/sessions/sess_123/tokens/my_template'));
+          expect(request.url.path,
+              equals('/v1/sessions/sess_123/tokens/my_template'));
           return http.Response(jsonEncode(tokenJson), 200);
         });
         sessionsApi = SessionsApi(apiClient);
@@ -195,11 +196,13 @@ void main() {
         apiClient.client = MockClient((request) async {
           expect(request.method, equals('POST'));
           expect(request.url.path, equals('/v1/sessions/sess_123/refresh'));
-          return http.Response(jsonEncode({
-            'object': 'cookies',
-            'jwt': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test',
-            'cookies': ['__session=abc123'],
-          }), 200);
+          return http.Response(
+              jsonEncode({
+                'object': 'cookies',
+                'jwt': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test',
+                'cookies': ['__session=abc123'],
+              }),
+              200);
         });
         sessionsApi = SessionsApi(apiClient);
 

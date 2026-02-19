@@ -81,8 +81,22 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'sign_in_token', 'id': 's1', 'status': 'pending', 'user_id': 'u1', 'created_at': 1, 'updated_at': 2},
-        {'object': 'sign_in_token', 'id': 's2', 'status': 'accepted', 'user_id': 'u2', 'created_at': 3, 'updated_at': 4},
+        {
+          'object': 'sign_in_token',
+          'id': 's1',
+          'status': 'pending',
+          'user_id': 'u1',
+          'created_at': 1,
+          'updated_at': 2
+        },
+        {
+          'object': 'sign_in_token',
+          'id': 's2',
+          'status': 'accepted',
+          'user_id': 'u2',
+          'created_at': 3,
+          'updated_at': 4
+        },
       ];
       final list = SignInToken.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -137,7 +151,8 @@ void main() {
 
   group('SignInTokenObjectEnum', () {
     test('values contains all enum values', () {
-      expect(SignInTokenObjectEnum.values, contains(SignInTokenObjectEnum.signInToken));
+      expect(SignInTokenObjectEnum.values,
+          contains(SignInTokenObjectEnum.signInToken));
     });
 
     test('toJson returns correct string', () {
@@ -145,7 +160,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(SignInTokenObjectEnum.fromJson('sign_in_token'), SignInTokenObjectEnum.signInToken);
+      expect(SignInTokenObjectEnum.fromJson('sign_in_token'),
+          SignInTokenObjectEnum.signInToken);
     });
 
     test('fromJson returns null for unknown value', () {
@@ -156,9 +172,12 @@ void main() {
   group('SignInTokenStatusEnum', () {
     test('values contains all enum values', () {
       expect(SignInTokenStatusEnum.values, hasLength(3));
-      expect(SignInTokenStatusEnum.values, contains(SignInTokenStatusEnum.pending));
-      expect(SignInTokenStatusEnum.values, contains(SignInTokenStatusEnum.accepted));
-      expect(SignInTokenStatusEnum.values, contains(SignInTokenStatusEnum.revoked));
+      expect(SignInTokenStatusEnum.values,
+          contains(SignInTokenStatusEnum.pending));
+      expect(SignInTokenStatusEnum.values,
+          contains(SignInTokenStatusEnum.accepted));
+      expect(SignInTokenStatusEnum.values,
+          contains(SignInTokenStatusEnum.revoked));
     });
 
     test('toJson returns correct string', () {
@@ -168,9 +187,12 @@ void main() {
     });
 
     test('fromJson parses correct values', () {
-      expect(SignInTokenStatusEnum.fromJson('pending'), SignInTokenStatusEnum.pending);
-      expect(SignInTokenStatusEnum.fromJson('accepted'), SignInTokenStatusEnum.accepted);
-      expect(SignInTokenStatusEnum.fromJson('revoked'), SignInTokenStatusEnum.revoked);
+      expect(SignInTokenStatusEnum.fromJson('pending'),
+          SignInTokenStatusEnum.pending);
+      expect(SignInTokenStatusEnum.fromJson('accepted'),
+          SignInTokenStatusEnum.accepted);
+      expect(SignInTokenStatusEnum.fromJson('revoked'),
+          SignInTokenStatusEnum.revoked);
     });
 
     test('fromJson returns null for unknown value', () {

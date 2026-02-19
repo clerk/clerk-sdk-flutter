@@ -18,8 +18,14 @@ void main() {
 
     setUp(() {
       cnameTargets = [
-        CNameTarget(host: 'clerk.example.com', value: 'target.clerk.dev', required_: true),
-        CNameTarget(host: 'accounts.example.com', value: 'accounts.clerk.dev', required_: false),
+        CNameTarget(
+            host: 'clerk.example.com',
+            value: 'target.clerk.dev',
+            required_: true),
+        CNameTarget(
+            host: 'accounts.example.com',
+            value: 'accounts.clerk.dev',
+            required_: false),
       ];
       instance = Domain(
         object: DomainObjectEnum.domain,
@@ -132,8 +138,22 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'domain', 'id': 'dmn_1', 'name': 'one.com', 'is_satellite': false, 'frontend_api_url': 'https://one.com', 'development_origin': 'http://localhost:1'},
-        {'object': 'domain', 'id': 'dmn_2', 'name': 'two.com', 'is_satellite': true, 'frontend_api_url': 'https://two.com', 'development_origin': 'http://localhost:2'},
+        {
+          'object': 'domain',
+          'id': 'dmn_1',
+          'name': 'one.com',
+          'is_satellite': false,
+          'frontend_api_url': 'https://one.com',
+          'development_origin': 'http://localhost:1'
+        },
+        {
+          'object': 'domain',
+          'id': 'dmn_2',
+          'name': 'two.com',
+          'is_satellite': true,
+          'frontend_api_url': 'https://two.com',
+          'development_origin': 'http://localhost:2'
+        },
       ];
       final list = Domain.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -148,8 +168,22 @@ void main() {
 
     test('mapFromJson creates map from json', () {
       final jsonMap = {
-        'key1': {'object': 'domain', 'id': 'dmn_1', 'name': 'one.com', 'is_satellite': false, 'frontend_api_url': 'https://one.com', 'development_origin': 'http://localhost:1'},
-        'key2': {'object': 'domain', 'id': 'dmn_2', 'name': 'two.com', 'is_satellite': true, 'frontend_api_url': 'https://two.com', 'development_origin': 'http://localhost:2'},
+        'key1': {
+          'object': 'domain',
+          'id': 'dmn_1',
+          'name': 'one.com',
+          'is_satellite': false,
+          'frontend_api_url': 'https://one.com',
+          'development_origin': 'http://localhost:1'
+        },
+        'key2': {
+          'object': 'domain',
+          'id': 'dmn_2',
+          'name': 'two.com',
+          'is_satellite': true,
+          'frontend_api_url': 'https://two.com',
+          'development_origin': 'http://localhost:2'
+        },
       };
       final map = Domain.mapFromJson(jsonMap);
       expect(map.length, 2);

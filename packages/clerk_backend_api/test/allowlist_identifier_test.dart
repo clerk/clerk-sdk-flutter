@@ -24,11 +24,13 @@ void main() {
         createdAt: 1700000000,
         updatedAt: 1700000001,
       );
-      expect(instance.object, AllowlistIdentifierObjectEnum.allowlistIdentifier);
+      expect(
+          instance.object, AllowlistIdentifierObjectEnum.allowlistIdentifier);
       expect(instance.id, 'alid_123');
       expect(instance.invitationId, 'inv_456');
       expect(instance.identifier, 'test@example.com');
-      expect(instance.identifierType, AllowlistIdentifierIdentifierTypeEnum.emailAddress);
+      expect(instance.identifierType,
+          AllowlistIdentifierIdentifierTypeEnum.emailAddress);
       expect(instance.instanceId, 'ins_789');
       expect(instance.createdAt, 1700000000);
       expect(instance.updatedAt, 1700000001);
@@ -53,7 +55,8 @@ void main() {
       expect(json['object'], AllowlistIdentifierObjectEnum.allowlistIdentifier);
       expect(json['id'], 'alid_123');
       expect(json['identifier'], 'test@example.com');
-      expect(json['identifier_type'], AllowlistIdentifierIdentifierTypeEnum.emailAddress);
+      expect(json['identifier_type'],
+          AllowlistIdentifierIdentifierTypeEnum.emailAddress);
       expect(json['created_at'], 1700000000);
       expect(json['updated_at'], 1700000001);
     });
@@ -71,11 +74,13 @@ void main() {
       };
       final instance = AllowlistIdentifier.fromJson(json);
       expect(instance, isNotNull);
-      expect(instance!.object, AllowlistIdentifierObjectEnum.allowlistIdentifier);
+      expect(
+          instance!.object, AllowlistIdentifierObjectEnum.allowlistIdentifier);
       expect(instance.id, 'alid_123');
       expect(instance.invitationId, 'inv_456');
       expect(instance.identifier, 'test@example.com');
-      expect(instance.identifierType, AllowlistIdentifierIdentifierTypeEnum.emailAddress);
+      expect(instance.identifierType,
+          AllowlistIdentifierIdentifierTypeEnum.emailAddress);
     });
 
     test('fromJson returns null for non-map input', () {
@@ -95,16 +100,21 @@ void main() {
     });
 
     test('equality operator works correctly', () {
-      final instance1 = AllowlistIdentifier(id: 'alid_123', identifier: 'test@example.com');
-      final instance2 = AllowlistIdentifier(id: 'alid_123', identifier: 'test@example.com');
-      final instance3 = AllowlistIdentifier(id: 'alid_456', identifier: 'other@example.com');
+      final instance1 =
+          AllowlistIdentifier(id: 'alid_123', identifier: 'test@example.com');
+      final instance2 =
+          AllowlistIdentifier(id: 'alid_123', identifier: 'test@example.com');
+      final instance3 =
+          AllowlistIdentifier(id: 'alid_456', identifier: 'other@example.com');
       expect(instance1, equals(instance2));
       expect(instance1, isNot(equals(instance3)));
     });
 
     test('hashCode is consistent', () {
-      final instance1 = AllowlistIdentifier(id: 'alid_123', identifier: 'test@example.com');
-      final instance2 = AllowlistIdentifier(id: 'alid_123', identifier: 'test@example.com');
+      final instance1 =
+          AllowlistIdentifier(id: 'alid_123', identifier: 'test@example.com');
+      final instance2 =
+          AllowlistIdentifier(id: 'alid_123', identifier: 'test@example.com');
       expect(instance1.hashCode, equals(instance2.hashCode));
     });
 
@@ -117,11 +127,13 @@ void main() {
 
   group('AllowlistIdentifierObjectEnum', () {
     test('values contains all enum values', () {
-      expect(AllowlistIdentifierObjectEnum.values, contains(AllowlistIdentifierObjectEnum.allowlistIdentifier));
+      expect(AllowlistIdentifierObjectEnum.values,
+          contains(AllowlistIdentifierObjectEnum.allowlistIdentifier));
     });
 
     test('fromJson parses valid value', () {
-      expect(AllowlistIdentifierObjectEnum.fromJson('allowlist_identifier'), AllowlistIdentifierObjectEnum.allowlistIdentifier);
+      expect(AllowlistIdentifierObjectEnum.fromJson('allowlist_identifier'),
+          AllowlistIdentifierObjectEnum.allowlistIdentifier);
     });
 
     test('fromJson returns null for invalid value', () {
@@ -129,21 +141,28 @@ void main() {
     });
 
     test('toJson returns correct string', () {
-      expect(AllowlistIdentifierObjectEnum.allowlistIdentifier.toJson(), 'allowlist_identifier');
+      expect(AllowlistIdentifierObjectEnum.allowlistIdentifier.toJson(),
+          'allowlist_identifier');
     });
   });
 
   group('AllowlistIdentifierIdentifierTypeEnum', () {
     test('values contains all enum values', () {
-      expect(AllowlistIdentifierIdentifierTypeEnum.values, contains(AllowlistIdentifierIdentifierTypeEnum.emailAddress));
-      expect(AllowlistIdentifierIdentifierTypeEnum.values, contains(AllowlistIdentifierIdentifierTypeEnum.phoneNumber));
-      expect(AllowlistIdentifierIdentifierTypeEnum.values, contains(AllowlistIdentifierIdentifierTypeEnum.web3Wallet));
+      expect(AllowlistIdentifierIdentifierTypeEnum.values,
+          contains(AllowlistIdentifierIdentifierTypeEnum.emailAddress));
+      expect(AllowlistIdentifierIdentifierTypeEnum.values,
+          contains(AllowlistIdentifierIdentifierTypeEnum.phoneNumber));
+      expect(AllowlistIdentifierIdentifierTypeEnum.values,
+          contains(AllowlistIdentifierIdentifierTypeEnum.web3Wallet));
     });
 
     test('fromJson parses valid values', () {
-      expect(AllowlistIdentifierIdentifierTypeEnum.fromJson('email_address'), AllowlistIdentifierIdentifierTypeEnum.emailAddress);
-      expect(AllowlistIdentifierIdentifierTypeEnum.fromJson('phone_number'), AllowlistIdentifierIdentifierTypeEnum.phoneNumber);
-      expect(AllowlistIdentifierIdentifierTypeEnum.fromJson('web3_wallet'), AllowlistIdentifierIdentifierTypeEnum.web3Wallet);
+      expect(AllowlistIdentifierIdentifierTypeEnum.fromJson('email_address'),
+          AllowlistIdentifierIdentifierTypeEnum.emailAddress);
+      expect(AllowlistIdentifierIdentifierTypeEnum.fromJson('phone_number'),
+          AllowlistIdentifierIdentifierTypeEnum.phoneNumber);
+      expect(AllowlistIdentifierIdentifierTypeEnum.fromJson('web3_wallet'),
+          AllowlistIdentifierIdentifierTypeEnum.web3Wallet);
     });
 
     test('fromJson returns null for invalid value', () {
@@ -151,9 +170,12 @@ void main() {
     });
 
     test('toJson returns correct string', () {
-      expect(AllowlistIdentifierIdentifierTypeEnum.emailAddress.toJson(), 'email_address');
-      expect(AllowlistIdentifierIdentifierTypeEnum.phoneNumber.toJson(), 'phone_number');
-      expect(AllowlistIdentifierIdentifierTypeEnum.web3Wallet.toJson(), 'web3_wallet');
+      expect(AllowlistIdentifierIdentifierTypeEnum.emailAddress.toJson(),
+          'email_address');
+      expect(AllowlistIdentifierIdentifierTypeEnum.phoneNumber.toJson(),
+          'phone_number');
+      expect(AllowlistIdentifierIdentifierTypeEnum.web3Wallet.toJson(),
+          'web3_wallet');
     });
   });
 }

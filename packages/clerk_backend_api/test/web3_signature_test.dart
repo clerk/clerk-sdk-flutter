@@ -35,7 +35,8 @@ void main() {
         expireAt: 1700000000,
       );
       expect(minimal.status, Web3SignatureStatusEnum.unverified);
-      expect(minimal.strategy, Web3SignatureStrategyEnum.coinbaseWalletSignature);
+      expect(
+          minimal.strategy, Web3SignatureStrategyEnum.coinbaseWalletSignature);
       expect(minimal.attempts, 0);
       expect(minimal.expireAt, 1700000000);
       expect(minimal.nonce, isNull);
@@ -128,10 +129,14 @@ void main() {
   group('Web3SignatureStatusEnum', () {
     test('values contains all enum values', () {
       expect(Web3SignatureStatusEnum.values, hasLength(4));
-      expect(Web3SignatureStatusEnum.values, contains(Web3SignatureStatusEnum.unverified));
-      expect(Web3SignatureStatusEnum.values, contains(Web3SignatureStatusEnum.verified));
-      expect(Web3SignatureStatusEnum.values, contains(Web3SignatureStatusEnum.failed));
-      expect(Web3SignatureStatusEnum.values, contains(Web3SignatureStatusEnum.expired));
+      expect(Web3SignatureStatusEnum.values,
+          contains(Web3SignatureStatusEnum.unverified));
+      expect(Web3SignatureStatusEnum.values,
+          contains(Web3SignatureStatusEnum.verified));
+      expect(Web3SignatureStatusEnum.values,
+          contains(Web3SignatureStatusEnum.failed));
+      expect(Web3SignatureStatusEnum.values,
+          contains(Web3SignatureStatusEnum.expired));
     });
 
     test('toJson returns correct string', () {
@@ -140,8 +145,10 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(Web3SignatureStatusEnum.fromJson('verified'), Web3SignatureStatusEnum.verified);
-      expect(Web3SignatureStatusEnum.fromJson('unverified'), Web3SignatureStatusEnum.unverified);
+      expect(Web3SignatureStatusEnum.fromJson('verified'),
+          Web3SignatureStatusEnum.verified);
+      expect(Web3SignatureStatusEnum.fromJson('unverified'),
+          Web3SignatureStatusEnum.unverified);
     });
 
     test('fromJson returns null for unknown value', () {
@@ -152,19 +159,27 @@ void main() {
   group('Web3SignatureStrategyEnum', () {
     test('values contains all enum values', () {
       expect(Web3SignatureStrategyEnum.values, hasLength(3));
-      expect(Web3SignatureStrategyEnum.values, contains(Web3SignatureStrategyEnum.metamaskSignature));
-      expect(Web3SignatureStrategyEnum.values, contains(Web3SignatureStrategyEnum.coinbaseWalletSignature));
-      expect(Web3SignatureStrategyEnum.values, contains(Web3SignatureStrategyEnum.okxWalletSignature));
+      expect(Web3SignatureStrategyEnum.values,
+          contains(Web3SignatureStrategyEnum.metamaskSignature));
+      expect(Web3SignatureStrategyEnum.values,
+          contains(Web3SignatureStrategyEnum.coinbaseWalletSignature));
+      expect(Web3SignatureStrategyEnum.values,
+          contains(Web3SignatureStrategyEnum.okxWalletSignature));
     });
 
     test('toJson returns correct string', () {
-      expect(Web3SignatureStrategyEnum.metamaskSignature.toJson(), 'web3_metamask_signature');
-      expect(Web3SignatureStrategyEnum.coinbaseWalletSignature.toJson(), 'web3_coinbase_wallet_signature');
+      expect(Web3SignatureStrategyEnum.metamaskSignature.toJson(),
+          'web3_metamask_signature');
+      expect(Web3SignatureStrategyEnum.coinbaseWalletSignature.toJson(),
+          'web3_coinbase_wallet_signature');
     });
 
     test('fromJson parses correct value', () {
-      expect(Web3SignatureStrategyEnum.fromJson('web3_metamask_signature'), Web3SignatureStrategyEnum.metamaskSignature);
-      expect(Web3SignatureStrategyEnum.fromJson('web3_coinbase_wallet_signature'), Web3SignatureStrategyEnum.coinbaseWalletSignature);
+      expect(Web3SignatureStrategyEnum.fromJson('web3_metamask_signature'),
+          Web3SignatureStrategyEnum.metamaskSignature);
+      expect(
+          Web3SignatureStrategyEnum.fromJson('web3_coinbase_wallet_signature'),
+          Web3SignatureStrategyEnum.coinbaseWalletSignature);
     });
 
     test('fromJson returns null for unknown value', () {

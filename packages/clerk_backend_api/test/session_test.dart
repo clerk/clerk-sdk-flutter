@@ -106,8 +106,30 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'object': 'session', 'id': 'sess_1', 'user_id': 'u1', 'client_id': 'c1', 'status': 'active', 'last_active_at': 1, 'expire_at': 2, 'abandon_at': 3, 'updated_at': 4, 'created_at': 5},
-        {'object': 'session', 'id': 'sess_2', 'user_id': 'u2', 'client_id': 'c2', 'status': 'ended', 'last_active_at': 6, 'expire_at': 7, 'abandon_at': 8, 'updated_at': 9, 'created_at': 10},
+        {
+          'object': 'session',
+          'id': 'sess_1',
+          'user_id': 'u1',
+          'client_id': 'c1',
+          'status': 'active',
+          'last_active_at': 1,
+          'expire_at': 2,
+          'abandon_at': 3,
+          'updated_at': 4,
+          'created_at': 5
+        },
+        {
+          'object': 'session',
+          'id': 'sess_2',
+          'user_id': 'u2',
+          'client_id': 'c2',
+          'status': 'ended',
+          'last_active_at': 6,
+          'expire_at': 7,
+          'abandon_at': 8,
+          'updated_at': 9,
+          'created_at': 10
+        },
       ];
       final list = Session.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -222,8 +244,10 @@ void main() {
       expect(SessionStatusEnum.fromJson('ended'), SessionStatusEnum.ended);
       expect(SessionStatusEnum.fromJson('expired'), SessionStatusEnum.expired);
       expect(SessionStatusEnum.fromJson('removed'), SessionStatusEnum.removed);
-      expect(SessionStatusEnum.fromJson('abandoned'), SessionStatusEnum.abandoned);
-      expect(SessionStatusEnum.fromJson('replaced'), SessionStatusEnum.replaced);
+      expect(
+          SessionStatusEnum.fromJson('abandoned'), SessionStatusEnum.abandoned);
+      expect(
+          SessionStatusEnum.fromJson('replaced'), SessionStatusEnum.replaced);
       expect(SessionStatusEnum.fromJson('pending'), SessionStatusEnum.pending);
     });
 

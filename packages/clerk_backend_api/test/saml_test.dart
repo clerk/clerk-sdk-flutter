@@ -28,7 +28,8 @@ void main() {
     test('constructor creates instance with required parameters', () {
       expect(instance.status, SAMLStatusEnum.unverified);
       expect(instance.strategy, SAMLStrategyEnum.saml);
-      expect(instance.externalVerificationRedirectUrl, 'https://example.com/saml');
+      expect(
+          instance.externalVerificationRedirectUrl, 'https://example.com/saml');
       expect(instance.expireAt, 1234567890);
       expect(instance.attempts, 0);
     });
@@ -50,7 +51,8 @@ void main() {
       final json = instance.toJson();
       expect(json['status'], SAMLStatusEnum.unverified);
       expect(json['strategy'], SAMLStrategyEnum.saml);
-      expect(json['external_verification_redirect_url'], 'https://example.com/saml');
+      expect(json['external_verification_redirect_url'],
+          'https://example.com/saml');
       expect(json['expire_at'], 1234567890);
     });
 

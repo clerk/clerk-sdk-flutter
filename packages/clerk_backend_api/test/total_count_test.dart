@@ -100,7 +100,8 @@ void main() {
 
   group('TotalCountObjectEnum', () {
     test('values contains all enum values', () {
-      expect(TotalCountObjectEnum.values, contains(TotalCountObjectEnum.totalCount));
+      expect(TotalCountObjectEnum.values,
+          contains(TotalCountObjectEnum.totalCount));
     });
 
     test('toJson returns correct string', () {
@@ -108,7 +109,8 @@ void main() {
     });
 
     test('fromJson parses correct value', () {
-      expect(TotalCountObjectEnum.fromJson('total_count'), TotalCountObjectEnum.totalCount);
+      expect(TotalCountObjectEnum.fromJson('total_count'),
+          TotalCountObjectEnum.totalCount);
     });
 
     test('fromJson returns null for unknown value', () {

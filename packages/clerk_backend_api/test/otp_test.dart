@@ -68,8 +68,18 @@ void main() {
 
     test('listFromJson creates list from json array', () {
       final jsonArray = [
-        {'status': 'unverified', 'strategy': 'email_code', 'attempts': 1, 'expire_at': 1},
-        {'status': 'verified', 'strategy': 'phone_code', 'attempts': 2, 'expire_at': 2},
+        {
+          'status': 'unverified',
+          'strategy': 'email_code',
+          'attempts': 1,
+          'expire_at': 1
+        },
+        {
+          'status': 'verified',
+          'strategy': 'phone_code',
+          'attempts': 2,
+          'expire_at': 2
+        },
       ];
       final list = OTP.listFromJson(jsonArray);
       expect(list.length, 2);
@@ -147,19 +157,22 @@ void main() {
       expect(OTPStrategyEnum.values, hasLength(3));
       expect(OTPStrategyEnum.values, contains(OTPStrategyEnum.phoneCode));
       expect(OTPStrategyEnum.values, contains(OTPStrategyEnum.emailCode));
-      expect(OTPStrategyEnum.values, contains(OTPStrategyEnum.resetPasswordEmailCode));
+      expect(OTPStrategyEnum.values,
+          contains(OTPStrategyEnum.resetPasswordEmailCode));
     });
 
     test('toJson returns correct string', () {
       expect(OTPStrategyEnum.phoneCode.toJson(), 'phone_code');
       expect(OTPStrategyEnum.emailCode.toJson(), 'email_code');
-      expect(OTPStrategyEnum.resetPasswordEmailCode.toJson(), 'reset_password_email_code');
+      expect(OTPStrategyEnum.resetPasswordEmailCode.toJson(),
+          'reset_password_email_code');
     });
 
     test('fromJson parses correct values', () {
       expect(OTPStrategyEnum.fromJson('phone_code'), OTPStrategyEnum.phoneCode);
       expect(OTPStrategyEnum.fromJson('email_code'), OTPStrategyEnum.emailCode);
-      expect(OTPStrategyEnum.fromJson('reset_password_email_code'), OTPStrategyEnum.resetPasswordEmailCode);
+      expect(OTPStrategyEnum.fromJson('reset_password_email_code'),
+          OTPStrategyEnum.resetPasswordEmailCode);
     });
 
     test('fromJson returns null for unknown value', () {

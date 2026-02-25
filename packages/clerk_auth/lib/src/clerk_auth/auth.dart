@@ -528,6 +528,10 @@ class Auth {
         update();
       }
       return;
+    } else if (strategy.isPasskey) {
+      await _api.createSignIn(strategy: strategy).then(_housekeeping);
+      update();
+      return;
     }
 
     // Ensure we have a signIn object for the current identifier
@@ -759,6 +763,15 @@ class Auth {
 
     update();
     return client;
+  }
+
+  /// Passkeys
+
+  /// Adds a passkey to the current user
+  ///
+  Future<void> addPasskey() async {
+    await _api.addPasskey().then(_housekeeping);
+    update();
   }
 
   /// Sign out of the given [Session]

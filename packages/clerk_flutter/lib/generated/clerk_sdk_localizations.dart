@@ -160,6 +160,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Add email address'**
   String get addEmailAddress;
 
+  /// No description provided for @addPasskey.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a passkey'**
+  String get addPasskey;
+
   /// No description provided for @addPhoneNumber.
   ///
   /// In en, this message translates to:
@@ -280,6 +286,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Create organization'**
   String get createOrganization;
 
+  /// No description provided for @created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get created;
+
   /// No description provided for @developmentMode.
   ///
   /// In en, this message translates to:
@@ -321,6 +333,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'email'**
   String get emailAddressConcise;
+
+  /// No description provided for @emailAddresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Email addresses'**
+  String get emailAddresses;
 
   /// No description provided for @enrollment.
   ///
@@ -442,6 +460,12 @@ abstract class ClerkSdkLocalizations {
   /// **'last name'**
   String get lastName;
 
+  /// No description provided for @lastUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last used'**
+  String get lastUsed;
+
   /// No description provided for @leave.
   ///
   /// In en, this message translates to:
@@ -471,6 +495,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Logo'**
   String get logo;
+
+  /// No description provided for @longDateFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'d MMMM y, \'h:mm a'**
+  String get longDateFormat;
 
   /// No description provided for @manualInvitation.
   ///
@@ -610,6 +640,12 @@ abstract class ClerkSdkLocalizations {
   /// **'passkey'**
   String get passkey;
 
+  /// No description provided for @passkeys.
+  ///
+  /// In en, this message translates to:
+  /// **'Passkeys'**
+  String get passkeys;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
@@ -663,6 +699,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'phone'**
   String get phoneNumberConcise;
+
+  /// No description provided for @phoneNumbers.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone numbers'**
+  String get phoneNumbers;
 
   /// No description provided for @pleaseAddRequiredInformation.
   ///
@@ -933,6 +975,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'unverified'**
   String get unverified;
+
+  /// No description provided for @usePasskeyInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Use passkey instead'**
+  String get usePasskeyInstead;
 
   /// No description provided for @username.
   ///

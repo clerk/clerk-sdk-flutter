@@ -584,6 +584,16 @@ class Api with Logging {
     );
   }
 
+  /// Add a passkey to the current [User]
+  ///
+  Future<ApiResponse> addPasskey() async {
+    final xxx = await _fetchApiResponse(
+      '/me/passkeys',
+      withSession: true,
+    );
+    return xxx;
+  }
+
   // Identifying Data
 
   /// Add some [UserIdentifyingData] to the current [User]

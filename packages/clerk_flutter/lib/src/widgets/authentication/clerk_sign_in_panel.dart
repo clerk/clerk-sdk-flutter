@@ -14,6 +14,8 @@ import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/or_divider.dart';
 import 'package:clerk_flutter/src/widgets/ui/strategy_button.dart';
 import 'package:flutter/material.dart';
+import 'package:passkeys/authenticator.dart';
+import 'package:passkeys/types.dart';
 
 /// The [ClerkSignInPanel] renders a UI for signing in users.
 ///
@@ -82,19 +84,42 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
             strategy: strategy!,
             identifier: _identifier.identifier.orNullIfEmpty,
             password: _password.orNullIfEmpty,
-            code: _code.orNullIfEmpty,
+            code: code?.orNullIfEmpty,
             redirectUrl: redirectUri?.toString(),
           );
 
-          if (authState.client.signIn case clerk.SignIn signIn when mounted) {
-            final factors = signIn.factors;
-            if (factors.any((f) => f.strategy.isEnterpriseSSO)) {
-              await authState.ssoSignIn(context, clerk.Strategy.enterpriseSSO);
-            } else if (signIn.needsFactor && factors.length == 1) {
-              await authState.attemptSignIn(strategy: factors.first.strategy);
-            }
-            if (signIn.needsFactor && signIn.factors.length == 1) {
-              _strategy = signIn.factors.first.strategy;
+          if (authState.signIn case clerk.SignIn signIn when mounted) {
+            if (signIn.firstFactorVerification
+                case clerk.Verification verification
+                when verification.strategy.isPasskey &&
+                    verification.status.isUnverified) {
+              if (verification.nonce case clerk.VerificationNonce nonce) {
+                final authenticator = PasskeyAuthenticator();
+                final requestType = AuthenticateRequestType(
+                  challenge: nonce.challenge,
+                  relyingPartyId: nonce.rpId,
+                  mediation: MediationType.Silent,
+                  timeout: nonce.timeout,
+                  userVerification: nonce.userVerification,
+                  preferImmediatelyAvailableCredentials: false,
+                );
+                await authenticator.authenticate(requestType);
+              }
+              // await authState.passkeySignIn();
+            } else if (signIn.factors case final factors
+                when factors.isNotEmpty) {
+              if (factors.any((f) => f.strategy.isEnterpriseSSO)) {
+                await authState.ssoSignIn(
+                  context,
+                  clerk.Strategy.enterpriseSSO,
+                );
+              } else if (signIn.needsFactor && factors.length == 1) {
+                await authState.attemptSignIn(strategy: factors.first.strategy);
+              }
+              if (authState.signIn case clerk.SignIn signIn
+                  when signIn.needsFactor && signIn.factors.length == 1) {
+                _strategy = signIn.factors.first.strategy;
+              }
             }
           }
         },

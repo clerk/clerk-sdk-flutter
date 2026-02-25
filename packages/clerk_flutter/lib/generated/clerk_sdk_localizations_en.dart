@@ -48,6 +48,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get addEmailAddress => 'Add email address';
 
   @override
+  String get addPasskey => 'Add a passkey';
+
+  @override
   String get addPhoneNumber => 'Add phone number';
 
   @override
@@ -112,6 +115,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get createOrganization => 'Create organization';
 
   @override
+  String get created => 'Created';
+
+  @override
   String get developmentMode => 'Development mode';
 
   @override
@@ -131,6 +137,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get emailAddressConcise => 'email';
+
+  @override
+  String get emailAddresses => 'Email addresses';
 
   @override
   String get enrollment => 'Enrollment';
@@ -201,6 +210,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get lastName => 'last name';
 
   @override
+  String get lastUsed => 'Last used';
+
+  @override
   String get leave => 'Leave';
 
   @override
@@ -216,6 +228,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get logo => 'Logo';
+
+  @override
+  String get longDateFormat => 'd MMMM y, \'h:mm a';
 
   @override
   String get manualInvitation => 'Manual invitation';
@@ -301,6 +316,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get passkey => 'passkey';
 
   @override
+  String get passkeys => 'Passkeys';
+
+  @override
   String get password => 'Password';
 
   @override
@@ -326,6 +344,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get phoneNumberConcise => 'phone';
+
+  @override
+  String get phoneNumbers => 'Phone numbers';
 
   @override
   String get pleaseAddRequiredInformation => 'Something seems to be missing. Please add the required information';
@@ -481,6 +502,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get unverified => 'unverified';
+
+  @override
+  String get usePasskeyInstead => 'Use passkey instead';
 
   @override
   String get username => 'username';

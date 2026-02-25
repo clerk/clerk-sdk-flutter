@@ -1,5 +1,5 @@
-import 'package:clerk_auth/src/models/client/verification.dart';
-import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
+import 'package:clerk_auth/src/models/client/user_identifying_data.dart';
+import 'package:clerk_auth/src/models/enums.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -9,25 +9,19 @@ part 'passkey.g.dart';
 /// [Passkey] Clerk object
 @immutable
 @JsonSerializable()
-class Passkey with InformativeToStringMixin {
+class Passkey extends UserIdentifyingData {
   /// Constructor
   const Passkey({
-    required this.id,
+    required super.id,
+    required super.verification,
     required this.name,
-    required this.verification,
     required this.lastUsedAt,
     required this.updatedAt,
     required this.createdAt,
-  });
-
-  /// id
-  final String id;
+  }) : super(type: IdentifierType.passkey);
 
   /// name
   final String name;
-
-  /// verification
-  final Verification verification;
 
   /// updated at
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
@@ -40,6 +34,9 @@ class Passkey with InformativeToStringMixin {
   /// last used at
   @JsonKey(fromJson: intToDateTime, toJson: dateTimeToInt)
   final DateTime lastUsedAt;
+
+  @override
+  String get identifier => name;
 
   /// fromJson
   static Passkey fromJson(Map<String, dynamic> json) => _$PasskeyFromJson(json);

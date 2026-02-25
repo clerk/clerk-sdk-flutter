@@ -22,4 +22,5 @@ export 'client/user.dart';
 export 'client/user_identifying_data.dart';
 export 'client/user_public.dart';
 export 'client/verification.dart';
+export 'client/verification_nonce.dart';
 export 'client/web3_wallet.dart';

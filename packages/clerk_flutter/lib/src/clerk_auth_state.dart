@@ -323,6 +323,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       _onError(error, onError);
     } on Exception catch (error, stack) {
       debugPrint('ClerkAuthState: $error\n$stack');
+      _onError(clerk.ClerkError.external(error), onError);
     } finally {
       _loadingOverlay.removeFrom(overlay);
       if (_updateLock.release()) {

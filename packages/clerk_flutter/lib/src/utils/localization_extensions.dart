@@ -12,6 +12,8 @@ extension ClerkAuthErrorExtension on clerk.ClerkError {
     return switch (code) {
       // codes requiring localisation
       clerk.ClerkErrorCode.cannotDeleteSelf => l10ns.cannotDeleteSelf,
+      clerk.ClerkErrorCode.externalError =>
+        l10ns.externalError(argument.toString()),
       clerk.ClerkErrorCode.jwtPoorlyFormatted =>
         l10ns.jwtPoorlyFormatted(argument.toString()),
       clerk.ClerkErrorCode.noAssociatedCodeRetrievalMethod =>

@@ -177,6 +177,11 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get expired => 'expired';
 
   @override
+  String externalError(String arg) {
+    return '$arg (EXTERNAL ERROR)';
+  }
+
+  @override
   String get failed => 'failed';
 
   @override

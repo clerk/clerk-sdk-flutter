@@ -409,6 +409,7 @@ class Api with Logging {
     String? code,
     String? password,
     String? redirectUrl,
+    String? passkeyCredential,
   }) async {
     assert(
       strategy.requiresRedirect == false || redirectUrl is String,
@@ -430,6 +431,7 @@ class Api with Logging {
         'code': code,
         'password': password,
         'redirect_url': redirectUrl,
+        'public_key_credential': passkeyCredential,
       },
     );
   }
@@ -584,14 +586,29 @@ class Api with Logging {
     );
   }
 
-  /// Add a passkey to the current [User]
+  /// Creates an unverified passkey for the current [User]
   ///
-  Future<ApiResponse> addPasskey() async {
-    final xxx = await _fetchApiResponse(
+  Future<ApiResponse> createPasskey() async {
+    return await _fetchApiResponse(
       '/me/passkeys',
       withSession: true,
     );
-    return xxx;
+  }
+
+  /// Verifies a passkey
+  ///
+  Future<ApiResponse> attemptPasskeyVerification(
+    String passkeyId,
+    String credential,
+  ) async {
+    return await _fetchApiResponse(
+      '/me/passkeys/$passkeyId/attempt_verification',
+      withSession: true,
+      params: {
+        'public_key_credential': credential,
+        'strategy': Strategy.passkey,
+      },
+    );
   }
 
   // Identifying Data

@@ -97,13 +97,17 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                 final authenticator = PasskeyAuthenticator();
                 final requestType = AuthenticateRequestType(
                   challenge: nonce.challenge,
-                  relyingPartyId: nonce.rpId,
+                  relyingPartyId: nonce.relyingParty.id,
                   mediation: MediationType.Silent,
                   timeout: nonce.timeout,
                   userVerification: nonce.userVerification,
-                  preferImmediatelyAvailableCredentials: false,
+                  preferImmediatelyAvailableCredentials: true,
                 );
-                await authenticator.authenticate(requestType);
+                final res = await authenticator.authenticate(requestType);
+                await authState.attemptSignIn(
+                  strategy: clerk.Strategy.passkey,
+                  passkeyCredential: res.toJsonString(),
+                );
               }
               // await authState.passkeySignIn();
             } else if (signIn.factors case final factors
@@ -244,8 +248,42 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           onBack: _needsBack(signIn) ? () => _reset(authState) : null,
         ),
 
-        verticalMargin32,
+        verticalMargin16,
+        if (env.user.passkeySettings.showSignInButton &&
+            env.user.attributes[clerk.UserAttribute.passkey]?.isEnabled ==
+                true) //
+          Openable(
+            open: signIn.status.isUnknown,
+            child: _UsePasskeyAction(
+              onTap: () =>
+                  _continue(authState, strategy: clerk.Strategy.passkey),
+            ),
+          ),
+        verticalMargin16,
       ],
+    );
+  }
+}
+
+class _UsePasskeyAction extends StatelessWidget {
+  const _UsePasskeyAction({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final authState = ClerkAuth.of(context);
+    final l10ns = authState.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
+    return Center(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Text(
+          l10ns.usePasskeyInstead,
+          style: themeExtension.styles.clickableText,
+        ),
+      ),
     );
   }
 }

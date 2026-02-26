@@ -6,6 +6,7 @@ import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_divider.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_input_dialog.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel.dart';
@@ -93,7 +94,7 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
                 maxLines: 1,
                 style: themeExtension.styles.heading,
               ),
-              Padding(padding: topPadding16, child: divider(context)),
+              const ClerkDivider(),
               _ProfileRow(
                 title: _localizations.organizationProfile,
                 child: EditableProfileData(
@@ -107,13 +108,13 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
                 ),
               ),
               if (showDomains) ...[
-                Padding(padding: topPadding16, child: divider(context)),
+                const ClerkDivider(),
                 _ProfileRow(
                   title: _localizations.verifiedDomains,
                   child: _DomainsList(membership),
                 ),
               ],
-              Padding(padding: topPadding16, child: divider(context)),
+              const ClerkDivider(),
               _ProfileRow(
                 title: _localizations.leaveOrganization,
                 child: GestureDetector(

@@ -9,9 +9,13 @@ part of 'verification_nonce.dart';
 VerificationNonce _$VerificationNonceFromJson(Map<String, dynamic> json) =>
     VerificationNonce(
       challenge: json['challenge'] as String,
-      rpId: json['rpId'] as String,
+      relyingParty: RelyingParty.fromJson(
+          _readRelyingParty(json, 'relying_party') as Map<String, dynamic>),
       timeout: (json['timeout'] as num?)?.toInt() ?? 30000,
       userVerification: json['user_verification'] as String?,
+      user: json['user'] == null
+          ? null
+          : PasskeyUser.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$VerificationNonceToJson(VerificationNonce instance) {
@@ -27,6 +31,7 @@ Map<String, dynamic> _$VerificationNonceToJson(VerificationNonce instance) {
   }
 
   writeNotNull('user_verification', instance.userVerification);
-  val['rpId'] = instance.rpId;
+  val['relying_party'] = instance.relyingParty.toJson();
+  writeNotNull('user', instance.user?.toJson());
   return val;
 }

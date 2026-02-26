@@ -406,6 +406,12 @@ abstract class ClerkSdkLocalizations {
   /// **'expired'**
   String get expired;
 
+  /// No description provided for @externalError.
+  ///
+  /// In en, this message translates to:
+  /// **'{arg} (EXTERNAL ERROR)'**
+  String externalError(String arg);
+
   /// No description provided for @failed.
   ///
   /// In en, this message translates to:

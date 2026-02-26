@@ -195,6 +195,7 @@ class Strategy {
 
   /// is passkey?
   bool get isPasskey => this == passkey;
+
   /// is email link?
   bool get isEmailLink => this == emailLink;
 

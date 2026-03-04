@@ -151,16 +151,21 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
     });
   }
 
-  // For passkeys to work on Android, the app needs to be added to the Clerk
-  // dashboard Native Applications (https://dashboard.clerk.com/apps/<APPLICATION ID>/instances/<INSTANCE ID>/native-applications)
+  // For passkeys to work the app needs to be added to the Clerk dashboard
+  // Native Applications (https://dashboard.clerk.com/apps/<APPLICATION ID>/instances/<INSTANCE ID>/native-applications)
+  //
+  // * Android:
   //    * Namespace: 'android_app'
   //    * Package name: '<your app's package name>'
   //    * SHA-256 certificate fingerprint: '<SHA-256 fingerprint>'
-  //
   // To find the cert for debug/dev builds:
   // 1. Run `keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore` (assuming that's where your keystore is)
   // 2. Enter the password. Default is 'android'
   // 3. Copy the SHA-256 fingerprint
+  //
+  // * iOS
+  //    * App ID prefix: '<your app's team ID>'
+  //    * Bundle ID: '<your app's bundle ID>'
   //
   Future<void> _addNewPasskey(ClerkAuthState authState) async {
     await authState.safelyCall(
@@ -175,6 +180,15 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
             user: nonce.user!.toUserType(),
             excludeCredentials: const [],
             timeout: nonce.timeout,
+            // force platform attachment so we don't use hw security key (not supported on simulator)
+            authSelectionType: authState.config.supportsHardwareSecurityKeys
+                ? AuthenticatorSelectionType(
+                    authenticatorAttachment: 'platform',
+                    requireResidentKey: false,
+                    residentKey: '',
+                    userVerification: '',
+                  )
+                : null,
           );
           final res = await authenticator.register(challenge);
           await authState.attemptPasskeyVerification(

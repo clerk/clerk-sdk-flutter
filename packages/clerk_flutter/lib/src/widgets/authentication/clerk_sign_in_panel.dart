@@ -98,7 +98,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
                 final requestType = AuthenticateRequestType(
                   challenge: nonce.challenge,
                   relyingPartyId: nonce.relyingParty.id,
-                  mediation: MediationType.Silent,
+                  mediation: MediationType.Required,
                   timeout: nonce.timeout,
                   userVerification: nonce.userVerification,
                   preferImmediatelyAvailableCredentials: true,

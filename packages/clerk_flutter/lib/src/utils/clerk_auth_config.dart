@@ -44,6 +44,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
     this.redirectionGenerator,
     this.deepLinkStream,
     this.defaultLaunchMode = LaunchMode.externalApplication,
+    this.supportsHardwareSecurityKeys = true,
     ClerkFileCache? fileCache,
     ClerkSdkLocalizationsCollection? localizations,
     ClerkSdkLocalizations? fallbackLocalization,
@@ -99,6 +100,10 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   /// The [Widget] to display while loading data, override with null
   /// to disable the loading overlay or use your own widget.
   final Widget? loading;
+
+  /// Whether the Clerk instance supports hardware security keys
+  /// (basically, are we running on an iOS simulator?)
+  final bool supportsHardwareSecurityKeys;
 
   /// Flags used to affect behaviour
   @override

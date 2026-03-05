@@ -4,6 +4,7 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/utils/extensions.dart';
 import 'package:clerk_flutter/src/utils/localization_extensions.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
@@ -15,6 +16,7 @@ import 'package:clerk_flutter/src/widgets/ui/clerk_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_phone_number_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_row_label.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
+import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/editable_profile_data.dart';
 import 'package:clerk_flutter/src/widgets/user/connect_account_panel.dart';
@@ -38,6 +40,8 @@ class ClerkUserProfile extends StatefulWidget {
 
 class _ClerkUserProfileState extends State<ClerkUserProfile>
     with ClerkTelemetryStateMixin {
+  final _passkeyAvailable = PasskeyAuthenticator().isAvailable;
+
   bool _validate(String? identifier, clerk.IdentifierType type) {
     if (identifier?.trim() case String identifier when identifier.isNotEmpty) {
       switch (type) {
@@ -230,14 +234,14 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                   children: [
                     _ProfileRow(
                       title: l10ns.profile,
+                      withDivider: false,
                       child: EditableProfileData(
                         name: user.name,
                         imageUrl: user.imageUrl,
                         onSubmit: _update,
                       ),
                     ),
-                    if (authState.env.config.allowsEmailAddress) ...[
-                      const ClerkDivider(),
+                    if (authState.env.config.allowsEmailAddress) //
                       _ProfileRow(
                         title: l10ns.emailAddresses,
                         child: _IdentifierList<clerk.Email>(
@@ -261,9 +265,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                           },
                         ),
                       ),
-                    ],
-                    if (authState.env.config.allowsPhoneNumber) ...[
-                      const ClerkDivider(),
+                    if (authState.env.config.allowsPhoneNumber) //
                       _ProfileRow(
                         title: l10ns.phoneNumbers,
                         child: _IdentifierList<clerk.PhoneNumber>(
@@ -288,45 +290,49 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
                           },
                         ),
                       ),
-                    ],
-                    if (authState.env.supportsPasskeys) ...[
-                      const ClerkDivider(),
-                      _ProfileRow(
-                        title: l10ns.passkeys,
-                        child: _IdentifierList<clerk.Passkey>(
-                          user: user,
-                          identifiers: user.passkeys,
-                          addLine: l10ns.addPasskey,
-                          builder: (context, passkey) => Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                passkey.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: themeExtension.styles.text,
+                    if (authState.env.supportsPasskeys) //
+                      FutureBuilder(
+                        future: _passkeyAvailable,
+                        builder: (context, snapshot) {
+                          return Openable(
+                            open: snapshot.data == true,
+                            builder: (context) => _ProfileRow(
+                              title: l10ns.passkeys,
+                              child: _IdentifierList<clerk.Passkey>(
+                                user: user,
+                                identifiers: user.passkeys,
+                                addLine: l10ns.addPasskey,
+                                builder: (context, passkey) => Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      passkey.name,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: themeExtension.styles.text,
+                                    ),
+                                    verticalMargin4,
+                                    Text(
+                                      '${l10ns.created}: ${_dateFormatter.format(passkey.createdAt)}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: themeExtension.styles.subtext,
+                                    ),
+                                    verticalMargin4,
+                                    Text(
+                                      '${l10ns.lastUsed}: ${_dateFormatter.format(passkey.lastUsedAt)}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: themeExtension.styles.subtext,
+                                    ),
+                                  ],
+                                ),
+                                onAddNew: () => _addNewPasskey(authState),
                               ),
-                              verticalMargin4,
-                              Text(
-                                '${l10ns.created}: ${_dateFormatter.format(passkey.createdAt)}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: themeExtension.styles.subtext,
-                              ),
-                              verticalMargin4,
-                              Text(
-                                '${l10ns.lastUsed}: ${_dateFormatter.format(passkey.lastUsedAt)}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: themeExtension.styles.subtext,
-                              ),
-                            ],
-                          ),
-                          onAddNew: () => _addNewPasskey(authState),
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                    ],
-                    const ClerkDivider(),
                     _ProfileRow(
                       title: l10ns.connectedAccounts,
                       child: _ExternalAccountList(
@@ -511,31 +517,39 @@ class _ProfileRow extends StatelessWidget {
   const _ProfileRow({
     required this.title,
     required this.child,
+    this.withDivider = true,
   });
 
   final String title;
   final Widget child;
+  final bool withDivider;
 
   @override
   Widget build(BuildContext context) {
     final themeExtension = ClerkAuth.themeExtensionOf(context);
-    return Padding(
-      padding: topPadding16,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 96,
-            child: Text(
-              title,
-              maxLines: 2,
-              style: themeExtension.styles.subheading,
-            ),
+    return Column(
+      children: [
+        if (withDivider) //
+          const ClerkDivider(),
+        Padding(
+          padding: topPadding16,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 96,
+                child: Text(
+                  title,
+                  maxLines: 2,
+                  style: themeExtension.styles.subheading,
+                ),
+              ),
+              horizontalMargin8,
+              Expanded(child: child),
+            ],
           ),
-          horizontalMargin8,
-          Expanded(child: child),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/utils/extensions.dart';
 import 'package:clerk_flutter/src/utils/identifier.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_forgotten_password_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
@@ -34,6 +35,8 @@ class ClerkSignInPanel extends StatefulWidget {
 
 class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     with ClerkTelemetryStateMixin {
+  final _passkeyAvailable = PasskeyAuthenticator().isAvailable;
+
   clerk.Strategy _strategy = clerk.Strategy.unknown;
   Identifier _identifier = const Identifier('');
   String _password = '';
@@ -189,7 +192,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         Openable(
           key: const Key('identifierInput'),
           open: signIn.status.isUnknown,
-          child: ClerkIdentifierInput(
+          builder: (context) => ClerkIdentifierInput(
             initialValue: _identifier,
             strategies: env.identificationStrategies.toList(),
             onChanged: (identifier) => _identifier = identifier,
@@ -201,7 +204,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         Openable(
           key: const Key('heading'),
           open: signIn.status.needsFactor,
-          child: Text(
+          builder: (context) => Text(
             signIn.needsSecondFactor
                 ? l10ns.twoStepVerification
                 : _identifier.identifier,
@@ -250,14 +253,18 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
         verticalMargin16,
         if (env.user.passkeySettings.showSignInButton &&
-            env.user.attributes[clerk.UserAttribute.passkey]?.isEnabled ==
-                true) //
-          Openable(
-            open: signIn.status.isUnknown,
-            child: _UsePasskeyAction(
-              onTap: () =>
-                  _continue(authState, strategy: clerk.Strategy.passkey),
-            ),
+            env.supportsPasskeys) //
+          FutureBuilder(
+            future: _passkeyAvailable,
+            builder: (context, snapshot) {
+              return Openable(
+                open: snapshot.data == true && signIn.status.isUnknown,
+                builder: (context) => _UsePasskeyAction(
+                  onTap: () =>
+                      _continue(authState, strategy: clerk.Strategy.passkey),
+                ),
+              );
+            },
           ),
         verticalMargin16,
       ],
@@ -304,7 +311,7 @@ class _EmailLinkMessage extends StatelessWidget {
     final themeExtension = ClerkAuth.themeExtensionOf(context);
     return Openable(
       open: open,
-      child: Column(
+      builder: (context) => Column(
         children: [
           Text(
             identifier is String
@@ -345,7 +352,7 @@ class _CodeInput extends StatelessWidget {
     final l10ns = ClerkAuth.localizationsOf(context);
     return Openable(
       open: strategy.requiresCode,
-      child: Padding(
+      builder: (context) => Padding(
         padding: verticalPadding8,
         child: ClerkCodeInput(
           title: switch (strategy) {
@@ -405,7 +412,7 @@ class _FactorList extends StatelessWidget {
 
     return Openable(
       open: open,
-      child: Column(
+      builder: (context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (onPasswordChanged case final onPasswordChanged?

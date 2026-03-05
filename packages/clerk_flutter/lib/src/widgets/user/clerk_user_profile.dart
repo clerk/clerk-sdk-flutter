@@ -185,14 +185,15 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
             excludeCredentials: const [],
             timeout: nonce.timeout,
             // force platform attachment so we don't use hw security key (not supported on simulator)
-            authSelectionType: authState.config.supportsHardwareSecurityKeys
-                ? AuthenticatorSelectionType(
-                    authenticatorAttachment: 'platform',
-                    requireResidentKey: false,
-                    residentKey: '',
-                    userVerification: '',
-                  )
-                : null,
+            authSelectionType:
+                authState.config.supportsHardwareSecurityKeys == false
+                    ? AuthenticatorSelectionType(
+                        authenticatorAttachment: 'platform',
+                        requireResidentKey: false,
+                        residentKey: '',
+                        userVerification: '',
+                      )
+                    : null,
           );
           final res = await authenticator.register(challenge);
           await authState.attemptPasskeyVerification(

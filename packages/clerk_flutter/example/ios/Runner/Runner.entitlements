@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>webcredentials:more-yeti-53.clerk.accounts.dev?mode=developer</string>
+		<string>webcredentials:more-yeti-53.clerk.accounts.dev</string>
 	</array>
 </dict>
 </plist>

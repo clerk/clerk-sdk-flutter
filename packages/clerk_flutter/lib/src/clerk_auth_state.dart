@@ -92,6 +92,14 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   void update() {
     if (_updateLock.isUnlocked) {
       super.update();
+
+      if (this is HydratedClerkAuthState) {
+        final HydratedClerkAuthState hydratedState = this as HydratedClerkAuthState;
+        if (!hydratedState.isHydrated && client.isNotEmpty && env.isNotEmpty) {
+          hydratedState.isHydrated = true;
+          hydratedState.hydrationSource = HydrationSource.update;
+        }
+      }
       notifyListeners();
     }
   }
@@ -406,6 +414,76 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     }
 
     return null;
+  }
+}
+
+/// A [ClerkAuthState] subclass that exposes a reliable hydration flag.
+///
+/// Hydration refers to Clerk restoring sessions, user, and environment
+/// inside the async [initialize] lifecycle.
+enum HydrationSource { beforeInitialize, afterInitialize, afterRefresh, refreshError, update }
+
+class HydratedClerkAuthState extends ClerkAuthState {
+  bool isHydrated = false;
+  int hydrationAttempt = 0;
+  HydrationSource? hydrationSource;
+
+  HydratedClerkAuthState._(super.config) : super._();
+
+  /// Create an uninitialized instance so the UI can mount and listen
+  /// while hydration happens asynchronously.
+  static HydratedClerkAuthState createUninitialized({
+    required ClerkAuthConfig config,
+  }) {
+    return HydratedClerkAuthState._(config);
+  }
+
+  static Future<HydratedClerkAuthState> create({
+    required ClerkAuthConfig config,
+  }) async {
+    final state = HydratedClerkAuthState._(config);
+    await state.initialize();
+    return state;
+  }
+
+  @override
+  Future<void> initialize() async {
+    // Emit an initial "pre-initialize" state so UI can log that hydration started
+    hydrationSource = HydrationSource.beforeInitialize;
+    notifyListeners();
+    await super.initialize();
+
+    // If client is ready right after initialize, mark hydrated
+    if (client.isNotEmpty && env.isNotEmpty) {
+      isHydrated = true;
+      hydrationSource = HydrationSource.afterInitialize;
+      notifyListeners();
+      return;
+    }
+    // Retry when client/env are not yet ready: 1s, 3s, 5s
+    final List<Duration> delays = <Duration>[
+      const Duration(seconds: 1),
+      const Duration(seconds: 3),
+      const Duration(seconds: 5),
+    ];
+    for (int i = 0; i < delays.length; i++) {
+      await Future.delayed(delays[i]);
+
+      hydrationAttempt = i + 1;
+      try {
+        await refreshClient();
+      } catch (error) {
+        // Surface refresh errors via hydration callback mechanism
+        hydrationSource = HydrationSource.refreshError;
+        notifyListeners();
+      }
+       if (client.isNotEmpty) {
+        isHydrated = true;
+        hydrationSource = HydrationSource.afterRefresh;
+        notifyListeners();
+        break;
+      }
+    }
   }
 }
 

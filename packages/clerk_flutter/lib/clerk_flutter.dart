@@ -10,6 +10,7 @@ export 'src/widgets/authentication/clerk_authentication.dart';
 export 'src/widgets/control/clerk_auth.dart';
 export 'src/widgets/control/clerk_auth_builder.dart';
 export 'src/widgets/control/clerk_error_listener.dart';
+export 'src/widgets/control/custom_clerk_auth_builder.dart';
 export 'src/widgets/control/clerk_signed_in.dart';
 export 'src/widgets/control/clerk_signed_out.dart';
 export 'src/widgets/organization/clerk_organization_list.dart';

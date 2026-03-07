@@ -18,11 +18,11 @@ class ClerkAuth extends StatefulWidget {
     this.persistor,
     this.httpService,
     this.authState,
-  })  : assert(
-          (config == null) != (authState == null),
-          'Requires one and only one of `authState` or `config`',
-        ),
-        _config = config;
+  }) : assert(
+         (config == null) != (authState == null),
+         'Requires one and only one of `authState` or `config`',
+       ),
+       _config = config;
 
   /// Constructor to use when using [MaterialApp] for your project.
   static TransitionBuilder materialAppBuilder({
@@ -60,7 +60,8 @@ class ClerkAuth extends StatefulWidget {
   /// Get the [context]'s nearest [ClerkAuthState]
   /// with rebuild on change
   static ClerkAuthState of(BuildContext context, {bool listen = true}) {
-    final result = listen //
+    final result =
+        listen //
         ? context.dependOnInheritedWidgetOfExactType<_ClerkAuthData>()
         : context.findAncestorWidgetOfExactType<_ClerkAuthData>();
     assert(result != null, 'No `ClerkAuth` found in context');
@@ -123,9 +124,19 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
       if (widget.config.loading == null) {
         WidgetsBinding.instance.deferFirstFrame();
       }
-      ClerkAuthState.create(config: widget.config).then((authState) {
+
+      // Create an uninitialized state immediately so descendants can render
+      // and listen for hydration progress, then initialize asynchronously.
+      final pre = HydratedClerkAuthState.createUninitialized(
+        config: widget.config,
+      );
+      _clerkAuthState = pre;
+
+      // Kick off initialization without blocking UI mount
+      scheduleMicrotask(() async {
+        await pre.initialize();
         if (mounted) {
-          setState(() => _clerkAuthState = authState);
+          setState(() {});
         }
         if (widget.config.loading == null) {
           WidgetsBinding.instance.allowFirstFrame();
@@ -148,9 +159,7 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
         builder: (BuildContext context, Widget? child) {
           return _ClerkAuthData(
             authState: authState,
-            child: ClerkOverlayHost(
-              child: widget.child,
-            ),
+            child: ClerkOverlayHost(child: widget.child),
           );
         },
       );
@@ -161,11 +170,9 @@ class _ClerkAuthState extends State<ClerkAuth> with ClerkTelemetryStateMixin {
 
 /// Data class holding the auth object
 class _ClerkAuthData extends InheritedWidget {
-  _ClerkAuthData({
-    required this.authState,
-    required super.child,
-  })  : client = authState.client,
-        env = authState.env;
+  _ClerkAuthData({required this.authState, required super.child})
+    : client = authState.client,
+      env = authState.env;
 
   /// Clerk auth object
   final ClerkAuthState authState;

@@ -33,17 +33,14 @@ class Auth {
   late final Api _api;
 
   static const _initialisationTimeout = Duration(milliseconds: 1000);
-  static const _persistenceDelay = Duration(milliseconds: 500);
   static const _refetchDelay = Duration(seconds: 10);
   static const _kClientKey = '\$client';
   static const _kEnvKey = '\$env';
   static const _defaultPollDelay = Duration(seconds: 53);
 
   Timer? _clientTimer;
-  Timer? _persistenceTimer;
   Timer? _refetchTimer;
   Timer? _pollTimer;
-  Map<String, dynamic> _persistableData = {};
 
   /// Stream of [SessionToken]s as they renew
   Stream<SessionToken> get sessionTokenStream => _sessionTokens.stream;
@@ -94,9 +91,7 @@ class Auth {
 
   set env(Environment env) {
     _env = env;
-    _persistableData[_kEnvKey] = env;
-    _persistenceTimer?.cancel();
-    _persistenceTimer = Timer(_persistenceDelay, _persistData);
+    config.persistor.write(_kEnvKey, jsonEncode(env));
   }
 
   Environment _env = Environment.empty;
@@ -109,9 +104,7 @@ class Auth {
 
   set client(Client client) {
     _client = client;
-    _persistableData[_kClientKey] = client;
-    _persistenceTimer?.cancel();
-    _persistenceTimer = Timer(_persistenceDelay, _persistData);
+    config.persistor.write(_kClientKey, jsonEncode(client));
   }
 
   Client _client = Client.empty;
@@ -212,7 +205,6 @@ class Auth {
   void terminate() {
     _pollTimer?.cancel();
     _clientTimer?.cancel();
-    _persistenceTimer?.cancel();
     _refetchTimer?.cancel();
     _api.terminate();
     _sessionTokens.close();
@@ -265,19 +257,6 @@ class Auth {
       // either get both or neither (shouldn't initialise with different
       // timestamped versions anyway)
       return (Client.empty, Environment.empty);
-    }
-  }
-
-  Future<void> _persistData() async {
-    final data = _persistableData;
-    _persistableData = {};
-
-    if (data[_kClientKey] case Client client when client.user != null) {
-      config.persistor.write(_kClientKey, jsonEncode(client));
-    }
-
-    if (data[_kEnvKey] case Environment env) {
-      config.persistor.write(_kEnvKey, jsonEncode(env));
     }
   }
 

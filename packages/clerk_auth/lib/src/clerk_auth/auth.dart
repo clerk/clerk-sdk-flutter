@@ -34,8 +34,8 @@ class Auth {
 
   static const _initialisationTimeout = Duration(milliseconds: 1000);
   static const _refetchDelay = Duration(seconds: 10);
-  static const _kClientKey = '\$client';
-  static const _kEnvKey = '\$env';
+  static const _kClientKey = r'$client';
+  static const _kEnvKey = r'$env';
   static const _defaultPollDelay = Duration(seconds: 53);
 
   Timer? _clientTimer;
@@ -91,7 +91,7 @@ class Auth {
 
   set env(Environment env) {
     _env = env;
-    config.persistor.write(_kEnvKey, jsonEncode(env));
+    config.persistor.write(_kEnvKey, env.toJson());
   }
 
   Environment _env = Environment.empty;
@@ -104,7 +104,7 @@ class Auth {
 
   set client(Client client) {
     _client = client;
-    config.persistor.write(_kClientKey, jsonEncode(client));
+    config.persistor.write(_kClientKey, client.toJson());
   }
 
   Client _client = Client.empty;
@@ -155,18 +155,22 @@ class Auth {
     final (client, env) = await _fetchClientAndEnv();
 
     if (client.isEmpty) {
-      final clientData = await config.persistor.read<String>(_kClientKey);
-      if (clientData case String data) {
-        _client = Client.fromJson(jsonDecode(data));
+      switch (await config.persistor.read(_kClientKey)) {
+        case Map<String, dynamic> data:
+          _client = Client.fromJson(data);
+        case String data:
+          _client = Client.fromJson(jsonDecode(data));
       }
     } else {
       this.client = client;
     }
 
     if (env.isEmpty) {
-      final envData = await config.persistor.read<String>(_kEnvKey);
-      if (envData case String data) {
-        _env = Environment.fromJson(jsonDecode(data));
+      switch (await config.persistor.read(_kEnvKey)) {
+        case Map<String, dynamic> data:
+          _env = Environment.fromJson(data);
+        case String data:
+          _env = Environment.fromJson(jsonDecode(data));
       }
     } else {
       this.env = env;

@@ -655,18 +655,6 @@ class Auth {
   }) async {
     final hasVerificationCredential = code is String || signature is String;
 
-    if (env.user.signUp.legalConsentEnabled) {
-      if (legalAccepted != true) {
-        // Legal acceptance required but not given
-        throw const ClerkError(
-          message: "Legal acceptance is required to proceed with sign up",
-          code: ClerkErrorCode.legalAcceptanceRequired,
-        );
-      }
-    } else {
-      legalAccepted = null;
-    }
-
     if (password != passwordConfirmation) {
       throw const ClerkError(
         message: "Password and password confirmation must match",
@@ -698,6 +686,18 @@ class Auth {
             .then(_housekeeping);
       }
     } else {
+      if (env.user.signUp.legalConsentEnabled) {
+        if (legalAccepted != true) {
+          // Legal acceptance required but not given
+          throw const ClerkError(
+            message: "Legal acceptance is required to proceed with sign up",
+            code: ClerkErrorCode.legalAcceptanceRequired,
+          );
+        }
+      } else {
+        legalAccepted = null;
+      }
+
       await _api
           .createSignUp(
             strategy: strategy,

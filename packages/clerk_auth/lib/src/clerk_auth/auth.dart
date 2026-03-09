@@ -272,8 +272,7 @@ class Auth {
     final data = _persistableData;
     _persistableData = {};
 
-    if (_persistableData[_kClientKey] case Client client
-        when client.user != null) {
+    if (data[_kClientKey] case Client client when client.user != null) {
       config.persistor.write(_kClientKey, jsonEncode(client));
     }
 

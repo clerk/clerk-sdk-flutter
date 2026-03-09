@@ -88,6 +88,9 @@ enum ClerkErrorCode {
   /// Password and password confirmation must match
   passwordMatchError,
 
+  /// Legal acceptance required
+  legalAcceptanceRequired,
+
   /// JWT poorly formatted
   jwtPoorlyFormatted,
 

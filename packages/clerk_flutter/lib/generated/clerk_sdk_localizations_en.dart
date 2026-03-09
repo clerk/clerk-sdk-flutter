@@ -236,6 +236,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   String get leaveOrganization => 'Leave organization';
 
   @override
+  String get legalAcceptanceRequired =>
+      'Legal acceptance is required to proceed with sign up';
+
+  @override
   String get loading => 'Loading…';
 
   @override

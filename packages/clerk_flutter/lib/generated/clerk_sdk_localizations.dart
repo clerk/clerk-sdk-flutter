@@ -492,6 +492,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Leave organization'**
   String get leaveOrganization;
 
+  /// No description provided for @legalAcceptanceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal acceptance is required to proceed with sign up'**
+  String get legalAcceptanceRequired;
+
   /// No description provided for @loading.
   ///
   /// In en, this message translates to:

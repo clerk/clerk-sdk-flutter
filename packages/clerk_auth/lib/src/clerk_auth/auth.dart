@@ -227,7 +227,9 @@ class Auth {
     SessionToken? sessionToken;
 
     if (isSignedIn) {
-      sessionToken = await _catchExternalErrors(_api.updateSessionToken);
+      sessionToken = await _catchExternalErrors(
+        () => _api.updateSessionToken(config.defaultSessionTokenTemplate),
+      );
       if (sessionToken case SessionToken token) {
         _sessionTokens.add(token);
         if (token.expiry.difference(DateTime.timestamp())
@@ -329,13 +331,13 @@ class Auth {
     String? templateName,
   }) async {
     final org = env.organization.isEnabled ? organization : null;
-    SessionToken? token = _api.sessionToken(org, templateName);
+    SessionToken? token = _api.sessionToken(templateName, org);
     if (token == null) {
       if (org == null && templateName == null) {
         token = await _pollForSessionToken(); // this resets the timer too
       } else {
         token = await _catchExternalErrors(
-          () => _api.updateSessionToken(org, templateName),
+          () => _api.updateSessionToken(templateName, org),
         );
       }
       if (token != null) {

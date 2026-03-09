@@ -6,9 +6,6 @@ import 'dart:io';
 /// required to allow seamless auth across app runs
 ///
 abstract class Persistor {
-  /// Persistor used when no persistence is required
-  static const none = _NonePersistor();
-
   /// Initialise the service
   Future<void> initialize();
 
@@ -23,25 +20,6 @@ abstract class Persistor {
 
   /// Delete data associated with a [key]
   FutureOr<void> delete(String key);
-}
-
-final class _NonePersistor implements Persistor {
-  const _NonePersistor();
-
-  @override
-  Future<void> initialize() async {}
-
-  @override
-  void terminate() {}
-
-  @override
-  FutureOr<T?> read<T>(String key) => null;
-
-  @override
-  FutureOr<void> write<T>(String key, T value) {}
-
-  @override
-  FutureOr<void> delete(String key) {}
 }
 
 /// A function which returns a directory for file operations
@@ -87,7 +65,9 @@ class DefaultPersistor implements Persistor {
   }
 
   @override
-  void terminate() {}
+  void terminate() {
+    _timer?.cancel();
+  }
 
   @override
   FutureOr<T?> read<T>(String key) => _cache[key] as T?;

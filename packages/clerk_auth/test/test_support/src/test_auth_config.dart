@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:http/http.dart' show ByteStream, Response;
 
@@ -8,12 +10,31 @@ class TestAuthConfig extends AuthConfig {
   }) : super(
           sessionTokenPolling: false,
           localesLookup: _localesLookup,
-          persistor: Persistor.none,
+          persistor: const _NonePersistor(),
           clientRefreshPeriod: Duration.zero,
           telemetryPeriod: Duration.zero,
         );
 
   static List<String> _localesLookup() => const <String>['en'];
+}
+
+final class _NonePersistor implements Persistor {
+  const _NonePersistor();
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  void terminate() {}
+
+  @override
+  FutureOr<T?> read<T>(String key) => null;
+
+  @override
+  FutureOr<void> write<T>(String key, T value) {}
+
+  @override
+  FutureOr<void> delete(String key) {}
 }
 
 class _NoneHttpService implements HttpService {

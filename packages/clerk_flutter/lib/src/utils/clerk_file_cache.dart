@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 /// An interface to enable read-through cache for e.g. image caching
 abstract class ClerkFileCache {
@@ -27,7 +27,7 @@ abstract class ClerkFileCache {
   ///
   /// Once either or both have been sent the stream should close
   ///
-  Stream<File> stream(
+  Stream<Uint8List> stream(
     Uri uri, {
     Duration ttl = defaultTTL,
     Map<String, String>? headers,

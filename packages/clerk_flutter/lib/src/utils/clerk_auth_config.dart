@@ -4,10 +4,11 @@ import 'package:clerk_flutter/generated/clerk_sdk_localizations_en.dart';
 import 'package:clerk_flutter/src/utils/clerk_file_cache.dart';
 import 'package:clerk_flutter/src/utils/clerk_sdk_grammar.dart';
 import 'package:clerk_flutter/src/utils/default_caching_persistor.dart';
+import 'package:clerk_flutter/src/utils/get_cache_directory_io.dart'
+    if (dart.library.js_interop) 'package:clerk_flutter/src/utils/get_cache_directory_web.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart'
     show defaultLoadingWidget;
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// A map of [Locale] strings to [ClerkSdkLocalizations] instances
@@ -72,7 +73,7 @@ class ClerkAuthConfig extends clerk.AuthConfig {
 
   static get _defaultPersistor =>
       _defaultPersistorInstance ??= DefaultCachingPersistor(
-        getCacheDirectory: getApplicationDocumentsDirectory,
+        getCacheDirectory: getCacheDirectory(),
       );
 
   /// [ClerkSdkLocalizationsCollection] for translation within the UI

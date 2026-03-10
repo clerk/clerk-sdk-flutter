@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show File, HttpHeaders, HttpStatus, SocketException;
+import 'dart:typed_data';
 
 import 'package:clerk_auth/src/clerk_api/token_cache.dart';
+import 'package:universal_io/universal_io.dart';
 import 'package:clerk_auth/src/clerk_auth/auth_config.dart';
 import 'package:clerk_auth/src/clerk_auth/clerk_error.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
@@ -158,7 +159,7 @@ class Api with Logging {
         headers: headers,
         withSession: requiresSessionId,
       );
-      if (resp.statusCode == 200) {
+      if (resp.statusCode == HttpStatus.ok) {
         _tokenCache.clear();
         return true;
       } else {
@@ -540,10 +541,10 @@ class Api with Logging {
 
   /// Update the current [User]'s avatar
   ///
-  Future<ApiResponse> updateAvatar(File file) async {
+  Future<ApiResponse> updateAvatar(Uint8List bytes) async {
     final queryParams = _queryParams(HttpMethod.post, withSession: true);
     final uri = _uri('/me/profile_image', params: queryParams);
-    return await _uploadFile(HttpMethod.post, uri, file);
+    return await _uploadFile(HttpMethod.post, uri, bytes);
   }
 
   /// Delete the current [User]'s avatar
@@ -814,11 +815,11 @@ class Api with Logging {
     );
   }
 
-  /// Update the current [User]'s avatar
+  /// Update an [Organization]'s logo
   ///
   Future<ApiResponse> updateOrganizationLogo(
     Organization org, {
-    required File logo,
+    required Uint8List logo,
     Session? session,
   }) async {
     final params = _multiSessionMode && session is Session
@@ -905,15 +906,18 @@ class Api with Logging {
 
   // Internal
 
-  Future<ApiResponse> _uploadFile(HttpMethod method, Uri uri, File file) async {
+  Future<ApiResponse> _uploadFile(
+    HttpMethod method,
+    Uri uri,
+    Uint8List bytes,
+  ) async {
     try {
-      final length = await file.length();
-      final stream = http.ByteStream(file.openRead());
+      final stream = http.ByteStream(Stream.fromIterable([bytes]));
       final resp = await config.httpService.sendByteStream(
         method,
         uri,
         stream,
-        length,
+        bytes.length,
         _headers(method: method),
       );
       return _processResponse(resp);

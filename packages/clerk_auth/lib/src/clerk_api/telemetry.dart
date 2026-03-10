@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/models/telemetry/telemetric_event.dart';
+import 'package:universal_io/universal_io.dart';
 
 /// Telemetry
 ///

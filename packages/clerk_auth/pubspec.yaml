@@ -8,15 +8,17 @@ topics:
   - authentication
 
 environment:
-  sdk: '>=3.6.2 <4.0.0'
+  sdk: ">=3.6.2 <4.0.0"
 
 dependencies:
-  collection: '>=1.17.1 <2.0.0'
+  collection: ">=1.17.1 <2.0.0"
   http: ^1.1.0
   json_annotation: ^4.9.0
   logging: ^1.2.0
   meta: ">=1.9.1 <2.0.0"
   retry: ^3.1.2
+  universal_io: ^2.3.1
+  web: ^1.0.0
 
 dev_dependencies:
   build_runner: any

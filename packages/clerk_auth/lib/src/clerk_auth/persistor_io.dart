@@ -1,0 +1,75 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+
+/// A function which returns a directory for file operations
+typedef DirectoryGetter = FutureOr<Directory> Function();
+
+/// A default [Persistor] that writes a cache of values to the file system
+///
+class DefaultPersistor implements Persistor {
+  /// Constructor
+  DefaultPersistor({required DirectoryGetter getCacheDirectory})
+      : _getCacheDirectory = getCacheDirectory;
+
+  /// A function to return the storage directory
+  final DirectoryGetter _getCacheDirectory;
+
+  static const _writeDelay = Duration(milliseconds: 600);
+  static const _filename = 'clerk_sdk.json';
+
+  /// The cache directory
+  Directory? cacheDirectory;
+
+  final _cache = <String, dynamic>{};
+  late final File _cacheFile;
+  Timer? _timer;
+
+  @override
+  Future<void> initialize() async {
+    if (cacheDirectory == null) {
+      cacheDirectory = await _getCacheDirectory();
+      _cacheFile =
+          File('${cacheDirectory!.path}${Platform.pathSeparator}$_filename');
+      try {
+        if (_cacheFile.existsSync()) {
+          final data = await _cacheFile.readAsString();
+          _cache.addAll(json.decode(data) as Map<String, dynamic>);
+        }
+      } on FormatException catch (_) {
+        // if we can't decode the json file then we'll delete it and start over
+        _cacheFile.deleteSync();
+      }
+    }
+  }
+
+  @override
+  void terminate() {}
+
+  @override
+  FutureOr<T?> read<T>(String key) => _cache[key] as T?;
+
+  @override
+  FutureOr<void> write<T>(String key, T value) {
+    _cache[key] = value;
+    _save();
+  }
+
+  @override
+  FutureOr<void> delete(String key) {
+    if (_cache.containsKey(key)) {
+      _cache.remove(key);
+      _save();
+    }
+  }
+
+  void _save() {
+    _timer?.cancel();
+    _timer = Timer(_writeDelay, () {
+      final data = json.encode(_cache);
+      _cacheFile.writeAsString(data);
+    });
+  }
+}

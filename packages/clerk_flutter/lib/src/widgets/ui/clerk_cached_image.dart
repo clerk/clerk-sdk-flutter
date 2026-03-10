@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
@@ -59,9 +59,9 @@ class ClerkCachedImage extends StatelessWidget {
     final cache = ClerkAuth.fileCacheOf(context);
     return StreamBuilder(
       stream: cache.stream(uri),
-      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
         if (snapshot.hasData) {
-          return Image.file(
+          return Image.memory(
             snapshot.data!,
             height: height,
             width: width,

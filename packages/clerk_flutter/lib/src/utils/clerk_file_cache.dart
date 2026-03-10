@@ -17,7 +17,7 @@ abstract class ClerkFileCache {
   /// multiple times, and must be prepared for that to happen
   void terminate() {}
 
-  /// A function to initiate a stream of files for a given [Uri].
+  /// A function to initiate a stream of file bytes for a given [Uri].
   ///
   /// If the file exists in cache, this should be sent initially.
   ///

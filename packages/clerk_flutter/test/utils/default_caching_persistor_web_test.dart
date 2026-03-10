@@ -23,7 +23,7 @@ void main() {
       expect(results, isEmpty);
     });
 
-    test('caches bytes from a successful fetch and returns them on next call',
+    test('returns empty when fetch fails and nothing is cached',
         () async {
       // This test verifies the full round-trip through stream():
       // 1. First call fetches from network → stores in IndexedDB

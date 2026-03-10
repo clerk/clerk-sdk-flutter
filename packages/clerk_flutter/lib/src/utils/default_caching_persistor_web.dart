@@ -33,7 +33,20 @@ class DefaultCachingPersistor extends DefaultPersistor
   @override
   Future<void> initialize() async {
     await super.initialize();
-    _db = await _openDatabase();
+    try {
+      _db = await _openDatabase();
+    } catch (error) {
+      // IndexedDB may be unavailable or blocked (e.g., private mode,
+      // storage restrictions, embedded contexts). In that case, fall
+      // back to disabling file caching while keeping auth persistence
+      // functional.
+      _db = null;
+      web.console.warn(
+        'DefaultCachingPersistor: IndexedDB unavailable, '
+            'file caching disabled. Error: $error'
+            .toJS,
+      );
+    }
   }
 
   @override
@@ -195,7 +208,7 @@ class DefaultCachingPersistor extends DefaultPersistor
         }
         yield bytes;
       }
-    } catch (_) {
+    } on http.ClientException {
       // failed fetch - ignore
     }
   }

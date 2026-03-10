@@ -17,7 +17,8 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  clerk_auth: '>=0.0.14-beta <1.0.0'
+  clerk_auth:
+    path: ../clerk_auth
   collection: '>=1.17.1 <2.0.0'
   email_validator: ^3.0.0
   flutter_svg: ^2.0.10+1
@@ -27,7 +28,9 @@ dependencies:
   passkeys: ^2.17.4
   path_provider: ^2.1.2
   phone_input: ^1.0.0
+  universal_io: ^2.3.1
   url_launcher: ^6.1.14
+  web: ^1.0.0
   webview_flutter: ^4.4.3
 
 dev_dependencies:

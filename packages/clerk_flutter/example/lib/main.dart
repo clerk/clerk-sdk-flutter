@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:core';
-import 'dart:io';
 
 import 'package:app_links/app_links.dart';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
@@ -23,7 +22,7 @@ Future<void> main() async {
         '--dart-define-from-file=example.json',
       );
     }
-    exit(1);
+    return;
   }
 
   runApp(

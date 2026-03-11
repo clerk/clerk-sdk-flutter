@@ -27,7 +27,7 @@ void main() {
 
       expect(passkey.id, 'pk_123');
       expect(passkey.name, 'My Passkey');
-      expect(passkey.verification.status, Status.verified);
+      expect(passkey.verification!.status, Status.verified);
     });
 
     test('toJson serializes passkey', () {
@@ -68,7 +68,7 @@ void main() {
 
       expect(passkey.id, 'pk_789');
       expect(passkey.name, 'Mobile Passkey');
-      expect(passkey.verification.attempts, 2);
+      expect(passkey.verification!.attempts, 2);
     });
   });
 }

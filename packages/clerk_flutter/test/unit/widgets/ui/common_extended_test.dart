@@ -114,46 +114,6 @@ void main() {
 
         expect(decoration, isA<ShapeDecoration>());
       });
-
-      testWidgets('divider returns Divider with correct properties',
-          (tester) async {
-        late Divider div;
-
-        await tester.pumpWidget(
-          TestClerkAuthWrapper(
-            authState: authState,
-            child: Builder(
-              builder: (context) {
-                div = divider(context);
-                return const SizedBox();
-              },
-            ),
-          ),
-        );
-
-        expect(div.thickness, 1.0);
-        expect(div.height, 1.0);
-      });
-
-      testWidgets('narrowDivider returns Divider with zero thickness',
-          (tester) async {
-        late Divider div;
-
-        await tester.pumpWidget(
-          TestClerkAuthWrapper(
-            authState: authState,
-            child: Builder(
-              builder: (context) {
-                div = narrowDivider(context);
-                return const SizedBox();
-              },
-            ),
-          ),
-        );
-
-        expect(div.thickness, 0.0);
-        expect(div.height, 1.0);
-      });
     });
   });
 

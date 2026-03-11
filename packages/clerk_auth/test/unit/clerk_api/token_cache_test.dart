@@ -214,7 +214,7 @@ void main() {
 
         expect(token.jwt, jwt);
         expect(token.templateName, 'my_template');
-        expect(tokenCache.sessionTokenFor(null, 'my_template')?.jwt, jwt);
+        expect(tokenCache.sessionTokenFor('my_template', null)?.jwt, jwt);
       });
 
       test('persists session tokens', () async {
@@ -255,8 +255,8 @@ void main() {
         tokenCache.makeAndCacheSessionToken(jwt);
 
         final token = tokenCache.sessionTokenFor(
-          const Organization(id: 'org_123'),
           null,
+          const Organization(id: 'org_123'),
         );
         expect(token?.jwt, jwt);
       });

@@ -11,30 +11,68 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for Instance
 void main() {
-  // final instance = Instance();
+  group('Instance', () {
+    late Instance instance;
 
-  group('test Instance', () {
-    // String representing the object's type. Objects of the same type share the same value.
-    // String object
-    test('to test the property `object`', () async {
-      // TODO
+    setUp(() {
+      instance = Instance(
+        object: InstanceObjectEnum.instance,
+        id: 'inst_123',
+        environmentType: 'development',
+        allowedOrigins: ['https://example.com'],
+      );
     });
 
-    // String id
-    test('to test the property `id`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.id, 'inst_123');
+      expect(instance.object, InstanceObjectEnum.instance);
+      expect(instance.environmentType, 'development');
+      expect(instance.allowedOrigins, ['https://example.com']);
     });
 
-    // String environmentType
-    test('to test the property `environmentType`', () async {
-      // TODO
+    test('constructor uses default values', () {
+      final inst = Instance(
+        object: InstanceObjectEnum.instance,
+        id: 'inst_456',
+        environmentType: 'production',
+      );
+      expect(inst.allowedOrigins, isEmpty);
     });
 
-    // List<String> allowedOrigins (default value: const [])
-    test('to test the property `allowedOrigins`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['id'], 'inst_123');
+      expect(json['object'], InstanceObjectEnum.instance);
+      expect(json['environment_type'], 'development');
+      expect(json['allowed_origins'], ['https://example.com']);
+    });
+
+    test('fromJson returns null for non-map input', () {
+      expect(Instance.fromJson('invalid'), isNull);
+      expect(Instance.fromJson(123), isNull);
+      expect(Instance.fromJson(null), isNull);
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(Instance.listFromJson([]), isEmpty);
+      expect(Instance.listFromJson(null), isEmpty);
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('Instance'));
+      expect(str, contains('id=inst_123'));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(Instance.requiredKeys, contains('object'));
+      expect(Instance.requiredKeys, contains('id'));
+      expect(Instance.requiredKeys, contains('environment_type'));
     });
   });
 }

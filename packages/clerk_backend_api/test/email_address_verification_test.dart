@@ -11,39 +11,77 @@
 import 'package:clerk_backend_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for EmailAddressVerification
 void main() {
-  // final instance = EmailAddressVerification();
+  group('EmailAddressVerification', () {
+    late EmailAddressVerification instance;
 
-  group('test EmailAddressVerification', () {
-    // String status
-    test('to test the property `status`', () async {
-      // TODO
+    setUp(() {
+      instance = EmailAddressVerification(
+        status: EmailAddressVerificationStatusEnum.verified,
+        strategy: EmailAddressVerificationStrategyEnum.emailLink,
+        attempts: 1,
+        expireAt: 1234567890,
+      );
     });
 
-    // String strategy
-    test('to test the property `strategy`', () async {
-      // TODO
+    test('constructor creates instance with required parameters', () {
+      expect(instance.status, EmailAddressVerificationStatusEnum.verified);
+      expect(instance.strategy, EmailAddressVerificationStrategyEnum.emailLink);
+      expect(instance.attempts, 1);
+      expect(instance.expireAt, 1234567890);
     });
 
-    // int attempts
-    test('to test the property `attempts`', () async {
-      // TODO
+    test('constructor allows null optional parameters', () {
+      expect(instance.verifiedAtClient, isNull);
+      expect(instance.error, isNull);
+      expect(instance.externalVerificationRedirectUrl, isNull);
     });
 
-    // int expireAt
-    test('to test the property `expireAt`', () async {
-      // TODO
+    test('constructor creates instance with optional parameters', () {
+      final verification = EmailAddressVerification(
+        status: EmailAddressVerificationStatusEnum.unverified,
+        strategy: EmailAddressVerificationStrategyEnum.emailLink,
+        attempts: 0,
+        expireAt: 1234567890,
+        verifiedAtClient: 'client_123',
+      );
+      expect(verification.verifiedAtClient, 'client_123');
     });
 
-    // String verifiedAtClient
-    test('to test the property `verifiedAtClient`', () async {
-      // TODO
+    test('toJson produces correct map', () {
+      final json = instance.toJson();
+      expect(json['status'], EmailAddressVerificationStatusEnum.verified);
+      expect(json['strategy'], EmailAddressVerificationStrategyEnum.emailLink);
+      expect(json['attempts'], 1);
+      expect(json['expire_at'], 1234567890);
     });
 
-    // FromOAuthError error
-    test('to test the property `error`', () async {
-      // TODO
+    test('fromJson returns null for non-map input', () {
+      expect(EmailAddressVerification.fromJson('invalid'), isNull);
+      expect(EmailAddressVerification.fromJson(123), isNull);
+      expect(EmailAddressVerification.fromJson(null), isNull);
+    });
+
+    test('listFromJson returns empty list for empty input', () {
+      expect(EmailAddressVerification.listFromJson([]), isEmpty);
+      expect(EmailAddressVerification.listFromJson(null), isEmpty);
+    });
+
+    test('hashCode is consistent', () {
+      expect(instance.hashCode, equals(instance.hashCode));
+    });
+
+    test('toString returns expected format', () {
+      final str = instance.toString();
+      expect(str, contains('EmailAddressVerification'));
+      expect(str, contains('status='));
+    });
+
+    test('requiredKeys contains required fields', () {
+      expect(EmailAddressVerification.requiredKeys, contains('status'));
+      expect(EmailAddressVerification.requiredKeys, contains('strategy'));
+      expect(EmailAddressVerification.requiredKeys, contains('attempts'));
+      expect(EmailAddressVerification.requiredKeys, contains('expire_at'));
     });
   });
 }

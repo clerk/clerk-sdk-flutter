@@ -858,14 +858,14 @@ class Api with Logging {
   /// Return the [SessionToken] for the current active [Session], if
   /// available
   ///
-  SessionToken? sessionToken([Organization? org, String? templateName]) =>
-      _tokenCache.sessionTokenFor(org, templateName);
+  SessionToken? sessionToken([String? templateName, Organization? org]) =>
+      _tokenCache.sessionTokenFor(templateName, org);
 
   /// Refresh and return the [SessionToken] for the current active [Session]
   ///
   Future<SessionToken?> updateSessionToken([
-    Organization? org,
     String? templateName,
+    Organization? org,
   ]) async {
     if (_tokenCache.canRefreshSessionToken) {
       final path = [

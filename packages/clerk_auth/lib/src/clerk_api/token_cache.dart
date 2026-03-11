@@ -119,7 +119,7 @@ class TokenCache {
   }
 
   /// Get the [sessionTokenFor] for a [orgId]
-  SessionToken? sessionTokenFor(Organization? org, String? templateName) {
+  SessionToken? sessionTokenFor(String? templateName, Organization? org) {
     org ??= Organization.personal;
     return switch (_sessionTokens[_sessionTokenId(org.id, templateName)]) {
       SessionToken token when token.isNotExpired => token,

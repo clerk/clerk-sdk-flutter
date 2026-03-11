@@ -26,6 +26,7 @@ class AuthConfig {
     this.flags = const SdkFlags(),
     this.sessionTokenPolling = true,
     this.retryOptions = const RetryOptions(),
+    this.defaultSessionTokenTemplate,
     // ignore: deprecated_member_use_from_same_package
     SessionTokenPollMode? sessionTokenPollMode, // deprecated
     LocalesLookup? localesLookup,
@@ -98,6 +99,9 @@ class AuthConfig {
 
   /// The [HttpService] used to communicate with the backend.
   final HttpService httpService;
+
+  /// Default template for session token retrieval
+  final String? defaultSessionTokenTemplate;
 
   /// Initialise
   Future<void> initialize() async {

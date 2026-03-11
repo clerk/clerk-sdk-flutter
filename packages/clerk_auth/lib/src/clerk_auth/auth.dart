@@ -159,6 +159,7 @@ class Auth {
         case Map<String, dynamic> data:
           _client = Client.fromJson(data);
         case String data:
+          // backward compatibility with earlier versions
           _client = Client.fromJson(jsonDecode(data));
       }
     } else {
@@ -170,6 +171,7 @@ class Auth {
         case Map<String, dynamic> data:
           _env = Environment.fromJson(data);
         case String data:
+          // backward compatibility with earlier versions
           _env = Environment.fromJson(jsonDecode(data));
       }
     } else {

@@ -26,7 +26,7 @@ void main() {
   group('ClerkLoadingOverlay:', skip: true, () {
     final config = ClerkAuthConfig(
       publishableKey: 'NOT A KEY',
-      persistor: const _NonePersistor(),
+      persistor: Persistor.none,
     );
     final overlayEntry = ClerkLoadingOverlay(config);
 
@@ -185,23 +185,4 @@ class _TestOverlayHostState extends State<_TestOverlayHost>
   Widget build(BuildContext context) {
     return Container();
   }
-}
-
-final class _NonePersistor implements Persistor {
-  const _NonePersistor();
-
-  @override
-  Future<void> initialize() async {}
-
-  @override
-  void terminate() {}
-
-  @override
-  FutureOr<T?> read<T>(String key) => null;
-
-  @override
-  FutureOr<void> write<T>(String key, T value) {}
-
-  @override
-  FutureOr<void> delete(String key) {}
 }

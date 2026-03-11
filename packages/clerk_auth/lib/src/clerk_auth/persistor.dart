@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:meta/meta.dart';
 
 /// Abstract class defining the persistence interface for values
 /// required to allow seamless auth across app runs
 ///
 abstract class Persistor {
-  /// Persistor used when no persistence is required
+  /// A no-op persistor used for testing (persistor is now required to use the sdk)
+  @visibleForTesting
   static const none = _NonePersistor();
 
   /// Initialise the service
@@ -87,7 +89,9 @@ class DefaultPersistor implements Persistor {
   }
 
   @override
-  void terminate() {}
+  void terminate() {
+    _timer?.cancel();
+  }
 
   @override
   FutureOr<T?> read<T>(String key) => _cache[key] as T?;

@@ -29,7 +29,6 @@
       "missing_fields": [
         "first_name",
         "last_name",
-        "legal_accepted",
         "password",
         "phone_number"
       ],
@@ -66,7 +65,7 @@
       "created_session_id": null,
       "created_user_id": null,
       "abandon_at": "%%DATETIME 2%%",
-      "legal_accepted_at": null,
+      "legal_accepted_at": "%%DATETIME 1%%",
       "locale": null
     },
     "client": {
@@ -102,7 +101,6 @@
         "missing_fields": [
           "first_name",
           "last_name",
-          "legal_accepted",
           "password",
           "phone_number"
         ],
@@ -139,7 +137,7 @@
         "created_session_id": null,
         "created_user_id": null,
         "abandon_at": "%%DATETIME 2%%",
-        "legal_accepted_at": null,
+        "legal_accepted_at": "%%DATETIME 1%%",
         "locale": null
       },
       "last_active_session_id": null,

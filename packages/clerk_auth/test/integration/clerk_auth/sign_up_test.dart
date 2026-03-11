@@ -136,6 +136,7 @@ void main() {
         Client client = await auth.attemptSignUp(
           strategy: Strategy.emailCode,
           emailAddress: email,
+          legalAccepted: true,
         );
         expect(client.signUp?.status, Status.missingRequirements);
         final hitCount = httpService.hitCount;
@@ -166,6 +167,7 @@ void main() {
         Client client = await auth.attemptSignUp(
           strategy: Strategy.emailCode,
           emailAddress: firstEmail,
+          legalAccepted: true,
         );
         expect(client.signUp?.status, Status.missingRequirements);
         final hitCount = httpService.hitCount;

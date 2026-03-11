@@ -146,6 +146,7 @@
     }
   },
   "leaveOrganization": "Leave organization",
+  "legalAcceptanceRequired": "Legal acceptance is required to proceed with sign up",
   "loading": "Loading…",
   "logo": "Logo",
   "longDateFormat": "d MMMM y, 'h:mm a",

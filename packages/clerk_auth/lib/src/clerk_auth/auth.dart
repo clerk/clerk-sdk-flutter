@@ -650,6 +650,7 @@ class Auth {
     String? token,
     String? signature,
     String? redirectUrl,
+    Map<String, dynamic>? metadata,
     bool? legalAccepted,
   }) async {
     final hasVerificationCredential = code is String || signature is String;
@@ -668,7 +669,7 @@ class Auth {
           (username is String && username != signUp.username) ||
           (emailAddress is String && emailAddress != signUp.emailAddress) ||
           (phoneNumber is String && phoneNumber != signUp.phoneNumber) ||
-          (legalAccepted is bool);
+          (metadata is Map && _deeplyUnequal(metadata, signUp.unsafeMetadata));
       if (needsUpdate) {
         await _api
             .updateSignUp(
@@ -680,11 +681,23 @@ class Auth {
               username: username,
               emailAddress: emailAddress,
               phoneNumber: phoneNumber,
-              legalAccepted: legalAccepted,
+              metadata: metadata,
             )
             .then(_housekeeping);
       }
     } else {
+      if (env.user.signUp.legalConsentEnabled) {
+        if (legalAccepted != true) {
+          // Legal acceptance required but not given
+          throw const ClerkError(
+            message: "Legal acceptance is required to proceed with sign up",
+            code: ClerkErrorCode.legalAcceptanceRequired,
+          );
+        }
+      } else {
+        legalAccepted = null;
+      }
+
       await _api
           .createSignUp(
             strategy: strategy,
@@ -696,6 +709,7 @@ class Auth {
             phoneNumber: phoneNumber,
             token: token,
             legalAccepted: legalAccepted,
+            metadata: metadata,
           )
           .then(_housekeeping);
     }
@@ -1165,4 +1179,39 @@ class Auth {
         )
         .then(_housekeeping);
   }
+}
+
+bool _deeplyUnequal(Object? a, Object? b) {
+  if (a.runtimeType != b.runtimeType) {
+    return true;
+  }
+
+  switch (a) {
+    case Map aMap:
+      final bMap = b as Map;
+      if (aMap.keys.length != bMap.keys.length) {
+        return true;
+      }
+      for (final key in aMap.keys) {
+        if (_deeplyUnequal(aMap[key], bMap[key])) {
+          return true;
+        }
+      }
+
+    case List aList:
+      final bList = b as List;
+      if (aList.length != bList.length) {
+        return true;
+      }
+      for (int i = 0; i < aList.length; ++i) {
+        if (_deeplyUnequal(aList[i], bList[i])) {
+          return true;
+        }
+      }
+
+    default:
+      return a != b;
+  }
+
+  return false;
 }

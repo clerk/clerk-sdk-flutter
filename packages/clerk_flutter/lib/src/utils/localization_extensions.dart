@@ -16,6 +16,8 @@ extension ClerkAuthErrorExtension on clerk.ClerkError {
         l10ns.externalError(argument.toString()),
       clerk.ClerkErrorCode.jwtPoorlyFormatted =>
         l10ns.jwtPoorlyFormatted(argument.toString()),
+      clerk.ClerkErrorCode.legalAcceptanceRequired =>
+        l10ns.legalAcceptanceRequired,
       clerk.ClerkErrorCode.noAssociatedCodeRetrievalMethod =>
         l10ns.noAssociatedCodeRetrievalMethod(argument.toString()),
       clerk.ClerkErrorCode.noAssociatedStrategy =>

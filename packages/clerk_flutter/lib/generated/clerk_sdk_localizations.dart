@@ -62,15 +62,18 @@ import 'clerk_sdk_localizations_en.dart';
 /// be consistent with the languages listed in the ClerkSdkLocalizations.supportedLocales
 /// property.
 abstract class ClerkSdkLocalizations {
-  ClerkSdkLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  ClerkSdkLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
   static ClerkSdkLocalizations? of(BuildContext context) {
-    return Localizations.of<ClerkSdkLocalizations>(context, ClerkSdkLocalizations);
+    return Localizations.of<ClerkSdkLocalizations>(
+        context, ClerkSdkLocalizations);
   }
 
-  static const LocalizationsDelegate<ClerkSdkLocalizations> delegate = _ClerkSdkLocalizationsDelegate();
+  static const LocalizationsDelegate<ClerkSdkLocalizations> delegate =
+      _ClerkSdkLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,7 +85,8 @@ abstract class ClerkSdkLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -90,9 +94,7 @@ abstract class ClerkSdkLocalizations {
   ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[
-    Locale('en')
-  ];
+  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
 
   /// No description provided for @aLengthOfBetweenMINAndMAX.
   ///
@@ -159,6 +161,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Add email address'**
   String get addEmailAddress;
+
+  /// No description provided for @addPasskey.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a passkey'**
+  String get addPasskey;
 
   /// No description provided for @addPhoneNumber.
   ///
@@ -280,6 +288,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Create organization'**
   String get createOrganization;
 
+  /// No description provided for @created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get created;
+
   /// No description provided for @developmentMode.
   ///
   /// In en, this message translates to:
@@ -321,6 +335,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'email'**
   String get emailAddressConcise;
+
+  /// No description provided for @emailAddresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Email addresses'**
+  String get emailAddresses;
 
   /// No description provided for @enrollment.
   ///
@@ -388,6 +408,12 @@ abstract class ClerkSdkLocalizations {
   /// **'expired'**
   String get expired;
 
+  /// No description provided for @externalError.
+  ///
+  /// In en, this message translates to:
+  /// **'{arg} (EXTERNAL ERROR)'**
+  String externalError(String arg);
+
   /// No description provided for @failed.
   ///
   /// In en, this message translates to:
@@ -442,6 +468,12 @@ abstract class ClerkSdkLocalizations {
   /// **'last name'**
   String get lastName;
 
+  /// No description provided for @lastUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last used'**
+  String get lastUsed;
+
   /// No description provided for @leave.
   ///
   /// In en, this message translates to:
@@ -471,6 +503,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'Logo'**
   String get logo;
+
+  /// No description provided for @longDateFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'d MMMM y, \'h:mm a'**
+  String get longDateFormat;
 
   /// No description provided for @manualInvitation.
   ///
@@ -610,6 +648,12 @@ abstract class ClerkSdkLocalizations {
   /// **'passkey'**
   String get passkey;
 
+  /// No description provided for @passkeys.
+  ///
+  /// In en, this message translates to:
+  /// **'Passkeys'**
+  String get passkeys;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
@@ -663,6 +707,12 @@ abstract class ClerkSdkLocalizations {
   /// In en, this message translates to:
   /// **'phone'**
   String get phoneNumberConcise;
+
+  /// No description provided for @phoneNumbers.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone numbers'**
+  String get phoneNumbers;
 
   /// No description provided for @pleaseAddRequiredInformation.
   ///
@@ -934,6 +984,12 @@ abstract class ClerkSdkLocalizations {
   /// **'unverified'**
   String get unverified;
 
+  /// No description provided for @usePasskeyInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Use passkey instead'**
+  String get usePasskeyInstead;
+
   /// No description provided for @username.
   ///
   /// In en, this message translates to:
@@ -1013,33 +1069,34 @@ abstract class ClerkSdkLocalizations {
   String get welcomePleaseFillInTheDetailsToGetStarted;
 }
 
-class _ClerkSdkLocalizationsDelegate extends LocalizationsDelegate<ClerkSdkLocalizations> {
+class _ClerkSdkLocalizationsDelegate
+    extends LocalizationsDelegate<ClerkSdkLocalizations> {
   const _ClerkSdkLocalizationsDelegate();
 
   @override
   Future<ClerkSdkLocalizations> load(Locale locale) {
-    return SynchronousFuture<ClerkSdkLocalizations>(lookupClerkSdkLocalizations(locale));
+    return SynchronousFuture<ClerkSdkLocalizations>(
+        lookupClerkSdkLocalizations(locale));
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_ClerkSdkLocalizationsDelegate old) => false;
 }
 
 ClerkSdkLocalizations lookupClerkSdkLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return ClerkSdkLocalizationsEn();
+    case 'en':
+      return ClerkSdkLocalizationsEn();
   }
 
   throw FlutterError(
-    'ClerkSdkLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'ClerkSdkLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

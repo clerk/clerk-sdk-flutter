@@ -10,6 +10,7 @@ import 'package:clerk_flutter/src/widgets/organization/clerk_organization_profil
 import 'package:clerk_flutter/src/widgets/organization/create_organization_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_action_row.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_cached_image.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_divider.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_icon.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_page.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_panel_header.dart';
@@ -200,7 +201,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
             mainAxisSize: MainAxisSize.min,
             children: [
               ClerkPanelHeader(subtitle: _localizations.selectAccount),
-              narrowDivider(context),
+              const ClerkDivider(narrow: true),
               if (_currentOrg case _Organization current) //
                 Closeable(
                   key: Key('current:${current.orgId}'),
@@ -255,7 +256,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
                 ),
               for (final action in actions) ...[
                 ClerkActionRow(action: action),
-                narrowDivider(context),
+                const ClerkDivider(narrow: true),
               ],
             ],
           ),

@@ -46,6 +46,28 @@ extension StringExtension on String {
       .map((t) => t[0])
       .join();
 
+  /// Convert a camel case string to a sentence case string
+  String camelToSentenceCase() {
+    if (isEmpty) {
+      return this;
+    }
+
+    final buf = StringBuffer();
+
+    buf.writeCharCode(runes.first & 0xDF);
+
+    for (final c in runes.skip(1)) {
+      if (_isUpper(c)) {
+        buf.writeCharCode(0x20);
+        buf.writeCharCode(c | 0x20);
+      } else {
+        buf.writeCharCode(c);
+      }
+    }
+
+    return buf.toString();
+  }
+
   /// Decode a [String] that has been base64 encoded
   ///
   String get b64decoded => utf8.decode(base64.decode(base64.normalize(this)));

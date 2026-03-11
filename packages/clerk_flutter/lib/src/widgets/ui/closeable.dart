@@ -37,7 +37,11 @@ class Closeable extends StatefulWidget {
     this.keepAlive = false,
     this.onEnd,
     this.child,
-  });
+    this.builder,
+  }) : assert(
+          (child == null) != (builder == null),
+          'One of `child` or `builder` must be provided, but not both',
+        );
 
   /// Animation's [Duration]
   final Duration duration;
@@ -71,6 +75,9 @@ class Closeable extends StatefulWidget {
 
   /// Child [Widget] to be displayed in the panel
   final Widget? child;
+
+  /// Builder to be used to build the child widget if no widget passed
+  final WidgetBuilder? builder;
 
   /// The default [Duration]
   static const defaultDuration = Duration(milliseconds: 250);
@@ -124,7 +131,9 @@ class _CloseableState extends State<Closeable> {
               setState(() => _renderChild = false);
             }
           },
-          child: _renderChild ? widget.child : null,
+          child: _renderChild
+              ? widget.child ?? widget.builder?.call(context)
+              : null,
         ),
       ),
     );
@@ -148,6 +157,7 @@ class Openable extends Closeable {
     super.onEnd,
     super.keepAlive,
     super.child,
+    super.builder,
   }) : super(closed: open == false);
 }
 

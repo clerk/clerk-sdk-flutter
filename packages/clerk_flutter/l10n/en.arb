@@ -35,6 +35,7 @@
   "addAccount": "Add account",
   "addDomain": "Add domain",
   "addEmailAddress": "Add email address",
+  "addPasskey": "Add a passkey",
   "addPhoneNumber": "Add phone number",
   "alreadyHaveAnAccount": "Already have an account?",
   "anUppercaseLetter": "an UPPERCASE letter",
@@ -69,6 +70,7 @@
   "connectedAccounts": "Connected accounts",
   "cont": "Continue",
   "createOrganization": "Create organization",
+  "created": "Created",
   "developmentMode": "Development mode",
   "didntReceiveCode": "Didn't receive the code?",
   "domainName": "Domain name",
@@ -76,6 +78,7 @@
   "edit": "edit",
   "emailAddress": "email address",
   "emailAddressConcise": "email",
+  "emailAddresses": "Email addresses",
   "enrollment": "Enrollment",
   "enrollmentMode": "Enrollment mode:",
   "enterOneOfYourBackupCodes": "Enter one of your backup codes",
@@ -94,6 +97,14 @@
   "enterYourOrganizationDetailsToContinue": "Enter your organization details to continue",
   "enterYourPassword": "Enter your password",
   "expired": "expired",
+  "externalError": "{arg} (EXTERNAL ERROR)",
+  "@externalError": {
+    "placeholders": {
+      "arg": {
+        "type": "String"
+      }
+    }
+  },
   "failed": "failed",
   "firstName": "first name",
   "forgottenPassword": "Forgotten password?",
@@ -124,6 +135,7 @@
     }
   },
   "lastName": "last name",
+  "lastUsed": "Last used",
   "leave": "Leave",
   "leaveOrg": "Leave {organization}",
   "@leaveOrg": {
@@ -136,6 +148,7 @@
   "leaveOrganization": "Leave organization",
   "loading": "Loading…",
   "logo": "Logo",
+  "longDateFormat": "d MMMM y, 'h:mm a",
   "manualInvitation": "Manual invitation",
   "missingRequirements": "missing requirements",
   "myOrganization": "My Organization",
@@ -208,6 +221,7 @@
   "organizationProfile": "Organization profile",
   "organizations": "Organizations",
   "passkey": "passkey",
+  "passkeys": "Passkeys",
   "password": "Password",
   "passwordConfirmation": "confirm password",
   "passwordMatchError": "Password and password confirmation must match",
@@ -217,6 +231,7 @@
   "personalAccount": "Personal account",
   "phoneNumber": "phone number",
   "phoneNumberConcise": "phone",
+  "phoneNumbers": "Phone numbers",
   "pleaseAddRequiredInformation": "Something seems to be missing. Please add the required information",
   "pleaseChooseAnAccountToConnect": "Please choose an account to connect",
   "pleaseEnterYourIdentifier": "Please enter your identifier",
@@ -332,6 +347,7 @@
     }
   },
   "unverified": "unverified",
+  "usePasskeyInstead": "Use passkey instead",
   "username": "username",
   "verificationEmailAddress": "Email address verification",
   "verificationPhoneNumber": "Phone number verification",

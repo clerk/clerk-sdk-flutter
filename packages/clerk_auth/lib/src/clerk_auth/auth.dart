@@ -519,6 +519,7 @@ class Auth {
     String? code,
     String? token,
     String? redirectUrl,
+    String? passkeyCredential,
   }) async {
     if (strategy.isOauthToken) {
       if (token?.isNotEmpty == true || code?.isNotEmpty == true) {
@@ -527,6 +528,9 @@ class Auth {
             .then(_housekeeping);
         update();
       }
+      return;
+    } else if (strategy.isPasskey && passkeyCredential == null) {
+      await _api.createSignIn(strategy: strategy).then(_housekeeping);
       return;
     }
 
@@ -545,6 +549,16 @@ class Auth {
       case null when client.user is User:
         // We have signed in - possibly when creating the [SignIn] above
         break;
+
+      case SignIn signIn when strategy.isPasskey && passkeyCredential is String:
+        await _api
+            .attemptSignIn(
+              signIn,
+              stage: Stage.first,
+              strategy: strategy,
+              passkeyCredential: passkeyCredential,
+            )
+            .then(_housekeeping);
 
       case SignIn signIn when strategy.isSSO && token is String:
         await _api.sendOauthToken(signIn, token: token).then(_housekeeping);
@@ -759,6 +773,30 @@ class Auth {
 
     update();
     return client;
+  }
+
+  /// Passkeys
+
+  /// Creates an unverified passkey for the current [User]
+  ///
+  Future<Passkey?> createPasskey() async {
+    final resp = await _api.createPasskey().then(_housekeeping);
+    if (resp.response case final json?) {
+      return Passkey.fromJson(json);
+    }
+    return null;
+  }
+
+  /// Attempt to verify a passkey
+  ///
+  Future<void> attemptPasskeyVerification(
+    Passkey passkey,
+    String credential,
+  ) async {
+    await _api
+        .attemptPasskeyVerification(passkey.id, credential)
+        .then(_housekeeping);
+    update();
   }
 
   /// Sign out of the given [Session]

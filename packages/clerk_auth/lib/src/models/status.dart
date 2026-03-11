@@ -98,6 +98,9 @@ class Status {
   /// is transferable?
   bool get isTransferable => this == transferable;
 
+  /// is unverified?
+  bool get isUnverified => this == unverified;
+
   /// needs factor?
   bool get needsFactor => this == needsFirstFactor || this == needsSecondFactor;
 

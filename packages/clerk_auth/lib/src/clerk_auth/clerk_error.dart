@@ -1,3 +1,4 @@
+import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/models/api/external_error.dart';
 
 /// Error class renamed this is for backwards compatibility
@@ -32,6 +33,19 @@ class ClerkError implements Exception {
         code: ClerkErrorCode.clientAppError,
         message: message,
       );
+
+  /// Construct an external error
+  factory ClerkError.external(Exception error) {
+    var argument = error.toString();
+    if (argument.startsWith('Instance of ')) {
+      argument = error.runtimeType.toString().camelToSentenceCase();
+    }
+    return ClerkError(
+      code: ClerkErrorCode.externalError,
+      message: '{arg} (EXTERNAL ERROR)',
+      argument: argument,
+    );
+  }
 
   /// Error code
   final ClerkErrorCode code;
@@ -103,4 +117,7 @@ enum ClerkErrorCode {
 
   /// Client app error
   clientAppError,
+
+  /// External error
+  externalError,
 }

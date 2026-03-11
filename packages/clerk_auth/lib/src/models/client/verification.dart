@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:clerk_auth/src/models/client/strategy.dart';
+import 'package:clerk_auth/src/models/client/verification_nonce.dart';
 import 'package:clerk_auth/src/models/informative_to_string_mixin.dart';
 import 'package:clerk_auth/src/models/status.dart';
 import 'package:clerk_auth/src/utils/json_serialization_helpers.dart';
@@ -32,7 +35,8 @@ class Verification with InformativeToStringMixin {
   final int? attempts;
 
   /// nonce
-  final String? nonce;
+  @JsonKey(fromJson: _extractJsonIntoNonce)
+  final VerificationNonce? nonce;
 
   /// provider url
   final String? externalVerificationRedirectUrl;
@@ -56,3 +60,12 @@ class Verification with InformativeToStringMixin {
 
 String? _extractErrorMessage(Map<dynamic, dynamic> map, String field) =>
     readItem<String>(map, field, 'long_message');
+
+VerificationNonce? _extractJsonIntoNonce(dynamic json) {
+  if (json case String json) {
+    if (jsonDecode(json) case Map<String, dynamic> data) {
+      return VerificationNonce.fromJson(data);
+    }
+  }
+  return null;
+}

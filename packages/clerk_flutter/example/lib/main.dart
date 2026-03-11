@@ -112,6 +112,11 @@ class ExampleApp extends StatelessWidget {
         publishableKey: publishableKey,
         redirectionGenerator: generateDeepLink,
         deepLinkStream: AppLinks().allUriLinkStream.asyncMap(handleDeepLink),
+        // Uncomment the following line if running on an iOS simulator, or any
+        // device which doesn't support hardware security keys.
+        // This is only relevant for the passkey authentication flow.
+        //
+        // supportsHardwareSecurityKeys: false,
       ),
       child: MaterialApp(
         theme: ThemeData.light(),

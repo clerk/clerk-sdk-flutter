@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/utils/clerk_telemetry.dart';
+import 'package:clerk_flutter/src/utils/extensions.dart';
 import 'package:clerk_flutter/src/utils/identifier.dart';
 import 'package:clerk_flutter/src/widgets/authentication/clerk_forgotten_password_panel.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
@@ -14,6 +15,8 @@ import 'package:clerk_flutter/src/widgets/ui/common.dart';
 import 'package:clerk_flutter/src/widgets/ui/or_divider.dart';
 import 'package:clerk_flutter/src/widgets/ui/strategy_button.dart';
 import 'package:flutter/material.dart';
+import 'package:passkeys/authenticator.dart';
+import 'package:passkeys/types.dart';
 
 /// The [ClerkSignInPanel] renders a UI for signing in users.
 ///
@@ -32,6 +35,8 @@ class ClerkSignInPanel extends StatefulWidget {
 
 class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     with ClerkTelemetryStateMixin {
+  final _passkeyAvailable = PasskeyAuthenticator().isAvailable;
+
   clerk.Strategy _strategy = clerk.Strategy.unknown;
   Identifier _identifier = const Identifier('');
   String _password = '';
@@ -82,19 +87,46 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
             strategy: strategy!,
             identifier: _identifier.identifier.orNullIfEmpty,
             password: _password.orNullIfEmpty,
-            code: _code.orNullIfEmpty,
+            code: code?.orNullIfEmpty,
             redirectUrl: redirectUri?.toString(),
           );
 
-          if (authState.client.signIn case clerk.SignIn signIn when mounted) {
-            final factors = signIn.factors;
-            if (factors.any((f) => f.strategy.isEnterpriseSSO)) {
-              await authState.ssoSignIn(context, clerk.Strategy.enterpriseSSO);
-            } else if (signIn.needsFactor && factors.length == 1) {
-              await authState.attemptSignIn(strategy: factors.first.strategy);
-            }
-            if (signIn.needsFactor && signIn.factors.length == 1) {
-              _strategy = signIn.factors.first.strategy;
+          if (authState.signIn case clerk.SignIn signIn when mounted) {
+            if (signIn.firstFactorVerification
+                case clerk.Verification verification
+                when verification.strategy.isPasskey &&
+                    verification.status.isUnverified) {
+              if (verification.nonce case clerk.VerificationNonce nonce) {
+                final authenticator = PasskeyAuthenticator();
+                final requestType = AuthenticateRequestType(
+                  challenge: nonce.challenge,
+                  relyingPartyId: nonce.relyingParty.id,
+                  mediation: MediationType.Required,
+                  timeout: nonce.timeout,
+                  userVerification: nonce.userVerification,
+                  preferImmediatelyAvailableCredentials: true,
+                );
+                final res = await authenticator.authenticate(requestType);
+                await authState.attemptSignIn(
+                  strategy: clerk.Strategy.passkey,
+                  passkeyCredential: res.toJsonString(),
+                );
+              }
+              // await authState.passkeySignIn();
+            } else if (signIn.factors case final factors
+                when factors.isNotEmpty) {
+              if (factors.any((f) => f.strategy.isEnterpriseSSO)) {
+                await authState.ssoSignIn(
+                  context,
+                  clerk.Strategy.enterpriseSSO,
+                );
+              } else if (signIn.needsFactor && factors.length == 1) {
+                await authState.attemptSignIn(strategy: factors.first.strategy);
+              }
+              if (authState.signIn case clerk.SignIn signIn
+                  when signIn.needsFactor && signIn.factors.length == 1) {
+                _strategy = signIn.factors.first.strategy;
+              }
             }
           }
         },
@@ -152,6 +184,31 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final safeIdentifier = signIn.factorFor(_strategy)?.safeIdentifier ??
         _identifier.prettyIdentifier.orNullIfEmpty;
 
+    final showIdentifierInput = signIn.status.isUnknown;
+    final showHeading = signIn.status.needsFactor;
+    final showEmailLinkMessage =
+        signIn.needsFirstFactor && _strategy.isEmailLink;
+    final showCodeInput = _strategy.requiresCode;
+
+    final firstFactors = signIn.factorsFor(clerk.Stage.first);
+    final showFirstFactors = signIn.needsFirstFactor &&
+        _externalActionFactorChosen(firstFactors) == false;
+
+    final secondFactors = signIn.factorsFor(clerk.Stage.second);
+    final showSecondFactors = signIn.needsSecondFactor &&
+        _externalActionFactorChosen(secondFactors) == false;
+
+    if ((showIdentifierInput ||
+            showHeading ||
+            showEmailLinkMessage ||
+            showCodeInput ||
+            showFirstFactors ||
+            showSecondFactors) ==
+        false) {
+      // If we get here, there is no way to progress. Reset.
+      _reset(authState);
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -159,8 +216,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         // Identifier input
         Openable(
           key: const Key('identifierInput'),
-          open: signIn.status.isUnknown,
-          child: ClerkIdentifierInput(
+          open: showIdentifierInput,
+          builder: (context) => ClerkIdentifierInput(
             initialValue: _identifier,
             strategies: env.identificationStrategies.toList(),
             onChanged: (identifier) => _identifier = identifier,
@@ -171,8 +228,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         // Identifier
         Openable(
           key: const Key('heading'),
-          open: signIn.status.needsFactor,
-          child: Text(
+          open: showHeading,
+          builder: (context) => Text(
             signIn.needsSecondFactor
                 ? l10ns.twoStepVerification
                 : _identifier.identifier,
@@ -183,33 +240,47 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         verticalMargin8,
 
         // Email link message
-        _EmailLinkMessage(
-          key: const Key('emailLinkMessage'),
-          open: signIn.needsFirstFactor && _strategy.isEmailLink,
-          identifier: safeIdentifier,
+        Openable(
+          open: showEmailLinkMessage,
+          child: _EmailLinkMessage(
+            key: const Key('emailLinkMessage'),
+            identifier: safeIdentifier,
+          ),
         ),
 
         // Code input
-        _CodeInput(
-          key: const Key('codeInput'),
-          strategy: _strategy,
-          identifier: safeIdentifier,
-          onChanged: _updateCode,
-          onSubmit: (code) => _submitCode(code, authState),
+        Openable(
+          open: showCodeInput,
+          child: _CodeInput(
+            key: const Key('codeInput'),
+            strategy: _strategy,
+            identifier: safeIdentifier,
+            onChanged: _updateCode,
+            onSubmit: (code) => _submitCode(code, authState),
+          ),
         ),
 
-        // Factors for each stage
-        for (final stage in clerk.Stage.values) //
-          if (signIn.factorsFor(stage) case final factors
-              when factors.isNotEmpty) //
-            _FactorList(
-              key: ValueKey<clerk.Stage>(stage),
-              open: signIn.needsFactorsFor(stage) &&
-                  _externalActionFactorChosen(factors) == false,
-              factors: factors,
-              onPasswordChanged: _updatePassword,
-              onSubmit: (strategy) => _continue(authState, strategy: strategy),
-            ),
+        // Factors for first stage
+        Openable(
+          open: showFirstFactors,
+          child: _FactorList(
+            key: const Key('firstFactors'),
+            factors: firstFactors,
+            onPasswordChanged: _updatePassword,
+            onSubmit: (strategy) => _continue(authState, strategy: strategy),
+          ),
+        ),
+
+        // Factors for second stage
+        Openable(
+          open: showSecondFactors,
+          child: _FactorList(
+            key: const Key('secondFactors'),
+            factors: secondFactors,
+            onPasswordChanged: _updatePassword,
+            onSubmit: (strategy) => _continue(authState, strategy: strategy),
+          ),
+        ),
 
         verticalMargin8,
 
@@ -219,8 +290,48 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           onBack: _needsBack(signIn) ? () => _reset(authState) : null,
         ),
 
-        verticalMargin32,
+        verticalMargin16,
+
+        if (env.user.passkeySettings.showSignInButton &&
+            env.supportsPasskeys) //
+          FutureBuilder(
+            future: _passkeyAvailable,
+            builder: (context, snapshot) {
+              return Openable(
+                open: snapshot.data == true && signIn.status.isUnknown,
+                builder: (context) => _UsePasskeyAction(
+                  onTap: () =>
+                      _continue(authState, strategy: clerk.Strategy.passkey),
+                ),
+              );
+            },
+          ),
+
+        verticalMargin16,
       ],
+    );
+  }
+}
+
+class _UsePasskeyAction extends StatelessWidget {
+  const _UsePasskeyAction({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final authState = ClerkAuth.of(context);
+    final l10ns = authState.localizationsOf(context);
+    final themeExtension = ClerkAuth.themeExtensionOf(context);
+    return Center(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Text(
+          l10ns.usePasskeyInstead,
+          style: themeExtension.styles.clickableText,
+        ),
+      ),
     );
   }
 }
@@ -229,33 +340,28 @@ class _EmailLinkMessage extends StatelessWidget {
   const _EmailLinkMessage({
     super.key,
     required this.identifier,
-    required this.open,
   });
 
-  final bool open;
   final String? identifier;
 
   @override
   Widget build(BuildContext context) {
     final l10ns = ClerkAuth.localizationsOf(context);
     final themeExtension = ClerkAuth.themeExtensionOf(context);
-    return Openable(
-      open: open,
-      child: Column(
-        children: [
-          Text(
-            identifier is String
-                ? l10ns.clickOnTheLinkThatsBeenSentTo(identifier!)
-                : l10ns.clickOnTheLinkThatsBeenSentToYou,
-            textAlign: TextAlign.center,
-            maxLines: 3,
-            style: themeExtension.styles.subheading,
-          ),
-          verticalMargin16,
-          defaultLoadingWidget,
-          verticalMargin16,
-        ],
-      ),
+    return Column(
+      children: [
+        Text(
+          identifier is String
+              ? l10ns.clickOnTheLinkThatsBeenSentTo(identifier!)
+              : l10ns.clickOnTheLinkThatsBeenSentToYou,
+          textAlign: TextAlign.center,
+          maxLines: 3,
+          style: themeExtension.styles.subheading,
+        ),
+        verticalMargin16,
+        defaultLoadingWidget,
+        verticalMargin16,
+      ],
     );
   }
 }
@@ -280,30 +386,27 @@ class _CodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10ns = ClerkAuth.localizationsOf(context);
-    return Openable(
-      open: strategy.requiresCode,
-      child: Padding(
-        padding: verticalPadding8,
-        child: ClerkCodeInput(
-          title: switch (strategy) {
-            clerk.Strategy.emailCode ||
-            clerk.Strategy.resetPasswordEmailCode =>
-              identifier is String
-                  ? l10ns.enterTheCodeSentTo(identifier!)
-                  : l10ns.enterTheCodeSentToYouByEmail,
-            clerk.Strategy.phoneCode ||
-            clerk.Strategy.resetPasswordPhoneCode =>
-              identifier is String
-                  ? l10ns.enterTheCodeSentTo(identifier!)
-                  : l10ns.enterTheCodeSentToYouByTextMessage,
-            clerk.Strategy.backupCode => l10ns.enterOneOfYourBackupCodes,
-            clerk.Strategy.totp => l10ns.enterTheCodeFromYourAuthenticatorApp,
-            _ => null,
-          },
-          isTextual: strategy.requiresTextualCode,
-          onChanged: onChanged,
-          onSubmit: onSubmit,
-        ),
+    return Padding(
+      padding: verticalPadding8,
+      child: ClerkCodeInput(
+        title: switch (strategy) {
+          clerk.Strategy.emailCode ||
+          clerk.Strategy.resetPasswordEmailCode =>
+            identifier is String
+                ? l10ns.enterTheCodeSentTo(identifier!)
+                : l10ns.enterTheCodeSentToYouByEmail,
+          clerk.Strategy.phoneCode ||
+          clerk.Strategy.resetPasswordPhoneCode =>
+            identifier is String
+                ? l10ns.enterTheCodeSentTo(identifier!)
+                : l10ns.enterTheCodeSentToYouByTextMessage,
+          clerk.Strategy.backupCode => l10ns.enterOneOfYourBackupCodes,
+          clerk.Strategy.totp => l10ns.enterTheCodeFromYourAuthenticatorApp,
+          _ => null,
+        },
+        isTextual: strategy.requiresTextualCode,
+        onChanged: onChanged,
+        onSubmit: onSubmit,
       ),
     );
   }
@@ -314,13 +417,10 @@ class _FactorList extends StatelessWidget {
     super.key,
     required this.factors,
     required this.onSubmit,
-    required this.open,
     this.onPasswordChanged,
   });
 
   final List<clerk.Factor> factors;
-
-  final bool open;
 
   final ValueChanged<clerk.Strategy> onSubmit;
 
@@ -340,50 +440,46 @@ class _FactorList extends StatelessWidget {
     final canResetPassword =
         authState.env.config.firstFactors.any((s) => s.isPasswordResetter);
 
-    return Openable(
-      open: open,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (onPasswordChanged case final onPasswordChanged?
-              when hasPassword) //
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (onPasswordChanged case final onPasswordChanged? when hasPassword) //
+          Padding(
+            padding: topPadding8 + bottomPadding2,
+            child: ClerkTextFormField(
+              label: l10ns.password,
+              hint: l10ns.enterYourPassword,
+              obscureText: true,
+              onChanged: onPasswordChanged,
+              onSubmit: (_) => onSubmit(clerk.Strategy.password),
+              trailing: canResetPassword
+                  ? GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => _openPasswordResetFlow(context),
+                      child: Text(
+                        l10ns.forgottenPassword,
+                        style: themeExtension.styles.clickableText,
+                      ),
+                    )
+                  : null,
+            ),
+          ),
+        if (otherFactors.isNotEmpty) ...[
+          if (hasPassword) //
+            const OrDivider(),
+          for (final factor in otherFactors)
             Padding(
-              padding: topPadding8 + bottomPadding2,
-              child: ClerkTextFormField(
-                label: l10ns.password,
-                hint: l10ns.enterYourPassword,
-                obscureText: true,
-                onChanged: onPasswordChanged,
-                onSubmit: (_) => onSubmit(clerk.Strategy.password),
-                trailing: canResetPassword
-                    ? GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () => _openPasswordResetFlow(context),
-                        child: Text(
-                          l10ns.forgottenPassword,
-                          style: themeExtension.styles.clickableText,
-                        ),
-                      )
-                    : null,
+              padding: topPadding4,
+              child: StrategyButton(
+                key: ValueKey<clerk.Factor>(factor),
+                strategy: factor.strategy,
+                safeIdentifier: factor.safeIdentifier,
+                onClick: () => onSubmit(factor.strategy),
               ),
             ),
-          if (otherFactors.isNotEmpty) ...[
-            if (hasPassword) //
-              const OrDivider(),
-            for (final factor in otherFactors)
-              Padding(
-                padding: topPadding4,
-                child: StrategyButton(
-                  key: ValueKey<clerk.Factor>(factor),
-                  strategy: factor.strategy,
-                  safeIdentifier: factor.safeIdentifier,
-                  onClick: () => onSubmit(factor.strategy),
-                ),
-              ),
-          ],
-          verticalMargin24,
         ],
-      ),
+        verticalMargin24,
+      ],
     );
   }
 }

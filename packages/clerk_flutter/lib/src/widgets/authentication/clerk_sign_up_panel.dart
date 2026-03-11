@@ -311,7 +311,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
         if (env.supportsEmailLink) //
           Openable(
             open: awaitingEmailLink,
-            child: Column(
+            builder: (context) => Column(
               children: [
                 Text(
                   emailAddress is String
@@ -331,7 +331,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
         if (needsEmail) //
           Openable(
             open: awaitingPhoneCode == false && needsEmailStrategy,
-            child: Column(
+            builder: (context) => Column(
               children: [
                 for (final strategy in [
                   if (env.supportsEmailCode) clerk.Strategy.emailCode,
@@ -360,7 +360,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
         // Input fields
         Openable(
           open: _strategy.isPassword,
-          child: Column(
+          builder: (context) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               for (final attribute in attributes) //

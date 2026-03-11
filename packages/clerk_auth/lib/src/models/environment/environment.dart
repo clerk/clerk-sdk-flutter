@@ -94,6 +94,10 @@ class Environment with InformativeToStringMixin {
   bool get supportsPhoneCode =>
       _supports(UserAttribute.phoneNumber, Strategy.phoneCode);
 
+  /// Do we support passkeys?
+  bool get supportsPasskeys =>
+      user.attributes[UserAttribute.passkey]?.isEnabled == true;
+
   /// [Iterable] of other strategies
   /// i.e. strategies that are neither oauth nor password-based
   Iterable<Strategy> get otherStrategies =>

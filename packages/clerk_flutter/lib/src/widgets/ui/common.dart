@@ -47,23 +47,6 @@ ShapeDecoration inputBoxBorderDecoration(BuildContext context) =>
 const firstColumnWidth = 215.0;
 const secondColumnWidth = 280.0;
 
-Divider divider(BuildContext context) {
-  final themeExtension = ClerkAuth.themeExtensionOf(context);
-  return Divider(
-    color: themeExtension.colors.borderSide,
-    thickness: 1.0,
-    height: 1.0,
-  );
-}
-
-Divider narrowDivider(BuildContext context) {
-  final themeExtension = ClerkAuth.themeExtensionOf(context);
-  return Divider(
-    color: themeExtension.colors.borderSide,
-    thickness: 0.0,
-    height: 1.0,
-  );
-}
 // Margins
 
 const horizontalMargin4 = SizedBox(width: 4.0);

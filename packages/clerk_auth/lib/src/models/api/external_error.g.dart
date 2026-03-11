@@ -49,12 +49,15 @@ const _$ClerkErrorCodeEnumMap = {
   ClerkErrorCode.passwordMatchError: 'passwordMatchError',
   ClerkErrorCode.jwtPoorlyFormatted: 'jwtPoorlyFormatted',
   ClerkErrorCode.noSessionFoundForUser: 'noSessionFoundForUser',
+  ClerkErrorCode.noUserAttributeForField: 'noUserAttributeForField',
   ClerkErrorCode.noSuchFirstFactorStrategy: 'noSuchFirstFactorStrategy',
   ClerkErrorCode.noSuchSecondFactorStrategy: 'noSuchSecondFactorStrategy',
   ClerkErrorCode.passwordResetStrategyError: 'passwordResetStrategyError',
   ClerkErrorCode.cannotDeleteSelf: 'cannotDeleteSelf',
   ClerkErrorCode.unknownError: 'unknownError',
+  ClerkErrorCode.tooManyRetries: 'tooManyRetries',
   ClerkErrorCode.clientAppError: 'clientAppError',
+  ClerkErrorCode.externalError: 'externalError',
 };
 
 ExternalErrorCollection _$ExternalErrorCollectionFromJson(

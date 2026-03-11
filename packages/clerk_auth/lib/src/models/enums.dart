@@ -130,6 +130,9 @@ enum IdentifierType {
 
   /// web3 wallet
   web3wallet('web3_wallet', Strategy.phoneCode),
+
+  /// passkey
+  passkey('passkey', Strategy.passkey),
   ;
 
   const IdentifierType(this.name, this.verificationStrategy);

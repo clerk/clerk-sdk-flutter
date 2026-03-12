@@ -1,5 +1,5 @@
 {
-  "key": "POST /v1/client/sign_ups/SIGN_UP_ID/attempt_verification code=424242&strategy=email_code",
+  "key": "POST /v1/client/sign_ups/SIGN_UP_ID/prepare_verification strategy=phone_code",
   "body": {
     "response": {
       "object": "sign_up_attempt",
@@ -42,7 +42,18 @@
             "email_code"
           ]
         },
-        "phone_number": null,
+        "phone_number": {
+          "object": "verification_otp",
+          "status": "unverified",
+          "strategy": "phone_code",
+          "channel": "sms",
+          "attempts": 0,
+          "expire_at": "%%DATETIME 1%%",
+          "next_action": "needs_attempt",
+          "supported_strategies": [
+            "phone_code"
+          ]
+        },
         "web3_wallet": null,
         "external_account": null
       },
@@ -109,7 +120,18 @@
               "email_code"
             ]
           },
-          "phone_number": null,
+          "phone_number": {
+            "object": "verification_otp",
+            "status": "unverified",
+            "strategy": "phone_code",
+            "channel": "sms",
+            "attempts": 0,
+            "expire_at": "%%DATETIME 1%%",
+            "next_action": "needs_attempt",
+            "supported_strategies": [
+              "phone_code"
+            ]
+          },
           "web3_wallet": null,
           "external_account": null
         },

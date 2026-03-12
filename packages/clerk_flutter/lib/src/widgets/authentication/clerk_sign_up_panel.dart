@@ -255,6 +255,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
         needsEmail;
     final needsEmailStrategy =
         needsEmail && awaitingEmailCode == false && awaitingEmailLink == false;
+    final awaitingSomething = needsEmail || awaitingPhoneCode;
 
     // if we have both first and last name, associate them
     attributes.firstWhereOrNull((a) => a.isFirstName)?.associated =
@@ -359,8 +360,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
 
         // Input fields
         Openable(
-          open: _strategy.isPassword,
-          builder: (context) => Column(
+          open: awaitingSomething == false,
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               for (final attribute in attributes) //
@@ -385,8 +386,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
           onContinue: awaitingEmailLink == false
               ? () => _continue(authState, attributes)
               : null,
-          onBack:
-              _strategy.isPassword == false ? () => _reset(authState) : null,
+          onBack: awaitingSomething ? () => _reset(authState) : null,
           needsLegalAcceptance: _needsLegalAcceptance,
           hasLegalAcceptance: _hasLegalAcceptance,
         ),

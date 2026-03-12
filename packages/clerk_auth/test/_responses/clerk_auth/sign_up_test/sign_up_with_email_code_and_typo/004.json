@@ -1,5 +1,5 @@
 {
-  "key": "POST /v1/client/sign_ups/SIGN_UP_ID/prepare_verification strategy=email_code",
+  "key": "PATCH /v1/client/sign_ups/SIGN_UP_ID email_address&strategy=email_code",
   "body": {
     "response": {
       "object": "sign_up_attempt",
@@ -48,7 +48,7 @@
         "external_account": null
       },
       "username": null,
-      "email_address": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8-typo+clerk_test@somedomain.com",
+      "email_address": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8+clerk_test@somedomain.com",
       "phone_number": "+15555550133",
       "web3_wallet": null,
       "password_enabled": true,
@@ -116,7 +116,7 @@
           "external_account": null
         },
         "username": null,
-        "email_address": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8-typo+clerk_test@somedomain.com",
+        "email_address": "user-c2lnbl91cf93axrox2vtywlsx2nvzgvfyw5kx3r5cg8+clerk_test@somedomain.com",
         "phone_number": "+15555550133",
         "web3_wallet": null,
         "password_enabled": true,

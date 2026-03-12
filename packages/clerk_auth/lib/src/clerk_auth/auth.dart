@@ -717,20 +717,24 @@ class Auth {
                 signUp.unverifiedFields.isNotEmpty:
           if (strategy == Strategy.phoneCode &&
               env.supportsPhoneCode &&
-              signUp.unverified(Field.phoneNumber)) {
+              signUp.unverified(Field.phoneNumber) &&
+              signUp.isVerifying(Strategy.phoneCode) == false) {
             await _api
                 .prepareSignUp(signUp, strategy: Strategy.phoneCode)
                 .then(_housekeeping);
           }
 
           if (signUp.unverified(Field.emailAddress)) {
-            if (strategy == Strategy.emailCode && env.supportsEmailCode) {
+            if (strategy == Strategy.emailCode &&
+                env.supportsEmailCode &&
+                signUp.isVerifying(Strategy.emailCode) == false) {
               await _api
                   .prepareSignUp(signUp, strategy: Strategy.emailCode)
                   .then(_housekeeping);
             } else if (strategy == Strategy.emailLink &&
                 env.supportsEmailLink &&
-                redirectUrl is String) {
+                redirectUrl is String &&
+                signUp.isVerifying(Strategy.emailLink) == false) {
               await _api
                   .prepareSignUp(
                     signUp,

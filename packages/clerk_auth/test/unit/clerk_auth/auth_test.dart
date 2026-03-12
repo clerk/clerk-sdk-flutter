@@ -3298,7 +3298,7 @@ class _TestAuth extends Auth {
     if (error case ClerkError error) {
       onError(error);
     } else {
-      ClerkError.external(error);
+      onError(ClerkError.external(error));
     }
   }
 }

@@ -53,9 +53,14 @@ class Auth {
   /// Handles [ClerkError]s when they occur
   void handleError(ClerkError error) => throw error;
 
-  Future<T?> _catchExternalErrors<T>(FutureOr<T?> Function() fn) async {
+  Future<T?> _catchExternalErrors<T>(
+    FutureOr<T?> Function() fn, {
+    FutureOr<void> Function()? onFinally,
+  }) async {
+    T? result;
+
     try {
-      return await fn();
+      result = await fn();
     } on ExternalError catch (error) {
       if (error.errors case ExternalErrorCollection errors) {
         handleError(ClerkError.from(errors));
@@ -67,8 +72,13 @@ class Auth {
           ),
         );
       }
+    } catch (error) {
+      handleError(ClerkError.external(error));
+    } finally {
+      await onFinally?.call();
     }
-    return null;
+
+    return result;
   }
 
   ApiResponse _housekeeping(ApiResponse resp) {
@@ -224,21 +234,25 @@ class Auth {
     Duration delay = _defaultPollDelay;
     SessionToken? sessionToken;
 
-    if (isSignedIn) {
-      sessionToken = await _catchExternalErrors(
-        () => _api.updateSessionToken(config.defaultSessionTokenTemplate),
-      );
-      if (sessionToken case SessionToken token) {
-        _sessionTokens.add(token);
-        if (token.expiry.difference(DateTime.timestamp())
-            case Duration tokenBasedDelay
-            when tokenBasedDelay > Duration.zero) {
-          delay = tokenBasedDelay;
+    await _catchExternalErrors(
+      () async {
+        if (isSignedIn) {
+          sessionToken =
+              await _api.updateSessionToken(config.defaultSessionTokenTemplate);
+          if (sessionToken case SessionToken token) {
+            _sessionTokens.add(token);
+            if (token.expiry.difference(DateTime.timestamp())
+                case Duration tokenBasedDelay
+                when tokenBasedDelay > Duration.zero) {
+              delay = tokenBasedDelay;
+            }
+          }
         }
-      }
-    }
-
-    _pollTimer = Timer(delay, _pollForSessionToken);
+      },
+      onFinally: () {
+        _pollTimer = Timer(delay, _pollForSessionToken);
+      },
+    );
 
     return sessionToken;
   }

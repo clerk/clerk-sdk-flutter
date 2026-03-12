@@ -35,7 +35,7 @@ class ClerkError implements Exception {
       );
 
   /// Construct an external error
-  factory ClerkError.external(Exception error) {
+  factory ClerkError.external(Object error) {
     var argument = error.toString();
     if (argument.startsWith('Instance of ')) {
       argument = error.runtimeType.toString().camelToSentenceCase();

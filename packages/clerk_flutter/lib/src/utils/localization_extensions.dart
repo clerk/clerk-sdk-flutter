@@ -22,6 +22,8 @@ extension ClerkAuthErrorExtension on clerk.ClerkError {
         l10ns.noAssociatedCodeRetrievalMethod(argument.toString()),
       clerk.ClerkErrorCode.noAssociatedStrategy =>
         l10ns.noAssociatedStrategy(argument.toString()),
+      clerk.ClerkErrorCode.noInitialCodeHasBeenSetUpToResend =>
+        l10ns.noInitialCodeHasBeenSetUpToResend,
       clerk.ClerkErrorCode.noSessionFoundForUser =>
         l10ns.noSessionFoundForUser(argument.toString()),
       clerk.ClerkErrorCode.noSessionTokenRetrieved =>

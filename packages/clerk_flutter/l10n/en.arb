@@ -175,6 +175,7 @@
       }
     }
   },
+  "noInitialCodeHasBeenSetUpToResend": "No initial code has been set up to resend",
   "noSessionFoundForUser": "No session found for user {arg}",
   "@noSessionFoundForUser": {
     "placeholders": {

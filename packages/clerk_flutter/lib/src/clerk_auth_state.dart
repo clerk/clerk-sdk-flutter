@@ -48,9 +48,13 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   final _updateLock = _UpdateLock();
 
   @override
-  void handleError(clerk.ClerkError error) {
+  void handleError(Object error) {
     if (_errors.hasListener) {
-      _errors.add(error);
+      if (error case clerk.ClerkError error) {
+        _errors.add(error);
+      } else {
+        _errors.add(clerk.ClerkError.external(error));
+      }
     } else {
       super.handleError(error);
     }

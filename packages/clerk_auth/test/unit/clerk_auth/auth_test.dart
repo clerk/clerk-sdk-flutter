@@ -3294,7 +3294,11 @@ class _TestAuth extends Auth {
   final void Function(ClerkError) onError;
 
   @override
-  void handleError(ClerkError error) {
-    onError(error);
+  void handleError(Object error) {
+    if (error case ClerkError error) {
+      onError(error);
+    } else {
+      ClerkError.external(error);
+    }
   }
 }

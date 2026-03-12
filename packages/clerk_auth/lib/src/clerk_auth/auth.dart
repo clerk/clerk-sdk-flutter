@@ -51,7 +51,7 @@ class Auth {
   void addError(ClerkError error) => handleError(error);
 
   /// Handles [ClerkError]s when they occur
-  void handleError(ClerkError error) => throw error;
+  void handleError(Object error) => throw error;
 
   Future<T?> _catchExternalErrors<T>(
     FutureOr<T?> Function() fn, {
@@ -73,7 +73,7 @@ class Auth {
         );
       }
     } catch (error) {
-      handleError(ClerkError.external(error));
+      handleError(error);
     } finally {
       await onFinally?.call();
     }

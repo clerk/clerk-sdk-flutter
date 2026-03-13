@@ -9,6 +9,7 @@ import 'package:clerk_flutter/src/widgets/authentication/clerk_forgotten_passwor
 import 'package:clerk_flutter/src/widgets/ui/clerk_code_input.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_control_buttons.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_identifier_input.dart';
+import 'package:clerk_flutter/src/widgets/ui/clerk_material_button.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_text_form_field.dart';
 import 'package:clerk_flutter/src/widgets/ui/closeable.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart';
@@ -53,6 +54,12 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     _password = _code = '';
     _strategy = clerk.Strategy.unknown;
     await authState.resetClient();
+  }
+
+  Future<void> _resend(ClerkAuthState authState) async {
+    await authState.safelyCall(context, () async {
+      await authState.resendCode(_strategy);
+    });
   }
 
   Future<void> _continue(
@@ -257,6 +264,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
             identifier: safeIdentifier,
             onChanged: _updateCode,
             onSubmit: (code) => _submitCode(code, authState),
+            onResend: () => _resend(authState),
           ),
         ),
 
@@ -373,6 +381,7 @@ class _CodeInput extends StatelessWidget {
     required this.identifier,
     required this.onChanged,
     required this.onSubmit,
+    required this.onResend,
   });
 
   final clerk.Strategy strategy;
@@ -383,30 +392,49 @@ class _CodeInput extends StatelessWidget {
 
   final Future<bool> Function(String) onSubmit;
 
+  final VoidCallback onResend;
+
   @override
   Widget build(BuildContext context) {
     final l10ns = ClerkAuth.localizationsOf(context);
     return Padding(
       padding: verticalPadding8,
-      child: ClerkCodeInput(
-        title: switch (strategy) {
-          clerk.Strategy.emailCode ||
-          clerk.Strategy.resetPasswordEmailCode =>
-            identifier is String
-                ? l10ns.enterTheCodeSentTo(identifier!)
-                : l10ns.enterTheCodeSentToYouByEmail,
-          clerk.Strategy.phoneCode ||
-          clerk.Strategy.resetPasswordPhoneCode =>
-            identifier is String
-                ? l10ns.enterTheCodeSentTo(identifier!)
-                : l10ns.enterTheCodeSentToYouByTextMessage,
-          clerk.Strategy.backupCode => l10ns.enterOneOfYourBackupCodes,
-          clerk.Strategy.totp => l10ns.enterTheCodeFromYourAuthenticatorApp,
-          _ => null,
-        },
-        isTextual: strategy.requiresTextualCode,
-        onChanged: onChanged,
-        onSubmit: onSubmit,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          ClerkCodeInput(
+            title: switch (strategy) {
+              clerk.Strategy.emailCode ||
+              clerk.Strategy.resetPasswordEmailCode =>
+                identifier is String
+                    ? l10ns.enterTheCodeSentTo(identifier!)
+                    : l10ns.enterTheCodeSentToYouByEmail,
+              clerk.Strategy.phoneCode ||
+              clerk.Strategy.resetPasswordPhoneCode =>
+                identifier is String
+                    ? l10ns.enterTheCodeSentTo(identifier!)
+                    : l10ns.enterTheCodeSentToYouByTextMessage,
+              clerk.Strategy.backupCode => l10ns.enterOneOfYourBackupCodes,
+              clerk.Strategy.totp => l10ns.enterTheCodeFromYourAuthenticatorApp,
+              _ => null,
+            },
+            isTextual: strategy.requiresTextualCode,
+            onChanged: onChanged,
+            onSubmit: onSubmit,
+          ),
+          Padding(
+            padding: topPadding8,
+            child: SizedBox(
+              width: 80,
+              height: 20,
+              child: ClerkMaterialButton(
+                style: ClerkMaterialButtonStyle.light,
+                onPressed: onResend,
+                label: Text(l10ns.resend),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

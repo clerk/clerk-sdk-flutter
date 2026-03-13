@@ -87,13 +87,23 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
   String? _valueOrNull(clerk.UserAttribute? attr) =>
       _values[attr]?.identifier.trim().orNullIfEmpty;
 
-  Future<void> _sendCode({
-    required String code,
-    required clerk.Strategy strategy,
-  }) async {
+  Future<void> _sendCode(
+    ClerkAuthState authState,
+    String code,
+    clerk.Strategy strategy,
+  ) async {
     final authState = ClerkAuth.of(context, listen: false);
     await authState.safelyCall(context, () async {
       await authState.attemptSignUp(strategy: strategy, code: code);
+    });
+  }
+
+  Future<void> _resend(
+    ClerkAuthState authState,
+    clerk.Strategy strategy,
+  ) async {
+    await authState.safelyCall(context, () async {
+      await authState.resendCode(strategy);
     });
   }
 
@@ -282,13 +292,10 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             localizations: l10ns,
             open: awaitingPhoneCode,
             onSubmit: (code) async {
-              await _sendCode(
-                strategy: clerk.Strategy.phoneCode,
-                code: code,
-              );
+              await _sendCode(authState, code, clerk.Strategy.phoneCode);
               return false;
             },
-            onResend: () => _continue(authState, attributes),
+            onResend: () => _resend(authState, clerk.Strategy.phoneCode),
           ),
 
         // Email code input
@@ -299,13 +306,10 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             localizations: l10ns,
             open: awaitingEmailCode,
             onSubmit: (code) async {
-              await _sendCode(
-                strategy: clerk.Strategy.emailCode,
-                code: code,
-              );
+              await _sendCode(authState, code, clerk.Strategy.emailCode);
               return false;
             },
-            onResend: () => _continue(authState, attributes),
+            onResend: () => _resend(authState, clerk.Strategy.emailCode),
           ),
 
         // Email link message

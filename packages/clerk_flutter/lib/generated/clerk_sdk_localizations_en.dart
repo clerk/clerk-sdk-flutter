@@ -286,6 +286,10 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
   }
 
   @override
+  String get noInitialCodeHasBeenSetUpToResend =>
+      'No initial code has been set up to resend';
+
+  @override
   String noSessionFoundForUser(String arg) {
     return 'No session found for user $arg';
   }

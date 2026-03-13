@@ -582,6 +582,12 @@ abstract class ClerkSdkLocalizations {
   /// **'No strategy associated with {arg}'**
   String noAssociatedStrategy(String arg);
 
+  /// No description provided for @noInitialCodeHasBeenSetUpToResend.
+  ///
+  /// In en, this message translates to:
+  /// **'No initial code has been set up to resend'**
+  String get noInitialCodeHasBeenSetUpToResend;
+
   /// No description provided for @noSessionFoundForUser.
   ///
   /// In en, this message translates to:

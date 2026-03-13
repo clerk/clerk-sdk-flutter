@@ -94,17 +94,20 @@ enum ClerkErrorCode {
   /// JWT poorly formatted
   jwtPoorlyFormatted,
 
+  /// No initial code has been set up to resend
+  noInitialCodeHasBeenSetUpToResend,
+
   /// No session found for user
   noSessionFoundForUser,
-
-  /// No user attribute found for field
-  noUserAttributeForField,
 
   /// Unsupported strategy for first factor
   noSuchFirstFactorStrategy,
 
   /// Unsupported strategy for second factor
   noSuchSecondFactorStrategy,
+
+  /// No user attribute found for field
+  noUserAttributeForField,
 
   /// Password reset error
   passwordResetStrategyError,

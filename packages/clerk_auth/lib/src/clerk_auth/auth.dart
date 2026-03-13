@@ -332,15 +332,18 @@ class Auth {
     SessionToken? token = _api.sessionToken(templateName, org);
     if (token == null) {
       if (org == null && templateName == null) {
-        token = await _pollForSessionToken(); // this resets the timer too
+        // this resets the timer too, and adds a token to _sessionTokens
+        // if retrieved
+        token = await _pollForSessionToken();
       } else {
         token = await _catchExternalErrors(
           () => _api.updateSessionToken(templateName, org),
         );
+        if (token != null) {
+          _sessionTokens.add(token);
+        }
       }
-      if (token != null) {
-        _sessionTokens.add(token);
-      } else {
+      if (token == null) {
         throw const ClerkError(
           message: 'No session token retrieved',
           code: ClerkErrorCode.noSessionTokenRetrieved,
@@ -791,6 +794,38 @@ class Auth {
 
     update();
     return client;
+  }
+
+  /// Resend code if requested
+  ///
+  Future<ApiResponse> resendCode(Strategy strategy) async {
+    ApiResponse? response;
+
+    if (client.signUp case SignUp signUp when signUp.isVerifying(strategy)) {
+      response = await _api
+          .prepareSignUp(signUp, strategy: strategy)
+          .then(_housekeeping);
+    } else if (client.signIn case SignIn signIn) {
+      for (final stage in Stage.values) {
+        if (signIn.isVerifying(stage, strategy)) {
+          response = await _api
+              .prepareSignIn(signIn, stage: stage, strategy: strategy)
+              .then(_housekeeping);
+          break;
+        }
+      }
+    }
+
+    if (response is ApiResponse) {
+      update();
+    } else {
+      throw const ClerkError(
+        message: "No initial code has been set up to resend",
+        code: ClerkErrorCode.noInitialCodeHasBeenSetUpToResend,
+      );
+    }
+
+    return response;
   }
 
   /// Passkeys

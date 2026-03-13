@@ -116,6 +116,15 @@ class SignIn extends AuthObject with InformativeToStringMixin {
     };
   }
 
+  /// Do we have a [verification] for strategy happening?
+  bool isVerifying(Stage stage, Strategy strategy) {
+    if (verificationFor(stage) case Verification verification) {
+      return verification.strategy == strategy &&
+          verification.status.isVerified == false;
+    }
+    return false;
+  }
+
   /// Find a list of [Factor]s for this [SignIn]
   /// at the given [Stage]
   ///

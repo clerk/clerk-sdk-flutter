@@ -1,166 +1,240 @@
-# Clerk Dart & Flutter SDK Documentation
+# Clerk SDK Documentation
 
-This directory contains the documentation site for Clerk's Dart and Flutter SDKs, built with Jekyll and hosted on GitHub Pages.
+Welcome to the comprehensive documentation for the Clerk SDK for Flutter and Dart.
 
-## 🌐 Live Documentation
+## 📚 Documentation Structure
 
-Visit the live documentation at: **https://clerk.github.io/clerk-sdk-flutter/**
+This documentation is organized into two main sections:
 
-## 📁 Structure
+### 🎯 [clerk_auth](./clerk_auth/) - Core Dart SDK
 
-```
-docs/
-├── _config.yml              # Jekyll configuration
-├── index.md                 # Homepage
-├── getting-started.md       # Getting started overview
-├── getting-started/         # Quickstart guides
-│   ├── quickstart-dart.md
-│   └── quickstart-flutter.md
-├── guides/                  # Comprehensive guides
-│   ├── authentication.md
-│   ├── user-management.md
-│   ├── customization.md
-│   └── ...
-├── packages/                # Package-specific documentation
-│   ├── clerk-auth.md
-│   └── clerk-flutter.md
-└── assets/                  # Images and static assets
-```
+The foundational authentication library that works with any Dart application.
 
-## 🚀 Local Development
+**Start here if you're:**
+- Building a Dart CLI application
+- Integrating Clerk into a non-Flutter Dart project
+- Understanding the core authentication logic
+- Implementing custom UI or integrations
 
-### Prerequisites
+**Key Documentation:**
+- [**Auth API**](./clerk_auth/auth.md) - Complete authentication methods (sign-in, sign-up, OAuth, passkeys, sessions, etc.)
+- [**AuthConfig**](./clerk_auth/auth_config.md) - SDK configuration and initialization
+- [**Persistor**](./clerk_auth/persistor.md) - Custom storage implementations
+- [**HttpService**](./clerk_auth/http_service.md) - Custom HTTP client implementations
 
-- Ruby >= 3.1
-- Bundler
+### 🎨 [clerk_flutter](./clerk_flutter/) - Flutter Widgets
 
-### Setup
+Pre-built Flutter widgets and UI components for rapid integration.
 
-1. Install dependencies:
+**Start here if you're:**
+- Building a Flutter mobile or web application
+- Looking for pre-built authentication UI
+- Wanting quick integration with minimal code
+- Customizing the appearance of auth flows
 
-```bash
-cd docs
-bundle install
-```
+**Key Documentation:**
+- [**ClerkAuth**](./clerk_flutter/clerk_auth.md) - Root widget and state management
+- [**ClerkAuthentication**](./clerk_flutter/clerk_authentication.md) - Complete pre-built auth UI
+- [**ClerkUserButton**](./clerk_flutter/clerk_user_button.md) - User profile and session management
+- [**ClerkAuthBuilder**](./clerk_flutter/clerk_auth_builder.md) - Custom UI with builder pattern
+- [**ClerkTheme**](./clerk_flutter/clerk_theme.md) - Theming and customization
 
-2. Run the local server:
-
-```bash
-bundle exec jekyll serve
-```
-
-3. Open http://localhost:4000/clerk-sdk-flutter in your browser
-
-{: .note }
-> The site uses the local `just-the-docs` gem for development and `remote_theme` for GitHub Pages deployment. This is configured automatically via `_config.yml` and `_config_production.yml`.
-
-### Live Reload
-
-The server will automatically reload when you make changes to the documentation files.
-
-## 📝 Writing Documentation
-
-### Adding a New Page
-
-1. Create a new Markdown file in the appropriate directory
-2. Add front matter at the top:
-
-```yaml
 ---
-layout: default
-title: Your Page Title
-parent: Parent Page (optional)
-nav_order: 1
+
+## 🚀 Quick Start
+
+### For Flutter Applications
+
+1. **Add dependencies** to your `pubspec.yaml`:
+   ```yaml
+   dependencies:
+     clerk_flutter: ^0.0.14-beta
+   ```
+
+2. **Wrap your app** with `ClerkAuth`:
+   ```dart
+   MaterialApp(
+     builder: ClerkAuth.materialAppBuilder(
+       config: ClerkAuthConfig(
+         publishableKey: 'pk_test_...',
+       ),
+     ),
+     home: const HomePage(),
+   )
+   ```
+
+3. **Use pre-built UI** or build custom:
+   ```dart
+   // Pre-built UI
+   ClerkSignedOut(
+     child: const ClerkAuthentication(),
+   )
+   
+   // Custom UI
+   ClerkAuthBuilder(
+     signedInBuilder: (context, authState) {
+       return Text('Welcome, ${authState.user?.fullName}!');
+     },
+     signedOutBuilder: (context, authState) {
+       return const ClerkAuthentication();
+     },
+   )
+   ```
+
+📖 **[Full Flutter Guide →](./clerk_flutter/README.md)**
+
+### For Dart Applications
+
+1. **Add dependency** to your `pubspec.yaml`:
+   ```yaml
+   dependencies:
+     clerk_auth: ^0.0.14-beta
+   ```
+
+2. **Initialize** the Auth instance:
+   ```dart
+   import 'package:clerk_auth/clerk_auth.dart';
+   
+   final auth = Auth(
+     config: AuthConfig(publishableKey: 'pk_test_...'),
+   );
+   await auth.initialize();
+   ```
+
+3. **Authenticate** users:
+   ```dart
+   // Email + Password sign-in
+   await auth.attemptSignIn(identifier: 'user@example.com');
+   await auth.attemptSignIn(password: 'password123');
+   
+   // Check auth state
+   if (auth.isSignedIn) {
+     print('User: ${auth.user?.fullName}');
+   }
+   ```
+
+📖 **[Full Dart Guide →](./clerk_auth/README.md)**
+
 ---
-```
 
-3. Write your content in Markdown
+## 📖 Documentation Index
 
-### Front Matter Options
+### clerk_auth (Core SDK)
 
-| Option | Description |
-|--------|-------------|
-| `layout` | Page layout (usually `default`) |
-| `title` | Page title |
-| `parent` | Parent page for navigation hierarchy |
-| `nav_order` | Order in navigation menu |
-| `has_children` | Set to `true` if page has child pages |
-| `permalink` | Custom URL path |
+| Document | Description |
+|----------|-------------|
+| [README](./clerk_auth/README.md) | Overview and getting started |
+| [Auth](./clerk_auth/auth.md) | Complete API reference for authentication methods |
+| [AuthConfig](./clerk_auth/auth_config.md) | Configuration options and initialization |
+| [Persistor](./clerk_auth/persistor.md) | Storage interface for sessions and tokens |
+| [HttpService](./clerk_auth/http_service.md) | HTTP client interface for custom networking |
 
-### Markdown Features
+### clerk_flutter (Flutter Widgets)
 
-The documentation supports:
+| Document | Description |
+|----------|-------------|
+| [README](./clerk_flutter/README.md) | Overview and getting started |
+| [ClerkAuth](./clerk_flutter/clerk_auth.md) | Root widget and state management |
+| [ClerkAuthBuilder](./clerk_flutter/clerk_auth_builder.md) | Builder pattern for custom UI |
+| [ClerkAuthentication](./clerk_flutter/clerk_authentication.md) | Pre-built authentication UI |
+| [ClerkUserButton](./clerk_flutter/clerk_user_button.md) | User profile button and menu |
+| [ClerkOrganizationList](./clerk_flutter/clerk_organization_list.md) | Organization management UI |
+| [ClerkSignedIn](./clerk_flutter/clerk_signed_in.md) | Conditional rendering (signed in) |
+| [ClerkSignedOut](./clerk_flutter/clerk_signed_out.md) | Conditional rendering (signed out) |
+| [ClerkErrorListener](./clerk_flutter/clerk_error_listener.md) | Error handling and display |
+| [ClerkAuthConfig](./clerk_flutter/clerk_auth_config.md) | Flutter-specific configuration |
+| [ClerkTheme](./clerk_flutter/clerk_theme.md) | Theming and customization |
 
-- Standard Markdown syntax
-- Code blocks with syntax highlighting
-- Tables
-- Callouts (notes, warnings, etc.)
-- Table of contents
+---
 
-#### Code Blocks
+## 🎯 Common Use Cases
 
-````markdown
+### Authentication Flows
+
+- **[Email + Password Sign-In](./clerk_auth/auth.md#email--password-sign-in)** - Traditional authentication
+- **[Email Code Sign-In](./clerk_auth/auth.md#email-code-sign-in)** - Passwordless with verification code
+- **[Phone Code Sign-In](./clerk_auth/auth.md#phone-code-sign-in)** - SMS-based authentication
+- **[OAuth Sign-In](./clerk_auth/auth.md#oauth-sign-in)** - Social login (Google, Apple, GitHub, etc.)
+- **[Passkey Authentication](./clerk_auth/auth.md#passkey-authentication)** - WebAuthn/FIDO2
+- **[Multi-Factor Authentication](./clerk_auth/auth.md#multi-factor-authentication)** - 2FA with SMS or TOTP
+
+### Session Management
+
+- **[Session Handling](./clerk_auth/auth.md#session-management)** - Managing user sessions
+- **[Multi-Session Support](./clerk_auth/auth.md#multi-session-management)** - Multiple accounts
+- **[Token Management](./clerk_auth/auth.md#token-management)** - Access tokens and JWTs
+
+### User Management
+
+- **[User Profile](./clerk_auth/auth.md#user-management)** - Updating user information
+- **[Email Management](./clerk_auth/auth.md#email-management)** - Adding/removing emails
+- **[Phone Management](./clerk_auth/auth.md#phone-management)** - Adding/removing phone numbers
+- **[External Accounts](./clerk_auth/auth.md#external-account-management)** - OAuth connections
+
+### Organization Features
+
+- **[Organization Management](./clerk_auth/auth.md#organization-management)** - Creating and managing orgs
+- **[Organization Switching](./clerk_auth/auth.md#switching-organizations)** - Multi-org support
+- **[Organization UI](./clerk_flutter/clerk_organization_list.md)** - Pre-built organization widgets
+
+---
+
+## 🔑 Key Concepts
+
+### Re-entrant Authentication
+
+The `attemptSignIn()` and `attemptSignUp()` methods are **re-entrant**, meaning you call them multiple times with different parameters to progress through the authentication flow:
+
 ```dart
-import 'package:clerk_flutter/clerk_flutter.dart';
+// Step 1: Provide identifier
+await auth.attemptSignIn(identifier: 'user@example.com');
 
-void main() {
-  runApp(MyApp());
-}
-```
-````
+// Step 2: Provide password
+await auth.attemptSignIn(password: 'password123');
 
-#### Callouts
-
-```markdown
-{: .note }
-> This is a note callout
-
-{: .warning }
-> This is a warning callout
+// Step 3: If 2FA enabled, provide code
+await auth.attemptSignIn(code: '123456');
 ```
 
-## 🎨 Theme
+📖 **[Learn more about re-entrant flows →](./clerk_auth/auth.md#re-entrant-methods)**
 
-The documentation uses the [Just the Docs](https://just-the-docs.github.io/just-the-docs/) theme with custom Clerk branding.
+### Transfer Flow
 
-## 🚢 Deployment
+When using OAuth or ID token authentication, Clerk uses a "transfer flow" to securely complete authentication:
 
-The documentation is automatically deployed to GitHub Pages when changes are pushed to the `main` branch.
+```dart
+// 1. Initiate OAuth
+final transfer = await auth.oauthSignIn(strategy: Strategy.oauth_google);
 
-### GitHub Actions Workflow
+// 2. Open browser to transfer.authUrl
 
-The deployment is handled by `.github/workflows/deploy-docs.yml`:
+// 3. Complete after redirect
+await auth.completeOAuthSignIn(transfer: transfer);
+```
 
-1. Triggered on push to `main` branch (when `docs/**` files change)
-2. Builds the Jekyll site
-3. Deploys to GitHub Pages
+📖 **[Learn more about transfer flow →](./clerk_auth/auth.md#transfer-flow)**
 
-### Manual Deployment
+---
 
-You can also trigger a manual deployment:
+## 💡 Best Practices
 
-1. Go to the [Actions tab](https://github.com/clerk/clerk-sdk-flutter/actions)
-2. Select "Deploy Documentation to GitHub Pages"
-3. Click "Run workflow"
+1. **Use environment variables** for publishable keys
+2. **Handle errors** with `ClerkErrorListener` (Flutter) or try-catch blocks (Dart)
+3. **Respect re-entrant flows** - call `attemptSignIn`/`attemptSignUp` multiple times
+4. **Check auth state** before accessing user/session data
+5. **Implement proper loading states** during authentication
+6. **Test all authentication strategies** enabled in your Clerk Dashboard
+7. **Customize themes** to match your brand (Flutter)
 
-## 📦 Dependencies
+---
 
-- **Jekyll** - Static site generator
-- **just-the-docs** - Documentation theme
-- **jekyll-seo-tag** - SEO optimization
-- **jekyll-github-metadata** - GitHub integration
+## 🆘 Support
 
-## 🤝 Contributing
+- **Clerk Dashboard**: [https://dashboard.clerk.com](https://dashboard.clerk.com)
+- **Clerk Documentation**: [https://clerk.com/docs](https://clerk.com/docs)
+- **GitHub Issues**: Report bugs and request features
 
-To contribute to the documentation:
+---
 
-1. Fork the [repository](https://github.com/clerk/clerk-sdk-flutter)
-2. Create a new branch for your changes
-3. Make your edits in the `docs/` directory
-4. Test locally with `bundle exec jekyll serve`
-5. Submit a pull request
-
-## 📄 License
-
-This documentation is part of the Clerk Dart & Flutter SDK and is licensed under the MIT License.
+*Documentation generated for Clerk SDK version 0.0.14-beta*
 

@@ -338,8 +338,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   }
 
   void _onError(clerk.ClerkError error, ClerkErrorCallback? onError) {
-    onError?.call(error);
-    handleError(error); // last, because may throw
+    (onError ?? handleError).call(error);
   }
 
   /// Returns a boolean regarding whether or not a password has been supplied,

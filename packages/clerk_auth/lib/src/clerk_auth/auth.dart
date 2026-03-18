@@ -510,6 +510,23 @@ class Auth {
     }
   }
 
+  /// oAuthToken sign in
+  ///
+  Future<void> oAuthTokenSignIn({
+    required Strategy strategy,
+    String? token,
+    String? code,
+  }) async {
+    var response =
+        await _api.createSignIn(strategy: strategy, token: token, code: code);
+    if (response.errorCollection.containsExternalAccountNotFoundError) {
+      response =
+          await _api.createSignUp(strategy: strategy, token: token, code: code);
+    }
+    _housekeeping(response);
+    update();
+  }
+
   /// Progressively attempt sign in
   ///
   /// Can be repeatedly called with updated parameters
@@ -654,7 +671,7 @@ class Auth {
   /// until the user is signed up and in.
   ///
   Future<Client> attemptSignUp({
-    required Strategy strategy,
+    Strategy strategy = Strategy.password,
     String? firstName,
     String? lastName,
     String? username,

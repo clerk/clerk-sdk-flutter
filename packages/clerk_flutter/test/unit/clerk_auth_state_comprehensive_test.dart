@@ -354,21 +354,18 @@ void main() {
                 return ElevatedButton(
                   onPressed: () async {
                     // When onError is provided, the error is captured by the callback
-                    // but still thrown by handleError
-                    await expectLater(
-                      authState.safelyCall(
-                        context,
-                        () async {
-                          throw const clerk.ClerkError(
-                            message: 'Test error',
-                            code: clerk.ClerkErrorCode.clientAppError,
-                          );
-                        },
-                        onError: (error) {
-                          capturedError = error;
-                        },
-                      ),
-                      throwsA(isA<clerk.ClerkError>()),
+                    // and NOT thrown (error is handled gracefully)
+                    await authState.safelyCall(
+                      context,
+                      () async {
+                        throw const clerk.ClerkError(
+                          message: 'Test error',
+                          code: clerk.ClerkErrorCode.clientAppError,
+                        );
+                      },
+                      onError: (error) {
+                        capturedError = error;
+                      },
                     );
                   },
                   child: const Text('Test'),

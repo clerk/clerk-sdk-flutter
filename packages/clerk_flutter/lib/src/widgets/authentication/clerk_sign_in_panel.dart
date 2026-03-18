@@ -205,13 +205,14 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final showSecondFactors = signIn.needsSecondFactor &&
         _externalActionFactorChosen(secondFactors) == false;
 
-    if ((showIdentifierInput ||
-            showHeading ||
-            showEmailLinkMessage ||
-            showCodeInput ||
-            showFirstFactors ||
-            showSecondFactors) ==
-        false) {
+    final showSomething = showIdentifierInput ||
+        showHeading ||
+        showEmailLinkMessage ||
+        showCodeInput ||
+        showFirstFactors ||
+        showSecondFactors;
+
+    if (showSomething == false && signIn.hasVerification == false) {
       // If we get here, there is no way to progress. Reset.
       _reset(authState);
     }

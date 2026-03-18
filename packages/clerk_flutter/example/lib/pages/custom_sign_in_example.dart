@@ -92,12 +92,13 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
           token: account.authentication.idToken,
         );
         if (_authState.signUp case clerk.SignUp signUp) {
-          // If required fields or missing, you will now have a signUp object
+          // If required fields are absent, you will now have a signUp object
           // with missing fields or other requirements. Deal with them now,
           // possibly through further user input
           if (signUp.missingFields.contains(clerk.Field.legalAccepted)) {
             // Do this or similar for other missing fields as per your dashboard
-            // configuration too
+            // configuration too. NB don't hard-code legalAccepted to true
+            // like this!
             await _authState.attemptSignUp(legalAccepted: true);
           }
         }

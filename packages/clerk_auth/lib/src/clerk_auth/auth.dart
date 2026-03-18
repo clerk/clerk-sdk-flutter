@@ -510,6 +510,23 @@ class Auth {
     }
   }
 
+  /// oAuthToken sign in
+  ///
+  Future<void> oAuthTokenSignIn({
+    required Strategy strategy,
+    String? token,
+    String? code,
+  }) async {
+    var response =
+        await _api.createSignIn(strategy: strategy, token: token, code: code);
+    if (response.errorCollection.containsExternalAccountNotFoundError) {
+      response =
+          await _api.createSignUp(strategy: strategy, token: token, code: code);
+    }
+    _housekeeping(response);
+    update();
+  }
+
   /// Progressively attempt sign in
   ///
   /// Can be repeatedly called with updated parameters
@@ -633,13 +650,28 @@ class Auth {
     update();
   }
 
+  bool? _checkLegalAcceptance(bool? legalAccepted, bool acceptanceRequired) {
+    if (acceptanceRequired) {
+      if (legalAccepted == true) {
+        return true;
+      }
+
+      throw const ClerkError(
+        message: "Legal acceptance is required to proceed with sign up",
+        code: ClerkErrorCode.legalAcceptanceRequired,
+      );
+    }
+
+    return null;
+  }
+
   /// Progressively attempt sign up
   ///
   /// Can be repeatedly called with updated parameters
   /// until the user is signed up and in.
   ///
   Future<Client> attemptSignUp({
-    required Strategy strategy,
+    Strategy strategy = Strategy.password,
     String? firstName,
     String? lastName,
     String? username,
@@ -664,12 +696,18 @@ class Auth {
     }
 
     if (client.signUp case SignUp signUp) {
+      legalAccepted = _checkLegalAcceptance(
+        legalAccepted,
+        signUp.missingFields.contains(Field.legalAccepted),
+      );
+
       final needsUpdate = (password?.isNotEmpty == true) ||
           (firstName is String && firstName != signUp.firstName) ||
           (lastName is String && lastName != signUp.lastName) ||
           (username is String && username != signUp.username) ||
           (emailAddress is String && emailAddress != signUp.emailAddress) ||
           (phoneNumber is String && phoneNumber != signUp.phoneNumber) ||
+          (legalAccepted is bool) ||
           (metadata is Map && _deeplyUnequal(metadata, signUp.unsafeMetadata));
       if (needsUpdate) {
         await _api
@@ -682,22 +720,16 @@ class Auth {
               username: username,
               emailAddress: emailAddress,
               phoneNumber: phoneNumber,
+              legalAccepted: legalAccepted,
               metadata: metadata,
             )
             .then(_housekeeping);
       }
     } else {
-      if (env.user.signUp.legalConsentEnabled) {
-        if (legalAccepted != true) {
-          // Legal acceptance required but not given
-          throw const ClerkError(
-            message: "Legal acceptance is required to proceed with sign up",
-            code: ClerkErrorCode.legalAcceptanceRequired,
-          );
-        }
-      } else {
-        legalAccepted = null;
-      }
+      legalAccepted = _checkLegalAcceptance(
+        legalAccepted,
+        env.user.signUp.legalConsentEnabled,
+      );
 
       await _api
           .createSignUp(

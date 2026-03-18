@@ -86,6 +86,12 @@ class ExternalErrorCollection {
   /// The first error or a representation of this
   ExternalError get error => errors?.first ?? ExternalError.unknown;
 
+  /// Does this represent external_account_not_found?
+  bool get containsExternalAccountNotFoundError =>
+      _contains('external_account_not_found');
+
+  bool _contains(String err) => errors?.any((e) => e.code == err) == true;
+
   /// fromJson
   static ExternalErrorCollection fromJson(dynamic json) {
     return _$ExternalErrorCollectionFromJson(json as Map<String, dynamic>);

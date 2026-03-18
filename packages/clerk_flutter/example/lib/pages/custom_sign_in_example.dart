@@ -60,7 +60,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
   void _onError(clerk.ClerkError error) {
     ScaffoldMessenger.of(_scaffoldKey.currentContext!).showSnackBar(
       SnackBar(
-        content: Text(error.message),
+        content: Text(error.toString()),
       ),
     );
   }
@@ -77,6 +77,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
   Future<void> _oauthTokenGoogle() async {
     _loading.value = true;
     final google = GoogleSignIn.instance;
+    await _authState.resetClient();
     await google.initialize(
       serverClientId: const String.fromEnvironment('google_client_id'),
       nonce: const Uuid().v4(),
@@ -84,10 +85,25 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     final account = await google.authenticate(
       scopeHint: const ['openid', 'email', 'profile'],
     );
-    await _authState.attemptSignIn(
-      strategy: clerk.Strategy.oauthTokenGoogle,
-      token: account.authentication.idToken,
-    );
+    if (mounted) {
+      await _authState.safelyCall(context, () async {
+        await _authState.oAuthTokenSignIn(
+          strategy: clerk.Strategy.oauthTokenGoogle,
+          token: account.authentication.idToken,
+        );
+        if (_authState.signUp case clerk.SignUp signUp) {
+          // If required fields are absent, you will now have a signUp object
+          // with missing fields or other requirements. Deal with them now,
+          // possibly through further user input
+          if (signUp.missingFields.contains(clerk.Field.legalAccepted)) {
+            // Do this or similar for other missing fields as per your dashboard
+            // configuration too. NB don't hard-code legalAccepted to true
+            // like this!
+            await _authState.attemptSignUp(legalAccepted: true);
+          }
+        }
+      });
+    }
     _loading.value = false;
   }
 

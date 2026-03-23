@@ -94,8 +94,8 @@
             "locale": null,
             "image_url": "URL",
             "has_image": false,
-            "primary_email_address_id": "idn_38LTaqCjZojvjo8NOkZ7OM3BQEs",
-            "primary_phone_number_id": "idn_38LTast26F4tOwzQuNXuyumlDuF",
+            "primary_email_address_id": "idn_3BLNxAl9dZUgP6ie2PMd8mdhhMo",
+            "primary_phone_number_id": "idn_3BLNxA7q6Jh2H2phyX5766aKUje",
             "primary_web3_wallet_id": null,
             "password_enabled": true,
             "two_factor_enabled": false,
@@ -103,7 +103,7 @@
             "backup_code_enabled": false,
             "email_addresses": [
               {
-                "id": "idn_38LTaqCjZojvjo8NOkZ7OM3BQEs",
+                "id": "idn_3BLNxAl9dZUgP6ie2PMd8mdhhMo",
                 "object": "email_address",
                 "email_address": "user-ywrkaxrpb25hbf9wag9uzv9udw1izxi+clerk_test@somedomain.com",
                 "reserved": false,
@@ -122,7 +122,7 @@
             ],
             "phone_numbers": [
               {
-                "id": "idn_38LTast26F4tOwzQuNXuyumlDuF",
+                "id": "idn_3BLNxA7q6Jh2H2phyX5766aKUje",
                 "object": "phone_number",
                 "phone_number": "+15555550124",
                 "reserved_for_second_factor": false,

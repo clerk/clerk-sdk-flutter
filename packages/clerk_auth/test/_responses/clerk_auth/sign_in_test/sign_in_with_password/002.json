@@ -171,7 +171,8 @@
             "email_code",
             "email_link"
           ],
-          "verify_at_sign_up": true
+          "verify_at_sign_up": true,
+          "immutable": false
         },
         "phone_number": {
           "enabled": true,
@@ -187,7 +188,8 @@
           "verifications": [
             "phone_code"
           ],
-          "verify_at_sign_up": true
+          "verify_at_sign_up": true,
+          "immutable": false
         },
         "username": {
           "enabled": true,
@@ -197,7 +199,8 @@
           "used_for_second_factor": false,
           "second_factors": [],
           "verifications": [],
-          "verify_at_sign_up": false
+          "verify_at_sign_up": false,
+          "immutable": false
         },
         "web3_wallet": {
           "enabled": false,
@@ -207,7 +210,8 @@
           "used_for_second_factor": false,
           "second_factors": [],
           "verifications": [],
-          "verify_at_sign_up": false
+          "verify_at_sign_up": false,
+          "immutable": false
         },
         "first_name": {
           "enabled": true,
@@ -217,7 +221,8 @@
           "used_for_second_factor": false,
           "second_factors": [],
           "verifications": [],
-          "verify_at_sign_up": false
+          "verify_at_sign_up": false,
+          "immutable": false
         },
         "last_name": {
           "enabled": true,
@@ -227,7 +232,8 @@
           "used_for_second_factor": false,
           "second_factors": [],
           "verifications": [],
-          "verify_at_sign_up": false
+          "verify_at_sign_up": false,
+          "immutable": false
         },
         "password": {
           "enabled": true,
@@ -237,7 +243,8 @@
           "used_for_second_factor": false,
           "second_factors": [],
           "verifications": [],
-          "verify_at_sign_up": false
+          "verify_at_sign_up": false,
+          "immutable": false
         },
         "authenticator_app": {
           "enabled": true,
@@ -251,7 +258,8 @@
           "verifications": [
             "totp"
           ],
-          "verify_at_sign_up": false
+          "verify_at_sign_up": false,
+          "immutable": false
         },
         "ticket": {
           "enabled": true,
@@ -261,7 +269,8 @@
           "used_for_second_factor": false,
           "second_factors": [],
           "verifications": [],
-          "verify_at_sign_up": false
+          "verify_at_sign_up": false,
+          "immutable": false
         },
         "backup_code": {
           "enabled": true,
@@ -273,7 +282,8 @@
             "backup_code"
           ],
           "verifications": [],
-          "verify_at_sign_up": false
+          "verify_at_sign_up": false,
+          "immutable": false
         },
         "passkey": {
           "enabled": true,
@@ -287,7 +297,8 @@
           "verifications": [
             "passkey"
           ],
-          "verify_at_sign_up": false
+          "verify_at_sign_up": false,
+          "immutable": false
         }
       },
       "sign_in": {
@@ -301,7 +312,10 @@
         "custom_action_required": false,
         "progressive": true,
         "mode": "public",
-        "legal_consent_enabled": true
+        "legal_consent_enabled": true,
+        "mfa": {
+          "required": false
+        }
       },
       "restrictions": {
         "allowlist": {
@@ -454,7 +468,7 @@
           "required": false,
           "authenticatable": false,
           "block_email_subaddresses": false,
-          "strategy": "",
+          "strategy": "oauth_twitter",
           "not_selectable": true,
           "deprecated": false,
           "name": "Twitter",
@@ -519,6 +533,7 @@
       "orgs_api_keys_enabled": false
     },
     "maintenance_mode": false,
-    "client_debug_mode": false
+    "client_debug_mode": false,
+    "partitioned_cookies": false
   }
 }

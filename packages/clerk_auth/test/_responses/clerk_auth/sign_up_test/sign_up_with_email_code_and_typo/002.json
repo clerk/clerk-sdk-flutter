@@ -468,7 +468,7 @@
           "required": false,
           "authenticatable": false,
           "block_email_subaddresses": false,
-          "strategy": "",
+          "strategy": "oauth_twitter",
           "not_selectable": true,
           "deprecated": false,
           "name": "Twitter",

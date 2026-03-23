@@ -2,7 +2,7 @@
   "key": "POST /v1/me/email_addresses?_clerk_session_id=SESSION_ID email_address",
   "body": {
     "response": {
-      "id": "idn_38LTaupeu8QjLyPZkiN2eitJaem",
+      "id": "idn_3BLNxfbqUCkILJ2c4vGMdgdRLwd",
       "object": "email_address",
       "email_address": "deleteme+clerk_test@somedomain.com",
       "reserved": false,
@@ -34,8 +34,8 @@
             "locale": null,
             "image_url": "URL",
             "has_image": false,
-            "primary_email_address_id": "idn_38LTaaZwedItZHhDarYPZTF47gl",
-            "primary_phone_number_id": "idn_38LTaeqDsLKLRIU5rtrMnISZJk4",
+            "primary_email_address_id": "idn_3BLNxTDlOeDXGRXv92fqLDPw6fX",
+            "primary_phone_number_id": "idn_3BLNxVMOqQXs2gcPsph4GE2P7f4",
             "primary_web3_wallet_id": null,
             "password_enabled": true,
             "two_factor_enabled": false,
@@ -43,7 +43,7 @@
             "backup_code_enabled": false,
             "email_addresses": [
               {
-                "id": "idn_38LTaupeu8QjLyPZkiN2eitJaem",
+                "id": "idn_3BLNxfbqUCkILJ2c4vGMdgdRLwd",
                 "object": "email_address",
                 "email_address": "deleteme+clerk_test@somedomain.com",
                 "reserved": false,
@@ -54,7 +54,7 @@
                 "updated_at": "%%DATETIME -2%%"
               },
               {
-                "id": "idn_38LTaaZwedItZHhDarYPZTF47gl",
+                "id": "idn_3BLNxTDlOeDXGRXv92fqLDPw6fX",
                 "object": "email_address",
                 "email_address": "user-zgvszxrlx2vtywls+clerk_test@somedomain.com",
                 "reserved": false,
@@ -73,7 +73,7 @@
             ],
             "phone_numbers": [
               {
-                "id": "idn_38LTaeqDsLKLRIU5rtrMnISZJk4",
+                "id": "idn_3BLNxVMOqQXs2gcPsph4GE2P7f4",
                 "object": "phone_number",
                 "phone_number": "+15555550161",
                 "reserved_for_second_factor": false,

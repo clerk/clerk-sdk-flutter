@@ -3,7 +3,7 @@ import '_version.dart';
 /// constant values
 sealed class ClerkConstants {
   /// value for the `clerk-api-version` header in API requests
-  static const clerkApiVersion = '2024-10-01';
+  static const clerkApiVersion = '2025-11-10';
 
   /// value for the `x-flutter-sdk-version` header in API requests
   static const flutterSdkVersion = packageVersion;

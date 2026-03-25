@@ -753,6 +753,7 @@ class Auth {
         signUp.missingFields.contains(Field.legalAccepted),
       );
 
+      final isOauthTokenContinuation = strategy.isOauthToken;
       final needsUpdate = (password?.isNotEmpty == true) ||
           (firstName is String && firstName != signUp.firstName) ||
           (lastName is String && lastName != signUp.lastName) ||
@@ -765,8 +766,9 @@ class Auth {
         await _api
             .updateSignUp(
               signUp,
-              strategy: strategy,
+              strategy: isOauthTokenContinuation ? null : strategy,
               password: password,
+              token: isOauthTokenContinuation ? null : token,
               firstName: firstName,
               lastName: lastName,
               username: username,
@@ -861,7 +863,8 @@ class Auth {
         case SignUp signUp
             when signUp.status == Status.missingRequirements &&
                 signUp.missingFields.isEmpty &&
-                strategy.isSSO == false:
+                strategy.isSSO == false &&
+                strategy.isOauthToken == false:
           // OAuth sign-ups can already be prepared by Clerk. Re-running the
           // generic prepare step here can incorrectly bounce them into a
           // missing-requirements flow even though no fields are actually missing.

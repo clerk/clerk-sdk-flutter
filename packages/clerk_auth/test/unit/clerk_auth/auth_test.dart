@@ -2626,6 +2626,77 @@ void main() {
         auth.terminate();
       });
 
+      test('does not replay oauth token strategy on existing sign up', () async {
+        final mockHttp = MockHttpService();
+        final auth = Auth(
+          config: TestAuthConfig(
+            publishableKey: _validPublishableKey,
+            httpService: mockHttp,
+          ),
+        );
+
+        mockHttp.addClientResponse(
+          signUp: {
+            'object': 'sign_up',
+            'id': 'signup_oauth_token_update',
+            'status': 'missing_requirements',
+            'required_fields': [],
+            'optional_fields': [],
+            'missing_fields': ['legal_accepted'],
+            'unverified_fields': [],
+            'email_address': 'test@example.com',
+            'phone_number': null,
+            'first_name': null,
+            'last_name': null,
+            'username': null,
+            'web3_wallet': null,
+            'password_enabled': false,
+            'unsafe_metadata': {},
+            'public_metadata': {},
+            'verifications': {},
+            'custom_action': false,
+            'external_id': null,
+            'created_session_id': null,
+            'created_user_id': null,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 7))
+                .millisecondsSinceEpoch,
+          },
+        );
+        mockHttp.addEnvironmentResponse();
+        mockHttp.addSignUpResponse(
+          signUpId: 'signup_oauth_token_update',
+          missingFields: [],
+          unverifiedFields: [],
+        );
+
+        await auth.initialize();
+        await auth.attemptSignUp(
+          strategy: Strategy.oauthTokenApple,
+          token: 'native_apple_token',
+          firstName: 'Test',
+          lastName: 'User',
+          legalAccepted: true,
+        );
+
+        final updateCall = mockHttp.calls.firstWhere(
+          (call) => call.uri.path.contains('/sign_ups/signup_oauth_token_update'),
+        );
+        expect(updateCall.params?['strategy'], isNull);
+        expect(updateCall.params?['token'], isNull);
+        expect(updateCall.params?['legal_accepted'], true);
+        expect(updateCall.params?['first_name'], 'Test');
+        expect(updateCall.params?['last_name'], 'User');
+        expect(
+          mockHttp.calls.any(
+            (call) => call.uri.path.contains('/prepare_verification'),
+          ),
+          false,
+        );
+
+        auth.terminate();
+      });
+
       test('handles enterprise SSO sign up', () async {
         final mockHttp = MockHttpService();
         final auth = Auth(

@@ -86,8 +86,60 @@ class Auth {
       handleError(ClerkError.from(resp.errorCollection));
     } else if (resp.client case Client client) {
       this.client = client;
+    } else if (_clientFromAuthResponse(resp.response) case Client client) {
+      this.client = client;
     }
     return resp;
+  }
+
+  // Some native and OAuth flows return a raw auth object without a full client
+  // envelope. Preserve the current client and hydrate the new auth state.
+  Client? _clientFromAuthResponse(Map<String, dynamic>? response) {
+    if (response == null || response.isEmpty) {
+      return null;
+    }
+
+    try {
+      if (_looksLikeSignInResponse(response)) {
+        return Client(
+          id: client.id,
+          signIn: SignIn.fromJson(response),
+          signUp: null,
+          sessions: client.sessions,
+          lastActiveSessionId: client.lastActiveSessionId,
+          updatedAt: client.updatedAt,
+          createdAt: client.createdAt,
+        );
+      }
+
+      if (_looksLikeSignUpResponse(response)) {
+        return Client(
+          id: client.id,
+          signIn: null,
+          signUp: SignUp.fromJson(response),
+          sessions: client.sessions,
+          lastActiveSessionId: client.lastActiveSessionId,
+          updatedAt: client.updatedAt,
+          createdAt: client.createdAt,
+        );
+      }
+    } catch (_) {
+      return null;
+    }
+
+    return null;
+  }
+
+  bool _looksLikeSignInResponse(Map<String, dynamic> response) {
+    return response['supported_first_factors'] is List ||
+        response['supported_identifiers'] is List ||
+        response['first_factor_verification'] is Map<String, dynamic>;
+  }
+
+  bool _looksLikeSignUpResponse(Map<String, dynamic> response) {
+    return response['required_fields'] is List ||
+        response['missing_fields'] is List ||
+        response['verifications'] is Map<String, dynamic>;
   }
 
   /// Are we not yet initialised?
@@ -257,7 +309,7 @@ class Auth {
     return sessionToken;
   }
 
-  Future<void> _retryFetchClientAndEnv(_) async {
+  Future<void> _retryFetchClientAndEnv(Object? _) async {
     final (client, env) = await _fetchClientAndEnv();
     if (client.isNotEmpty && env.isNotEmpty) {
       this.client = client;
@@ -720,6 +772,7 @@ class Auth {
               username: username,
               emailAddress: emailAddress,
               phoneNumber: phoneNumber,
+              redirectUrl: redirectUrl,
               legalAccepted: legalAccepted,
               metadata: metadata,
             )
@@ -807,7 +860,11 @@ class Auth {
 
         case SignUp signUp
             when signUp.status == Status.missingRequirements &&
-                signUp.missingFields.isEmpty:
+                signUp.missingFields.isEmpty &&
+                strategy.isSSO == false:
+          // OAuth sign-ups can already be prepared by Clerk. Re-running the
+          // generic prepare step here can incorrectly bounce them into a
+          // missing-requirements flow even though no fields are actually missing.
           await _api
               .prepareSignUp(signUp, strategy: strategy)
               .then(_housekeeping);

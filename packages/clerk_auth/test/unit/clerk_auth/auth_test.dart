@@ -708,6 +708,48 @@ void main() {
 
           auth.terminate();
         });
+
+        test('hydrates signIn from a raw auth response', () async {
+          mockHttp.addClientResponse();
+          mockHttp.addEnvironmentResponse();
+          mockHttp.addApiResponse(
+            response: {
+              'object': 'sign_in',
+              'id': 'sia_raw',
+              'status': 'needs_first_factor',
+              'identifier': 'test@example.com',
+              'supported_identifiers': ['email_address'],
+              'supported_first_factors': [
+                {'strategy': 'oauth_apple'}
+              ],
+              'supported_second_factors': [],
+              'first_factor_verification': null,
+              'second_factor_verification': null,
+              'created_session_id': null,
+              'abandon_at': DateTime.now()
+                  .add(const Duration(days: 1))
+                  .millisecondsSinceEpoch,
+            },
+          );
+
+          auth = Auth(
+            config: TestAuthConfig(
+              publishableKey: _validPublishableKey,
+              httpService: mockHttp,
+            ),
+          );
+
+          await auth.initialize();
+          await auth.idTokenSignIn(
+            provider: IdTokenProvider.apple,
+            idToken: 'test_id_token',
+          );
+
+          expect(auth.signIn?.id, 'sia_raw');
+          expect(auth.signUp, isNull);
+
+          auth.terminate();
+        });
       });
 
       group('idTokenSignUp', () {
@@ -732,6 +774,57 @@ void main() {
           );
 
           expect(mockHttp.calls.length, greaterThanOrEqualTo(3));
+
+          auth.terminate();
+        });
+
+        test('hydrates signUp from a raw auth response', () async {
+          mockHttp.addClientResponse();
+          mockHttp.addEnvironmentResponse();
+          mockHttp.addApiResponse(
+            response: {
+              'object': 'sign_up',
+              'id': 'sua_raw',
+              'status': 'missing_requirements',
+              'required_fields': [],
+              'optional_fields': [],
+              'missing_fields': ['legal_accepted'],
+              'unverified_fields': [],
+              'email_address': 'test@example.com',
+              'phone_number': null,
+              'first_name': null,
+              'last_name': null,
+              'username': null,
+              'web3_wallet': null,
+              'password_enabled': false,
+              'unsafe_metadata': {},
+              'public_metadata': {},
+              'verifications': {},
+              'custom_action': false,
+              'external_id': null,
+              'created_session_id': null,
+              'created_user_id': null,
+              'abandon_at': DateTime.now()
+                  .add(const Duration(days: 7))
+                  .millisecondsSinceEpoch,
+            },
+          );
+
+          auth = Auth(
+            config: TestAuthConfig(
+              publishableKey: _validPublishableKey,
+              httpService: mockHttp,
+            ),
+          );
+
+          await auth.initialize();
+          await auth.idTokenSignUp(
+            provider: IdTokenProvider.apple,
+            idToken: 'test_id_token',
+          );
+
+          expect(auth.signUp?.id, 'sua_raw');
+          expect(auth.signIn, isNull);
 
           auth.terminate();
         });
@@ -2410,6 +2503,128 @@ void main() {
     group('attemptSignUp', () {
       // Note: email link strategy test removed due to async polling issues
       // The _pollForEmailLinkCompletion continues after test completion
+
+      test('forwards redirect URL when updating an OAuth sign up', () async {
+        final mockHttp = MockHttpService();
+        final auth = Auth(
+          config: TestAuthConfig(
+            publishableKey: _validPublishableKey,
+            httpService: mockHttp,
+          ),
+        );
+
+        mockHttp.addClientResponse(
+          signUp: {
+            'object': 'sign_up',
+            'id': 'signup_oauth_update',
+            'status': 'missing_requirements',
+            'required_fields': [],
+            'optional_fields': [],
+            'missing_fields': ['legal_accepted'],
+            'unverified_fields': [],
+            'email_address': 'test@example.com',
+            'phone_number': null,
+            'first_name': 'Test',
+            'last_name': 'User',
+            'username': null,
+            'web3_wallet': null,
+            'password_enabled': true,
+            'unsafe_metadata': {},
+            'public_metadata': {},
+            'verifications': {},
+            'custom_action': false,
+            'external_id': null,
+            'created_session_id': null,
+            'created_user_id': null,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 7))
+                .millisecondsSinceEpoch,
+          },
+        );
+        mockHttp.addEnvironmentResponse();
+        mockHttp.addSignUpResponse(
+          signUpId: 'signup_oauth_update',
+          missingFields: [],
+          unverifiedFields: [],
+        );
+
+        await auth.initialize();
+        await auth.attemptSignUp(
+          strategy: Strategy.oauthGoogle,
+          redirectUrl: 'https://example.com/callback',
+          legalAccepted: true,
+        );
+
+        final updateCall = mockHttp.calls.firstWhere(
+          (call) => call.uri.path.contains('/sign_ups/signup_oauth_update'),
+        );
+        expect(updateCall.params?['redirect_url'],
+            'https://example.com/callback');
+
+        auth.terminate();
+      });
+
+      test('does not re-prepare OAuth sign up when no fields remain missing',
+          () async {
+        final mockHttp = MockHttpService();
+        final auth = Auth(
+          config: TestAuthConfig(
+            publishableKey: _validPublishableKey,
+            httpService: mockHttp,
+          ),
+        );
+
+        mockHttp.addClientResponse(
+          signUp: {
+            'object': 'sign_up',
+            'id': 'signup_oauth_skip_prepare',
+            'status': 'missing_requirements',
+            'required_fields': [],
+            'optional_fields': [],
+            'missing_fields': ['legal_accepted'],
+            'unverified_fields': [],
+            'email_address': 'test@example.com',
+            'phone_number': null,
+            'first_name': 'Test',
+            'last_name': 'User',
+            'username': null,
+            'web3_wallet': null,
+            'password_enabled': true,
+            'unsafe_metadata': {},
+            'public_metadata': {},
+            'verifications': {},
+            'custom_action': false,
+            'external_id': null,
+            'created_session_id': null,
+            'created_user_id': null,
+            'abandon_at': DateTime.now()
+                .add(const Duration(days: 7))
+                .millisecondsSinceEpoch,
+          },
+        );
+        mockHttp.addEnvironmentResponse();
+        mockHttp.addSignUpResponse(
+          signUpId: 'signup_oauth_skip_prepare',
+          missingFields: [],
+          unverifiedFields: [],
+        );
+
+        await auth.initialize();
+        await auth.attemptSignUp(
+          strategy: Strategy.oauthApple,
+          redirectUrl: 'https://example.com/callback',
+          legalAccepted: true,
+        );
+
+        expect(
+          mockHttp.calls.any(
+            (call) => call.uri.path.contains('/prepare_verification'),
+          ),
+          false,
+        );
+
+        auth.terminate();
+      });
 
       test('handles enterprise SSO sign up', () async {
         final mockHttp = MockHttpService();

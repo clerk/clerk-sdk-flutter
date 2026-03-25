@@ -240,6 +240,43 @@ void main() {
       });
     });
 
+    group('raw auth responses', () {
+      test('preserves raw signIn responses outside the client envelope',
+          () async {
+        await api.initialize();
+        mockHttp.addApiResponse(
+          response: {
+            ..._createMockSignInJson(),
+            'id': 'sia_raw',
+            'supported_identifiers': ['email_address'],
+          },
+        );
+
+        final response =
+            await api.createSignIn(strategy: Strategy.oauthApple, token: 'token');
+
+        expect(response.client, isNull);
+        expect(response.response?['id'], 'sia_raw');
+      });
+
+      test('preserves raw signUp responses outside the client envelope',
+          () async {
+        await api.initialize();
+        mockHttp.addApiResponse(
+          response: {
+            ..._createMockSignUpJson(),
+            'id': 'sua_raw',
+          },
+        );
+
+        final response =
+            await api.createSignUp(strategy: Strategy.oauthApple, token: 'token');
+
+        expect(response.client, isNull);
+        expect(response.response?['id'], 'sua_raw');
+      });
+    });
+
     group('oauth operations', () {
       test('addExternalAccount sends request to external_accounts', () async {
         await api.initialize();

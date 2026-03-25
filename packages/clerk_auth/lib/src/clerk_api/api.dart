@@ -1008,6 +1008,7 @@ class Api with Logging {
       return ApiResponse(
         status: resp.statusCode,
         errorCollection: errorCollection,
+        response: responseData,
       );
     }
   }
@@ -1022,8 +1023,19 @@ class Api with Logging {
       case _JsonObject client when client.isNotEmpty:
         return (client, response);
       default:
-        return (response, null);
+        return (_looksLikeClientResponse(response) ? response : null, response);
     }
+  }
+
+  bool _looksLikeClientResponse(_JsonObject? response) {
+    if (response == null || response.isEmpty) {
+      return false;
+    }
+
+    return response.containsKey('sign_in') ||
+        response.containsKey('sign_up') ||
+        response.containsKey('sessions') ||
+        response.containsKey('last_active_session_id');
   }
 
   ExternalErrorCollection? _extractErrorCollection(Map<String, dynamic>? data) {

@@ -12,6 +12,9 @@ enum HttpMethod {
   /// GET
   get,
 
+  /// HEAD
+  head,
+
   /// PATCH
   patch,
 

@@ -20,6 +20,8 @@ class ClerkAuthBuilder extends StatefulWidget {
     super.key,
     this.signedInBuilder,
     this.signedOutBuilder,
+    this.signingInBuilder,
+    this.signingUpBuilder,
     this.builder,
   });
 
@@ -28,6 +30,12 @@ class ClerkAuthBuilder extends StatefulWidget {
 
   /// Builder to be invoked when a [clerk.User] is not available
   final AuthWidgetBuilder? signedOutBuilder;
+
+  /// Builder to be invoked when signing in
+  final AuthWidgetBuilder? signingInBuilder;
+
+  /// Builder to be invoked when signing up
+  final AuthWidgetBuilder? signingUpBuilder;
 
   /// Builder to be invoked when neither other builder is available
   final AuthWidgetBuilder? builder;
@@ -50,19 +58,28 @@ class _ClerkAuthBuilderState extends State<ClerkAuthBuilder>
 
   @override
   Widget build(BuildContext context) {
-    final authState = ClerkAuth.of(context);
-    final user = authState.client.user;
+    final auth = ClerkAuth.of(context);
 
-    if (widget.signedInBuilder case AuthWidgetBuilder signedInBuilder
-        when user is clerk.User) {
-      return signedInBuilder(context, authState);
+    if (auth.client.user is clerk.User) {
+      if (widget.signedInBuilder case final signedInBuilder?) {
+        return signedInBuilder(context, auth);
+      }
+    } else {
+      if (widget.signingInBuilder case final signingInBuilder?
+          when auth.isSigningIn) {
+        return signingInBuilder(context, auth);
+      }
+
+      if (widget.signingUpBuilder case final signingUpBuilder?
+          when auth.isSigningUp) {
+        return signingUpBuilder(context, auth);
+      }
+
+      if (widget.signedOutBuilder case final signedOutBuilder?) {
+        return signedOutBuilder(context, auth);
+      }
     }
 
-    if (widget.signedOutBuilder case AuthWidgetBuilder signedOutBuilder
-        when user is! clerk.User) {
-      return signedOutBuilder(context, authState);
-    }
-
-    return widget.builder?.call(context, authState) ?? emptyWidget;
+    return widget.builder?.call(context, auth) ?? emptyWidget;
   }
 }

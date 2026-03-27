@@ -433,9 +433,16 @@ class Auth {
   /// [ClerkError] if the API request fails. Errors are also sent to [errorStream].
   Future<void> idTokenSignIn({
     required IdTokenProvider provider,
-    required String idToken,
+    required String? idToken,
   }) async {
-    await attemptSignIn(strategy: provider.strategy, token: idToken);
+    var response =
+        await _api.createSignIn(strategy: provider.strategy, token: idToken);
+    if (response.errorCollection.containsExternalAccountNotFoundError) {
+      response =
+          await _api.createSignUp(strategy: provider.strategy, token: idToken);
+    }
+    _housekeeping(response);
+    update();
   }
 
   /// Sign up with an ID token from a provider (e.g., Apple)
@@ -508,23 +515,6 @@ class Auth {
         ),
       );
     }
-  }
-
-  /// oAuthToken sign in
-  ///
-  Future<void> oAuthTokenSignIn({
-    required Strategy strategy,
-    String? token,
-    String? code,
-  }) async {
-    var response =
-        await _api.createSignIn(strategy: strategy, token: token, code: code);
-    if (response.errorCollection.containsExternalAccountNotFoundError) {
-      response =
-          await _api.createSignUp(strategy: strategy, token: token, code: code);
-    }
-    _housekeeping(response);
-    update();
   }
 
   /// Progressively attempt sign in

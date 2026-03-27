@@ -87,9 +87,9 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     );
     if (mounted) {
       await _authState.safelyCall(context, () async {
-        await _authState.oAuthTokenSignIn(
-          strategy: clerk.Strategy.oauthTokenGoogle,
-          token: account.authentication.idToken,
+        await _authState.idTokenSignIn(
+          provider: clerk.IdTokenProvider.google,
+          idToken: account.authentication.idToken,
         );
         if (_authState.signUp case clerk.SignUp signUp) {
           // If required fields are absent, you will now have a signUp object

@@ -25,7 +25,7 @@ class Field {
   static const firstName = Field._('first_name');
 
   /// last name
-  static const lastName = Field._('lastName');
+  static const lastName = Field._('last_name');
 
   /// username
   static const username = Field._('username');
@@ -48,6 +48,8 @@ class Field {
   static final _values = <String, Field>{
     phoneNumber.name: phoneNumber,
     emailAddress.name: emailAddress,
+    firstName.name: firstName,
+    lastName.name: lastName,
     username.name: username,
     password.name: password,
     legalAccepted.name: legalAccepted,

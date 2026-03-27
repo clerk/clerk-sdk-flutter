@@ -92,9 +92,9 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
       final account = await google.authenticate(
         scopeHint: const ['openid', 'email', 'profile'],
       );
-      final name = account.displayName?.split(' ');
-      givenName = name?.first ?? 'Given';
-      familyName = name?.skip(1).join(' ') ?? 'Family';
+      final nameParts = account.displayName?.split(' ');
+      givenName = nameParts?.first ?? 'Given';
+      familyName = nameParts?.skip(1).last ?? 'Family';
       token = account.authentication.idToken;
     } else if (strategy == clerk.Strategy.oauthTokenApple) {
       final credential = await SignInWithApple.getAppleIDCredential(
@@ -109,7 +109,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
       token = credential.identityToken;
     }
 
-    if (mounted) {
+    if (token is String && mounted) {
       await _authState.safelyCall(context, () async {
         await _authState.oAuthTokenSignIn(strategy: strategy, token: token);
         if (_authState.signUp case clerk.SignUp signUp

@@ -75,14 +75,14 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     }
   }
 
-  Future<void> _oauthTokenSignIn(clerk.Strategy strategy) async {
+  Future<void> _oauthTokenSignIn(clerk.IdTokenProvider provider) async {
     _loading.value = true;
 
     String? token;
     String? givenName;
     String? familyName;
 
-    if (strategy == clerk.Strategy.oauthTokenGoogle) {
+    if (provider == clerk.IdTokenProvider.google) {
       final google = GoogleSignIn.instance;
       await _authState.resetClient();
       await google.initialize(
@@ -96,7 +96,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
       givenName = nameParts?.first ?? 'Given';
       familyName = nameParts?.skip(1).last ?? 'Family';
       token = account.authentication.idToken;
-    } else if (strategy == clerk.Strategy.oauthTokenApple) {
+    } else if (provider == clerk.IdTokenProvider.apple) {
       final credential = await SignInWithApple.getAppleIDCredential(
         nonce: const Uuid().v4(),
         scopes: [
@@ -111,10 +111,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
 
     if (token is String && mounted) {
       await _authState.safelyCall(context, () async {
-        await _authState.idTokenSignIn(
-          provider: clerk.IdTokenProvider.google,
-          token: token,
-        );
+        await _authState.idTokenSignIn(provider: provider, token: token);
         if (_authState.signUp case clerk.SignUp signUp
             when signUp.missingFields.isNotEmpty) {
           // If required fields are absent, you will now have a signUp object
@@ -226,7 +223,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
                                 .contains(clerk.Strategy.oauthTokenGoogle)) //
                               ElevatedButton(
                                 onPressed: () => _oauthTokenSignIn(
-                                  clerk.Strategy.oauthTokenGoogle,
+                                  clerk.IdTokenProvider.google,
                                 ),
                                 child: const Text('google via oauth token'),
                               ),
@@ -234,7 +231,7 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
                                 .contains(clerk.Strategy.oauthTokenApple)) //
                               ElevatedButton(
                                 onPressed: () => _oauthTokenSignIn(
-                                  clerk.Strategy.oauthTokenApple,
+                                  clerk.IdTokenProvider.apple,
                                 ),
                                 child: const Text('apple via oauth token'),
                               ),

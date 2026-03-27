@@ -15,6 +15,7 @@ dependencies:
   app_links: ^3.5.1
   url_launcher_ios: 6.2.0
   google_sign_in: ^7.1.0
+  sign_in_with_apple: ^7.0.1
   uuid: ^4.5.1
   win32: ^5.5.4
 

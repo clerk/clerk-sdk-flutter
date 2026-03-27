@@ -517,6 +517,32 @@ class Auth {
     }
   }
 
+  /// oAuthToken sign in
+  ///
+  Future<void> oAuthTokenSignIn({
+    required Strategy strategy,
+    String? token,
+    String? code,
+  }) async {
+    var response =
+        await _api.createSignIn(strategy: strategy, token: token, code: code);
+    if (response.isError) {
+      if (response.errorCollection.containsExternalAccountNotFoundError) {
+        response = await _api.createSignUp(
+          strategy: strategy,
+          token: token,
+          code: code,
+        );
+      }
+    } else if (response.client case Client client
+        when client.signIn?.isTransferable == true) {
+      this.client = client;
+      response = await _api.transferSignUp();
+    }
+    _housekeeping(response);
+    update();
+  }
+
   /// Progressively attempt sign in
   ///
   /// Can be repeatedly called with updated parameters

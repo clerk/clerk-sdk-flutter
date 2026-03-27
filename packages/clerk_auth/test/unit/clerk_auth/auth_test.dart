@@ -701,7 +701,7 @@ void main() {
           await auth.initialize();
           await auth.idTokenSignIn(
             provider: IdTokenProvider.apple,
-            idToken: 'test_id_token',
+            token: 'test_id_token',
           );
 
           expect(mockHttp.calls.length, greaterThanOrEqualTo(3));

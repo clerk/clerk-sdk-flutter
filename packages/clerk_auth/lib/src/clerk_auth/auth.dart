@@ -433,13 +433,19 @@ class Auth {
   /// [ClerkError] if the API request fails. Errors are also sent to [errorStream].
   Future<void> idTokenSignIn({
     required IdTokenProvider provider,
-    required String? idToken,
+    required String? token,
   }) async {
     var response =
-        await _api.createSignIn(strategy: provider.strategy, token: idToken);
-    if (response.errorCollection.containsExternalAccountNotFoundError) {
-      response =
-          await _api.createSignUp(strategy: provider.strategy, token: idToken);
+        await _api.createSignIn(strategy: provider.strategy, token: token);
+    if (response.isError) {
+      if (response.errorCollection.containsExternalAccountNotFoundError) {
+        response =
+            await _api.createSignUp(strategy: provider.strategy, token: token);
+      }
+    } else if (response.client case Client client
+        when client.signIn?.isTransferable == true) {
+      this.client = client;
+      response = await _api.transferSignUp();
     }
     _housekeeping(response);
     update();

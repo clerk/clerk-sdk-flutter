@@ -4,6 +4,7 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 
 /// Example of how to use clerk auth with custom ui.
@@ -74,33 +75,64 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
     }
   }
 
-  Future<void> _oauthTokenGoogle() async {
+  Future<void> _oauthTokenSignIn(clerk.IdTokenProvider provider) async {
     _loading.value = true;
-    final google = GoogleSignIn.instance;
-    await _authState.resetClient();
-    await google.initialize(
-      serverClientId: const String.fromEnvironment('google_client_id'),
-      nonce: const Uuid().v4(),
-    );
-    final account = await google.authenticate(
-      scopeHint: const ['openid', 'email', 'profile'],
-    );
-    if (mounted) {
+
+    String? token;
+    String? givenName;
+    String? familyName;
+
+    if (provider == clerk.IdTokenProvider.google) {
+      final google = GoogleSignIn.instance;
+      await _authState.resetClient();
+      await google.initialize(
+        serverClientId: const String.fromEnvironment('google_client_id'),
+        nonce: const Uuid().v4(),
+      );
+      final account = await google.authenticate(
+        scopeHint: const ['openid', 'email', 'profile'],
+      );
+      final nameParts = account.displayName?.split(' ');
+      givenName = nameParts?.first ?? 'Given';
+      familyName = nameParts?.skip(1).last ?? 'Family';
+      token = account.authentication.idToken;
+    } else if (provider == clerk.IdTokenProvider.apple) {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        nonce: const Uuid().v4(),
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+      givenName = credential.givenName ?? 'Given';
+      familyName = credential.familyName ?? 'Family';
+      token = credential.identityToken;
+    }
+
+    if (token is String && mounted) {
       await _authState.safelyCall(context, () async {
-        await _authState.idTokenSignIn(
-          provider: clerk.IdTokenProvider.google,
-          idToken: account.authentication.idToken,
-        );
-        if (_authState.signUp case clerk.SignUp signUp) {
+        await _authState.idTokenSignIn(provider: provider, token: token);
+        if (_authState.signUp case clerk.SignUp signUp
+            when signUp.missingFields.isNotEmpty) {
           // If required fields are absent, you will now have a signUp object
           // with missing fields or other requirements. Deal with them now,
           // possibly through further user input
-          if (signUp.missingFields.contains(clerk.Field.legalAccepted)) {
-            // Do this or similar for other missing fields as per your dashboard
-            // configuration too. NB don't hard-code legalAccepted to true
-            // like this!
-            await _authState.attemptSignUp(legalAccepted: true);
-          }
+
+          // Do this or similar for other missing fields as per your dashboard
+          // configuration too. NB don't hard-code legalAccepted to true
+          // like this!
+          final legalAccepted =
+              signUp.missing(clerk.Field.legalAccepted) ? true : null;
+          final firstName =
+              signUp.missing(clerk.Field.firstName) ? givenName : null;
+          final lastName =
+              signUp.missing(clerk.Field.lastName) ? familyName : null;
+
+          await _authState.attemptSignUp(
+            legalAccepted: legalAccepted,
+            firstName: firstName,
+            lastName: lastName,
+          );
         }
       });
     }
@@ -190,8 +222,18 @@ class _CustomOAuthSignInExampleState extends State<CustomOAuthSignInExample> {
                             if (_authState.env.config.firstFactors
                                 .contains(clerk.Strategy.oauthTokenGoogle)) //
                               ElevatedButton(
-                                onPressed: _oauthTokenGoogle,
+                                onPressed: () => _oauthTokenSignIn(
+                                  clerk.IdTokenProvider.google,
+                                ),
                                 child: const Text('google via oauth token'),
+                              ),
+                            if (_authState.env.config.firstFactors
+                                .contains(clerk.Strategy.oauthTokenApple)) //
+                              ElevatedButton(
+                                onPressed: () => _oauthTokenSignIn(
+                                  clerk.IdTokenProvider.apple,
+                                ),
+                                child: const Text('apple via oauth token'),
                               ),
                           ],
                         ),

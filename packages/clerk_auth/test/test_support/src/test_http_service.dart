@@ -42,7 +42,10 @@ class TestHttpService implements HttpService {
   void terminate() {}
 
   @override
-  Future<bool> ping(Uri _, {required Duration timeout}) => Future.value(true);
+  Future<bool> ping(Uri uri, {required Duration timeout}) async {
+    final response = await send(HttpMethod.head, uri);
+    return response.statusCode == 200;
+  }
 
   Directory get _directory {
     return Directory(
@@ -80,7 +83,9 @@ class TestHttpService implements HttpService {
         body: body,
       );
       await _directory.create(recursive: true);
-      final respBody = jsonDecode(_deflateFromReality(resp.body));
+      final respBody = resp.body.isNotEmpty
+          ? jsonDecode(_deflateFromReality(resp.body))
+          : '';
       final json = encoder.convert({'key': key, 'body': respBody});
       await file.writeAsString(json);
       return resp;

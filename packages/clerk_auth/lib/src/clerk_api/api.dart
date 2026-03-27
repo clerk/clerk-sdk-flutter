@@ -75,7 +75,7 @@ class Api with Logging {
   /// Confirm connectivity to the back end
   Future<bool> hasConnectivity() async {
     return await config.httpService.ping(
-      Uri(scheme: _scheme, host: _domain),
+      Uri(scheme: _scheme, host: _domain, path: '/v1/health'),
       timeout: config.httpConnectionTimeout,
     );
   }

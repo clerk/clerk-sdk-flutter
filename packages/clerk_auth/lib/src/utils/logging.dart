@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:clerk_auth/src/utils/platform_check/platform_check.dart';
 import 'package:logging/logging.dart';
 import 'package:universal_io/universal_io.dart';
 
@@ -160,9 +161,9 @@ Future<void> setUpLogging({
         output += '\n${record.stackTrace}'.split('\n').join('\n\t');
       }
       printer.print(_withColor(output, record.level));
-      // `identical(0, 0.0)` is true on web (no int/double distinction) and
-      // false on native. `stdout.flush()` is unavailable on web.
-      if (!identical(0, 0.0)) stdout.flush();
+      if (isWeb == false) {
+        stdout.flush();
+      }
     }
   });
 }

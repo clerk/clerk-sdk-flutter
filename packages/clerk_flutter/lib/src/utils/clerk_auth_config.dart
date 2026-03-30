@@ -4,7 +4,7 @@ import 'package:clerk_flutter/generated/clerk_sdk_localizations_en.dart';
 import 'package:clerk_flutter/src/utils/clerk_file_cache.dart';
 import 'package:clerk_flutter/src/utils/clerk_sdk_grammar.dart';
 import 'package:clerk_flutter/src/utils/default_caching_persistor.dart';
-import 'package:clerk_flutter/src/utils/get_cache_directory.dart';
+import 'package:clerk_flutter/src/utils/get_cache_directory/get_cache_directory.dart';
 import 'package:clerk_flutter/src/widgets/ui/common.dart'
     show defaultLoadingWidget;
 import 'package:flutter/material.dart';

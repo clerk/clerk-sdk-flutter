@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:js_interop';
-import 'dart:typed_data';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 // Direct import of the web persistor — can't use `clerk.DefaultPersistor`
@@ -8,6 +7,7 @@ import 'package:clerk_auth/clerk_auth.dart' as clerk;
 // version in the analyzer's default context.
 import 'package:clerk_auth/clerk_auth_persistor_web.dart';
 import 'package:clerk_flutter/src/utils/clerk_file_cache.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:universal_io/universal_io.dart';
 import 'package:web/web.dart' as web;
@@ -43,7 +43,7 @@ class DefaultCachingPersistor extends DefaultPersistor
       _db = null;
       web.console.warn(
         'DefaultCachingPersistor: IndexedDB unavailable, '
-            'file caching disabled. Error: $error'
+                'file caching disabled. Error: $error'
             .toJS,
       );
     }
@@ -188,13 +188,13 @@ class DefaultCachingPersistor extends DefaultPersistor
     }
 
     // Fetch from network
-    final etag = await read<String>(etagKey);
     try {
+      final etag = await read<String>(etagKey);
       final response = await http.get(
         uri,
         headers: {
           ...?headers,
-          if (etag case final etag?) //
+          if (etag is String) //
             _kETagHeader: etag,
         },
       );
@@ -208,8 +208,9 @@ class DefaultCachingPersistor extends DefaultPersistor
         }
         yield bytes;
       }
-    } on http.ClientException {
-      // failed fetch - ignore
+    } on http.ClientException catch (e) {
+      debugPrint('ClientException');
+      debugPrint(e.toString());
     }
   }
 }
@@ -219,5 +220,6 @@ extension type _CacheRecord._(JSObject _) implements JSObject {
   external factory _CacheRecord({JSArrayBuffer bytes, int timestamp});
 
   external JSArrayBuffer get bytes;
+
   external int get timestamp;
 }

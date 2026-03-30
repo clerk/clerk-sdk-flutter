@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:passkeys/authenticator.dart';
 
 /// Extensions on [PasskeyAuthenticator]
@@ -8,12 +7,14 @@ extension AvailbilityExtension on PasskeyAuthenticator {
   /// Is passkey authentication available?
   Future<bool> get isAvailable async {
     try {
-      if (Platform.isIOS) {
-        final availability = await getAvailability().iOS();
-        return availability.hasPasskeySupport;
-      } else if (Platform.isAndroid) {
-        final availability = await getAvailability().android();
-        return availability.hasPasskeySupport;
+      if (kIsWeb == false) {
+        if (defaultTargetPlatform == TargetPlatform.iOS) {
+          final availability = await getAvailability().iOS();
+          return availability.hasPasskeySupport;
+        } else if (defaultTargetPlatform == TargetPlatform.android) {
+          final availability = await getAvailability().android();
+          return availability.hasPasskeySupport;
+        }
       }
       return false;
     } catch (_) {

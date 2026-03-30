@@ -7,14 +7,15 @@ extension AvailbilityExtension on PasskeyAuthenticator {
   /// Is passkey authentication available?
   Future<bool> get isAvailable async {
     try {
-      if (kIsWeb == false) {
-        if (defaultTargetPlatform == TargetPlatform.iOS) {
-          final availability = await getAvailability().iOS();
-          return availability.hasPasskeySupport;
-        } else if (defaultTargetPlatform == TargetPlatform.android) {
-          final availability = await getAvailability().android();
-          return availability.hasPasskeySupport;
-        }
+      if (kIsWeb) {
+        final availability = await getAvailability().web();
+        return availability.hasPasskeySupport;
+      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+        final availability = await getAvailability().iOS();
+        return availability.hasPasskeySupport;
+      } else if (defaultTargetPlatform == TargetPlatform.android) {
+        final availability = await getAvailability().android();
+        return availability.hasPasskeySupport;
       }
       return false;
     } catch (_) {

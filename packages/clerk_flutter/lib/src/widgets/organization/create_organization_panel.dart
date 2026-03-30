@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';

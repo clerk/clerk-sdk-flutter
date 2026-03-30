@@ -1,7 +1,7 @@
 @TestOn('browser')
 library;
 
-import 'package:clerk_flutter/src/utils/default_caching_persistor_web.dart';
+import 'package:clerk_flutter/src/utils/default_caching_persistor/default_caching_persistor_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

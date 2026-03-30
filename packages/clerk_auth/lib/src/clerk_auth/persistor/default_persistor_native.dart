@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+import 'package:clerk_auth/src/clerk_auth/persistor/persistor.dart';
 
 /// A function which returns a directory for file operations
 typedef DirectoryGetter = FutureOr<Directory> Function();

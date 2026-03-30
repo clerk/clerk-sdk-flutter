@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+import 'package:clerk_auth/src/clerk_auth/persistor/persistor.dart';
 import 'package:web/web.dart' as web;
 
 /// A default [Persistor] that uses browser localStorage for persistence

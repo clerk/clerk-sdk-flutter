@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
 
+export 'default_persistor.dart';
+
 /// Abstract class defining the persistence interface for values
 /// required to allow seamless auth across app runs
 ///

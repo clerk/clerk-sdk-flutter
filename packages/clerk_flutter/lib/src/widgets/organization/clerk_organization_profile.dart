@@ -37,7 +37,11 @@ class _ClerkOrganizationProfileState extends State<ClerkOrganizationProfile>
     with ClerkTelemetryStateMixin {
   late final _localizations = ClerkAuth.localizationsOf(context);
 
-  Future<void> _update(clerk.Organization org, String name, Uint8List? logo) async {
+  Future<void> _update(
+    clerk.Organization org,
+    String name,
+    Uint8List? logo,
+  ) async {
     final authState = ClerkAuth.of(context, listen: false);
     await authState.safelyCall(context, () async {
       await authState.updateOrganization(

@@ -23,8 +23,7 @@ void main() {
       expect(results, isEmpty);
     });
 
-    test('returns empty when fetch fails and nothing is cached',
-        () async {
+    test('returns empty when fetch fails and nothing is cached', () async {
       // This test verifies the full round-trip through stream():
       // 1. First call fetches from network → stores in IndexedDB
       // 2. Second call reads from IndexedDB cache

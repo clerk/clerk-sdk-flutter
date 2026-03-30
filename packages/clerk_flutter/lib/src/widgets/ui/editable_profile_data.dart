@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 /// A [Function] that accepts and acts on edited data
-typedef EditableDataSubmitter = Future<void> Function(String name, Uint8List? image);
+typedef EditableDataSubmitter = Future<void> Function(
+  String name,
+  Uint8List? image,
+);
 
 /// A widget that allows user or organization profile data to
 /// be edited

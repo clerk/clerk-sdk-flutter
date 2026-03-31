@@ -4,7 +4,7 @@
 
 ## Official [Clerk](https://clerk.com) Flutter SDK (Beta)
 
-[![Pub Version](https://img.shields.io/pub/v/clerk_flutter?color=blueviolet)](https://pub.dev/packages/clerk_flutter)
+[![Pub Version](https://img.shields.io/badge/pub-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_flutter)
 [![Pub Points](https://img.shields.io/pub/points/clerk_flutter?label=pub%20points)](https://pub.dev/packages/clerk_flutter/score)
 [![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://discord.com/invite/b5rXHjAg7A)
 [![documentation](https://img.shields.io/badge/documentation-clerk-green.svg)](https://clerk.com/docs)

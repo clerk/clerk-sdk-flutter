@@ -10,8 +10,8 @@
 
 <div align="center">
 
-[![Pub Version](https://img.shields.io/pub/v/clerk_flutter?color=blueviolet&label=clerk_flutter)](https://pub.dev/packages/clerk_flutter)
-[![Pub Version](https://img.shields.io/pub/v/clerk_auth?color=blueviolet&label=clerk_auth)](https://pub.dev/packages/clerk_auth)
+[![Pub Version](https://img.shields.io/badge/clerk__flutter-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_flutter)
+[![Pub Version](https://img.shields.io/badge/clerk__auth-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_auth)
 [![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://discord.com/invite/b5rXHjAg7A)
 [![documentation](https://img.shields.io/badge/documentation-clerk-green.svg)](https://clerk.com/docs)
 
@@ -46,9 +46,7 @@ Our comprehensive documentation includes:
 
 ### [clerk_auth](./packages/clerk_auth) - Dart SDK
 
-Pure Dart SDK for backend and CLI applications.
-
-[![Pub Version](https://img.shields.io/pub/v/clerk_auth?color=blueviolet)](https://pub.dev/packages/clerk_auth)
+[![Pub Version](https://img.shields.io/badge/pub-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_auth)
 [![Pub Points](https://img.shields.io/pub/points/clerk_auth?label=pub%20points)](https://pub.dev/packages/clerk_auth/score)
 
 ```yaml
@@ -60,9 +58,7 @@ dependencies:
 
 ### [clerk_flutter](./packages/clerk_flutter) - Flutter SDK
 
-Flutter SDK with pre-built UI components for iOS, Android, Web, and Desktop.
-
-[![Pub Version](https://img.shields.io/pub/v/clerk_flutter?color=blueviolet)](https://pub.dev/packages/clerk_flutter)
+[![Pub Version](https://img.shields.io/badge/pub-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_flutter)
 [![Pub Points](https://img.shields.io/pub/points/clerk_flutter?label=pub%20points)](https://pub.dev/packages/clerk_flutter/score)
 
 ```yaml

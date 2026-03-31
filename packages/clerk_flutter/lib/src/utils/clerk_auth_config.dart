@@ -102,8 +102,10 @@ class ClerkAuthConfig extends clerk.AuthConfig {
   /// to disable the loading overlay or use your own widget.
   final Widget? loading;
 
-  /// Whether the Clerk instance supports hardware security keys
-  /// (basically, are we running on an iOS simulator?)
+  /// Whether the device on which the consuming app is running supports
+  /// hardware security keys or not. The iOS simulator, for example, doesn't,
+  /// so if you're running on that to test/develop, you'll want to set this
+  /// to false.
   final bool supportsHardwareSecurityKeys;
 
   /// Flags used to affect behaviour

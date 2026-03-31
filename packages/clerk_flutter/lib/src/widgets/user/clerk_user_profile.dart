@@ -184,7 +184,9 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
             user: nonce.user!.toUserType(),
             excludeCredentials: const [],
             timeout: nonce.timeout,
-            // force platform attachment so we don't use hw security key (not supported on simulator)
+            // where hardware security keys are unsupported (e.g. iOS
+            // simulator) force platform attachment only to avoid
+            // system erroring
             authSelectionType:
                 authState.config.supportsHardwareSecurityKeys == false
                     ? AuthenticatorSelectionType(

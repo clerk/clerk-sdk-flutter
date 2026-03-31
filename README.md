@@ -160,7 +160,7 @@ class MyApp extends StatelessWidget {
 - 💬 [Discord Community](https://clerk.com/discord) - Chat with the community and Clerk team
 - 📖 [Main Clerk Docs](https://clerk.com/docs) - Comprehensive guides and references
 - 🐛 [GitHub Issues](https://github.com/clerk/clerk-sdk-flutter/issues) - Report bugs and request features
-- 🐦 [Twitter](https://twitter.com/ClerkDev) - Latest updates and announcements
+- 🐦 [Twitter](https://twitter.com/Clerk) - Latest updates and announcements
 
 ---
 

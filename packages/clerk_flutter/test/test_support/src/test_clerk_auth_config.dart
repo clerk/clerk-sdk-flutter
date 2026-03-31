@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
@@ -114,7 +114,7 @@ class TestFileCache implements ClerkFileCache {
   void terminate() {}
 
   @override
-  Stream<File> stream(
+  Stream<Uint8List> stream(
     Uri uri, {
     Duration ttl = ClerkFileCache.defaultTTL,
     Map<String, String>? headers,

@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   clerk_flutter: '>=0.0.14-beta'
   clerk_auth: '>=0.0.14-beta'
-  app_links: ^3.5.1
+  app_links: ^6.4.1
   url_launcher_ios: 6.2.0
   google_sign_in: ^7.1.0
   sign_in_with_apple: ^7.0.1

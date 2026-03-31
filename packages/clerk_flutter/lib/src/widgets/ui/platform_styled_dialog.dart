@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_io/universal_io.dart';
 
 /// A default enum for basic choices from a dialog
 enum DialogChoice {

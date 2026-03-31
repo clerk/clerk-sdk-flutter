@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:universal_io/universal_io.dart';
 
 /// A store for authentication tokens and IDs from the
 /// Clerk back end

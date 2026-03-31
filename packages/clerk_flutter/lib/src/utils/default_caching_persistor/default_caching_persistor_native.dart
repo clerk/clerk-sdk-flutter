@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/src/utils/clerk_file_cache.dart';
@@ -14,7 +15,7 @@ class DefaultCachingPersistor extends clerk.DefaultPersistor
   static const _kETagHeader = 'ETag';
 
   @override
-  Stream<File> stream(
+  Stream<Uint8List> stream(
     Uri uri, {
     Duration ttl = ClerkFileCache.defaultTTL,
     Map<String, String>? headers,
@@ -30,7 +31,7 @@ class DefaultCachingPersistor extends clerk.DefaultPersistor
         await file.delete();
         await delete(etagKey);
       } else {
-        yield file;
+        yield await file.readAsBytes();
       }
     }
 
@@ -52,7 +53,7 @@ class DefaultCachingPersistor extends clerk.DefaultPersistor
           // a new image but no new etag, so the existing tag will be wrong
           await delete(etagKey);
         }
-        yield file;
+        yield Uint8List.fromList(response.bodyBytes);
       }
     } on SocketException {
       // failed fetch - ignore

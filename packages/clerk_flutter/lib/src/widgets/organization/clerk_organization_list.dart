@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
@@ -94,7 +94,7 @@ class _ClerkOrganizationListState extends State<ClerkOrganizationList>
       context,
       builder: (context) => ClerkVerticalCard(
         topPortion: CreateOrganizationPanel(
-          onSubmit: (String name, String slug, File? image) async {
+          onSubmit: (String name, String slug, Uint8List? image) async {
             await authState.safelyCall(
               context,
               () => authState.createOrganization(

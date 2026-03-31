@@ -2,7 +2,7 @@
 
 import 'package:clerk_auth/src/clerk_auth/auth.dart';
 import 'package:clerk_auth/src/clerk_auth/http_service.dart';
-import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+import 'package:clerk_auth/src/clerk_auth/persistor/persistor.dart';
 import 'package:clerk_auth/src/clerk_auth/sdk_flags.dart';
 // ignore: deprecated_member_use_from_same_package
 import 'package:clerk_auth/src/models/enums.dart' show SessionTokenPollMode;

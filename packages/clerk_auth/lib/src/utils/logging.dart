@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:clerk_auth/src/utils/platform_check/platform_check.dart';
 import 'package:logging/logging.dart';
+import 'package:universal_io/universal_io.dart';
 
 export 'package:logging/logging.dart' show Level;
 
@@ -160,7 +161,9 @@ Future<void> setUpLogging({
         output += '\n${record.stackTrace}'.split('\n').join('\n\t');
       }
       printer.print(_withColor(output, record.level));
-      stdout.flush();
+      if (isWeb == false) {
+        stdout.flush();
+      }
     }
   });
 }

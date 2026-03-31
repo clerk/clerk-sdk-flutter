@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_avatar.dart';
@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 /// A [Function] that accepts and acts on edited data
-typedef EditableDataSubmitter = Future<void> Function(String name, File? image);
+typedef EditableDataSubmitter = Future<void> Function(
+  String name,
+  Uint8List? image,
+);
 
 /// A widget that allows user or organization profile data to
 /// be edited
@@ -47,7 +50,7 @@ class _EditableProfileDataState extends State<EditableProfileData> {
   bool isEditing = false;
 
   late final TextEditingController _controller;
-  File? image;
+  Uint8List? image;
 
   @override
   void initState() {
@@ -65,7 +68,8 @@ class _EditableProfileDataState extends State<EditableProfileData> {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: source);
     if (context.mounted && image != null) {
-      setState(() => this.image = File(image.path));
+      final bytes = await image.readAsBytes();
+      setState(() => this.image = bytes);
     }
   }
 

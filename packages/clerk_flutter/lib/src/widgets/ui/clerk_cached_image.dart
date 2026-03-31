@@ -1,11 +1,11 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 
 /// A widget that returns an image using the [ClerkAuthState] file cache
 ///
-class ClerkCachedImage extends StatelessWidget {
+class ClerkCachedImage extends StatefulWidget {
   const ClerkCachedImage._(
     Key? key,
     this.uri,
@@ -44,6 +44,11 @@ class ClerkCachedImage extends StatelessWidget {
   /// Should the image be rendered as monochrome?
   final bool invertColors;
 
+  @override
+  State<ClerkCachedImage> createState() => _ClerkCachedImageState();
+}
+
+class _ClerkCachedImageState extends State<ClerkCachedImage> {
   static const _inversionFilter = ColorFilter.matrix([
     -1, 0, 0, 0, 255, //
     0, -1, 0, 0, 255, //
@@ -51,26 +56,36 @@ class ClerkCachedImage extends StatelessWidget {
     0, 0, 0, 1, 0, //
   ]);
 
+  Stream<Uint8List>? _stream;
+
   Widget _invert(BuildContext context, Widget child, int? _, bool __) =>
       ColorFiltered(colorFilter: _inversionFilter, child: child);
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_stream == null) {
+      final cache = ClerkAuth.fileCacheOf(context);
+      _stream = cache.stream(widget.uri);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final cache = ClerkAuth.fileCacheOf(context);
     return StreamBuilder(
-      stream: cache.stream(uri),
-      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+      stream: _stream,
+      builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
         if (snapshot.hasData) {
-          return Image.file(
+          return Image.memory(
             snapshot.data!,
-            height: height,
-            width: width,
-            fit: fit,
-            frameBuilder: invertColors ? _invert : null,
+            height: widget.height,
+            width: widget.width,
+            fit: widget.fit,
+            frameBuilder: widget.invertColors ? _invert : null,
           );
         }
 
-        return SizedBox(width: width, height: height);
+        return SizedBox(width: widget.width, height: widget.height);
       },
     );
   }

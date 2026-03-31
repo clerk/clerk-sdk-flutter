@@ -30,57 +30,63 @@ class ClerkVerticalCard extends StatelessWidget {
     final l10ns = displayConfig.showDevmodeWarning
         ? authState.localizationsOf(context)
         : null;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: borderRadius12,
-        boxShadow: [
-          BoxShadow(
-            color: themeExtension.colors.altBackground,
-            offset: const Offset(0.0, 6.0),
-            blurRadius: 12,
-          )
-        ],
-      ),
-      child: Material(
-        borderRadius: borderRadius12,
-        clipBehavior: Clip.antiAlias,
-        color: themeExtension.colors.background,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Material(
-                borderRadius: borderRadius6,
-                clipBehavior: Clip.antiAlias,
-                color: themeExtension.colors.background,
-                elevation: 1.0,
-                shadowColor: themeExtension.colors.altBackground,
-                child: topPortion,
-              ),
-              bottomPortion,
-              if (displayConfig.branded) ...[
-                verticalMargin12,
-                Center(
-                  child: SvgPicture.asset(
-                    ClerkAssets.securedByClerkLogo,
-                    package: 'clerk_flutter',
-                  ),
-                ),
-                verticalMargin12,
-              ],
-              if (l10ns case final l10ns?) ...[
-                if (displayConfig.branded == false) //
-                  verticalMargin12,
-                Center(
-                  child: Text(
-                    l10ns.developmentMode,
-                    style: themeExtension.styles.heading
-                        .copyWith(color: Colors.orange),
-                  ),
-                ),
-                verticalMargin12,
-              ],
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400, maxHeight: 520),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: borderRadius12,
+            boxShadow: [
+              BoxShadow(
+                color: themeExtension.colors.altBackground,
+                offset: const Offset(0.0, 6.0),
+                blurRadius: 12,
+              )
             ],
+          ),
+          child: Material(
+            borderRadius: borderRadius12,
+            clipBehavior: Clip.antiAlias,
+            color: themeExtension.colors.background,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Material(
+                    borderRadius: borderRadius6,
+                    clipBehavior: Clip.antiAlias,
+                    color: themeExtension.colors.background,
+                    elevation: 1.0,
+                    shadowColor: themeExtension.colors.altBackground,
+                    child: topPortion,
+                  ),
+                  bottomPortion,
+                  if (displayConfig.branded) ...[
+                    verticalMargin12,
+                    Center(
+                      child: SvgPicture.asset(
+                        ClerkAssets.securedByClerkLogo,
+                        package: 'clerk_flutter',
+                      ),
+                    ),
+                    verticalMargin12,
+                  ],
+                  if (l10ns case final l10ns?) ...[
+                    if (displayConfig.branded == false) //
+                      verticalMargin12,
+                    Center(
+                      child: Text(
+                        l10ns.developmentMode,
+                        style: themeExtension.styles.heading
+                            .copyWith(color: Colors.orange),
+                      ),
+                    ),
+                    verticalMargin12,
+                  ],
+                ],
+              ),
+            ),
           ),
         ),
       ),

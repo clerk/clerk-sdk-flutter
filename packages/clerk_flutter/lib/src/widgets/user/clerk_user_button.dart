@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
@@ -167,7 +167,7 @@ class _ClerkUserButtonState extends State<ClerkUserButton>
     ClerkAuthState authState,
     String name,
     String slug,
-    File? logo,
+    Uint8List? logo,
   ) async {
     if (name.isNotEmpty) {
       slug = slug.orNullIfEmpty ??

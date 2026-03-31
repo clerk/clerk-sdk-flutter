@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/src/widgets/control/clerk_auth.dart';
@@ -29,17 +29,17 @@ class ClerkAvatar extends StatelessWidget {
   /// the diameter of the avatar
   final double diameter;
 
-  /// an override file location
-  final File? file;
+  /// an override file as bytes
+  final Uint8List? file;
 
   /// A [BorderRadius] for non-circular avatars
   final BorderRadius? borderRadius;
 
   Widget _child(ClerkThemeExtension themeExtension) {
-    if (file case File file) {
+    if (file case Uint8List file) {
       return ClipRRect(
         borderRadius: borderRadius ?? BorderRadius.circular(diameter / 2),
-        child: Image.file(
+        child: Image.memory(
           file,
           width: diameter,
           height: diameter,

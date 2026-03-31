@@ -51,7 +51,7 @@ Our comprehensive documentation includes:
 
 ```yaml
 dependencies:
-  clerk_auth: ^0.0.13-beta
+  clerk_auth: ^0.0.14-beta
 ```
 
 **[View clerk_auth Documentation →](https://clerk.github.io/clerk-sdk-flutter/packages/clerk-auth)**
@@ -63,7 +63,7 @@ dependencies:
 
 ```yaml
 dependencies:
-  clerk_flutter: ^0.0.13-beta
+  clerk_flutter: ^0.0.14-beta
 ```
 
 **[View clerk_flutter Documentation →](https://clerk.github.io/clerk-sdk-flutter/packages/clerk-flutter)**

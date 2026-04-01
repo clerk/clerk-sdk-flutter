@@ -17,9 +17,7 @@
 
 </div>
 
-# Clerk Dart and Flutter SDKs
-
-The official [Clerk](https://clerk.com) Dart and Flutter SDKs for authentication and user management.
+# Clerk Flutter and Dart SDKs
 
 **Clerk helps developers build user management. We provide streamlined user experiences for your users to sign up, sign in, and manage their profiles.**
 
@@ -28,17 +26,11 @@ The official [Clerk](https://clerk.com) Dart and Flutter SDKs for authentication
 
 ---
 
-## 📚 Documentation
+## 🚀 Get Started With Clerk
 
-**[View Full Documentation →](https://clerk.github.io/clerk-sdk-flutter/)**
-
-Our comprehensive documentation includes:
-
-- 🚀 [Getting Started Guides](https://clerk.github.io/clerk-sdk-flutter/getting-started)
-- 📖 [API Reference](https://clerk.github.io/clerk-sdk-flutter/packages/clerk-auth)
-- 🎯 [Authentication Flows](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
-- 👤 [User Management](https://clerk.github.io/clerk-sdk-flutter/guides/user-management)
-- 🎨 [Customization](https://clerk.github.io/clerk-sdk-flutter/guides/customization)
+1. [Sign up for an account](https://dashboard.clerk.com/sign-up?utm_source=github&utm_medium=clerk_flutter_repo_readme)
+2. Create an application in your Clerk dashboard
+3. Follow the guides for our SDKs: [clerk_flutter](./packages/clerk_flutter/README.md) or [clerk_auth](./packages/clerk_auth/README.md)
 
 ---
 
@@ -71,36 +63,6 @@ dependencies:
 ---
 
 ## 🚀 Quick Start
-
-### Dart (clerk_auth)
-
-```dart
-import 'dart:io';
-import 'package:clerk_auth/clerk_auth.dart';
-
-Future<void> main() async {
-  final auth = Auth(
-    config: AuthConfig(
-      publishableKey: 'pk_test_xxxxxxxxxxxxx',
-      persistor: DefaultPersistor(
-        getCacheDirectory: () => Directory.current,
-      ),
-    ),
-  );
-
-  await auth.initialize();
-
-  await auth.attemptSignIn(
-    strategy: Strategy.password,
-    identifier: 'user@example.com',
-    password: 'password',
-  );
-
-  print('Signed in as ${auth.user?.emailAddress}');
-}
-```
-
-**[View Dart Quickstart →](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-dart)**
 
 ### Flutter (clerk_flutter)
 

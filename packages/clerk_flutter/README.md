@@ -35,10 +35,6 @@ for your users to sign up, sign in, and manage their profile from your Flutter c
 * Flutter >= 3.27.4
 * Dart >= 3.6.2
 
-## In Development
-
-* Organization support
-
 ## Example Usage
 
 To use this package you will need to go to your [Clerk Dashboard](https://dashboard.clerk.com/)
@@ -66,15 +62,13 @@ class ExampleApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           body: SafeArea(
-            child: ClerkErrorListener(
-              child: ClerkAuthBuilder(
-                signedInBuilder: (context, authState) {
-                  return const ClerkUserButton();
-                },
-                signedOutBuilder: (context, authState) {
-                  return const ClerkAuthentication();
-                },
-              ),
+            child: ClerkAuthBuilder(
+              signedInBuilder: (context, authState) {
+                return const ClerkUserButton();
+              },
+              signedOutBuilder: (context, authState) {
+                return const ClerkAuthentication();
+              },
             ),
           ),
         ),

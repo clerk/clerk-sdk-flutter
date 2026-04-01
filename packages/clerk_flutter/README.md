@@ -4,17 +4,31 @@
 
 ## Official [Clerk](https://clerk.com) Flutter SDK (Beta)
 
-[![Pub Version](https://img.shields.io/pub/v/clerk_flutter?color=blueviolet)](https://pub.dev/packages/clerk_flutter)
+[![Pub Version](https://img.shields.io/badge/pub-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_flutter)
 [![Pub Points](https://img.shields.io/pub/points/clerk_flutter?label=pub%20points)](https://pub.dev/packages/clerk_flutter/score)
-[![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://discord.com/invite/b5rXHjAg7A)
+[![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://clerk.com/discord)
 [![documentation](https://img.shields.io/badge/documentation-clerk-green.svg)](https://clerk.com/docs)
-[![twitter](https://img.shields.io/twitter/follow/ClerkDev?style=social)](https://twitter.com/intent/follow?screen_name=ClerkDev)
+[![twitter](https://img.shields.io/twitter/follow/Clerk?style=social)](https://twitter.com/intent/follow?screen_name=Clerk)
 
 > ### ⚠️ The Clerk Flutter SDK is in Beta ⚠️
 > ❗️ Breaking changes should be expected until the first stable release (1.0.0) ❗️
 
 **Clerk helps developers build user management. We provide streamlined user experiences
 for your users to sign up, sign in, and manage their profile from your Flutter code.**
+
+---
+
+## 📚 Documentation
+
+**[View Full Documentation →](https://clerk.github.io/clerk-sdk-flutter/packages/clerk-flutter)**
+
+- 🚀 [Flutter Quickstart](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-flutter)
+- 📖 [Widget Reference](https://clerk.github.io/clerk-sdk-flutter/api/widgets)
+- 🎨 [Customization Guide](https://clerk.github.io/clerk-sdk-flutter/guides/customization)
+- 🎯 [Authentication Flows](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
+- 👤 [User Management](https://clerk.github.io/clerk-sdk-flutter/guides/user-management)
+
+---
 
 ## Requirements
 
@@ -77,6 +91,19 @@ Add the following line to your `android/app/src/main/AndroidManifest.xml` file:
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 ```
+
+---
+
+## 📖 Learn More
+
+- [Full Documentation](https://clerk.github.io/clerk-sdk-flutter/)
+- [Flutter Quickstart](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-flutter)
+- [Widget Reference](https://clerk.github.io/clerk-sdk-flutter/api/widgets)
+- [Customization Guide](https://clerk.github.io/clerk-sdk-flutter/guides/customization)
+- [Authentication Flows](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
+- [Example App](https://github.com/clerk/clerk-sdk-flutter/tree/main/packages/clerk_flutter/example)
+
+---
 
 ## License
 

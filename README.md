@@ -12,7 +12,7 @@
 
 [![Pub Version](https://img.shields.io/badge/clerk__flutter-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_flutter)
 [![Pub Version](https://img.shields.io/badge/clerk__auth-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_auth)
-[![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://discord.com/invite/b5rXHjAg7A)
+[![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://clerk.com/discord)
 [![documentation](https://img.shields.io/badge/documentation-clerk-green.svg)](https://clerk.com/docs)
 
 </div>

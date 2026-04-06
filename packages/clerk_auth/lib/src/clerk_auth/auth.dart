@@ -655,6 +655,7 @@ class Auth {
             legalAccepted: legalAccepted,
           )
           .then(_housekeeping);
+      return client;
     }
 
     if (client.user is! User) {
@@ -672,12 +673,13 @@ class Auth {
           var su = rc?.signUp;
           // If backend returns missing=[password] after verification, supply it via
           // PATCH (updateSignUp). attempt_verification does not accept password.
-          final missingNames = su?.missingFields.map((f) => f.name).toList() ?? <String>[];
+          final missingNames =
+              su?.missingFields.map((f) => f.name).toList() ?? <String>[];
           if (resp.hasClient &&
               su != null &&
               missingNames.contains(Field.password.name) &&
               password != null &&
-              password!.isNotEmpty) {
+              password.isNotEmpty) {
             final updateResp = await _api.updateSignUp(su, password: password);
             _housekeeping(updateResp);
             rc = updateResp.client;
@@ -688,7 +690,8 @@ class Auth {
               su?.status == Status.complete &&
               su?.createdSessionId != null &&
               rc.user == null) {
-            final touchResp = await _api.activateSessionById(su!.createdSessionId!);
+            final touchResp =
+                await _api.activateSessionById(su!.createdSessionId!);
             _housekeeping(touchResp);
           }
 
@@ -740,9 +743,9 @@ class Auth {
                 signUp.missingFields.isEmpty:
           // Skip prepareSignUp when we just created with email_code/phone_code;
           // createSignUp already sent the verification code.
-          final skipPrepare =
-              didCreateInThisCall &&
-              (strategy == Strategy.emailCode || strategy == Strategy.phoneCode);
+          final skipPrepare = didCreateInThisCall &&
+              (strategy == Strategy.emailCode ||
+                  strategy == Strategy.phoneCode);
           if (!skipPrepare) {
             await _api
                 .prepareSignUp(signUp, strategy: strategy)

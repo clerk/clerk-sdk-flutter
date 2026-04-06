@@ -185,7 +185,8 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             password: usePasswordStrategy ? password : null,
-            passwordConfirmation: usePasswordStrategy ? passwordConfirmation : null,
+            passwordConfirmation:
+                usePasswordStrategy ? passwordConfirmation : null,
             redirectUrl: redirectUri?.toString(),
             legalAccepted: _needsLegalAcceptance ? _hasLegalAcceptance : null,
           );
@@ -276,7 +277,7 @@ class _ClerkSignUpPanelState extends State<ClerkSignUpPanel>
                 // the UI can transition (e.g. SignInPage pops when isSignedIn).
                 final authState = ClerkAuth.of(context, listen: false);
                 return authState.isSignedIn;
-              } catch (e, stack) {
+              } catch (e) {
                 // Ensure any uncaught exception (network, parse, etc.) is
                 // reported and loading state is cleared (we return false).
                 if (context.mounted) {

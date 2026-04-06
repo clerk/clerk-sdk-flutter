@@ -20,8 +20,8 @@ typedef ClerkErrorCallback = void Function(clerk.AuthError);
 class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   /// Construct a [ClerkAuthState]
   ClerkAuthState._(this._config)
-    : _loadingOverlay = ClerkLoadingOverlay(_config),
-      super(config: _config);
+      : _loadingOverlay = ClerkLoadingOverlay(_config),
+        super(config: _config);
 
   /// Create an [ClerkAuthState] object using appropriate Clerk credentials
   static Future<ClerkAuthState> create({
@@ -199,8 +199,7 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
     clerk.Strategy strategy, {
     ClerkErrorCallback? onError,
   }) async {
-    final redirect =
-        config.redirectionGenerator?.call(context, strategy) ??
+    final redirect = config.redirectionGenerator?.call(context, strategy) ??
         Uri.parse(clerk.ClerkConstants.oauthRedirect);
     final redirectUrl = redirect.toString();
     await safelyCall(
@@ -419,8 +418,8 @@ class _SsoWebViewOverlayState extends State<_SsoWebViewOverlay> {
           onPageFinished: (_) => _updateTitle(),
           onWebResourceError: (e) {
             final description = e.description.toLowerCase();
-            final isBenign =
-                description.contains('frame load interrupted') ||
+            final isBenign = description.contains('frame load interrupted') ||
+                description.contains('carga del marco interrumpida') ||
                 description.contains('net::err_aborted');
             if (isBenign) {
               return;

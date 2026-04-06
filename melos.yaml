@@ -3,6 +3,7 @@ sdkPath: .fvm/flutter_sdk
 
 packages:
   - packages/**
+  - packages/clerk_flutter/example
 
 ide:
   intellij:
@@ -69,10 +70,18 @@ scripts:
   # Run tests for Flutter packages
   test:flutter:
     name: Test Flutter packages
-    description: Run flutter test in Flutter packages
-    run: melos exec -- flutter test
+    description: Run flutter test in Flutter packages (excludes integration tests)
+    run: melos exec -- flutter test test/
     packageFilters:
       scope: "clerk_flutter"
+
+  # Run integration tests for clerk_flutter
+  test:integration:
+    name: Integration tests
+    description: Run flutter integration tests (requires a running emulator or device)
+    run: melos exec -- flutter test integration_test
+    packageFilters:
+      scope: "clerk_flutter_example"
 
   # Run tests for Dart packages
   test:dart:

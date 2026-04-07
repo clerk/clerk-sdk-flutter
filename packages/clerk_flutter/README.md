@@ -16,33 +16,35 @@
 **Clerk helps developers build user management. We provide streamlined user experiences
 for your users to sign up, sign in, and manage their profile from your Flutter code.**
 
----
-
-## 📚 Documentation
-
-**[View Full Documentation →](https://clerk.github.io/clerk-sdk-flutter/packages/clerk-flutter)**
-
-- 🚀 [Flutter Quickstart](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-flutter)
-- 📖 [Widget Reference](https://clerk.github.io/clerk-sdk-flutter/api/widgets)
-- 🎨 [Customization Guide](https://clerk.github.io/clerk-sdk-flutter/guides/customization)
-- 🎯 [Authentication Flows](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
-- 👤 [User Management](https://clerk.github.io/clerk-sdk-flutter/guides/user-management)
+<p align="center">
+  <img src="./assets/example-light.png" width="320">
+  <img src="./assets/example-dark.png" width="320">
+  <br />
+  <em>The clerk_flutter example app</em>
+</p>
 
 ---
 
 ## Requirements
 
-* Flutter >= 3.27.4
-* Dart >= 3.6.2
+| Flutter | Dart |
+|---------|------|
+| 3.27.4+ | 3.6.2+ |
 
-## Example Usage
+## 🚀 Getting Started
 
-To use this package you will need to go to your [Clerk Dashboard](https://dashboard.clerk.com/)
-create an application and copy the public and publishable API keys into your project.
+1. [Sign up for an account](https://dashboard.clerk.com/sign-up?utm_source=github&utm_medium=clerk_flutter_repo_readme)
+2. Create an application in your Clerk dashboard
+3. Copy the publishable key from the dashboard
+4. Add `clerk_flutter` to your `pubspec.yaml` 
 
-The bundled example app requires one, possibly two, variables to be set up in your environment:
-- `publishable_key`: your Clerk publishable key, usually starting `pk_`
-- `google_client_id`: the ID of your GCP web project, if you are using Google token oauth
+```yaml
+dependencies:
+  clerk_flutter: ^0.0.14-beta
+```
+
+5. You can now make use of clerk_flutter widgets adding authentication to your application
+
 
 ```dart
 /// Example App
@@ -78,27 +80,8 @@ class ExampleApp extends StatelessWidget {
 }
 ```
 
-## Installation (Android)
-
-Add the following line to your `android/app/src/main/AndroidManifest.xml` file:
-
-```xml
-<uses-permission android:name="android.permission.INTERNET" />
-```
-
----
-
-## 📖 Learn More
-
-- [Full Documentation](https://clerk.github.io/clerk-sdk-flutter/)
-- [Flutter Quickstart](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-flutter)
-- [Widget Reference](https://clerk.github.io/clerk-sdk-flutter/api/widgets)
-- [Customization Guide](https://clerk.github.io/clerk-sdk-flutter/guides/customization)
-- [Authentication Flows](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
-- [Example App](https://github.com/clerk/clerk-sdk-flutter/tree/main/packages/clerk_flutter/example)
-
----
-
 ## License
 
-This SDK is licensed under the MIT license found in the [LICENSE](./LICENSE) file.
+This project is licensed under the MIT license.
+
+See [LICENSE](./LICENSE) for more information.

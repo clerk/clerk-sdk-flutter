@@ -2,7 +2,7 @@
 <img src="https://images.clerk.com/static/logo-light-mode-400x400.png" height="90">
 </p>
 
-## Official [Clerk](https://clerk.com) Flutter SDK (Beta)
+## Official Clerk Flutter SDK (Beta)
 
 [![Pub Version](https://img.shields.io/badge/pub-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_flutter)
 [![Pub Points](https://img.shields.io/pub/points/clerk_flutter?label=pub%20points)](https://pub.dev/packages/clerk_flutter/score)
@@ -36,14 +36,15 @@ for your users to sign up, sign in, and manage their profile from your Flutter c
 1. [Sign up for an account](https://dashboard.clerk.com/sign-up?utm_source=github&utm_medium=clerk_flutter_repo_readme)
 2. Create an application in your Clerk dashboard
 3. Copy the publishable key from the dashboard
-4. Add `clerk_flutter` to your `pubspec.yaml` 
+4. Add `clerk_flutter` and `clerk_auth` to your `pubspec.yaml` 
 
 ```yaml
 dependencies:
+  clerk_auth: ^0.0.14-beta
   clerk_flutter: ^0.0.14-beta
 ```
 
-5. You can now make use of clerk_flutter widgets adding authentication to your application
+5. You can now make use of Clerk Flutter widgets adding authentication to your application
 
 
 ```dart

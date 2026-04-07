@@ -18,20 +18,11 @@ for your users to sign up, sign in, and manage their profile from your Dart code
 
 ---
 
-## 📚 Documentation
-
-**[View Full Documentation →](https://clerk.github.io/clerk-sdk-flutter/packages/clerk-auth)**
-
-- 🚀 [Dart Quickstart](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-dart)
-- 📖 [API Reference](https://pub.dev/documentation/clerk_auth/latest/)
-- 🎯 [Authentication Guide](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
-- 👤 [User Management](https://clerk.github.io/clerk-sdk-flutter/guides/user-management)
-
----
-
 ## Requirements
 
-* Dart >= 3.6.2
+| Dart |
+|------|
+| 3.6.2+ |
 
 ## Example Usage
 
@@ -126,4 +117,6 @@ the system defaulting to no polling, please review your code.
 
 ## License
 
-This SDK is licensed under the MIT license found in the [LICENSE](./LICENSE) file.
+This project is licensed under the MIT license.
+
+See [LICENSE](./LICENSE) for more information.

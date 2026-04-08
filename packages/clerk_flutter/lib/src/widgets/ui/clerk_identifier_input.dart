@@ -70,9 +70,11 @@ class _ClerkIdentifierInputState extends State<ClerkIdentifierInput> {
     if (_checkPhoneNumber(widget.initialValue?.identifier) case final ident?) {
       identifierType.value = clerk.IdentifierType.phoneNumber;
       _identifiers[clerk.IdentifierType.phoneNumber] = ident;
-    } else {
+    } else if (emailStrategies.isNotEmpty) {
       identifierType.value = clerk.IdentifierType.emailAddress;
       _identifiers[clerk.IdentifierType.emailAddress] = widget.initialValue;
+    } else {
+      identifierType.value = clerk.IdentifierType.phoneNumber;
     }
 
     _setFocus();

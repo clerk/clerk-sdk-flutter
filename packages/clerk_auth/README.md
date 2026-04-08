@@ -4,21 +4,25 @@
 
 ## Official [Clerk](https://clerk.com) Dart SDK (Beta)
 
-[![Pub Version](https://img.shields.io/pub/v/clerk_auth?color=blueviolet)](https://pub.dev/packages/clerk_auth)
+[![Pub Version](https://img.shields.io/badge/pub-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_auth)
 [![Pub Points](https://img.shields.io/pub/points/clerk_auth?label=pub%20points)](https://pub.dev/packages/clerk_auth/score)
-[![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://discord.com/invite/b5rXHjAg7A)
+[![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://clerk.com/discord)
 [![documentation](https://img.shields.io/badge/documentation-clerk-green.svg)](https://clerk.com/docs)
-[![twitter](https://img.shields.io/twitter/follow/ClerkDev?style=social)](https://twitter.com/intent/follow?screen_name=ClerkDev)
+[![twitter](https://img.shields.io/twitter/follow/Clerk?style=social)](https://twitter.com/intent/follow?screen_name=Clerk)
 
-> ### ⚠️ The Clerk Flutter SDK is in Beta ⚠️
-> ❗️ Breaking changes should be expected until the first stable release (1.0.0) ❗️
+> ### ⚠️ The Clerk Dart SDK is in Beta ⚠️
+> ❗️ Breaking changes should be expected until the first stable release (1.0.0). Please [file any issues you encounter](https://github.com/clerk/clerk-sdk-flutter/issues). ❗️
 
 **Clerk helps developers build user management. We provide streamlined user experiences
 for your users to sign up, sign in, and manage their profile from your Dart code.**
 
+---
+
 ## Requirements
 
-* Dart >= 3.6.2
+| Dart |
+|------|
+| 3.6.2+ |
 
 ## Example Usage
 
@@ -68,7 +72,9 @@ Future<void> main() async {
 }
 ```
 
-For more details see [Clerk Auth object](https://pub.dev/documentation/clerk_auth/latest/clerk_auth/Auth-class.html)
+For more details see:
+- [Clerk Auth Documentation](https://clerk.github.io/clerk-sdk-flutter/packages/clerk-auth)
+- [API Reference](https://pub.dev/documentation/clerk_auth/latest/clerk_auth/Auth-class.html)
 
 ## Session Token Polling
 
@@ -97,6 +103,20 @@ polling off, enabling it via a `SessionTokenPollMode` object in the config. This
 v0.0.13-beta: it is no longer used, and will be deleted in a future version. If you are using it, or relying on
 the system defaulting to no polling, please review your code.
 
+---
+
+## 📖 Learn More
+
+- [Full Documentation](https://clerk.github.io/clerk-sdk-flutter/)
+- [Dart Quickstart](https://clerk.github.io/clerk-sdk-flutter/getting-started/quickstart-dart)
+- [Authentication Guide](https://clerk.github.io/clerk-sdk-flutter/guides/authentication)
+- [User Management](https://clerk.github.io/clerk-sdk-flutter/guides/user-management)
+- [Session Tokens](https://clerk.github.io/clerk-sdk-flutter/guides/session-tokens)
+
+---
+
 ## License
 
-This SDK is licensed under the MIT license found in the [LICENSE](./LICENSE) file.
+This project is licensed under the MIT license.
+
+See [LICENSE](./LICENSE) for more information.

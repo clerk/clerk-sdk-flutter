@@ -11,7 +11,7 @@
 [![twitter](https://img.shields.io/twitter/follow/Clerk?style=social)](https://twitter.com/intent/follow?screen_name=Clerk)
 
 > ### ⚠️ The Clerk Dart SDK is in Beta ⚠️
-> ❗️ Breaking changes should be expected until the first stable release (1.0.0) ❗️
+> ❗️ Breaking changes should be expected until the first stable release (1.0.0). Please [file any issues you encounter](https://github.com/clerk/clerk-sdk-flutter/issues). ❗️
 
 **Clerk helps developers build user management. We provide streamlined user experiences
 for your users to sign up, sign in, and manage their profile from your Dart code.**

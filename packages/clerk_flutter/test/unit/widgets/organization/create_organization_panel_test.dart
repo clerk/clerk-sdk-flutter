@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/widgets/organization/create_organization_panel.dart';
@@ -23,7 +23,7 @@ void main() {
     });
 
     test('stores onSubmit callback', () {
-      Future<void> onSubmit(String name, String slug, File? image) async {}
+      Future<void> onSubmit(String name, String slug, Uint8List? image) async {}
       final widget = CreateOrganizationPanel(onSubmit: onSubmit);
       expect(widget.onSubmit, onSubmit);
     });
@@ -140,7 +140,7 @@ void main() {
       var submitCalled = false;
       String? submittedName;
       String? submittedSlug;
-      File? submittedImage;
+      Uint8List? submittedImage;
 
       await tester.pumpWidget(
         TestClerkAuthWrapper(

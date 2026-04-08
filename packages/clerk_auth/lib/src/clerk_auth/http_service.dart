@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:http/http.dart' as http;

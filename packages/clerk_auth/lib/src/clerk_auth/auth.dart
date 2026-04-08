@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_auth/src/clerk_api/api.dart';
@@ -903,7 +903,7 @@ class Auth {
   Future<void> createOrganization({
     required String name,
     String? slug,
-    File? logo,
+    Uint8List? logo,
   }) async {
     await _api.createOrganization(name).then(_housekeeping);
 
@@ -913,7 +913,7 @@ class Auth {
             .updateOrganization(org, slug: slug, session: session)
             .then(_housekeeping);
       }
-      if (logo case File logo) {
+      if (logo case Uint8List logo) {
         await _api
             .updateOrganizationLogo(org, logo: logo, session: session)
             .then(_housekeeping);
@@ -928,17 +928,17 @@ class Auth {
   Future<void> updateOrganization({
     required Organization organization,
     String? name,
-    File? logo,
+    Uint8List? logo,
   }) async {
     final hasName =
         name is String && name.isNotEmpty && name != organization.name;
-    if (hasName || logo is File) {
+    if (hasName || logo is Uint8List) {
       if (hasName) {
         await _api
             .updateOrganization(organization, name: name, session: session)
             .then(_housekeeping);
       }
-      if (logo case File logo) {
+      if (logo case Uint8List logo) {
         await _api
             .updateOrganizationLogo(organization, logo: logo, session: session)
             .then(_housekeeping);
@@ -1062,7 +1062,7 @@ class Auth {
     String? primaryPhoneNumberId,
     String? primaryWeb3WalletId,
     Map<String, dynamic>? metadata,
-    File? avatar,
+    Uint8List? avatar,
   }) async {
     final config = env.config;
     if (user case User user) {
@@ -1082,7 +1082,7 @@ class Auth {
           (primaryWeb3WalletId is String &&
               primaryWeb3WalletId != user.primaryWeb3WalletId) ||
           (metadata?.isNotEmpty == true);
-      if (needsUpdate || avatar is File) {
+      if (needsUpdate || avatar is Uint8List) {
         if (needsUpdate) {
           await _api
               .updateUser(
@@ -1096,7 +1096,7 @@ class Auth {
               )
               .then(_housekeeping);
         }
-        if (avatar case File avatar) {
+        if (avatar case Uint8List avatar) {
           await _api.updateAvatar(avatar).then(_housekeeping);
         }
         update();
@@ -1157,8 +1157,8 @@ class Auth {
 
   /// Update the avatar of the current [User]
   ///
-  Future<void> updateUserImage(File file) async {
-    await _api.updateAvatar(file).then(_housekeeping);
+  Future<void> updateUserImage(Uint8List bytes) async {
+    await _api.updateAvatar(bytes).then(_housekeeping);
     update();
   }
 

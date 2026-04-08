@@ -1,4 +1,4 @@
-import 'package:clerk_auth/src/clerk_auth/persistor.dart';
+import 'package:clerk_auth/src/clerk_auth/persistor/persistor.dart';
 
 import '../../test_helpers.dart';
 

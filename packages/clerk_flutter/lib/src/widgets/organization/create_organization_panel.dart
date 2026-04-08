@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:clerk_flutter/src/assets.dart';
 import 'package:clerk_flutter/src/utils/clerk_sdk_localization_ext.dart';
@@ -24,7 +22,7 @@ class CreateOrganizationPanel extends StatefulWidget {
 
   /// The function to be called once editing of the
   /// org data has completed
-  final Future<void> Function(String, String, File?) onSubmit;
+  final Future<void> Function(String, String, Uint8List?) onSubmit;
 
   @override
   State<CreateOrganizationPanel> createState() =>
@@ -39,13 +37,14 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
 
   String _name = '';
   String _slug = '';
-  File? _image;
+  Uint8List? _image;
 
   Future<void> _chooseImage(BuildContext context, ImageSource source) async {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: source);
     if (context.mounted && image != null) {
-      setState(() => _image = File(image.path));
+      final bytes = await image.readAsBytes();
+      setState(() => _image = bytes);
     }
   }
 
@@ -114,7 +113,7 @@ class _CreateOrganizationPanelState extends State<CreateOrganizationPanel> {
 class _LogoPicker extends StatelessWidget {
   const _LogoPicker({this.imageFile, required this.openPicker});
 
-  final File? imageFile;
+  final Uint8List? imageFile;
   final ValueChanged<ImageSource> openPicker;
 
   @override
@@ -129,10 +128,10 @@ class _LogoPicker extends StatelessWidget {
           onTap: () => openPicker(ImageSource.camera),
           child: SizedBox.square(
             dimension: 64,
-            child: imageFile is File
+            child: imageFile is Uint8List
                 ? ClipRRect(
                     borderRadius: borderRadius4,
-                    child: Image.file(
+                    child: Image.memory(
                       imageFile!,
                       fit: BoxFit.cover,
                     ),

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
@@ -138,7 +138,7 @@ class _ClerkUserProfileState extends State<ClerkUserProfile>
     }
   }
 
-  Future<void> _update(String name, File? image) async {
+  Future<void> _update(String name, Uint8List? image) async {
     final authState = ClerkAuth.of(context, listen: false);
     await authState.safelyCall(context, () async {
       final user = authState.user!;

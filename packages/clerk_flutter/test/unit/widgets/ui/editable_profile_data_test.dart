@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter/src/widgets/ui/clerk_avatar.dart';
@@ -40,7 +40,7 @@ void main() {
     });
 
     test('stores onSubmit callback', () {
-      Future<void> onSubmit(String name, File? image) async {}
+      Future<void> onSubmit(String name, Uint8List? image) async {}
       final widget = EditableProfileData(
         name: 'Test',
         imageUrl: null,

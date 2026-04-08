@@ -85,11 +85,8 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
 
       if (authState.client.signIn?.factors case List<clerk.Factor> factors
           when mounted && factors.any((f) => f.strategy.isEnterpriseSSO)) {
-        await authState.ssoSignIn(
-          context,
-          clerk.Strategy.enterpriseSSO,
-          identifier: _identifier.orNullIfEmpty,
-        );
+        await authState.ssoSignIn(context, clerk.Strategy.enterpriseSSO,
+            identifier: _identifier.orNullIfEmpty);
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -199,8 +196,7 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
               when factors.isNotEmpty) //
             Openable(
               key: ValueKey<clerk.Stage>(stage),
-              open:
-                  signIn.hasVerification == false &&
+              open: signIn.hasVerification == false &&
                   _strategy != clerk.Strategy.emailLink &&
                   signIn.status.needsFactorFor(stage),
               child: _FactorList(

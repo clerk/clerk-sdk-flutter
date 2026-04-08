@@ -36,6 +36,9 @@ class Field {
   /// external accounts
   static const externalAccount = Field._('external_account');
 
+  /// legal / terms acceptance (Clerk dashboard "Legal" requirement)
+  static const legalAccepted = Field._('legal_accepted');
+
   static final _values = <String, Field>{
     phoneNumber.name: phoneNumber,
     emailAddress.name: emailAddress,
@@ -44,6 +47,7 @@ class Field {
     saml.name: saml,
     enterpriseSSO.name: enterpriseSSO,
     externalAccount.name: externalAccount,
+    legalAccepted.name: legalAccepted,
   };
 
   /// The [values] of the Fields

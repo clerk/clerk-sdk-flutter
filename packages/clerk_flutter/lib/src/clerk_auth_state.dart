@@ -289,7 +289,29 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
       await transfer();
     }
 
+    await _autoAcceptLegalAfterSsoIfNeeded();
     return true;
+  }
+
+  /// After OAuth, Clerk may leave [SignUp] with only legal consent missing.
+  /// Submit automatically so the user is not blocked on a second screen.
+  Future<void> _autoAcceptLegalAfterSsoIfNeeded() async {
+    final signUp = client.signUp;
+    if (signUp == null ||
+        !signUp.missing(clerk.Field.legalAccepted) ||
+        !env.user.signUp.legalConsentEnabled ||
+        isSignedIn) {
+      return;
+    }
+    try {
+      await attemptSignUp(
+        strategy: clerk.Strategy.saml,
+        legalAccepted: true,
+        redirectUrl: clerk.ClerkConstants.oauthRedirect,
+      );
+    } on clerk.AuthError catch (e) {
+      addError(e);
+    }
   }
 
   /// Convenience method to make an auth call to the backend via ClerkAuth

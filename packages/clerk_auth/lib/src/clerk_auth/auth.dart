@@ -655,7 +655,6 @@ class Auth {
             legalAccepted: legalAccepted,
           )
           .then(_housekeeping);
-      return client;
     }
 
     if (client.user is! User) {
@@ -786,6 +785,7 @@ class Auth {
                   emailAddress: emailAddress,
                   phoneNumber: phoneNumber,
                   legalAccepted: legalAccepted,
+                  redirectUrl: redirectUrl,
                 )
                 .then(_housekeeping);
           }

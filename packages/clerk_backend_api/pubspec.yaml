@@ -3,7 +3,7 @@
 #
 
 name: 'clerk_backend_api'
-version: '0.0.14-beta'
+version: 0.0.15-beta
 description: 'The Clerk REST Backend API. Version 2025-11-10.'
 homepage: 'https://clerk.com/docs'
 repository: https://github.com/clerk/clerk-sdk-flutter/tree/main/packages/clerk_backend_api

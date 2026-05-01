@@ -12,7 +12,9 @@ import 'package:clerk_auth/src/models/api/external_error.dart';
 import 'package:clerk_auth/src/models/models.dart';
 import 'package:clerk_auth/src/utils/extensions.dart';
 import 'package:clerk_auth/src/utils/logging.dart';
+import 'package:clerk_auth/src/utils/platform_check/platform_check.dart';
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 
 typedef _JsonObject = Map<String, dynamic>;
 
@@ -23,12 +25,14 @@ class Api with Logging {
   ///
   Api({
     required this.config,
+    @visibleForTesting bool? isWebOverride,
   })  : _tokenCache = TokenCache(
           persistor: config.persistor,
           publishableKey: config.publishableKey,
         ),
         _domain = _deriveDomainFrom(config.publishableKey),
-        _testMode = config.isTestMode;
+        _testMode = config.isTestMode,
+        _isWeb = isWebOverride ?? isWeb;
 
   /// The config used to initialize this api instance.
   final AuthConfig config;
@@ -38,6 +42,11 @@ class Api with Logging {
 
   bool _testMode;
   bool _multiSessionMode = true;
+
+  /// `true` when this [Api] instance should behave as if it is running in
+  /// a web browser. Defaults to [kIsWeb] in production; can be overridden
+  /// for unit tests via the `isWebOverride` constructor parameter.
+  final bool _isWeb;
 
   // fields in passed or returned json
   static const _kActiveOrganizationIdKey = 'active_organization_id';
@@ -51,6 +60,11 @@ class Api with Logging {
   static const _kClerkJsVersion = '_clerk_js_version';
   static const _kClerkSessionId = '_clerk_session_id';
   static const _kIsNative = '_is_native';
+  // FAPI's apiversioning middleware accepts the API version either as the
+  // `clerk-api-version` header or as the `__clerk_api_version` query param.
+  // We use the query param form on web so that the header does not appear
+  // in the CORS preflight request.
+  static const _kClerkApiVersionParam = '__clerk_api_version';
   static const _kResponseKey = 'response';
 
   // headers
@@ -1118,6 +1132,8 @@ class Api with Logging {
     return {
       _kIsNative: true,
       _kClerkJsVersion: ClerkConstants.jsVersion,
+      if (_isWeb) //
+        _kClerkApiVersionParam: ClerkConstants.clerkApiVersion,
       if (withSession && _multiSessionMode && sessionId.isNotEmpty) //
         _kClerkSessionId: sessionId,
       if (method.isGet) //
@@ -1141,16 +1157,39 @@ class Api with Logging {
     return {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.acceptLanguageHeader: config.localesLookup().join(', '),
-      HttpHeaders.contentTypeHeader: method.isGet
-          ? 'application/json'
-          : 'application/x-www-form-urlencoded',
+      // Content-Type by (platform, method):
+      //   web    + GET     → omitted (bodiless GET; sending it forces a
+      //                      CORS preflight).
+      //   any    + non-GET → application/x-www-form-urlencoded
+      //                      (CORS-safelisted).
+      //   native + GET     → application/json (preserved).
+      if (method.isNotGet) //
+        HttpHeaders.contentTypeHeader: 'application/x-www-form-urlencoded',
+      if (method.isGet && !_isWeb) //
+        HttpHeaders.contentTypeHeader: 'application/json',
+      // Known limitation: on web, the Authorization header below will
+      // itself trigger a CORS preflight rejection until FAPI's preflight
+      // response is updated to include `authorization` in
+      // Access-Control-Allow-Headers. We intentionally still send it —
+      // dropping it would silently break native-mode token auth on web
+      // for any request that has a token. This SDK fix unblocks the
+      // initial unauthenticated `/v1/client` GET and all simple form
+      // POSTs that do not yet carry a token; authenticated requests
+      // require the FAPI-side fix.
       if (_tokenCache.hasClientToken) //
         HttpHeaders.authorizationHeader: _tokenCache.clientToken,
-      _kClerkAPIVersion: ClerkConstants.clerkApiVersion,
-      _kXFlutterSDKVersion: ClerkConstants.flutterSdkVersion,
-      if (_testMode) //
+      // The custom headers below would each trigger a CORS preflight
+      // rejection on web because FAPI's preflight response does not
+      // currently include them in Access-Control-Allow-Headers. On web
+      // we move clerk-api-version into the __clerk_api_version query
+      // param (see _queryParams) and simply omit the rest.
+      if (_testMode && !_isWeb) //
         _kClerkClientId: _tokenCache.clientId,
-      _kXMobile: '1',
+      if (!_isWeb) ...{
+        _kClerkAPIVersion: ClerkConstants.clerkApiVersion,
+        _kXFlutterSDKVersion: ClerkConstants.flutterSdkVersion,
+        _kXMobile: '1',
+      },
       ...?headers,
     };
   }

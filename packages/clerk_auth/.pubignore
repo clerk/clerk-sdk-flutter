@@ -14,3 +14,4 @@ build.yaml
 
 # Test environment
 .env.test
+test/_responses

@@ -1,3 +1,20 @@
+## 0.0.15-beta
+
+* feat: add passkey support [#300] 
+* feat: add default session token template [#354]
+* feat: add metadata to sign up [#355]
+* fix: make client persist [#348]
+* feat: improve testing [#350]
+* fix: improve sign up panel [#356]
+* fix: regression introduced to pollforsessiontoken [#363
+* fix: add explicit resend code function [#365]
+* chore(clerk_auth): upgrade to api version 2025-11-10 [#371]
+* fix: consolidate oauth token sign in methods [#380]
+* fix: make sign in with apple work [#384]
+* fix: change healthcheck endpoint [#376]
+* fix(clerk_auth): unblock CORS preflight on Flutter Web [#395]
+* fix(clerk_flutter): example app working on android [#397]
+
 ## 0.0.14-beta
 
 * BREAKING CHANGE: The `ClerkDeepLink` class has been removed, since the information

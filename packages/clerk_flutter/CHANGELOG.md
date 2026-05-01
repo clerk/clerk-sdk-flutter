@@ -1,3 +1,14 @@
+## 0.0.15-beta
+
+* feat: add passkey support [#300] 
+* feat: improve testing [#350]
+* fix: improve sign up panel [#356]
+* fix: add explicit resend code function [#365]
+* fix: regression in oauth sign up [#306]
+* fix: make sign in with apple work [#384] 
+* fix(clerk_flutter): phone number input field not visible [#389]
+* feat: add signing in and up to clerk_auth_builder [#382]
+
 ## 0.0.14-beta
 
 * BREAKING CHANGE: The `ClerkDeepLink` class has been removed, since the information

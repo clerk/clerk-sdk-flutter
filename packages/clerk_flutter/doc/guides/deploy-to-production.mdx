@@ -1,0 +1,140 @@
+---
+title: Deploy your Flutter app to production
+description: Learn how to deploy your Flutter app to production.
+sdk: flutter
+---
+
+Before you begin:
+
+1. You will need to have a domain you own.
+1. You will need social sign-in (OAuth) credentials for any providers you want to use in production. Each [OAuth provider](/docs/guides/configure/auth-strategies/social-connections/overview) has a dedicated guide on how to set up OAuth credentials for Clerk production apps.
+1. You will need your app registered under [**Native Applications**](https://dashboard.clerk.com/~/native-applications) in the Clerk Dashboard.
+
+## Create your production instance
+
+1. Navigate to the [Clerk Dashboard](https://dashboard.clerk.com).
+1. At the top of the Dashboard, select the **Development** button to reveal the instance selection dropdown. Select **Create production instance**.
+1. You will be prompted with a modal to either clone your development instance settings to your production instance or create your production instance with Clerk's default settings.
+1. The homepage of the dashboard will show you what is still required to deploy your production instance.
+
+> [!WARNING]
+> For security reasons, [**SSO connections**](https://dashboard.clerk.com/~/user-authentication/sso-connections), [**Integrations**](https://dashboard.clerk.com/~/integrations), and [**Paths**](https://dashboard.clerk.com/~/paths) settings do not copy over. You will need to set these values again.
+
+## Update your publishable key
+
+A common mistake when deploying to production is **forgetting to change your publishable key to your production instance's key.** The best way to handle this is to use environment variables or build-time configuration so the correct key is set for each environment.
+
+Your publishable key is formatted as `pk_test_` in development and `pk_live_` in production. Pass it to `ClerkAuth` during initialization:
+
+```dart
+ClerkAuth(
+  config: ClerkAuthConfig(
+    publishableKey: const String.fromEnvironment('CLERK_PUBLISHABLE_KEY'),
+  ),
+  child: MaterialApp(...),
+)
+```
+
+Run your Flutter app with the production key:
+
+```sh
+flutter run --dart-define=CLERK_PUBLISHABLE_KEY=pk_live_...
+```
+
+Or use a configuration file:
+
+```sh
+flutter run --dart-define-from-file=config.production.json
+```
+
+> [!TIP]
+> The SDK automatically infers whether it is in test or production mode from the publishable key prefix, so no additional configuration is required.
+
+## OAuth credentials
+
+In development, Clerk provides shared OAuth credentials for most social providers.
+
+In production, these shared credentials are not secure and you must provide your own. Each [OAuth provider](/docs/guides/configure/auth-strategies/social-connections/overview) has a dedicated guide on how to set up OAuth credentials for Clerk production apps.
+
+## Deep link redirect URLs
+
+If your app uses deep links for OAuth or email link callbacks, you must register the redirect URLs for your production app in the Clerk Dashboard.
+
+1. Navigate to [**Redirect URLs**](https://dashboard.clerk.com/~/redirect-urls) in the Clerk Dashboard.
+1. Add your production deep link scheme, for example `myapp://clerk/oauth` and `myapp://clerk/email-link`.
+
+> [!NOTE]
+> Deep link URL schemes are registered per instance. Ensure the schemes configured in your production app's `Info.plist` (iOS) or `AndroidManifest.xml` (Android) match what you have registered in the Dashboard.
+
+## iOS setup
+
+### Confirm your iOS app is registered in production
+
+Ensure your iOS app exists in the production instance under [**Native Applications**](https://dashboard.clerk.com/~/native-applications). You will need your **App ID Prefix** (Team ID) and **Bundle ID**.
+
+### Update associated domains
+
+In Xcode, update the **Associated Domains** entitlement to use your production [Frontend API URL](!frontend-api-url).
+
+Under **Signing & Capabilities**, add or update the entry to:
+
+```
+webcredentials:<YOUR_PRODUCTION_FRONTEND_API_URL>
+```
+
+Replace `<YOUR_PRODUCTION_FRONTEND_API_URL>` with the value found on the [**Domains**](https://dashboard.clerk.com/~/domains) page in the Clerk Dashboard.
+
+## Android setup
+
+### Confirm your Android app is registered in production
+
+Ensure your Android app exists in the production instance under [**Native Applications**](https://dashboard.clerk.com/~/native-applications). You will need your **Package Name** and **SHA-256 certificate fingerprint** from your production keystore.
+
+To get the SHA-256 fingerprint from your production keystore, run:
+
+```sh
+keytool -keystore path-to-production-keystore -list -v
+```
+
+> [!IMPORTANT]
+> Your development and production keystores have different SHA-256 fingerprints. Make sure you register the fingerprint from your **production** keystore, not the debug keystore.
+
+## Deploy certificates
+
+The Clerk Dashboard home page shows what steps are still required to deploy your production instance. Once you have completed all necessary steps, a **Deploy certificates** button will appear. Selecting this button deploys your production instance.
+
+## Test on a physical device
+
+Build a release build using your production keys and verify the authentication flow on a physical device before releasing to users:
+
+```sh
+# iOS — build a release archive
+flutter build ipa --dart-define=CLERK_PUBLISHABLE_KEY=pk_live_...
+
+# Android — build a signed release APK
+flutter build apk --dart-define=CLERK_PUBLISHABLE_KEY=pk_live_...
+```
+
+## Troubleshooting
+
+### DNS records not propagating
+
+Clerk uses a DNS check to validate CNAME records. If the subdomain is reverse proxied behind a service that points to generic hostnames (such as Cloudflare), the DNS check will fail. Set the DNS record for the subdomain to a **DNS only** mode on your host to prevent proxying.
+
+### Deployment stuck in certificate issuance
+
+If your instance is stuck during TLS certificate issuance, this may be caused by [CAA DNS records](https://en.wikipedia.org/wiki/DNS_Certification_Authority_Authorization) on your primary domain. Clerk provisions certificates using either [LetsEncrypt](https://letsencrypt.org/) or [Google Trust Services](https://pki.goog/). Ensure your primary domain does not have CAA records that prevent either authority from issuing certificates.
+
+To check your CAA records, run:
+
+```sh
+dig example.com +short CAA
+```
+
+If the command returns an empty response, your domain is correctly configured. If it returns any text, remove the restrictive CAA records from your primary domain.
+
+### Associated domains not working on iOS
+
+- Ensure the `webcredentials` entry in Xcode uses your **production** Frontend API URL, not the development URL.
+- Allow up to 48 hours for DNS changes to propagate.
+- Verify the app bundle ID and Team ID registered in the Clerk Dashboard match your Xcode project.

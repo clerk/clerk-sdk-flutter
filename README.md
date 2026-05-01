@@ -8,16 +8,43 @@
   <br />
 </p>
 
-
-# Clerk Dart and Flutter SDKs
-
-The official [Clerk](https://clerk.com) Flutter/Dart client library.
+<div align="center">
 
 
-* [clerk_auth](./packages/clerk_auth): Dart SDK
-* [clerk_flutter](./packages/clerk_flutter): Flutter SDK
+[![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://clerk.com/discord)
+[![documentation](https://img.shields.io/badge/documentation-clerk-green.svg)](https://clerk.com/docs)
+[![twitter](https://img.shields.io/twitter/follow/Clerk?style=social)](https://twitter.com/intent/follow?screen_name=Clerk)
+[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
+
+</div>
+
+# Clerk Flutter and Dart SDKs
+
+**Clerk helps developers build user management. We provide streamlined user experiences for your users to sign up, sign in, and manage their profiles.**
+
+> ### ⚠️ Beta Notice
+> These SDKs are currently in Beta. Breaking changes should be expected until the first stable release (1.0.0). Please [file any issues you encounter](https://github.com/clerk/clerk-sdk-flutter/issues).
+
+<p align="center">
+  <img src="./assets/example-light.png" width="320">
+  <img src="./assets/example-dark.png" width="320">
+  <br />
+  <em>The clerk_flutter example app</em>
+</p>
+
+---
+
+## 📦 Packages
+
+| Package | Description | Pub |
+|---------|-------------|-----|
+| [clerk_auth](./packages/clerk_auth) | Dart SDK for Clerk authentication | [![pub package](https://img.shields.io/badge/pub-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_auth) |
+| [clerk_flutter](./packages/clerk_flutter) | Flutter UI components for Clerk authentication | [![pub package](https://img.shields.io/badge/pub-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_flutter) |
 
 
-### License
 
-These SDKs are licensed under the MIT license found in the [LICENSE](./LICENSE) file.
+## 📄 License
+
+This project is licensed under the MIT license.
+
+See [LICENSE](./LICENSE) for more information.

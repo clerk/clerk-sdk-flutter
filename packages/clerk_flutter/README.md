@@ -2,37 +2,50 @@
 <img src="https://images.clerk.com/static/logo-light-mode-400x400.png" height="90">
 </p>
 
-## Official [Clerk](https://clerk.com) Flutter SDK (Beta)
+## Official Clerk Flutter SDK (Beta)
 
-[![Pub Version](https://img.shields.io/pub/v/clerk_flutter?color=blueviolet)](https://pub.dev/packages/clerk_flutter)
+[![Pub Version](https://img.shields.io/badge/pub-v0.0.14--beta-blueviolet)](https://pub.dev/packages/clerk_flutter)
 [![Pub Points](https://img.shields.io/pub/points/clerk_flutter?label=pub%20points)](https://pub.dev/packages/clerk_flutter/score)
-[![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://discord.com/invite/b5rXHjAg7A)
+[![chat on Discord](https://img.shields.io/discord/856971667393609759.svg?logo=discord)](https://clerk.com/discord)
 [![documentation](https://img.shields.io/badge/documentation-clerk-green.svg)](https://clerk.com/docs)
-[![twitter](https://img.shields.io/twitter/follow/ClerkDev?style=social)](https://twitter.com/intent/follow?screen_name=ClerkDev)
+[![twitter](https://img.shields.io/twitter/follow/Clerk?style=social)](https://twitter.com/intent/follow?screen_name=Clerk)
 
 > ### ⚠️ The Clerk Flutter SDK is in Beta ⚠️
-> ❗️ Breaking changes should be expected until the first stable release (1.0.0) ❗️
+> ❗️ Breaking changes should be expected until the first stable release (1.0.0). Please [file any issues you encounter](https://github.com/clerk/clerk-sdk-flutter/issues). ❗️
 
 **Clerk helps developers build user management. We provide streamlined user experiences
 for your users to sign up, sign in, and manage their profile from your Flutter code.**
 
+<p align="center">
+  <img src="./assets/example-light.png" width="320">
+  <img src="./assets/example-dark.png" width="320">
+  <br />
+  <em>The clerk_flutter example app</em>
+</p>
+
+---
+
 ## Requirements
 
-* Flutter >= 3.27.4
-* Dart >= 3.6.2
+| Flutter | Dart |
+|---------|------|
+| 3.27.4+ | 3.6.2+ |
 
-## In Development
+## 🚀 Getting Started
 
-* Organization support
+1. [Sign up for an account](https://dashboard.clerk.com/sign-up?utm_source=github&utm_medium=clerk_flutter_repo_readme)
+2. Create an application in your Clerk dashboard
+3. Copy the publishable key from the dashboard
+4. Add `clerk_flutter` and `clerk_auth` to your `pubspec.yaml` 
 
-## Example Usage
+```yaml
+dependencies:
+  clerk_auth: ^0.0.14-beta
+  clerk_flutter: ^0.0.14-beta
+```
 
-To use this package you will need to go to your [Clerk Dashboard](https://dashboard.clerk.com/)
-create an application and copy the public and publishable API keys into your project.
+5. You can now make use of Clerk Flutter widgets adding authentication to your application
 
-The bundled example app requires one, possibly two, variables to be set up in your environment:
-- `publishable_key`: your Clerk publishable key, usually starting `pk_`
-- `google_client_id`: the ID of your GCP web project, if you are using Google token oauth
 
 ```dart
 /// Example App
@@ -52,15 +65,13 @@ class ExampleApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           body: SafeArea(
-            child: ClerkErrorListener(
-              child: ClerkAuthBuilder(
-                signedInBuilder: (context, authState) {
-                  return const ClerkUserButton();
-                },
-                signedOutBuilder: (context, authState) {
-                  return const ClerkAuthentication();
-                },
-              ),
+            child: ClerkAuthBuilder(
+              signedInBuilder: (context, authState) {
+                return const ClerkUserButton();
+              },
+              signedOutBuilder: (context, authState) {
+                return const ClerkAuthentication();
+              },
             ),
           ),
         ),
@@ -70,14 +81,8 @@ class ExampleApp extends StatelessWidget {
 }
 ```
 
-## Installation (Android)
-
-Add the following line to your `android/app/src/main/AndroidManifest.xml` file:
-
-```xml
-<uses-permission android:name="android.permission.INTERNET" />
-```
-
 ## License
 
-This SDK is licensed under the MIT license found in the [LICENSE](./LICENSE) file.
+This project is licensed under the MIT license.
+
+See [LICENSE](./LICENSE) for more information.

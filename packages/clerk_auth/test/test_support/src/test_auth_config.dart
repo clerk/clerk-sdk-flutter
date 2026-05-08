@@ -2,7 +2,7 @@ import 'package:clerk_auth/clerk_auth.dart';
 import 'package:http/http.dart' show ByteStream, Response;
 
 class TestAuthConfig extends AuthConfig {
-  // A valid publishable key whose base64 payload decodes to 'somedomain.com\n'.
+  /// FAKE KEY - A valid publishable key whose base64 payload decodes to 'somedomain.com\n'.
   static const kPublishableKey = 'pk_test_c29tZWRvbWFpbi5jb20K';
 
   const TestAuthConfig({

@@ -205,6 +205,7 @@ class MockHttpCall {
       this.headers,
       this.params,
       this.body});
+
   final HttpMethod method;
   final Uri uri;
   final Map<String, String>? headers;
@@ -215,6 +216,7 @@ class MockHttpCall {
 class MockHttpResponse {
   MockHttpResponse(
       {required this.body, this.statusCode = 200, this.headers = const {}});
+
   final String body;
   final int statusCode;
   final Map<String, String> headers;
@@ -516,7 +518,11 @@ extension MockHttpServiceExtensions on MockHttpService {
     String sessionId = 'sess_123',
     String userId = 'user_123',
   }) {
-    final sessionJson = _createSessionJson(sessionId: sessionId, userId: userId);
+    final sessionJson = _createSessionJson(
+      sessionId: sessionId,
+      userId: userId,
+    );
+
     final clientJson = {
       'object': 'client',
       'id': clientId,
@@ -527,6 +533,7 @@ extension MockHttpServiceExtensions on MockHttpService {
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     };
+
     addResponse(MockHttpResponse(
       body: jsonEncode({'response': clientJson}),
       statusCode: 200,

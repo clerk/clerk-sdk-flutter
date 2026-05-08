@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:clerk_auth/clerk_auth.dart';
 import 'package:http/http.dart' show ByteStream, Response;
@@ -6,6 +7,10 @@ import 'package:http/http.dart' show ByteStream, Response;
 /// A mock HTTP service that returns pre-configured responses for testing
 class MockHttpService implements HttpService {
   MockHttpService();
+
+  /// When true, [send] throws a [SocketException] and [ping] returns false,
+  /// simulating a device with no network connectivity.
+  bool isOffline = false;
 
   final List<MockHttpCall> calls = [];
   final List<MockHttpResponse> responses = [];
@@ -135,6 +140,7 @@ class MockHttpService implements HttpService {
   }
 
   void reset() {
+    isOffline = false;
     calls.clear();
     responses.clear();
     _responseIndex = 0;
@@ -147,7 +153,8 @@ class MockHttpService implements HttpService {
   void terminate() {}
 
   @override
-  Future<bool> ping(Uri uri, {required Duration timeout}) => Future.value(true);
+  Future<bool> ping(Uri uri, {required Duration timeout}) =>
+      Future.value(!isOffline);
 
   @override
   Future<Response> send(
@@ -157,6 +164,7 @@ class MockHttpService implements HttpService {
     Map<String, dynamic>? params,
     String? body,
   }) async {
+    if (isOffline) throw SocketException('No network');
     calls.add(MockHttpCall(
         method: method,
         uri: uri,
@@ -197,6 +205,7 @@ class MockHttpCall {
       this.headers,
       this.params,
       this.body});
+
   final HttpMethod method;
   final Uri uri;
   final Map<String, String>? headers;
@@ -207,6 +216,7 @@ class MockHttpCall {
 class MockHttpResponse {
   MockHttpResponse(
       {required this.body, this.statusCode = 200, this.headers = const {}});
+
   final String body;
   final int statusCode;
   final Map<String, String> headers;
@@ -496,4 +506,38 @@ extension MockHttpServiceExtensions on MockHttpService {
         'last_active_at': DateTime.now().millisecondsSinceEpoch,
         'delete_self_enabled': true,
       };
+
+  /// Add a client-with-session response that includes an Authorization response
+  /// header carrying [clientToken]. This mirrors what the real Clerk API returns
+  /// after a successful authentication: the token cache reads the client token
+  /// from the Authorization header via [TokenCache.updateFrom], so subsequent
+  /// requests from this [Auth] instance will be sent with credentials.
+  void addAuthenticatedClientWithSessionResponse({
+    String clientToken = 'test_client_token',
+    String clientId = 'client_123',
+    String sessionId = 'sess_123',
+    String userId = 'user_123',
+  }) {
+    final sessionJson = _createSessionJson(
+      sessionId: sessionId,
+      userId: userId,
+    );
+
+    final clientJson = {
+      'object': 'client',
+      'id': clientId,
+      'sessions': [sessionJson],
+      'last_active_session_id': sessionId,
+      'sign_in': null,
+      'sign_up': null,
+      'created_at': DateTime.now().millisecondsSinceEpoch,
+      'updated_at': DateTime.now().millisecondsSinceEpoch,
+    };
+
+    addResponse(MockHttpResponse(
+      body: jsonEncode({'response': clientJson}),
+      statusCode: 200,
+      headers: {HttpHeaders.authorizationHeader: clientToken},
+    ));
+  }
 }

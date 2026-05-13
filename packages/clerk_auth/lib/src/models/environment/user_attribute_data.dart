@@ -51,6 +51,10 @@ class UserAttributeData with InformativeToStringMixin {
   @JsonKey(name: 'required', fromJson: isTrue)
   final bool isRequired;
 
+  /// is immutable
+  @JsonKey(name: 'immutable', fromJson: isTrue)
+  final bool isImmutable;
+
   /// empty [UserAttributeData] object
   static const empty = UserAttributeData();
 

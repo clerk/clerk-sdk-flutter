@@ -9,7 +9,7 @@ part of 'passkey_user.dart';
 PasskeyUser _$PasskeyUserFromJson(Map<String, dynamic> json) => PasskeyUser(
       id: json['id'] as String,
       name: json['name'] as String,
-      displayName: json['displayName'] as String,
+      displayName: json['display_name'] as String,
     );
 
 Map<String, dynamic> _$PasskeyUserToJson(PasskeyUser instance) =>

@@ -20,6 +20,7 @@ class UserAttributeData with InformativeToStringMixin {
     this.secondFactors = const [],
     this.verifyAtSignUp = false,
     this.verifications = const [],
+    this.isImmutable = false,
   });
 
   /// first factors
@@ -50,6 +51,10 @@ class UserAttributeData with InformativeToStringMixin {
   /// is required?
   @JsonKey(name: 'required', fromJson: isTrue)
   final bool isRequired;
+
+  /// is immutable
+  @JsonKey(name: 'immutable', fromJson: isTrue)
+  final bool isImmutable;
 
   /// empty [UserAttributeData] object
   static const empty = UserAttributeData();

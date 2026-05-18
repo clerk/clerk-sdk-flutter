@@ -1,0 +1,43 @@
+name: Auto assign PRs
+
+on:
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign PR and request reviewers
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // Always assign the PR to MarkOSullivan94
+            await github.rest.issues.addAssignees({
+              owner,
+              repo,
+              issue_number: pr.number,
+              assignees: ['MarkOSullivan94']
+            });
+
+            // Always request slightfoot as a reviewer
+            const reviewers = ['slightfoot'];
+
+            // If PR author isn't MarkOSullivan94, also request MarkOSullivan94
+            if (pr.user.login !== 'MarkOSullivan94') {
+              reviewers.push('MarkOSullivan94');
+            }
+
+            await github.rest.pulls.requestReviewers({
+              owner,
+              repo,
+              pull_number: pr.number,
+              reviewers
+            });

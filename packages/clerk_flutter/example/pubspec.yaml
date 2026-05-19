@@ -34,7 +34,7 @@ patrol:
   android:
     package_name: com.example.example
   ios:
-    bundle_id: com.example.example
+    bundle_id: com.clerk.example
 
 flutter:
   uses-material-design: true

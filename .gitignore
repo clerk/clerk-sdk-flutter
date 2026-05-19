@@ -38,3 +38,4 @@ packages/clerk_flutter/example/example.env
 
 # Coverage output
 coverage/
+packages/clerk_flutter/example/patrol_test/test_bundle.dart

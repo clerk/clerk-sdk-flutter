@@ -40,7 +40,15 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    testOptions {
+        execution "ANDROIDX_TEST_ORCHESTRATOR"
+    }
+
     defaultConfig {
+
+        testInstrumentationRunner "pl.leancode.patrol.PatrolJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: "true"
+
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.example"
         // You can update the following values to match your application needs.
@@ -57,6 +65,10 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
     }
 }
 
@@ -65,4 +77,5 @@ flutter {
 }
 
 dependencies {
+    androidTestUtil "androidx.test:orchestrator:1.5.1"
 }

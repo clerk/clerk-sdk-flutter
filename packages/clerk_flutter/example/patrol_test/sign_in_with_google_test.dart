@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/src/widgets/ui/social_connection_button.dart';
 import 'package:clerk_flutter_example/main.dart' as app;
@@ -51,16 +53,27 @@ void main() {
       );
       await $.pumpAndSettle();
 
+      // On iOS, OAuth opens in Safari (external app); on Android it opens in Chrome.
+      // UiAutomator2 searches the full screen, but XCTest defaults to the app under
+      // test — so we must specify Safari's bundle ID explicitly on iOS.
+      final browserAppId =
+          Platform.isIOS ? 'com.apple.mobilesafari' : null;
+
       $.log('${DateTime.now().toIso8601String()} :: Choose an account');
-      // Chrome opens Google's "Choose an account" page — tap the test email
-      await $.platform.tap(Selector(text: googleEmail));
+      // Browser opens Google's "Choose an account" page — tap the test email
+      await $.platform.tap(Selector(text: googleEmail), appId: browserAppId);
 
       await Future.delayed(const Duration(milliseconds: 600));
 
       $.log('${DateTime.now().toIso8601String()} :: Tap continue');
 
       // Tap "Continue" on the Google consent screen
-      await $.platform.tap(Selector(text: 'Continue'));
+      await $.platform.tap(Selector(text: 'Continue'), appId: browserAppId);
+
+      if (Platform.isIOS) {
+        $.log('${DateTime.now().toIso8601String()} :: is iOS so tap Open button');
+        await $.platform.tap(Selector(text: 'Open'), appId: browserAppId);
+      }
 
       $.log(
           '${DateTime.now().toIso8601String()} :: Should return to app and be signed in');

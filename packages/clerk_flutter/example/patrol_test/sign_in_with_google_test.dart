@@ -4,18 +4,36 @@ import 'package:clerk_flutter_example/main.dart' as app;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
 
+// Integration test: Sign In with Google (OAuth)
+//
+// Verifies the full Google OAuth sign-in flow using Patrol's native automation:
+//   1. Launches the example app and navigates to the Clerk sign-in screen.
+//   2. Taps the Google OAuth button (identified by its connection strategy).
+//   3. On Chrome's "Choose an account" page, selects the test Google account
+//      supplied via --dart-define=GOOGLE_EMAIL=<email>.
+//   4. Taps "Continue" on the Google consent screen to grant access.
+//   5. Waits for the app to return to the foreground via deep link and confirms
+//      the signed-in UI (Profile, Sign out, Organizations) is visible.
+//
+// Run with:
+//   patrol test --target patrol_test/sign_in_with_google_test.dart \
+//     --dart-define=publishable_key=<key> \
+//     --dart-define=GOOGLE_EMAIL=<email> \
+//     --no-clear-test-steps
 void main() {
   const googleEmail = String.fromEnvironment('GOOGLE_EMAIL');
 
-  // patrol test --target patrol_test/sign_in_with_google_test.dart --dart-define=publishable_key=<key> --dart-define=GOOGLE_EMAIL=<email> --no-clear-test-steps
   patrolTest(
     'Sign in with Google',
     platformAutomatorConfig: PlatformAutomatorConfig.fromOptions(
       findTimeout: const Duration(seconds: 30),
     ),
     ($) async {
+
       assert(
-          googleEmail.isNotEmpty, 'Provide --dart-define=GOOGLE_EMAIL=<email>');
+        googleEmail.isNotEmpty,
+        'Provide --dart-define=GOOGLE_EMAIL=<email>',
+      );
 
       app.main();
       await $.pumpAndSettle();
@@ -44,7 +62,8 @@ void main() {
       // Tap "Continue" on the Google consent screen
       await $.platform.tap(Selector(text: 'Continue'));
 
-      $.log('${DateTime.now().toIso8601String()} :: Should return to app and be signed in');
+      $.log(
+          '${DateTime.now().toIso8601String()} :: Should return to app and be signed in');
 
       // App returns to foreground via deep link; pumpAndSettle settles immediately
       // because Flutter has no pending frames until the deep link is processed.
@@ -52,7 +71,8 @@ void main() {
 
       await $('Profile').waitUntilVisible(timeout: const Duration(seconds: 30));
 
-      $.log('${DateTime.now().toIso8601String()} :: Waiting for signed-in UI to settle');
+      $.log(
+          '${DateTime.now().toIso8601String()} :: Waiting for signed-in UI to settle');
 
       expect($('Profile'), findsOneWidget);
       expect($('Sign out'), findsOneWidget);

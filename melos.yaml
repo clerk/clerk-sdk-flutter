@@ -119,10 +119,25 @@ scripts:
     packageFilters:
       scope: "clerk_flutter"
 
+  # Coverage for integration tests (requires a running emulator or device)
+  coverage:clerk_flutter_example:
+    name: Coverage integration tests
+    description: Run integration tests with coverage for clerk_flutter_example (requires a running emulator or device)
+    run: melos exec -- flutter test integration_test --coverage --coverage-package clerk_flutter
+    packageFilters:
+      scope: "clerk_flutter_example"
+
   # Generate HTML coverage reports for each package (requires genhtml/lcov)
   coverage:html:
     name: Generate HTML coverage reports
     description: Generate HTML coverage report for each package from its lcov.info
     run: melos exec -- genhtml coverage/lcov.info -o coverage/html
     packageFilters:
+      dirExists: coverage
+
+  coverage:html:clerk_flutter_example:
+    name: Generate HTML coverage report for clerk_flutter
+    run: melos exec -- genhtml coverage/lcov.info -o coverage/html
+    packageFilters:
+      scope: "clerk_flutter_example"
       dirExists: coverage

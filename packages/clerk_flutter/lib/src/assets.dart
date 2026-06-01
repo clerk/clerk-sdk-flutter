@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 ///
 @immutable
 class ClerkAssets {
-  const ClerkAssets._();
+  const ClerkAssets._(); // coverage:ignore-line
 
   static const String _kAssetsPath = 'assets';
 

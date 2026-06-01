@@ -42,6 +42,11 @@ class ExampleApp extends StatelessWidget {
   /// Publishable Key
   final String publishableKey;
 
+  // When true the app skips the redirectionGenerator so OAuth is handled by
+  // the in-app WebView (_SsoWebViewOverlay) instead of an external browser.
+  // Set via --dart-define=use_webview_sso=true when running Patrol tests.
+  static const _useWebviewSso = bool.fromEnvironment('use_webview_sso');
+
   static const _redirectionScheme = 'clerk';
   static const _redirectionHost = 'example.com';
   static const _oauthRedirectionPath = '/oauth';
@@ -111,7 +116,7 @@ class ExampleApp extends StatelessWidget {
     return ClerkAuth(
       config: ClerkAuthConfig(
         publishableKey: publishableKey,
-        redirectionGenerator: generateDeepLink,
+        redirectionGenerator: _useWebviewSso ? null : generateDeepLink,
         deepLinkStream: AppLinks().allUriLinkStream.asyncMap(handleDeepLink),
         // Uncomment the following line if running on an iOS simulator, or any
         // device which doesn't support hardware security keys.

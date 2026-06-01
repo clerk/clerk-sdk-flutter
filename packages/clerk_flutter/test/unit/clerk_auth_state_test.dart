@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' show Response;
 
 import '../test_support/test_support.dart';
 
@@ -315,5 +318,242 @@ void main() {
         authState.terminate();
       });
     });
+
+    group('ssoConnect', () {
+      testWidgets(
+        'completes without dialog when user has no unverified external accounts',
+        (tester) async {
+          final authState = await createSignedInAuthState();
+
+          await tester.pumpWidget(
+            TestClerkAuthWrapper(
+              authState: authState,
+              child: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      await authState.ssoConnect(
+                        context,
+                        clerk.Strategy.oauthGoogle,
+                      );
+                    },
+                    child: const Text('Connect'),
+                  );
+                },
+              ),
+            ),
+          );
+
+          await tester.tap(find.text('Connect'));
+          await tester.pump();
+
+          expect(find.byType(Dialog), findsNothing);
+          authState.terminate();
+        },
+      );
+
+      testWidgets('calls onError when connection fails', (tester) async {
+        final config = TestClerkAuthConfig(
+          httpService: _SsoErrorHttpService(
+            failPaths: ['/me/external_accounts'],
+          ),
+        );
+        final authState = await ClerkAuthState.create(config: config);
+        clerk.ClerkError? capturedError;
+
+        await tester.pumpWidget(
+          TestClerkAuthWrapper(
+            authState: authState,
+            child: Builder(
+              builder: (context) {
+                return ElevatedButton(
+                  onPressed: () async {
+                    await authState.ssoConnect(
+                      context,
+                      clerk.Strategy.oauthGoogle,
+                      onError: (error) => capturedError = error,
+                    );
+                  },
+                  child: const Text('Connect'),
+                );
+              },
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Connect'));
+        await tester.pump();
+
+        expect(capturedError, isNotNull);
+        authState.terminate();
+      });
+    });
+
+    group('ssoSignIn', () {
+      testWidgets(
+        'completes without dialog when signIn has no redirect URL',
+        (tester) async {
+          final authState = await createSignedOutAuthState();
+
+          await tester.pumpWidget(
+            TestClerkAuthWrapper(
+              authState: authState,
+              child: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      await authState.ssoSignIn(
+                        context,
+                        clerk.Strategy.oauthGoogle,
+                      );
+                    },
+                    child: const Text('Sign In'),
+                  );
+                },
+              ),
+            ),
+          );
+
+          await tester.tap(find.text('Sign In'));
+          await tester.pump();
+
+          expect(find.byType(Dialog), findsNothing);
+          authState.terminate();
+        },
+      );
+
+      testWidgets('calls onError when sign-in fails', (tester) async {
+        final config = TestClerkAuthConfig(
+          httpService: _SsoErrorHttpService(failPaths: ['/sign_ins']),
+        );
+        final authState = await ClerkAuthState.create(config: config);
+        clerk.ClerkError? capturedError;
+
+        await tester.pumpWidget(
+          TestClerkAuthWrapper(
+            authState: authState,
+            child: Builder(
+              builder: (context) {
+                return ElevatedButton(
+                  onPressed: () async {
+                    await authState.ssoSignIn(
+                      context,
+                      clerk.Strategy.oauthGoogle,
+                      onError: (error) => capturedError = error,
+                    );
+                  },
+                  child: const Text('Sign In'),
+                );
+              },
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Sign In'));
+        await tester.pump();
+
+        expect(capturedError, isNotNull);
+        authState.terminate();
+      });
+    });
+
+    group('ssoSignUp', () {
+      testWidgets(
+        'completes without dialog when signUp has no verification redirect URL',
+        (tester) async {
+          final authState = await createSignedOutAuthState();
+
+          await tester.pumpWidget(
+            TestClerkAuthWrapper(
+              authState: authState,
+              child: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      await authState.ssoSignUp(
+                        context,
+                        clerk.Strategy.oauthGoogle,
+                      );
+                    },
+                    child: const Text('Sign Up'),
+                  );
+                },
+              ),
+            ),
+          );
+
+          await tester.tap(find.text('Sign Up'));
+          await tester.pump();
+
+          expect(find.byType(Dialog), findsNothing);
+          authState.terminate();
+        },
+      );
+
+      testWidgets('calls onError when sign-up fails', (tester) async {
+        final config = TestClerkAuthConfig(
+          httpService: _SsoErrorHttpService(failPaths: ['/sign_ups']),
+        );
+        final authState = await ClerkAuthState.create(config: config);
+        clerk.ClerkError? capturedError;
+
+        await tester.pumpWidget(
+          TestClerkAuthWrapper(
+            authState: authState,
+            child: Builder(
+              builder: (context) {
+                return ElevatedButton(
+                  onPressed: () async {
+                    await authState.ssoSignUp(
+                      context,
+                      clerk.Strategy.oauthGoogle,
+                      onError: (error) => capturedError = error,
+                    );
+                  },
+                  child: const Text('Sign Up'),
+                );
+              },
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Sign Up'));
+        await tester.pump();
+
+        expect(capturedError, isNotNull);
+        authState.terminate();
+      });
+    });
   });
+}
+
+class _SsoErrorHttpService extends TestHttpService {
+  _SsoErrorHttpService({
+    required this.failPaths,
+    super.client,
+    super.environment,
+  });
+
+  final List<String> failPaths;
+
+  @override
+  Future<Response> send(
+    clerk.HttpMethod method,
+    Uri uri, {
+    Map<String, String>? headers,
+    Map<String, dynamic>? params,
+    String? body,
+  }) {
+    if (failPaths.any((p) => uri.path.contains(p))) {
+      return Future.value(Response(
+        jsonEncode({
+          'errors': [
+            {'message': 'OAuth failed', 'code': 'form_code_incorrect'},
+          ],
+        }),
+        422,
+      ));
+    }
+    return super.send(method, uri, headers: headers, params: params, body: body);
+  }
 }

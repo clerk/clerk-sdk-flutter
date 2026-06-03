@@ -12,8 +12,15 @@ import 'package:clerk_flutter_example/pages/examples_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-Future<void> main() async {
-  await clerk.setUpLogging(printer: const LogPrinter());
+// isUseWebView is used for integration testing purposes
+//
+// When isUseWebView is true the app skips the redirectionGenerator so OAuth is handled by
+// the in-app WebView (_SsoWebViewOverlay) instead of an external browser
+Future<void> main({bool useWebView = false}) async {
+  await clerk.setUpLogging(
+    level: clerk.Level.WARNING,
+    printer: const LogPrinter(),
+  );
 
   const publishableKey = String.fromEnvironment('publishable_key');
   if (publishableKey.isEmpty) {
@@ -27,8 +34,9 @@ Future<void> main() async {
   }
 
   runApp(
-    const ExampleApp(
+    ExampleApp(
       publishableKey: publishableKey,
+      isUseWebView: useWebView,
     ),
   );
 }
@@ -36,15 +44,16 @@ Future<void> main() async {
 /// Example App
 class ExampleApp extends StatelessWidget {
   /// Constructs an instance of Example App
-  const ExampleApp({super.key, required this.publishableKey});
+  const ExampleApp({
+    super.key,
+    required this.publishableKey,
+    bool isUseWebView = false,
+  }) : _useWebviewSso = isUseWebView;
 
   /// Publishable Key
   final String publishableKey;
 
-  // When true the app skips the redirectionGenerator so OAuth is handled by
-  // the in-app WebView (_SsoWebViewOverlay) instead of an external browser.
-  // Set via --dart-define=use_webview_sso=true when running Patrol tests.
-  static const _useWebviewSso = bool.fromEnvironment('use_webview_sso');
+  final bool _useWebviewSso;
 
   static const _redirectionScheme = 'clerk';
   static const _redirectionHost = 'example.com';

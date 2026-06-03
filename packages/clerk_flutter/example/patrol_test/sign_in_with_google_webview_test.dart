@@ -52,7 +52,7 @@ void main() {
         'Provide --dart-define=GOOGLE_PASSWORD=<password>',
       );
 
-      app.main();
+      app.main(useWebView: true);
       await $.pumpAndSettle();
 
       await $('Clerk UI Sign In').tap();
@@ -145,6 +145,8 @@ void main() {
       expect($('Organizations'), findsOneWidget);
 
       $.log('$date' ':: Signed in successfully');
+
+
     },
   );
 }

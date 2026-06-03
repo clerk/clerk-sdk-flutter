@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
@@ -389,6 +390,146 @@ void main() {
       });
     });
 
+    group('refreshClient race condition', () {
+      test('stale refreshClient() response overwrites signed-in client', () async {
+        final now = DateTime.now();
+        final signedInClient = createSignedInClient();
+        final staleClient = clerk.Client(
+          id: 'client_stale',
+          sessions: const [],
+          updatedAt: now.subtract(const Duration(seconds: 10)),
+          createdAt: now.subtract(const Duration(hours: 1)),
+        );
+
+        final authState = await ClerkAuthState.create(
+          config: TestClerkAuthConfig(
+            httpService: _StaleRefreshHttpService(
+              initialClient: signedInClient,
+              staleClient: staleClient,
+            ),
+          ),
+        );
+
+        expect(authState.user, isNotNull,
+            reason: 'should be signed in initially');
+
+        await authState.refreshClient();
+
+        expect(
+          authState.user,
+          isNotNull,
+          reason: 'stale refreshClient() must not revert the signed-in client',
+        );
+
+        authState.terminate();
+      });
+
+      // Demonstrates the Guard 2 equal-timestamp loophole:
+      // A stale client whose updatedAt exactly matches the current client's
+      // updatedAt passes the `<` check and overwrites the signed-in state.
+      test(
+        'stale client with equal timestamp bypasses Guard 2 and overwrites signed-in state',
+        () async {
+          final signedInClient = createSignedInClient();
+          final staleClient = clerk.Client(
+            id: 'client_stale',
+            sessions: const [],
+            updatedAt: signedInClient.updatedAt, // same timestamp — `<` does not block
+            createdAt: signedInClient.createdAt,
+          );
+
+          final authState = await ClerkAuthState.create(
+            config: TestClerkAuthConfig(
+              httpService: _StaleRefreshHttpService(
+                initialClient: signedInClient,
+                staleClient: staleClient,
+              ),
+            ),
+          );
+
+          expect(authState.user, isNotNull, reason: 'should start signed in');
+
+          await authState.refreshClient();
+
+          expect(
+            authState.user,
+            isNotNull,
+            reason:
+                'equal-timestamp stale refreshClient() must not overwrite the signed-in state',
+          );
+
+          authState.terminate();
+        },
+      );
+
+      // Demonstrates the missing Guard 1:
+      // refreshClient() runs even while safelyCall holds the lock. When the
+      // stale client (equal timestamp) passes Guard 2's `<` check, it replaces
+      // the signed-in client. When the lock then releases, update() fires with
+      // the stale (signed-out) client.
+      testWidgets(
+        'refreshClient during safelyCall corrupts state when lock releases without Guard 1',
+        (tester) async {
+          final signedInClient = createSignedInClient();
+          final staleClient = clerk.Client(
+            id: 'client_stale',
+            sessions: const [],
+            updatedAt: signedInClient.updatedAt, // same timestamp
+            createdAt: signedInClient.createdAt,
+          );
+
+          final authState = await ClerkAuthState.create(
+            config: TestClerkAuthConfig(
+              httpService: _StaleRefreshHttpService(
+                initialClient: signedInClient,
+                staleClient: staleClient,
+              ),
+            ),
+          );
+
+          expect(authState.user, isNotNull, reason: 'should start signed in');
+
+          final safelyCallCompleter = Completer<void>();
+          var lockStarted = false;
+
+          await tester.pumpWidget(
+            TestClerkAuthWrapper(
+              authState: authState,
+              child: Builder(builder: (context) {
+                if (!lockStarted) {
+                  lockStarted = true;
+                  // Start safelyCall — acquires the lock and suspends at the
+                  // completer, keeping the lock held for the rest of the test.
+                  authState.safelyCall(context, () => safelyCallCompleter.future);
+                }
+                return const SizedBox();
+              }),
+            ),
+          );
+
+          // Lock is now held. Without Guard 1, refreshClient() runs anyway,
+          // applies the equal-timestamp stale client (Guard 2 `<` doesn't block
+          // equal timestamps), and suppresses update() via the lock.
+          await authState.refreshClient();
+
+          // Releasing the lock causes safelyCall's finally block to call
+          // update() — which fires notifyListeners() with whatever client is
+          // current. Without the fix that client is the stale one (no user).
+          safelyCallCompleter.complete();
+          await tester.pump();
+
+          expect(
+            authState.user,
+            isNotNull,
+            reason:
+                'refreshClient during a locked safelyCall must not corrupt the signed-in state',
+          );
+
+          authState.terminate();
+        },
+      );
+    });
+
     group('ssoSignIn', () {
       testWidgets(
         'completes without dialog when signIn has no redirect URL',
@@ -525,6 +666,37 @@ void main() {
       });
     });
   });
+}
+
+class _StaleRefreshHttpService extends TestHttpService {
+  _StaleRefreshHttpService({
+    required clerk.Client initialClient,
+    required this.staleClient,
+  }) : super(client: initialClient);
+
+  final clerk.Client staleClient;
+  bool _initialized = false;
+
+  @override
+  Future<Response> send(
+    clerk.HttpMethod method,
+    Uri uri, {
+    Map<String, String>? headers,
+    Map<String, dynamic>? params,
+    String? body,
+  }) {
+    if (uri.path.contains('/client')) {
+      if (_initialized) {
+        final clientJson = staleClient.toJson();
+        return Future.value(Response(
+          jsonEncode({'response': clientJson, 'client': clientJson}),
+          200,
+        ));
+      }
+      _initialized = true;
+    }
+    return super.send(method, uri, headers: headers, params: params, body: body);
+  }
 }
 
 class _SsoErrorHttpService extends TestHttpService {

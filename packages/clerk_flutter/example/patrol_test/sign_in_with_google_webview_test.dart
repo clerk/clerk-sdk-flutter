@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:clerk_auth/clerk_auth.dart' as clerk;
-import 'package:clerk_flutter/src/widgets/ui/social_connection_button.dart';
-import 'package:clerk_flutter_example/main.dart' as app;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
+
+import 'sign_in_with_google_common.dart';
 
 // Integration test: Sign In with Google (OAuth) via in-app WebView
 //
@@ -52,21 +51,7 @@ void main() {
         'Provide --dart-define=GOOGLE_PASSWORD=<password>',
       );
 
-      app.main(useWebView: true);
-      await $.pumpAndSettle();
-
-      await $('Clerk UI Sign In').tap();
-      await $.pumpAndSettle();
-
-      // Tap the Google OAuth button identified by its connection strategy.
-      await $.tester.tap(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is SocialConnectionButton &&
-              widget.connection.strategy == clerk.Strategy.oauthGoogle,
-        ),
-      );
-      await $.pumpAndSettle();
+      await launchAndTapGoogleSignIn($, useWebView: true);
 
       // _SsoWebViewOverlay is now open — the Google sign-in page is loading
       // inside the in-app WebView. No appId is needed because the WebView is
@@ -74,11 +59,9 @@ void main() {
       //
       // Google may show an account picker (text matches googleEmail) or a
       // standard email/password form. We handle both paths here.
-      $.log('$date :: Waiting for Google sign-in page');
-
+      final accountSelector = Selector(text: googleEmail);
       final emailFieldSelector = Selector(text: 'Email or phone');
       final signInGoogleAccounts = Selector(text: 'Sign in - Google Accounts');
-      final accountSelector = Selector(text: googleEmail);
 
       await Future.delayed(const Duration(milliseconds: 600));
 
@@ -97,16 +80,14 @@ void main() {
             .then((_) => FirstVisibleView.timeout),
       ]);
 
-      $.log('Visible: $visible');
+      $.log('Visible => $visible');
 
       if (visible == FirstVisibleView.account) {
-        $.log('$date :: Account picker visible — tapping account');
         await $.platform.tap(accountSelector);
         await Future.delayed(const Duration(milliseconds: 600));
-        $.log('$date :: Tap Continue in WebView');
+
         await $.platform.tap(Selector(text: 'Continue'));
       } else {
-        $.log('$date :: Email field visible — entering credentials');
         await $.platform.tap(emailFieldSelector);
         await $.platform.mobile.enterText(
           emailFieldSelector,
@@ -115,7 +96,6 @@ void main() {
 
         await $.platform.tap(Selector(text: 'Next'));
 
-        $.log('$date :: Password');
         final passwordSelector = Selector(text: 'Enter your password');
         await $.platform.mobile.waitUntilVisible(passwordSelector);
         await $.platform.tap(passwordSelector);
@@ -128,7 +108,6 @@ void main() {
 
         await Future.delayed(const Duration(milliseconds: 1800));
 
-        $.log('$date :: Allow');
         final allowButton = Selector(text: 'Allow');
         await $.platform.tap(allowButton);
       }
@@ -136,17 +115,13 @@ void main() {
       // Google redirects to com.clerk.flutter://callback. The WebView's
       // NavigationDelegate intercepts it, pops the dialog with the URL, and
       // ssoSignIn calls parseDeepLink to complete the OAuth flow.
-      $.log('$date :: Waiting for signed-in UI');
-
       await $('Profile').waitUntilVisible(timeout: const Duration(seconds: 30));
 
       expect($('Profile'), findsOneWidget);
       expect($('Sign out'), findsOneWidget);
       expect($('Organizations'), findsOneWidget);
 
-      $.log('$date' ':: Signed in successfully');
-
-
+      await signOut($);
     },
   );
 }
@@ -182,5 +157,3 @@ Future<bool> isBothVisible(
 }
 
 enum FirstVisibleView { account, email, timeout }
-
-String get date => DateTime.now().toIso8601String();

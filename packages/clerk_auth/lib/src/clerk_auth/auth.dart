@@ -260,6 +260,55 @@ class Auth {
     return resp;
   }
 
+  bool _apiResponseHasErrorCode(ApiResponse response, String code) {
+    return response.errorCollection.errors //
+            ?.any((error) => error.code == code) ??
+        false;
+  }
+
+  Future<void> _activateCreatedSession(String? sessionId) async {
+    if (sessionId?.isEmpty != false) return;
+    if (client.activeSession?.id == sessionId) return;
+
+    Session? session;
+    for (final currentSession in client.sessions) {
+      if (currentSession.id == sessionId) {
+        session = currentSession;
+        break;
+      }
+    }
+
+    if (session != null) {
+      await _api.activate(session).then(_housekeeping);
+    }
+  }
+
+  Future<void> _activateCreatedSessionFromClient() async {
+    await _activateCreatedSession(
+      client.signIn?.createdSessionId ?? client.signUp?.createdSessionId,
+    );
+  }
+
+  Future<void> _authenticateWithGoogleOneTap({required String token}) async {
+    var response = await _api.createSignIn(
+      strategy: Strategy.oauthTokenGoogle,
+      token: token,
+    );
+
+    if (_apiResponseHasErrorCode(response, 'external_account_not_found')) {
+      response = await _api.createSignUp(
+        strategy: Strategy.oauthTokenGoogle,
+        token: token,
+      );
+    }
+
+    _housekeeping(response);
+    if (response.isOkay) {
+      await _activateCreatedSessionFromClient();
+    }
+    update();
+  }
+
   Future<void> _persistData() async {
     final data = _persistableData;
     _persistableData = {};
@@ -471,12 +520,19 @@ class Auth {
     String? firstName,
     String? lastName,
   }) async {
+    if (provider.strategy == Strategy.oauthTokenGoogle) {
+      await _authenticateWithGoogleOneTap(token: idToken);
+      return;
+    }
+
     await attemptSignUp(
       strategy: provider.strategy,
       token: idToken,
       firstName: firstName,
       lastName: lastName,
     );
+    await _activateCreatedSessionFromClient();
+    update();
   }
 
   /// Delete an external account
@@ -714,7 +770,8 @@ class Auth {
 
         case SignUp signUp
             when signUp.status == Status.missingRequirements &&
-                signUp.missingFields.isEmpty:
+                signUp.missingFields.isEmpty &&
+                strategy.isOauthToken == false:
           await _api
               .prepareSignUp(signUp, strategy: strategy)
               .then(_housekeeping);

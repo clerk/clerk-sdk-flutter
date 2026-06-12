@@ -31,6 +31,8 @@ UserAttributeData _$UserAttributeDataFromJson(Map<String, dynamic> json) =>
               ?.map((e) => Strategy.fromJson(e as String))
               .toList() ??
           const [],
+      isImmutable:
+          json['immutable'] == null ? false : isTrue(json['immutable']),
     );
 
 Map<String, dynamic> _$UserAttributeDataToJson(UserAttributeData instance) =>
@@ -43,4 +45,5 @@ Map<String, dynamic> _$UserAttributeDataToJson(UserAttributeData instance) =>
       'verify_at_sign_up': instance.verifyAtSignUp,
       'enabled': instance.isEnabled,
       'required': instance.isRequired,
+      'immutable': instance.isImmutable,
     };

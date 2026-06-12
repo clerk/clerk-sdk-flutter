@@ -49,13 +49,13 @@ void main() {
 
   group(
     'ClerkAuthentication: Phone-only configuration',
-        () {
+    () {
       // -----------------------------------------------------------------------
       // Primary regression guard
       // -----------------------------------------------------------------------
       testWidgets(
         'should show the phone input field and hide email fields',
-            (tester) async {
+        (tester) async {
           final authState = await buildAuthState();
 
           await tester.pumpWidget(
@@ -105,8 +105,7 @@ void main() {
           expect(
             phoneFieldRect.height,
             greaterThan(0),
-            reason:
-                'Phone input field height must be > 0. '
+            reason: 'Phone input field height must be > 0. '
                 'A Closeable(closed: true) sets heightFactor to 0, making '
                 'the identifier section appear completely empty.',
           );
@@ -131,7 +130,7 @@ void main() {
       // -----------------------------------------------------------------------
       testWidgets(
         'should use ClerkPhoneNumberFormField',
-            (tester) async {
+        (tester) async {
           final authState = await buildAuthState();
 
           await tester.pumpWidget(

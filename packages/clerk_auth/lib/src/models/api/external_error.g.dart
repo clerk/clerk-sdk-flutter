@@ -47,11 +47,14 @@ const _$ClerkErrorCodeEnumMap = {
   ClerkErrorCode.noAssociatedCodeRetrievalMethod:
       'noAssociatedCodeRetrievalMethod',
   ClerkErrorCode.passwordMatchError: 'passwordMatchError',
+  ClerkErrorCode.legalAcceptanceRequired: 'legalAcceptanceRequired',
   ClerkErrorCode.jwtPoorlyFormatted: 'jwtPoorlyFormatted',
+  ClerkErrorCode.noInitialCodeHasBeenSetUpToResend:
+      'noInitialCodeHasBeenSetUpToResend',
   ClerkErrorCode.noSessionFoundForUser: 'noSessionFoundForUser',
-  ClerkErrorCode.noUserAttributeForField: 'noUserAttributeForField',
   ClerkErrorCode.noSuchFirstFactorStrategy: 'noSuchFirstFactorStrategy',
   ClerkErrorCode.noSuchSecondFactorStrategy: 'noSuchSecondFactorStrategy',
+  ClerkErrorCode.noUserAttributeForField: 'noUserAttributeForField',
   ClerkErrorCode.passwordResetStrategyError: 'passwordResetStrategyError',
   ClerkErrorCode.cannotDeleteSelf: 'cannotDeleteSelf',
   ClerkErrorCode.unknownError: 'unknownError',

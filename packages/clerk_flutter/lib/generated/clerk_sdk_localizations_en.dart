@@ -3,6 +3,7 @@
 import 'clerk_sdk_localizations.dart';
 
 // ignore_for_file: type=lint
+// coverage:ignore-file
 
 /// The translations for English (`en`).
 class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {

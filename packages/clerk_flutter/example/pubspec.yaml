@@ -26,6 +26,15 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+  patrol: ^4.5.0
+
+
+patrol:
+  app_name: clerk_flutter_example
+  android:
+    package_name: com.example.example
+  ios:
+    bundle_id: com.clerk.example
 
 flutter:
   uses-material-design: true

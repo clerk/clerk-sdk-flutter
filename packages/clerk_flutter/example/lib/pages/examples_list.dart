@@ -1,4 +1,5 @@
 import 'package:clerk_flutter_example/pages/clerk_sign_in_example.dart';
+import 'package:clerk_flutter_example/pages/clerk_signed_in_out_example.dart';
 import 'package:clerk_flutter_example/pages/custom_email_sign_in_example.dart';
 import 'package:clerk_flutter_example/pages/custom_sign_in_example.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,11 @@ class ExamplesList extends StatelessWidget {
             title: const Text('Custom Email Sign In'),
             onTap: () =>
                 Navigator.of(context).pushNamed(CustomEmailSignInExample.path),
+          ),
+          ListTile(
+            title: const Text('ClerkSignedIn / ClerkSignedOut'),
+            onTap: () =>
+                Navigator.of(context).pushNamed(ClerkSignedInOutExample.path),
           ),
         ],
       ),

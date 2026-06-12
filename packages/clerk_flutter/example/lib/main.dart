@@ -6,6 +6,7 @@ import 'package:app_links/app_links.dart';
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:clerk_flutter_example/pages/clerk_sign_in_example.dart';
+import 'package:clerk_flutter_example/pages/clerk_signed_in_out_example.dart';
 import 'package:clerk_flutter_example/pages/custom_email_sign_in_example.dart';
 import 'package:clerk_flutter_example/pages/custom_sign_in_example.dart';
 import 'package:clerk_flutter_example/pages/examples_list.dart';
@@ -131,6 +132,8 @@ class ExampleApp extends StatelessWidget {
               const CustomOAuthSignInExample(),
           CustomEmailSignInExample.path: (context) =>
               const CustomEmailSignInExample(),
+          ClerkSignedInOutExample.path: (context) =>
+              const ClerkSignedInOutExample(),
         },
       ),
     );

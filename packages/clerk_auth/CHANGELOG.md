@@ -1,3 +1,8 @@
+## 0.0.16-beta
+
+ - **FIX**(clerk_auth): offline sign out (#403).
+ - **FEAT**(clerk_auth): added immutable to user attribute data (#406).
+
 ## 0.0.15-beta
 
 * feat: add passkey support [#300] 

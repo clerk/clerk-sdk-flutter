@@ -1,3 +1,8 @@
+## 0.0.16-beta
+
+ - **FEAT**(clerk_auth): added immutable to user attribute data (#406).
+ - **DOCS**(clerk_flutter): ClerkSignedIn and ClerkSignedOut example (#416).
+
 ## 0.0.15-beta
 
 * feat: add passkey support [#300] 

@@ -1,3 +1,7 @@
+## 0.0.16-beta
+
+ - Bump "clerk_backend_api" to `0.0.16-beta`.
+
 ## 0.0.15-beta
 
 * chore: align release version with `clerk_auth` package

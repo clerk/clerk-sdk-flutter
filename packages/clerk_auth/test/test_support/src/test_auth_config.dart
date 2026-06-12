@@ -2,9 +2,13 @@ import 'package:clerk_auth/clerk_auth.dart';
 import 'package:http/http.dart' show ByteStream, Response;
 
 class TestAuthConfig extends AuthConfig {
+  /// FAKE KEY - A valid publishable key whose base64 payload decodes to 'somedomain.com\n'.
+  static const kPublishableKey = 'pk_test_c29tZWRvbWFpbi5jb20K';
+
   const TestAuthConfig({
     required super.publishableKey,
     super.httpService = const _NoneHttpService(),
+    super.retryOptions = const RetryOptions(maxAttempts: 1),
   }) : super(
           sessionTokenPolling: false,
           localesLookup: _localesLookup,

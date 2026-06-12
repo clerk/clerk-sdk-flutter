@@ -11,6 +11,7 @@ PODS:
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - PromisesObjC (~> 2.4)
+  - CocoaAsyncSocket (7.6.5)
   - device_info_plus (0.0.1):
     - Flutter
   - Flutter (1.0.0)
@@ -43,6 +44,8 @@ PODS:
     - GTMSessionFetcher/Core
   - image_picker_ios (0.0.1):
     - Flutter
+  - integration_test (0.0.1):
+    - Flutter
   - package_info_plus (0.4.5):
     - Flutter
   - passkeys_darwin (0.0.1):
@@ -51,15 +54,20 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - patrol (0.0.1):
+    - CocoaAsyncSocket (~> 7.6)
+    - Flutter
+    - FlutterMacOS
   - PromisesObjC (2.4.0)
   - sign_in_with_apple (0.0.1):
     - Flutter
-  - ua_client_hints (1.4.1):
+  - ua_client_hints (1.7.0):
     - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
@@ -67,18 +75,21 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - passkeys_darwin (from `.symlinks/plugins/passkeys_darwin/darwin`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - patrol (from `.symlinks/plugins/patrol/darwin`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - ua_client_hints (from `.symlinks/plugins/ua_client_hints/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
     - AppAuth
     - AppCheckCore
+    - CocoaAsyncSocket
     - GoogleSignIn
     - GoogleUtilities
     - GTMAppAuth
@@ -96,12 +107,16 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_sign_in_ios/darwin"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   passkeys_darwin:
     :path: ".symlinks/plugins/passkeys_darwin/darwin"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  patrol:
+    :path: ".symlinks/plugins/patrol/darwin"
   sign_in_with_apple:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
   ua_client_hints:
@@ -109,29 +124,32 @@ EXTERNAL SOURCES:
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
   app_links: c5161ac5ab5383ad046884568b4b91cb52df5d91
   AppAuth: 1c1a8afa7e12f2ec3a294d9882dfa5ab7d3cb063
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  google_sign_in_ios: 205742c688aea0e64db9da03c33121694a365109
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  google_sign_in_ios: 000870aa06da9b28d1d0bf7ef70ff0213059dd28
   GoogleSignIn: fcee2257188d5eda57a5e2b6a715550ffff9206d
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   GTMAppAuth: 217a876b249c3c585a54fd6f73e6b58c4f5c4238
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
-  image_picker_ios: 85f2b3c9fb98c09d63725c4d12ebd585b56ec35d
+  image_picker_ios: e0ece4aa2a75771a7de3fa735d26d90817041326
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
-  passkeys_darwin: 0a09d3b26cea8de1ec3bb8f8c7c159981f63bbc7
-  path_provider_foundation: 608fcb11be570ce83519b076ab6a1fffe2474f05
+  passkeys_darwin: 395f63bb4dbfe81344ada36400c391e86fc395ea
+  path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
+  patrol: cea8074f183a2a4232d0ebd10569ae05149ada42
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   sign_in_with_apple: c5dcc141574c8c54d5ac99dd2163c0c72ad22418
-  ua_client_hints: 92fe0d139619b73ec9fcb46cc7e079a26178f586
+  ua_client_hints: 6f8942ec0651883e0959cf255cdeaf8f93cf69e3
   url_launcher_ios: 9d5365b30ff416ba8e3d917bae5f7fb25f6a4a89
-  webview_flutter_wkwebview: daa94b5ed120e19439eb7f797649768d6360ebdd
+  webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
 
-PODFILE CHECKSUM: 4bb0d5af7b0a7a18570b26cd09a55bf9a905f81f
+PODFILE CHECKSUM: 049e629b04b84cf66198109aaa44ffb27a2ba9d0
 
 COCOAPODS: 1.16.2

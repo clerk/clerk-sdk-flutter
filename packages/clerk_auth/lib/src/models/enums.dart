@@ -89,6 +89,7 @@ enum Stage {
     return switch (status) {
       Status.needsFirstFactor => first,
       Status.needsSecondFactor => second,
+      Status.needsClientTrust => second,
       _ => throw ClerkError(
           message: 'No Stage for {arg}',
           argument: status.toString(),

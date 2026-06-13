@@ -36,6 +36,9 @@ class Status {
   /// needs second factor
   static const needsSecondFactor = Status._('needs_second_factor');
 
+  /// needs client trust
+  static const needsClientTrust = Status._('needs_client_trust');
+
   /// transferable
   static const transferable = Status._('transferable');
 
@@ -65,6 +68,7 @@ class Status {
     needsIdentifier.name: needsIdentifier,
     needsFirstFactor.name: needsFirstFactor,
     needsSecondFactor.name: needsSecondFactor,
+    needsClientTrust.name: needsClientTrust,
     transferable.name: transferable,
     unverified.name: unverified,
     verified.name: verified,
@@ -102,7 +106,10 @@ class Status {
   bool get isUnverified => this == unverified;
 
   /// needs factor?
-  bool get needsFactor => this == needsFirstFactor || this == needsSecondFactor;
+  bool get needsFactor =>
+      this == needsFirstFactor ||
+      this == needsSecondFactor ||
+      this == needsClientTrust;
 
   /// Do we need factors for this stage?
   bool needsFactorFor(Stage stage) => switch (stage) {

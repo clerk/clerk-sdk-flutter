@@ -280,6 +280,55 @@ void main() {
         authStateWithSignIn.terminate();
       });
 
+      testWidgets('renders factor list and heading for needs_client_trust',
+          (tester) async {
+        const environment = clerk.Environment(
+          config: clerk.Config(
+            identificationStrategies: [clerk.Strategy.emailAddress],
+            firstFactors: [clerk.Strategy.password],
+          ),
+        );
+        final signIn = createTestSignIn(
+          status: clerk.Status.needsClientTrust,
+          identifier: 'test@example.com',
+          supportedSecondFactors: [
+            createTestFactor(
+              strategy: clerk.Strategy.emailCode,
+              safeIdentifier: 'test@example.com',
+              emailAddressId: 'email_123',
+            ),
+          ],
+          firstFactorVerification: createTestVerification(
+            status: clerk.Status.verified,
+            strategy: clerk.Strategy.password,
+          ),
+        );
+        final client = createTestClient(signIn: signIn);
+        final authStateWithSignIn = await createTestAuthState(
+          config: TestClerkAuthConfig(
+            initialClient: client,
+            initialEnvironment: environment,
+          ),
+        );
+
+        await tester.pumpWidget(
+          TestClerkAuthWrapper(
+            authState: authStateWithSignIn,
+            child: const Scaffold(
+              body: SingleChildScrollView(
+                child: ClerkSignInPanel(),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ClerkSignInPanel), findsOneWidget);
+        expect(find.text('Verify this device'), findsOneWidget);
+
+        authStateWithSignIn.terminate();
+      });
+
       testWidgets('renders with multiple first factors', (tester) async {
         final signIn = createTestSignIn(
           status: clerk.Status.needsFirstFactor,

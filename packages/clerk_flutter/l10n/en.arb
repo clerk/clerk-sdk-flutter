@@ -355,6 +355,8 @@
   "verificationPhoneNumber": "Phone number verification",
   "verified": "verified",
   "verifiedDomains": "Verified domains",
+  "verifyThisDevice": "Verify this device",
+  "@verifyThisDevice": {},
   "verifyYourEmailAddress": "Verify your email address",
   "verifyYourPhoneNumber": "Verify your phone number",
   "viaAutomaticInvitation": "via automatic invitation",

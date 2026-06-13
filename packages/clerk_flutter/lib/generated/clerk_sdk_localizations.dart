@@ -1032,6 +1032,12 @@ abstract class ClerkSdkLocalizations {
   /// **'Verified domains'**
   String get verifiedDomains;
 
+  /// No description provided for @verifyThisDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify this device'**
+  String get verifyThisDevice;
+
   /// No description provided for @verifyYourEmailAddress.
   ///
   /// In en, this message translates to:

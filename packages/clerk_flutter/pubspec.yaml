@@ -37,5 +37,6 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
+  generate: true
   assets:
     - assets/

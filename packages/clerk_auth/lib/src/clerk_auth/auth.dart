@@ -610,7 +610,7 @@ class Auth {
         }
 
       case SignIn signIn
-          when signIn.status.needsFactor &&
+          when signIn.needsFirstFactor &&
               strategy.isPassword &&
               password is String:
         await _api

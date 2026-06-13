@@ -205,12 +205,17 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
     final showSecondFactors = signIn.needsSecondFactor &&
         _externalActionFactorChosen(secondFactors) == false;
 
+    final clientTrustFactors = signIn.factorsFor(clerk.Stage.second);
+    final showClientTrustFactors = signIn.needsClientTrust &&
+        _externalActionFactorChosen(clientTrustFactors) == false;
+
     final showSomething = showIdentifierInput ||
         showHeading ||
         showEmailLinkMessage ||
         showCodeInput ||
         showFirstFactors ||
-        showSecondFactors;
+        showSecondFactors ||
+        showClientTrustFactors;
 
     if (showSomething == false && signIn.hasVerification == false) {
       // If we get here, there is no way to progress. Reset.
@@ -237,12 +242,17 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
         Openable(
           key: const Key('heading'),
           open: showHeading,
-          builder: (context) => Text(
-            signIn.needsSecondFactor
-                ? l10ns.twoStepVerification
-                : _identifier.identifier,
-            style: themeExtension.styles.heading,
-          ),
+          builder: (context) {
+            late String headingText;
+            if (signIn.needsSecondFactor) {
+              headingText = l10ns.twoStepVerification;
+            } else if (signIn.needsClientTrust) {
+              headingText = l10ns.verifyThisDevice;
+            } else {
+              headingText = _identifier.identifier;
+            }
+            return Text(headingText, style: themeExtension.styles.heading);
+          },
         ),
 
         verticalMargin8,
@@ -286,6 +296,17 @@ class _ClerkSignInPanelState extends State<ClerkSignInPanel>
           child: _FactorList(
             key: const Key('secondFactors'),
             factors: secondFactors,
+            onPasswordChanged: _updatePassword,
+            onSubmit: (strategy) => _continue(authState, strategy: strategy),
+          ),
+        ),
+
+        // Factors for device-trust stage
+        Openable(
+          open: showClientTrustFactors,
+          child: _FactorList(
+            key: const Key('clientTrustFactors'),
+            factors: clientTrustFactors,
             onPasswordChanged: _updatePassword,
             onSubmit: (strategy) => _continue(authState, strategy: strategy),
           ),

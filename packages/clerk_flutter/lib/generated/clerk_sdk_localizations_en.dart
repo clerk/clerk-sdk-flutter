@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, use_super_parameters
 
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'clerk_sdk_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -546,6 +548,9 @@ class ClerkSdkLocalizationsEn extends ClerkSdkLocalizations {
 
   @override
   String get verifiedDomains => 'Verified domains';
+
+  @override
+  String get verifyThisDevice => 'Verify this device';
 
   @override
   String get verifyYourEmailAddress => 'Verify your email address';

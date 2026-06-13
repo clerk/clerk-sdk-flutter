@@ -81,6 +81,32 @@ void main() {
       });
     });
 
+    test('can sign in with password then client trust email code', () async {
+      await runWithLogging(() async {
+        await initialiseForTest('sign_in_with_client_trust');
+
+        expect(auth.user, null);
+        await auth.attemptSignIn(
+          identifier: env.email,
+          strategy: Strategy.password,
+          password: env.password,
+        );
+        expect(auth.signIn?.status, Status.needsClientTrust);
+
+        await auth.attemptSignIn(strategy: Strategy.emailCode);
+        expect(auth.signIn?.status, Status.needsClientTrust);
+
+        await auth.attemptSignIn(
+          strategy: Strategy.emailCode,
+          code: env.code,
+        );
+        expect(auth.signIn, null);
+        expect(auth.user is User);
+
+        expect(httpService.isCompleted);
+      });
+    });
+
     test('can sign in with email link', () async {
       await runWithLogging(() async {
         await initialiseForTest('sign_in_with_email_link');

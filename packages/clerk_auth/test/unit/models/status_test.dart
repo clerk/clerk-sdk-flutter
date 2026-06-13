@@ -23,6 +23,7 @@ void main() {
       expect(Status(name: 'needs_identifier'), Status.needsIdentifier);
       expect(Status(name: 'needs_first_factor'), Status.needsFirstFactor);
       expect(Status(name: 'needs_second_factor'), Status.needsSecondFactor);
+      expect(Status(name: 'needs_client_trust'), Status.needsClientTrust);
       expect(Status(name: 'transferable'), Status.transferable);
       expect(Status(name: 'unverified'), Status.unverified);
       expect(Status(name: 'verified'), Status.verified);
@@ -66,9 +67,11 @@ void main() {
       expect(Status.active.isTransferable, false);
     });
 
-    test('needsFactor returns true for first and second factor statuses', () {
+    test('needsFactor returns true for first, second, and client trust statuses',
+        () {
       expect(Status.needsFirstFactor.needsFactor);
       expect(Status.needsSecondFactor.needsFactor);
+      expect(Status.needsClientTrust.needsFactor);
       expect(Status.active.needsFactor, false);
       expect(Status.verified.needsFactor, false);
     });
@@ -80,6 +83,13 @@ void main() {
       expect(Status.needsSecondFactor.needsFactorFor(Stage.first), false);
       expect(Status.active.needsFactorFor(Stage.first), false);
       expect(Status.active.needsFactorFor(Stage.second), false);
+    });
+
+    test('needsClientTrust is included in needsFactor', () {
+      expect(Status.needsClientTrust.needsFactor);
+      expect(Status.needsClientTrust, Status(name: 'needs_client_trust'));
+      expect(Status.needsClientTrust.toString(), 'needs_client_trust');
+      expect(Status.needsClientTrust.title, 'needs client trust');
     });
 
     test('toString returns the name', () {
@@ -103,7 +113,7 @@ void main() {
       expect(values.contains(Status.active));
       expect(values.contains(Status.verified));
       expect(values.contains(Status.unknown));
-      expect(values.length >= 14); // At least the predefined ones
+      expect(values.length >= 15); // At least the predefined ones
     });
 
     test('index returns correct position in values list', () {

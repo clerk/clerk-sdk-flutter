@@ -1,0 +1,65 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'   # v0.0.17-beta, v1.0.0, etc.
+
+jobs:
+  # Publish in dependency order: clerk_backend_api → clerk_auth → clerk_flutter.
+  # Each job waits for the previous one via `needs:`.
+
+  publish_clerk_backend_api:
+    permissions:
+      id-token: write
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
+      environment: pub.dev
+      working-directory: packages/clerk_backend_api
+
+  publish_clerk_auth:
+    needs: publish_clerk_backend_api
+    permissions:
+      id-token: write
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
+      environment: pub.dev
+      working-directory: packages/clerk_auth
+
+  # pub.dev may take ~2 minutes before the new clerk_auth version is resolvable
+  # as a dependency when publishing clerk_flutter.
+  wait_for_propagation:
+    name: Wait for clerk_auth to propagate on pub.dev
+    needs: publish_clerk_auth
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 120
+
+  publish_clerk_flutter:
+    needs: wait_for_propagation
+    permissions:
+      id-token: write
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
+      environment: pub.dev
+      working-directory: packages/clerk_flutter
+
+  github_release:
+    name: Create GitHub Release
+    needs: publish_clerk_flutter
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.ref_name }}"
+          gh release create "$TAG" \
+            --title "Release $TAG" \
+            --notes "See individual package CHANGELOGs for details:
+          - [clerk_auth](packages/clerk_auth/CHANGELOG.md)
+          - [clerk_backend_api](packages/clerk_backend_api/CHANGELOG.md)
+          - [clerk_flutter](packages/clerk_flutter/CHANGELOG.md)"

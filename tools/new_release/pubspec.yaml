@@ -7,4 +7,4 @@ environment:
   sdk: '>=3.6.2 <4.0.0'
 
 dev_dependencies:
-  lints: ^6.1.0
+  lints: ^5.1.1

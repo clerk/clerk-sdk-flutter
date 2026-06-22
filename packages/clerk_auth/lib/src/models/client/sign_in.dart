@@ -83,6 +83,7 @@ class SignIn extends AuthObject with InformativeToStringMixin {
     return switch (status) {
       Status.needsFirstFactor => firstFactorVerification,
       Status.needsSecondFactor => secondFactorVerification,
+      Status.needsClientTrust => secondFactorVerification,
       _ => firstFactorVerification ?? secondFactorVerification,
     };
   }
@@ -100,8 +101,13 @@ class SignIn extends AuthObject with InformativeToStringMixin {
   /// Do we need a second factor?
   bool get needsSecondFactor => status == Status.needsSecondFactor;
 
+  /// Do we need client trust?
+  bool get needsClientTrust => status == Status.needsClientTrust;
+
   /// Do we need a factor?
-  bool get needsFactor => needsFirstFactor || needsSecondFactor;
+  bool get needsFactor {
+    return needsFirstFactor || needsSecondFactor || needsClientTrust;
+  }
 
   /// Is this [SignIn] transferable to a [SignUp]?
   bool get isTransferable => verification?.status.isTransferable == true;

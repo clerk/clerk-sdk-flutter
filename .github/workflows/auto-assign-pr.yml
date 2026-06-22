@@ -27,13 +27,9 @@ jobs:
               assignees: ['MarkOSullivan94']
             });
 
-            // Always request slightfoot as a reviewer
-            const reviewers = ['slightfoot'];
-
-            // If PR author isn't MarkOSullivan94, also request MarkOSullivan94
-            if (pr.user.login !== 'MarkOSullivan94') {
-              reviewers.push('MarkOSullivan94');
-            }
+            // Request all maintainers to review unless one of them is the author
+            const reviewers = ['slightfoot', 'MarkOSullivan94']
+              .filter(reviewer => reviewer !== pr.user.login);
 
             await github.rest.pulls.requestReviewers({
               owner,

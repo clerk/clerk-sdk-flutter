@@ -1,0 +1,10 @@
+name: new_release
+description: Release automation tool for the Clerk Flutter SDK monorepo.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.6.2 <4.0.0'
+
+dev_dependencies:
+  lints: ^5.1.1

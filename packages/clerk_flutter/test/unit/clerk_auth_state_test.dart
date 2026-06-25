@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:clerk_auth/clerk_auth.dart' as clerk;
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:flutter/material.dart';
@@ -394,7 +392,8 @@ void main() {
               .where((r) =>
                   r.uri.path.contains('/sign_ins/') &&
                   r.method == clerk.HttpMethod.get &&
-                  r.uri.queryParameters['rotating_token_nonce'] == 'nonce_abc123')
+                  r.uri.queryParameters['rotating_token_nonce'] ==
+                      'nonce_abc123')
               .firstOrNull;
           expect(
             oauthCompletionCall,
@@ -413,13 +412,14 @@ void main() {
 
 class _CapturedRequest {
   _CapturedRequest(this.method, this.uri, this.params);
+
   final clerk.HttpMethod method;
   final Uri uri;
   final Map<String, dynamic>? params;
 }
 
 class _CapturingHttpService extends TestHttpService {
-  _CapturingHttpService({super.client, super.environment});
+  _CapturingHttpService({super.client});
 
   final List<_CapturedRequest> capturedRequests = [];
 
@@ -432,6 +432,12 @@ class _CapturingHttpService extends TestHttpService {
     String? body,
   }) {
     capturedRequests.add(_CapturedRequest(method, uri, params));
-    return super.send(method, uri, headers: headers, params: params, body: body);
+    return super.send(
+      method,
+      uri,
+      headers: headers,
+      params: params,
+      body: body,
+    );
   }
 }

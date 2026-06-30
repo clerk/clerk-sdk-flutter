@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
- platform :ios, '12.0'
+ platform :ios, '13.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -35,10 +35,30 @@ target 'Runner' do
   target 'RunnerTests' do
     inherit! :search_paths
   end
+  target 'RunnerUITests' do
+    inherit! :search_paths
+    flutter_install_all_ios_pods File.dirname(File.expand_path(__FILE__))
+  end
 end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+  end
+
+  # Wire Pods-RunnerUITests xcconfigs to Flutter xcconfigs so the base
+  # configuration chain includes both CocoaPods and Flutter settings.
+  # CocoaPods can't do this automatically because RunnerUITests already
+  # has custom base configurations set by Xcode.
+  {
+    'debug' => 'Debug',
+    'release' => 'Release',
+    'profile' => 'Release',
+  }.each do |pods_config, flutter_config|
+    xcconfig_path = "#{installer.sandbox.root}/Target Support Files/Pods-RunnerUITests/Pods-RunnerUITests.#{pods_config}.xcconfig"
+    flutter_xcconfig = "#include \"../../../Flutter/#{flutter_config}.xcconfig\""
+    next unless File.exist?(xcconfig_path)
+    content = File.read(xcconfig_path)
+    File.open(xcconfig_path, 'a') { |f| f.puts flutter_xcconfig } unless content.include?(flutter_xcconfig)
   end
 end

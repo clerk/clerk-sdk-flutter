@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
 
 import 'sign_in_with_google_common.dart';
-import 'utils.dart';
 
 // Integration test: Sign In with Google (OAuth)
 //

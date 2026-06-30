@@ -164,7 +164,7 @@ class MockHttpService implements HttpService {
     Map<String, dynamic>? params,
     String? body,
   }) async {
-    if (isOffline) throw SocketException('No network');
+    if (isOffline) throw const SocketException('No network');
     calls.add(MockHttpCall(
         method: method,
         uri: uri,

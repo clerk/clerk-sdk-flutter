@@ -702,8 +702,6 @@ class _StaleRefreshHttpService extends TestHttpService {
 class _SsoErrorHttpService extends TestHttpService {
   _SsoErrorHttpService({
     required this.failPaths,
-    super.client,
-    super.environment,
   });
 
   final List<String> failPaths;

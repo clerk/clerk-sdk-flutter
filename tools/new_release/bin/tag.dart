@@ -43,14 +43,14 @@ Future<void> main(List<String> args) async {
   }
   final version = unique.first;
 
-  print('Tagging release v$version...');
+  stdout.writeln('Tagging release v$version...');
 
   for (final pkg in _packages) {
     await _tag('$pkg-v$version', 'Release $pkg $version', root);
   }
   await _tag('v$version', 'Release v$version', root);
 
-  print('\nPushing tags...');
+  stdout.writeln('\nPushing tags...');
   final pushResult = await Process.run(
     'git',
     ['push', 'origin', '--tags'],
@@ -61,11 +61,11 @@ Future<void> main(List<String> args) async {
     exit(1);
   }
 
-  print('\nDone! Tags pushed — pub.dev publish workflow will start shortly.');
+  stdout.writeln('\nDone! Tags pushed — pub.dev publish workflow will start shortly.');
   for (final pkg in _packages) {
-    print('  $pkg-v$version');
+    stdout.writeln('  $pkg-v$version');
   }
-  print('  v$version  ← global trigger');
+  stdout.writeln('  v$version  ← global trigger');
 }
 
 Future<void> _tag(String name, String message, String root) async {
@@ -78,5 +78,5 @@ Future<void> _tag(String name, String message, String root) async {
     stderr.writeln('Failed to create tag $name:\n${result.stderr}');
     exit(1);
   }
-  print('  $name');
+  stdout.writeln('  $name');
 }

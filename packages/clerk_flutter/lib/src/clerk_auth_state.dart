@@ -101,6 +101,23 @@ class ClerkAuthState extends clerk.Auth with ChangeNotifier {
   }
 
   @override
+  set client(clerk.Client newClient) {
+    final newTs = newClient.updatedAt.microsecondsSinceEpoch;
+    final currentTs = client.updatedAt.microsecondsSinceEpoch;
+    if (newTs > 0 && currentTs > 0 && newTs <= currentTs) return;
+    super.client = newClient;
+  }
+
+  // Guard 1: skip background refreshes while any safelyCall holds the lock.
+  // This prevents a timer-fired currentClient() response from overwriting a
+  // client that is being updated by an in-progress SSO or auth operation.
+  @override
+  Future<void> refreshClient() async {
+    if (_updateLock.isLocked) return;
+    await super.refreshClient();
+  }
+
+  @override
   Future<void> signOut() async {
     if (config.flags.clearCookiesOnSignOut) {
       await WebViewCookieManager().clearCookies();

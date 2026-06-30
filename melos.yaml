@@ -143,6 +143,17 @@ scripts:
       scope: "clerk_flutter_example"
       dirExists: coverage
 
+  # Use the below command to globally activate combine_coverage as there is a bug which stops it
+  # working correctly on v1.0.2
+  # dart pub global activate --source git https://github.com/MarkOSullivan94/combine_coverage.git --git-ref 2029597be45aebed243fb8e02000dafc20969b27
+  coverage:combine:
+    name: Generate a single LCOV.info test coverage file from all the packages coverage results
+    run: dart pub global run combine_coverage --repo-path="$MELOS_ROOT_PATH"
+
+  coverage:genhtml:
+    name: Generate HTML for the code coverage
+    run: genhtml coverage/lcov.info -o coverage/html --prefix "$MELOS_ROOT_PATH/packages" --hierarchical
+
   # Release scripts — see tools/new_release/ for implementation.
   new_release:
     description: >

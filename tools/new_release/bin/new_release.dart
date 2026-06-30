@@ -33,7 +33,7 @@ Future<void> main(List<String> args) async {
 
   final root = Directory.current.path;
 
-  print('--- Bumping versions '
+  stdout.writeln('--- Bumping versions '
       '($bumpType${preId != null ? ' --pre=$preId' : ''}) ---');
 
   // 1. Update pubspec.yaml for all packages.
@@ -51,7 +51,7 @@ Future<void> main(List<String> args) async {
         'version: $bumped',
       ),
     );
-    print('  $pkg: $current → $bumped');
+    stdout.writeln('  $pkg: $current → $bumped');
   }
 
   // 2. Sync pubVersion in openapi-generator-config.json.
@@ -62,12 +62,12 @@ Future<void> main(List<String> args) async {
         jsonDecode(await openapiConfig.readAsString()) as Map<String, dynamic>;
     json['pubVersion'] = newVersion;
     await openapiConfig.writeAsString(
-        const JsonEncoder.withIndent('    ').convert(json) + '\n');
-    print('  openapi_generator/openapi-generator-config.json');
+        '${const JsonEncoder.withIndent('    ').convert(json)}\n');
+    stdout.writeln('  openapi_generator/openapi-generator-config.json');
   }
 
   // 3. Regenerate _version.dart via build_runner.
-  print('\n--- Running build_runner for clerk_auth ---');
+  stdout.writeln('\n--- Running build_runner for clerk_auth ---');
   final buildResult = await Process.run(
     'dart',
     ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],
@@ -77,30 +77,31 @@ Future<void> main(List<String> args) async {
     stderr.writeln('build_runner failed:\n${buildResult.stderr}');
     exit(1);
   }
-  print('  packages/clerk_auth/lib/src/_version.dart regenerated');
+  stdout.writeln('  packages/clerk_auth/lib/src/_version.dart regenerated');
 
   // 4. Prepend changelog entries for each package.
-  print('\n--- Generating changelogs ---');
+  stdout.writeln('\n--- Generating changelogs ---');
   for (final pkg in _packages) {
     await _generateChangelog(root, pkg, _packagePaths[pkg]!, newVersion!);
   }
 
   // 5. Stage specific files and commit.
-  print('\n--- Committing ---');
+  stdout.writeln('\n--- Committing ---');
   await _commit(root, newVersion!);
 
-  print('\nDone! Created commit: chore: release v$newVersion');
-  print('Next: push branch, open PR, merge to main, then run:');
-  print('  git checkout main && git pull && melos run tag');
+  stdout.writeln('\nDone! Created commit: chore: release v$newVersion');
+  stdout.writeln('Next: push branch, open PR, merge to main, then run:');
+  stdout.writeln('  git checkout main && git pull && melos run tag');
 }
 
 void _usage() {
-  print('Usage: dart tools/new_release/bin/new_release.dart <patch|minor|major>'
+  stdout.writeln(
+      'Usage: dart tools/new_release/bin/new_release.dart <patch|minor|major>'
       ' [--pre=<id>]');
-  print('');
-  print('Examples:');
-  print('  patch --pre=beta   # 0.0.16-beta → 0.0.17-beta');
-  print('  minor              # 0.0.17-beta → 0.1.0');
+  stdout.writeln('');
+  stdout.writeln('Examples:');
+  stdout.writeln('  patch --pre=beta   # 0.0.16-beta → 0.0.17-beta');
+  stdout.writeln('  minor              # 0.0.17-beta → 0.1.0');
 }
 
 String _extractVersion(String pubspec) {
@@ -168,7 +169,7 @@ Future<void> _generateChangelog(
       .toList();
 
   if (commits.isEmpty) {
-    print('  $pkgName: no new commits — CHANGELOG unchanged');
+    stdout.writeln('  $pkgName: no new commits — CHANGELOG unchanged');
     return;
   }
 
@@ -184,7 +185,7 @@ Future<void> _generateChangelog(
   final section =
       '## $newVersion\n\n${entries.map((e) => ' - $e').join('\n')}\n\n';
   await changelogFile.writeAsString(section + existing);
-  print(
+  stdout.writeln(
       '  $pkgName: ${entries.length} entr${entries.length == 1 ? 'y' : 'ies'}');
 }
 
@@ -247,5 +248,5 @@ Future<void> _commit(String root, String version) async {
     stderr.writeln('git commit failed:\n${commitResult.stderr}');
     exit(1);
   }
-  print('  chore: release v$version');
+  stdout.writeln('  chore: release v$version');
 }
